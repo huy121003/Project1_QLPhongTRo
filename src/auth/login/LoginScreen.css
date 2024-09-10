@@ -1,0 +1,120 @@
+/* Import the FontAwesome CSS in your HTML file or through a JavaScript bundler */
+
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background:linear-gradient(135deg, #1c0d63 0%, #4f3180 );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  
+  
+  .login-box {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    width: 350px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  h2 {
+    margin-bottom: 40px;
+    font-size: 30px;
+    color: #333;
+   font-weight: bold;
+
+
+  }
+  
+  .input-group {
+    margin-bottom: 15px;
+  }
+  
+  .input-group label {
+    display: flex;
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+  }
+  
+  .input-group input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    padding-left: 10px;
+    font-size: 16px;
+  }
+  
+  input::placeholder {
+    color: #aaa;
+  }
+  
+  .fa-user, .fa-lock {
+    color: #aaa;
+    font-size: 18px;
+  }
+  
+  .forgot-password {
+    text-align: right;
+    margin-bottom: 20px;
+  }
+  
+  .forgot-password a {
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .login-button {
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    border: none;
+    padding: 12px;
+    color: white;
+    border-radius: 25px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.3s ease;
+  }
+  
+  .login-button:hover {
+    background: linear-gradient(to right, #0072ff, #00c6ff);
+  }
+  
+  .social-login {
+    margin-top: 20px;
+  }
+  
+  .social-login p {
+    margin-bottom: 10px;
+  }
+  
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .social-icons i {
+    font-size: 24px;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .social-icons i:hover {
+    color: #0072ff;
+  }
+  
+  .fab {
+    color: #aaa;
+  }
+  
