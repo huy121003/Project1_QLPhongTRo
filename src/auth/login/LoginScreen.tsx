@@ -34,7 +34,7 @@ function LoginScreen() {
           <button className="login-button" type="submit">Login</button>
         </form>
         <div className="social-login">
-          <p>Have not an account ? <Link to='/register'>Sign up</Link></p>
+          <p>Have not an account ? <Link to='/auth/register'>Sign up</Link></p>
           
            <div className="social-icons">
             <i className="fab fa-facebook"></i>

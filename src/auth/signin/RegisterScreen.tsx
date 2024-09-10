@@ -30,7 +30,7 @@ function RegisterScreen() {
           <button className="login-button" type="submit">Register</button>
         </form>
         <div className="social-login">
-          <p>Have  an account ? <Link to='/'>Sign in</Link></p>
+          <p>Have  an account ? <Link to='/auth/login'>Sign in</Link></p>
           
            <div className="social-icons">
             <i className="fab fa-facebook"></i>
