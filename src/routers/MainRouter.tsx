@@ -9,7 +9,6 @@ import StaffScreen from "../pages/staff/StaffScreen";
 import InvoiceScreen from "../pages/invoice/InvoiceScreen";
 import SettingScreen from "../pages/Setting/SettingScreen";
 
-
 const MainRouter = () => {
   return (
     <Routes>
@@ -21,7 +20,6 @@ const MainRouter = () => {
       <Route path="/staff/index" element={<StaffScreen />} />
       <Route path="/invoice/index" element={<InvoiceScreen />} />
       <Route path="/setting/index" element={<SettingScreen />} />
-   
     </Routes>
   );
 };
