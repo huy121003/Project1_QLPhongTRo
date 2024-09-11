@@ -1,11 +1,14 @@
-import React from 'react'
-import LoginScreen from './auth/login/LoginScreen'
-import AuthRouter from './auth/AuthRouter'
+
 import { BrowserRouter } from 'react-router-dom'
+import MainScreen from './pages/main/MainScreen'
+
 function App() {
   return (
-    <BrowserRouter>
-    <AuthRouter/></BrowserRouter>
+     <BrowserRouter>
+  <MainScreen/>
+     </BrowserRouter>
+   
+ 
   )
 }
 

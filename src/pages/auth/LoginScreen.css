@@ -2,79 +2,75 @@
 
 * {
     box-sizing: border-box;
-  }
-  
-  body {
+}
+
+.login {
     font-family: 'Arial', sans-serif;
-    background:linear-gradient(135deg, #1c0d63 0%, #4f3180 );
+    background: linear-gradient(135deg, #1c0d63 0%, #4f3180);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
-  }
-  
-  
-  
-  .login-box {
+}
+
+.login__box {
     background-color: white;
     border-radius: 10px;
     padding: 30px;
     width: 350px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-  }
-  
-  h2 {
+}
+
+.login__title {
     margin-bottom: 40px;
     font-size: 30px;
     color: #333;
-   font-weight: bold;
+    font-weight: bold;
+}
 
-
-  }
-  
-  .input-group {
+.login__input-group {
     margin-bottom: 15px;
-  }
-  
-  .input-group label {
+}
+
+.login__input-group label {
     display: flex;
     align-items: center;
     background-color: #f0f0f0;
     border-radius: 5px;
     padding: 10px;
-  }
-  
-  .input-group input {
+}
+
+.login__input-group input {
     border: none;
     background: none;
     outline: none;
     width: 100%;
     padding-left: 10px;
     font-size: 16px;
-  }
-  
-  input::placeholder {
+}
+
+.login__input-group input::placeholder {
     color: #aaa;
-  }
-  
-  .fa-user, .fa-lock {
+}
+
+.login__icon {
     color: #aaa;
     font-size: 18px;
-  }
-  
-  .forgot-password {
+}
+
+.login__forgot-password {
     text-align: right;
     margin-bottom: 20px;
-  }
-  
-  .forgot-password a {
+}
+
+.login__forgot-password a {
     color: #666;
     font-size: 14px;
-  }
-  
-  .login-button {
+}
+
+.login__button {
     background: linear-gradient(to right, #00c6ff, #0072ff);
     border: none;
     padding: 12px;
@@ -84,38 +80,36 @@
     cursor: pointer;
     font-size: 16px;
     transition: 0.3s ease;
-  }
-  
-  .login-button:hover {
+}
+
+.login__button:hover {
     background: linear-gradient(to right, #0072ff, #00c6ff);
-  }
-  
-  .social-login {
-    margin-top: 30px;
-    
-  }
-  
-  .social-login p {
+}
+
+.login__social-login {
+    margin-top: 20px;
+}
+
+.login__social-login p {
     margin-bottom: 10px;
-  }
-  
-  .social-icons {
+}
+
+.login__social-icons {
     display: flex;
     justify-content: center;
     gap: 15px;
-  }
-  
-  .social-icons i {
+}
+
+.login__social-icon {
     font-size: 24px;
     cursor: pointer;
     transition: 0.3s ease;
-  }
-  
-  .social-icons i:hover {
+}
+
+.login__social-icon:hover {
     color: #0072ff;
-  }
-  
-  .fab {
+}
+
+.fab {
     color: #aaa;
-  }
-  
+}
