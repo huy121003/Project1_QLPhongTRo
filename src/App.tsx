@@ -1,11 +1,14 @@
 
 import { BrowserRouter } from 'react-router-dom'
-import MainScreen from './pages/main/MainScreen'
+
+
+import AppRoutes from './routers/AppRoutes'
+
 
 function App() {
   return (
      <BrowserRouter>
-  <MainScreen/>
+<AppRoutes />
      </BrowserRouter>
    
  
