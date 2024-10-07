@@ -14,5 +14,5 @@ export const apiLogout = () => {
   return axios.post("/api/v1/auth/logout");
 };
 export const apiFetchUser = () => {
-  return axios.get("/api/v1/auth/me");
+  return axios.get("/api/v1/auth/account");
 };

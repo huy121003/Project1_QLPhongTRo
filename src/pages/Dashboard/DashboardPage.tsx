@@ -4,7 +4,6 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { Table } from "antd";
 
-import { useEffect, useState } from "react";
 import { resizeWidth } from "../../utils/resize";
 
 function DashboardPage() {
@@ -86,7 +85,7 @@ function DashboardPage() {
 
   return (
     <>
-      <div className={`flex-1 ${width > 1024 ? "flex" : ""}`}>
+      <div className={`flex-1 ${width > 1024 ? "flex" : ""}  `}>
         <div className={`bg-white p-2 rounded-lg m-1 flex-1 flex-col flex `}>
           <Stack spacing={2}>
             <Box>
