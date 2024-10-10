@@ -11,6 +11,7 @@ import SettingPage from "../pages/Setting/SettingPage";
 import TenantPage from "../pages/Tenant/TenantPage";
 import ContractPage from "../pages/Contract/ContractPage";
 import ReceiptPage from "../pages/Receipt/ReceiptPage";
+import AccountPage from "../pages/Account/AccountPage";
 
 
 
@@ -64,7 +65,7 @@ const   homeRouters:Routers[] = [
     path: "staff",
     component: StaffPage,
     isShowNav: true,
-    icon: "fa-users",
+    icon: "fa-user-tie",
     label: "Staff",
   },
   {
@@ -103,6 +104,13 @@ const   homeRouters:Routers[] = [
     isShowNav: true,
     icon: "fa-file-invoice",
     label: "Receipt",
+  },
+  {
+    path:"account",
+    component: AccountPage,
+    isShowNav:true,
+    icon:"fa-solid fa-user-lock",
+    label:"Account"
   }
   
 ];

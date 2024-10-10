@@ -97,12 +97,17 @@ function HomeLayout() {
       </nav>
 
       <div className="flex-1 bg-gray-100 transition-all duration-300">
-        <div className="flex items-center bg-white text-black h-16 px-5">
-          <i
+        <div className="flex items-center  text-black h-16 px-5 justify-between">
+        <div className="flex">
+        <i
             className="fa fa-bars text-2xl cursor-pointer"
             onClick={toggleNav}
           />
           <h2 className="ml-4 text-2xl">{selected}</h2>
+        </div>
+        <div className="flex">
+    
+        </div>
         </div>
         <div
           className="flex-1 flex-row overflow-y-auto "

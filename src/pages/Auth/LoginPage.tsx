@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-import { Form, Input, Button, message, notification, Divider } from "antd";
+import { Form, Input, Button, message, Divider } from "antd";
 import { useAppDispatch } from "../../redux/hook";
 import { apiLogin } from "../../services/authtApi";
 import { loginaction } from "../../redux/slice/auth/authSlice";
@@ -15,7 +15,7 @@ function LoginPage(): JSX.Element {
     const { email, password } = value;
     setIsSubmit(true);
     const res = await apiLogin(email, password);
-    console.log(res);
+
     setIsSubmit(false);
     if (res?.data) {
       localStorage.setItem("access_token", res.data.access_token);
@@ -24,13 +24,7 @@ function LoginPage(): JSX.Element {
       message.success("Login successfully!");
       navigate("/dashboard");
     } else {
-      const errorMessage = res.data.message;
-      notification.error({
-        message: "Login failed!",
-        description: Array.isArray(errorMessage)
-          ? errorMessage.join(", ")
-          : errorMessage || "Unknown error",
-      });
+      message.error(res.message);
     }
   };
 

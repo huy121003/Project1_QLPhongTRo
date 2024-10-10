@@ -1,4 +1,4 @@
-import  { useEffect } from "react";
+import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./redux/hook";
 import { apiFetchUser } from "./services/authtApi";
@@ -12,6 +12,7 @@ import NotFoundPage from "./components/NotFoundPage";
 import Loading from "./components/Loading";
 import homeRouters from "./routers/index";
 import ProtectedRoute from "./routers/ProtectedRouter";
+import { message } from "antd";
 
 // Router setup moved outside to avoid re-creating it on every render
 const router = createBrowserRouter([
@@ -46,13 +47,16 @@ function App() {
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   useEffect(() => {
     // Only fetch the user account if authenticated and not on the login page
-    const isLoginPage = window.location.pathname === "/login" ||window.location.pathname === "/register";
+    const isLoginPage =
+      window.location.pathname === "/login" ||
+      window.location.pathname === "/register";
     if (!isLoginPage) {
       const getAccount = async () => {
         const res = await apiFetchUser();
         if (res?.data) {
           dispatch(getUserAction(res.data.user));
-        }
+          //  message.success(res.message);
+        } else message.error(res.message);
       };
       getAccount();
     }
