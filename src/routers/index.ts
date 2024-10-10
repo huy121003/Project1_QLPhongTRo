@@ -4,11 +4,10 @@ import RoomPage from "../pages/Room/RoomPage";
 import ElectricPage from "../pages/Electric/ElectricPage";
 import WaterPage from "../pages/Water/WaterPage";
 import ServicePage from "../pages/Service/ServicePage";
-import StaffPage from "../pages/Staff/StaffPage";
+
 import InvoicePage from "../pages/Invoice/InvoicePage";
 import SettingPage from "../pages/Setting/SettingPage";
 
-import TenantPage from "../pages/Tenant/TenantPage";
 import ContractPage from "../pages/Contract/ContractPage";
 import ReceiptPage from "../pages/Receipt/ReceiptPage";
 import AccountPage from "../pages/Account/AccountPage";
@@ -61,13 +60,7 @@ const   homeRouters:Routers[] = [
     icon: "fa-cubes",
     label: "Service",
   },
-  {
-    path: "staff",
-    component: StaffPage,
-    isShowNav: true,
-    icon: "fa-user-tie",
-    label: "Staff",
-  },
+
   {
     path: "invoice",
     component: InvoicePage,
@@ -83,13 +76,7 @@ const   homeRouters:Routers[] = [
     label: "Setting",
   },
 
-  {
-    path: "tenant",
-    component: TenantPage,
-    isShowNav: true,
-    icon: "fa-users",
-    label: "Tenant",
-  },
+  
 
   {
     path: "contract",

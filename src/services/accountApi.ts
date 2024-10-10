@@ -26,6 +26,6 @@ export const postAccountApi = (
     gender,
     address,
     idCard,
-    role,
+    role:role,
   });
 };
