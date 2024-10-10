@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-import { Form, Input, Button, message, notification, Divider } from "antd";
+import { Form, Input, Button, message, Divider } from "antd";
 import { useAppDispatch } from "../../redux/hook";
 import { apiLogin } from "../../services/authtApi";
-import { loginaction } from "../../redux/slice/account/authSlice";
+import { loginaction } from "../../redux/slice/auth/authSlice";
 import { useState } from "react";
 
 function LoginPage(): JSX.Element {
@@ -15,25 +15,25 @@ function LoginPage(): JSX.Element {
     const { email, password } = value;
     setIsSubmit(true);
     const res = await apiLogin(email, password);
+
     setIsSubmit(false);
-    
-    if (res?.data?.user?._id) {
+    if (res?.data) {
       localStorage.setItem("access_token", res.data.access_token);
       dispatch(loginaction(res.data.user));
+      // console.log(res.data.user)
       message.success("Login successfully!");
-      navigate("/");
+      navigate("/dashboard");
     } else {
-      notification.error({
-        message: "Login failed!",
-        description: res?.request?.responseText,
-      });
+      message.error(res.message);
     }
   };
 
   return (
     <AuthLayout>
       <div className="bg-gradient-to-br from-purple-400 to-green-300 p-12 rounded-lg shadow-lg w-[500px] mx-auto">
-        <h2 className="text-4xl font-bold text-center text-white mb-8">Login</h2>
+        <h2 className="text-4xl font-bold text-center text-white mb-8">
+          Login
+        </h2>
         <Divider />
         <Form layout="vertical" onFinish={handleLogin}>
           <Form.Item

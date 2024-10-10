@@ -1,5 +1,5 @@
 import { Menu, Dropdown, Button, Space } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+
 
 interface SortColumn {
   label: string;
@@ -16,7 +16,7 @@ const CustomSort: React.FC<CustomSortProps> = ({ columns, onSort }) => {
     <Menu className="text-xl">
       {columns.map((column) => (
         <Menu.Item key={column.key} onClick={() => onSort(column.key)} >
-          <p className="text-xl" >{column.label}</p>
+          <p className="text-xl" >Sort by {column.label}</p>
           
         </Menu.Item>
       ))}
@@ -28,7 +28,7 @@ const CustomSort: React.FC<CustomSortProps> = ({ columns, onSort }) => {
     className="text-xl">
       <Button className=" mx-3 h-[40px]" >
         <Space className=" font-normal">
-          Sort by <DownOutlined />
+        <i className="fa-solid fa-sort text-xl"/>
         </Space>
       </Button>
     </Dropdown>

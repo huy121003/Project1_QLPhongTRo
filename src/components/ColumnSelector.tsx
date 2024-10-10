@@ -4,7 +4,7 @@ import { Menu, Dropdown, Button, Checkbox } from "antd";
 
 // Prop types cho ColumnSelector
 interface ColumnSelectorProps {
-  columns: Array<{ label: string; key: string }>;  // Cột được truyền vào
+  columns: Array<{ title: string;dataIndex:string; key: string;render?:any }>;  // Cột được truyền vào
   visibleColumns: string[];                       // Cột đang hiển thị
   onChangeVisibleColumns: (columns: string[]) => void; // Hàm xử lý thay đổi cột
 }
@@ -29,7 +29,7 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
               );
             }}
           >
-           <p className="text-xl"> {column.label}</p>
+           <p className="text-xl"> {column.title}</p>
           </Checkbox>
         </Menu.Item>
       ))}

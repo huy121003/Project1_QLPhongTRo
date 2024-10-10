@@ -1,22 +1,16 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  apiRegister,
-  apiLogout,
-  apiLogin,
-  apiFetchUser,
-} from "../../../services/authtApi";
-import { Status } from "../../status";
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
+
+export const initialState = {
   isAuthenticated: false,
+  isLoading:true,
   user: {
-   email: "",
-   name: "",
-   role: "",
-   _id: ""
+    email: "",
+    name: "",
+    role: "",
+    _id: "",
   },
-  status: Status.Idle,
-}
+};
 
 export const authSlice = createSlice({
   name: "auth",
@@ -25,21 +19,24 @@ export const authSlice = createSlice({
     loginaction: (state, action) => {
       state.isAuthenticated = true;
       state.user = action.payload;
+      state.isLoading=false
     },
     getUserAction: (state, action) => {
+      //console.log(action.payload);
       state.isAuthenticated = true;
       state.user = action.payload;
+      state.isLoading=false
     },
     logoutAction: (state) => {
+      localStorage.removeItem("access_token");
       state.isAuthenticated = false;
       state.user = {
         email: "",
         name: "",
         role: "",
-        _id: ""
+        _id: "",
       };
     },
-   
   },
 });
 export const { loginaction, getUserAction, logoutAction } = authSlice.actions;

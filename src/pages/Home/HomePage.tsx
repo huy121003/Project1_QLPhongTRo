@@ -1,16 +1,16 @@
-import { Outlet } from "react-router-dom";
+// import { Outlet } from "react-router-dom";
 
-import HomeLayout from "../../layouts/HomeLayout/HomeLayout";
+// import HomeLayout from "../../layouts/HomeLayout/HomeLayout";
 
-import PrivateRoute from "../../routers/PrivateRoute";
 
-function HomePage() {
-  return (
-    <HomeLayout>
-      <PrivateRoute />
-      <Outlet />
-    </HomeLayout>
-  );
-}
 
-export default HomePage;
+// function HomePage() {
+//   return (
+//     <HomeLayout>
+    
+//       <Outlet />
+//     </HomeLayout>
+//   );
+// }
+
+// export default HomePage;
