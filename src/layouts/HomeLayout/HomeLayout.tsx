@@ -110,7 +110,7 @@ function HomeLayout() {
         </div>
         </div>
         <div
-          className="flex-1 flex-row overflow-y-auto "
+          className="flex-1 flex-row overflow-y-auto overflow-x-auto "
           style={{ maxHeight: "calc(100vh - 4rem)" }}
         >
           <Outlet />

@@ -20,7 +20,7 @@ const AddAccountModal: React.FC<Props> = ({
   useEffect(() => {
     const fetchRole = async () => {
       const res = await fecthRoleApi();
-      console.log(res);
+    
       setRole(res.data.result);
     };
     fetchRole();
@@ -28,7 +28,7 @@ const AddAccountModal: React.FC<Props> = ({
   const handleOk = async () => {
     // Validate the form fields
     const values = await form.validateFields();
-    console.log("Received values:", values);
+  
 
     // Call the API to post account data
     const response = await postAccountApi(
@@ -42,8 +42,7 @@ const AddAccountModal: React.FC<Props> = ({
       values.Role
     );
 
-    // console.log("Account added successfully:", response);
-    // Optionally handle success notification or further actions
+   
     if (response.statusCode === 201) {
       message.success(response.message);
       form.resetFields(); // Reset form fields

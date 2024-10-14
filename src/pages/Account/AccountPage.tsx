@@ -11,7 +11,7 @@ import { deleteAcountApi, fecthAccountApi } from "../../services/accountApi";
 import SearchFilters from "../../components/SearchFilter";
 import AddAccountModal from "./AddAccountModal";
 
-const { Option } = Select;
+
 
 function AccountPage() {
   const [openDelete, setOpenDelete] = useState(false);
@@ -64,7 +64,7 @@ function AccountPage() {
         roleName: account.role?.name || "Unknown Role",
         createAt: new Date(account.createdAt).toLocaleDateString("vi-VN"),
       }));
-      console.log(formattedAccounts);
+     
       setListAccount(formattedAccounts);
       setTotal(res.data.meta.total);
       // message.success()
@@ -73,7 +73,7 @@ function AccountPage() {
 
   useEffect(() => {
     getAccount();
-  }, [current, pageSize, sorted, searchParams]);
+  }, [current, pageSize, sorted, searchParams,openAddAccount]);
 
   const onChange = (pagination: any) => {
     if (pagination.current !== current) {
@@ -91,7 +91,7 @@ function AccountPage() {
 
   const handleSortChange = (e: any) => {
     setSorted(e.target.value);
-    console.log("aaa", e.target.value);
+    
   };
 
   const onEditTenant = (tenant: TenantModel) => {
@@ -156,16 +156,7 @@ function AccountPage() {
           fields={[
             { label: "Name", field: "name", type: "text" },
             { label: "Email", field: "email", type: "text" },
-            // {
-            //   label: "Role",
-            //   field: "role.name",
-            //   type: "select",
-            //   options: [
-            //     { value: "", label: "All Role" },
-            //     { value: "SUPER ADMIN", label: "Super Admin" },
-            //     { value: "NORMAL USER", label: "Normal User" },
-            //   ],
-            // },
+            
             {
               label: "Gender",
               field: "gender",
@@ -191,12 +182,14 @@ function AccountPage() {
             </Space>
           </Radio.Group>
         </div>
-        <div className="bg-white p-2 rounded-lg m-2 justify-between">
-          <ColumnSelector
+        <div className="bg-white p-2 rounded-lg m-2 justify-between flex">
+         <div>
+         <ColumnSelector
             columns={columns}
             visibleColumns={visibleColumns}
             onChangeVisibleColumns={setVisibleColumns}
           />
+         </div>
           <AddButton
             onClick={() => setOpenAddAccount(true)}
             label="Add Account"
