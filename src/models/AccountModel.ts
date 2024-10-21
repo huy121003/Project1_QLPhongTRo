@@ -1,16 +1,23 @@
 interface AccountModel{
-    UserName: string;
-    Password: string;
-    StaffId: string;
-    Power: {
-        Dashboard: boolean;
-        Tenant: boolean;
-        Room: boolean;
-        Service: boolean;
-        Staff: boolean;
-        Statistic: boolean;
-        Account : boolean;
-        
-    }
+    _id:string,
+    name:string,
+    email:string,
+    phone:number,
+    idCard:number,
+    birthday:Date,
+    role:{
+        _id:string,
+        name:string,
+    },
+    createdAt:Date,
+    gender:Gender,
+    address:string,
+
 }
 export default AccountModel;
+
+export enum Gender{
+    Male="MALE",
+    Female="FEMALE",
+    Other="OTHER",
+}

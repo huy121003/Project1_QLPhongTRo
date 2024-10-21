@@ -9,7 +9,7 @@ function AuthLayout({ children }: Props) {
     <div className="flex justify-center items-center h-screen relative">
       {/* Background image */}
       <img
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-auto object-cover"
         src="https://wallpaperaccess.com/full/84248.png"
         alt="Background"
       />

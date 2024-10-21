@@ -1,16 +1,17 @@
-import DashboardPage from "../pages/Dashboard/DashboardPage";
+import DashboardPage from "../pages/DashboardPages/DashboardPage";
 
-import RoomPage from "../pages/Room/RoomPage";
-import ElectricPage from "../pages/Electric/ElectricPage";
-import WaterPage from "../pages/Water/WaterPage";
-import ServicePage from "../pages/Service/ServicePage";
+import RoomPage from "../pages/RoomPages/RoomPage";
 
-import InvoicePage from "../pages/Invoice/InvoicePage";
-import SettingPage from "../pages/Setting/SettingPage";
 
-import ContractPage from "../pages/Contract/ContractPage";
-import ReceiptPage from "../pages/Receipt/ReceiptPage";
-import AccountPage from "../pages/Account/AccountPage";
+import ServicePage from "../pages/ServicePages/ServicePage";
+
+import InvoicePage from "../pages/InvoicePages/InvoicePage";
+
+
+import ContractPage from "../pages/ContractPages/ContractPage";
+
+import AccountPage from "../pages/AccountPages/AccountPage";
+import EquipmentPage from "../pages/EquipmentPages/EquipmentPage";
 
 
 
@@ -39,20 +40,7 @@ const   homeRouters:Routers[] = [
     icon: "fa-bed",
     label: "Room",
   },
-  {
-    path: "electric",
-    component: ElectricPage,
-    isShowNav: true,
-    icon: "fa-bolt",
-    label: "Electric",
-  },
-  {
-    path: "water",
-    component: WaterPage,
-    isShowNav: true,
-    icon: "fa-shower",
-    label: "Water",
-  },
+
   {
     path: "service",
     component: ServicePage,
@@ -67,17 +55,7 @@ const   homeRouters:Routers[] = [
     isShowNav: true,
     icon: "fa-money-bill",
     label: "Invoice",
-  },
-  {
-    path: "setting",
-    component: SettingPage,
-    isShowNav: true,
-    icon: "fa-gears",
-    label: "Setting",
-  },
-
-  
-
+  }, 
   {
     path: "contract",
     component: ContractPage,
@@ -86,18 +64,18 @@ const   homeRouters:Routers[] = [
     label: "Contract",
   },
   {
-    path: "receipt",
-    component: ReceiptPage,
-    isShowNav: true,
-    icon: "fa-file-invoice",
-    label: "Receipt",
-  },
-  {
     path:"account",
     component: AccountPage,
     isShowNav:true,
     icon:"fa-solid fa-user-lock",
     label:"Account"
+  },
+  {
+    path:"equipment",
+    component: EquipmentPage,
+    isShowNav:true,
+    icon:"fa-solid fa-tools",
+    label:"Equipment"
   }
   
 ];
