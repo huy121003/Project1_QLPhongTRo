@@ -1,17 +1,11 @@
-import React, { useState, useEffect } from "react";
-import {
-  Link,
-  Navigate,
-  Outlet,
-  RouterProvider,
-  useNavigate,
-} from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import homeRouters from "../../routers";
 import { resizeWidth } from "../../utils/resize";
 import { useAppDispatch } from "../../redux/hook";
 import { apiLogout } from "../../services/authtApi";
-import { useDispatch } from "react-redux";
-import { initialState, logoutAction } from "../../redux/slice/auth/authSlice";
+
+import { logoutAction } from "../../redux/slice/auth/authSlice";
 import { message } from "antd";
 
 interface Props {
@@ -19,6 +13,7 @@ interface Props {
 }
 
 function HomeLayout() {
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const width = resizeWidth();
@@ -72,7 +67,7 @@ function HomeLayout() {
             <Link
               to={item.path}
               key={item.label}
-              className={`flex hover:bg-gray-300 flex-row items-center text-black rounded-md my-1 px-4 py-2 w-full transition-colors duration-300  ${
+              className={`flex hover:bg-gray-300 flex-row items-center text-black rounded-md my-3 px-4 py-2 w-full transition-colors duration-300  ${
                 selected === item.label ? "text-blue-700" : ""
               }`}
               onClick={() => setSelected(item.label ?? "Dashboard")}
@@ -98,16 +93,14 @@ function HomeLayout() {
 
       <div className="flex-1 bg-gray-100 transition-all duration-300">
         <div className="flex items-center  text-black h-16 px-5 justify-between">
-        <div className="flex">
-        <i
-            className="fa fa-bars text-2xl cursor-pointer"
-            onClick={toggleNav}
-          />
-          <h2 className="ml-4 text-2xl">{selected}</h2>
-        </div>
-        <div className="flex">
-    
-        </div>
+          <div className="flex">
+            <i
+              className="fa fa-bars text-2xl cursor-pointer"
+              onClick={toggleNav}
+            />
+            <h2 className="ml-4 text-2xl">{selected}</h2>
+          </div>
+          <div className="flex"></div>
         </div>
         <div
           className="flex-1 flex-row overflow-y-auto overflow-x-auto "

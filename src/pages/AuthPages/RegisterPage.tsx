@@ -1,19 +1,23 @@
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-import { Form, Input, Button, Select, notification, message } from "antd";
-import { apiRegister } from "../../services/authtApi";
-
+import { Form, Input, Button, Select, notification, message, DatePicker } from "antd";
+import { apiRegister } from "../../services/authtApi"
 const { Option } = Select;
 
 function RegisterPage() {
   const navigate = useNavigate();
 
   const handleRegister = async (values: any) => {
+    const birthdayDate = values.birthday.toDate();
+    const birthdayIsoString = new Date(birthdayDate).toISOString();
+    const birthdayAsDate = new Date(birthdayIsoString);
+    console.log(typeof birthdayAsDate);
     const res = await apiRegister(
       values.email,
+      values.phone,
       values.password,
       values.username,
-      values.age,
+      birthdayAsDate,
       values.gender,
       values.address,
       values.idCard
@@ -55,7 +59,19 @@ function RegisterPage() {
               className="text-lg rounded-md border-gray-300"
             />
           </Form.Item>
-
+          <Form.Item
+            label="Phone"
+            name="phone"
+            rules={[
+              { required: true, message: "Please enter your phone!" },
+             
+            ]}
+          >
+            <Input
+              placeholder="Enter phone" type="number"
+              className="text-lg rounded-md border-gray-300"
+            />
+          </Form.Item>
           <Form.Item
             label="Password"
             name="password"
@@ -68,15 +84,11 @@ function RegisterPage() {
           </Form.Item>
 
           <Form.Item
-            label="Age"
-            name="age"
-            rules={[{ required: true, message: "Please enter your age!" }]}
+            label="Bỉrthday"
+            name="birthday"
+            rules={[{ required: true, message: "Please enter your Bỉrthday!" }]}
           >
-            <Input
-              placeholder="Enter age"
-              type="number"
-              className="text-lg rounded-md border-gray-300"
-            />
+               <DatePicker placeholder="Enter BirthDay" />
           </Form.Item>
 
           <Form.Item
@@ -110,19 +122,7 @@ function RegisterPage() {
               <Option value="other">Other</Option>
             </Select>
           </Form.Item>
-          <Form.Item
-            label="Role"
-            name="role"
-            rules={[{ required: true, message: "Please select your role!" }]}
-          >
-            <Select
-              placeholder="Select role"
-              className="text-lg rounded-md border-gray-300"
-            >
-              <Option value="6703ea8e85fb778baf881f60">SUPER ADMIN</Option>
-              <Option value="6703ea8e85fb778baf881f61">NORMAL USER</Option>
-            </Select>
-          </Form.Item>
+   
           <Form.Item>
             <Button
               type="primary"

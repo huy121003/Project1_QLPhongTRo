@@ -1,15 +1,19 @@
-import React, { useEffect } from "react";
-import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
+import React from "react";
+import { Modal, Button, Input, Form, Select, message } from "antd";
 import { postServiceApi } from "../../services/serviceApi";
-interface AddServiceModalProps {
+import { addServiceAction } from "../../redux/slice/service/serviceSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import { ServiceType } from "../../models/ServiceModel";
+interface Props {
     openAddService: boolean;
     setOpenAddService: (value: boolean) => void;
 }
-const { Option } = Select;
-const  AddServiceModal:React.FC<AddServiceModalProps>=({openAddService, setOpenAddService})=> {
+
+const  AddServiceModal:React.FC<Props>=({openAddService, setOpenAddService})=> {
     const [form] = Form.useForm();
 
- 
+ const dispatch = useAppDispatch()
+  const service=useAppSelector((state)=>state.service.service)
    
     const handleOk = async () => {
       // Validate the form fields
@@ -21,13 +25,16 @@ const  AddServiceModal:React.FC<AddServiceModalProps>=({openAddService, setOpenA
         values.serviceName,
         values.description,
         values.price,
-        values.unit
+        values.unit,
+        values.type
       );
   
      
       if (response.statusCode === 201) {
         message.success(response.message);
         form.resetFields(); // Reset form fields
+     //   dispatch(addServiceAction(values))
+     
         setOpenAddService(false); // Close modal on success
        
       } else {
@@ -65,7 +72,7 @@ const  AddServiceModal:React.FC<AddServiceModalProps>=({openAddService, setOpenA
           <Form.Item
             label={
               <span>
-                serviceName <span className="text-red-600">*</span>
+              Name 
               </span>
             }
             name="serviceName"
@@ -77,7 +84,7 @@ const  AddServiceModal:React.FC<AddServiceModalProps>=({openAddService, setOpenA
           <Form.Item
             label={
               <span>
-                description <span className="text-red-600">*</span>
+                Description 
               </span>
             }
             name="description"
@@ -91,7 +98,7 @@ const  AddServiceModal:React.FC<AddServiceModalProps>=({openAddService, setOpenA
           <Form.Item
             label={
               <span>
-                price <span className="text-red-600">*</span>
+                Price 
               </span>
             }
             name="price"
@@ -103,7 +110,7 @@ const  AddServiceModal:React.FC<AddServiceModalProps>=({openAddService, setOpenA
           <Form.Item
             label={
               <span>
-                unit <span className="text-red-600">*</span>
+                Unit 
               </span>
             }
             name="unit"
@@ -111,7 +118,25 @@ const  AddServiceModal:React.FC<AddServiceModalProps>=({openAddService, setOpenA
           >
             <Input placeholder="Enter unit" />
           </Form.Item>
-  
+          <Form.Item
+            label={
+              <span>
+                Type 
+              </span>
+            }
+            name="type"
+            rules={[{ required: true, message: "type is required" }]}
+          >
+             <Select>
+            {
+              Object.values(ServiceType).map((type) => (
+                <Select.Option key={type} value={type}>
+                  {type}
+                </Select.Option>
+              ))
+            }
+           </Select>
+          </Form.Item>
          
   
          
