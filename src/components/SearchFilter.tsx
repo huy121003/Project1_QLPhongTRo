@@ -17,7 +17,7 @@ interface SearchFiltersProps {
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({ searchParams, onSearchChange, fields }) => {
   return (
-    <div className="bg-white p-2 rounded-lg m-2">
+    <div className="bg-white p-2 rounded-lg m-2 ">
       <h2 className="font-bold text-xl my-3">Search</h2>
       <Space direction="horizontal">
         {fields.map((field) => {

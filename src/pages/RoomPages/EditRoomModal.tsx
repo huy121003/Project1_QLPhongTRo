@@ -1,6 +1,6 @@
 import React from 'react'
 
-function ServicePage() {
+function EditRoomModal() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function ServicePage() {
   )
 }
 
-export default ServicePage
+export default EditRoomModal

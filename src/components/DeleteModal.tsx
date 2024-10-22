@@ -9,12 +9,14 @@ interface Props {
 }
 
 const CustomModal: React.FC<Props> = ({ openDelete, setOpenDelete, onConfirm, record }) => {
+ 
   const [isLoading,setIsLoading]=useState(false)
   return (
+    
     <Modal
       centered
       visible={openDelete}
-      title={<h1 className="text-2xl font-bold">Delete service Id</h1>}
+      title={<h1 className="text-2xl font-bold">Delete </h1>}
       onCancel={() => setOpenDelete(false)}
       footer={[
         <Button key="back" onClick={() => setOpenDelete(false)}>
@@ -37,7 +39,7 @@ const CustomModal: React.FC<Props> = ({ openDelete, setOpenDelete, onConfirm, re
       ]}
     >
       <span className="text-xl">
-        Are you sure you want to delete this service?
+        Are you sure you want to delete ?
       </span>
     </Modal>
   );
