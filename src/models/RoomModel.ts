@@ -1,25 +1,21 @@
-interface RoomModel { 
-     _id: string,
-      roomName: string,
-      type: RoomType,
-      status: RoomStatus,
-      price:number,
-      description: string,
-      equipment: any[],
-
+interface RoomModel {
+    _id: string;
+    roomName: string;
+    type: RoomType;
+    status: RoomStatus;
+    price: number;
+    description: string;
+    equipment: any[];
 }
 export default RoomModel;
 
 export enum RoomType {
-  Single = 'SINGLE',
-  Double = 'DOUBLE',
-  Quad = 'QUAD',
-  Studio = 'STUDIO',
-  
-
- 
+    Single = "SINGLE",
+    Double = "DOUBLE",
+    Quad = "QUAD",
+    Studio = "STUDIO",
 }
 export enum RoomStatus {
-  Occupied = "OCCUPIED", // Phòng đã được thuê
-  Available = "AVAILABLE" // Phòng còn trống
+    Occupied = "OCCUPIED", // Phòng đã được thuê
+    Available = "AVAILABLE", // Phòng còn trống
 }

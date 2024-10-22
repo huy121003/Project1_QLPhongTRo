@@ -75,7 +75,7 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
                         },
                     ]}
                 >
-                    <Input placeholder="Enter RoomName" />
+                    <Input placeholder="Enter room name" />
                 </Form.Item>
                 <Form.Item
                     name="type"
@@ -102,7 +102,7 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
                         { required: true, message: "Please input the price!" },
                     ]}
                 >
-                    <Input type="number" placeholder="Enter Price" />
+                    <Input type="number" placeholder="Enter price" />
                 </Form.Item>
 
                 <Form.Item
@@ -115,7 +115,7 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
                         },
                     ]}
                 >
-                    <Input placeholder="Enter Description" />
+                    <Input placeholder="Enter description" />
                 </Form.Item>
             </Form>
         </Modal>
