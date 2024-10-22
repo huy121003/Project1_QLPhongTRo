@@ -176,19 +176,19 @@ function RoomPage() {
           <h2 className="font-bold text-xl my-3">Sort by</h2>
           <Radio.Group onChange={handleSortChange} value={sorted}>
             <Space direction="horizontal" className="justify-between">
-              <Radio value="roomName" className="font-bold">
+              <Radio value="roomName" className="font-medium">
                 By Room Name
               </Radio>
-              <Radio value="type" className="font-bold">
+              <Radio value="type" className="font-medium">
                 By Type
               </Radio>
-              <Radio value="price" className="font-bold">
+              <Radio value="price" className="font-medium">
                 By Price Increase
               </Radio>
-              <Radio value="-price" className="font-bold">
+              <Radio value="-price" className="font-medium">
                 By Price Decrease
               </Radio>
-              <Radio value="status" className="font-bold">
+              <Radio value="status" className="font-medium">
                 By Status
               </Radio>
             </Space>
@@ -202,7 +202,7 @@ function RoomPage() {
               onChangeVisibleColumns={setVisibleColumns}
             />
           </div>
-          <AddButton onClick={() => setOpenAddRoom(true)} label="Add Room" />
+          <AddButton onClick={() => setOpenAddRoom(true)} label="Add Room"  />
         </div>
         <div className="bg-white p-2 rounded-lg m-2">
           <Table
