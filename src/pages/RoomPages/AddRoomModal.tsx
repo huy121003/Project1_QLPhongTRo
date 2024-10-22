@@ -17,6 +17,7 @@ interface Props {
 }
 const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
     const [form] = Form.useForm();
+// Click submit
     const handleOk = async () => {
         const values = await form.validateFields();
         const response = await postRoomApi(
@@ -24,7 +25,6 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
             values.type,
             RoomStatus.Available,
             values.price,
-
             values.description,
             []
         );
