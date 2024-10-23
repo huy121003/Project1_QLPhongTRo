@@ -43,7 +43,7 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
     <Modal
       title="Add Room"
       centered
-      visible={openAddRoom}
+      open={openAddRoom}
       onOk={handleOk}
       onCancel={() => {
         setOpenAddRoom(false);

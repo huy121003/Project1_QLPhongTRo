@@ -46,7 +46,7 @@ const EditEquipmentModal: React.FC<Props> = ({ openEditEquipment, setOpenEditEqu
   return (
   <Modal
   centered
-    visible={openEditEquipment}
+    open={openEditEquipment}
     title={<h1 className="text-3xl font-bold text-center">Edit Equipment</h1>}
     onCancel={() => {
       setOpenEditEquipment(false);

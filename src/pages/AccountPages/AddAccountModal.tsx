@@ -57,7 +57,7 @@ console.log( typeof birthdayAsDate)
   return (
     <Modal
       centered
-      visible={openAddAccount}
+      open={openAddAccount}
       title={<h1 className="text-3xl font-bold text-center">Add Account</h1>}
       onCancel={() => {
         setOpenAddAccount(false);
@@ -133,7 +133,7 @@ console.log( typeof birthdayAsDate)
           name="IdCard"
           rules={[{ required: true, message: "IdCard is required" }]}
         >
-          <Input type="number" placeholder="Enter  IdCard" />
+          <Input type="number"  placeholder="Enter  IdCard"  />
         </Form.Item>
 
         <Form.Item

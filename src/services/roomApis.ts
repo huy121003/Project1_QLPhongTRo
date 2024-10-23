@@ -42,7 +42,7 @@ export const patchRoomApi = (
     roomName,
     type,
     status,
-    price,
+    price:parseInt(price.toString()),
     description,
     equipment,
   });
