@@ -45,7 +45,7 @@ const  AddServiceModal:React.FC<Props>=({openAddService, setOpenAddService})=> {
     return (
       <Modal
         centered
-        visible={openAddService}
+        open={openAddService}
         title={<h1 className="text-3xl font-bold text-center">Add Service</h1>}
         onCancel={() => {
             setOpenAddService(false);

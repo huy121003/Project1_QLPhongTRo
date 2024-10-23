@@ -40,7 +40,7 @@ const AddEquipmentModal: React.FC<Props> = ({
   return (
     <Modal
       centered
-      visible={openAddEquipment}
+      open={openAddEquipment}
       title={<h1 className="text-3xl font-bold text-center">Add Equipment</h1>}
       onCancel={() => {
         setOpenAddEquipment(false);

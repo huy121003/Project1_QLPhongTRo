@@ -1,12 +1,11 @@
 import React from "react";
 import { Menu, Dropdown, Button, Checkbox } from "antd";
 
-
-// Prop types cho ColumnSelector
+// Prop types for ColumnSelector
 interface ColumnSelectorProps {
-  columns: Array<{ title: string;dataIndex:string; key: string;render?:any }>;  // Cột được truyền vào
-  visibleColumns: string[];                       // Cột đang hiển thị
-  onChangeVisibleColumns: (columns: string[]) => void; // Hàm xử lý thay đổi cột
+  columns: Array<{ title: string; dataIndex: string; key: string; render?: any }>; // Columns to be passed in
+  visibleColumns: string[]; // Currently visible columns
+  onChangeVisibleColumns: (columns: string[]) => void; // Handler for column visibility change
 }
 
 const ColumnSelector: React.FC<ColumnSelectorProps> = ({
@@ -14,32 +13,35 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
   visibleColumns,
   onChangeVisibleColumns,
 }) => {
+  // Prepare menu items for the dropdown
+  const columnItems = columns.map((column) => ({
+    key: column.key,
+    label: (
+      <Checkbox
+        checked={visibleColumns.includes(column.key)}
+        onChange={(e) => {
+          const checked = e.target.checked;
+          onChangeVisibleColumns(
+            checked
+              ? [...visibleColumns, column.key]
+              : visibleColumns.filter((col) => col !== column.key)
+          );
+        }}
+      >
+        <p className="text-xl">{column.title}</p>
+      </Checkbox>
+    ),
+  }));
+
+  // Define the menu using the items array
   const columnMenu = (
-    <Menu>
-      {columns.map((column) => (
-        <Menu.Item key={column.key}>
-          <Checkbox
-            checked={visibleColumns.includes(column.key)}
-            onChange={(e) => {
-              const checked = e.target.checked;
-              onChangeVisibleColumns(
-                checked
-                  ? [...visibleColumns, column.key]
-                  : visibleColumns.filter((col) => col !== column.key)
-              );
-            }}
-          >
-           <p className="text-xl"> {column.title}</p>
-          </Checkbox>
-        </Menu.Item>
-      ))}
-    </Menu>
+    <Menu items={columnItems} />
   );
 
   return (
     <Dropdown overlay={columnMenu}>
       <Button className="ml-2 justify-center items-center h-[40px]">
-      <i className="fa-solid fa-filter text-2xl text-blue-500"></i>
+        <i className="fa-solid fa-filter text-2xl text-blue-500"></i>
       </Button>
     </Dropdown>
   );

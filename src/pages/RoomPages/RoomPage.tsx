@@ -10,6 +10,7 @@ import SearchFilters from "../../components/SearchFilter";
 import RoomModel, { RoomStatus, RoomType } from "../../models/RoomModel";
 import { deleteRoomApi, fetchRoomApi } from "../../services/roomApis";
 import AddRoomModal from "./AddRoomModal";
+import EditRoomModal from "./EditRoomModal";
 
 function RoomPage() {
   const [rooms, setRooms] = useState<RoomModel[]>([]);
@@ -18,8 +19,9 @@ function RoomPage() {
   const [total, setTotal] = useState(0);
   const [openDelete, setOpenDelete] = useState(false);
   const [openAddRoom, setOpenAddRoom] = useState(false);
+  const [openEditRoom, setOpenEditRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [recordToDelete, setRecordToDelete] = useState<any>(null); // For delete confirmation
+  const [record, setRecord] = useState<any>(null); // For delete confirmation
   const columns = [
     { title: "ID", dataIndex: "_id", key: "_id" },
     { title: "Room Name", dataIndex: "roomName", key: "roomName" },
@@ -66,9 +68,9 @@ function RoomPage() {
       render: (_: any, record: RoomModel) => (
         <ActionButton
           item={record}
-          onEdit={() => setOpenAddRoom(true)} // For editing
+          onEdit={() => onEditRoom(record)} // For editing
           onDelete={() => {
-            setRecordToDelete(record);
+            setRecord(record);
             setOpenDelete(true);
           }}
         />
@@ -76,7 +78,9 @@ function RoomPage() {
     },
   ];
 
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(columns.map((column) => column.dataIndex));
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(
+    columns.map((column) => column.dataIndex)
+  );
   const [sorted, setSorted] = useState<string>("");
   const [searchParams, setSearchParams] = useState({
     roomName: "",
@@ -111,7 +115,7 @@ function RoomPage() {
       }
     };
     getRoom();
-  }, [current, pageSize, sorted, searchParams, openAddRoom, openDelete]);
+  }, [current, pageSize, sorted, searchParams, openAddRoom, openDelete, openEditRoom]);
 
   const onChange = (pagination: any) => {
     if (pagination.current !== current) setCurrent(pagination.current);
@@ -137,7 +141,10 @@ function RoomPage() {
       message.error(res.message);
     }
   };
-
+  const onEditRoom = (record: any) => {
+    setOpenEditRoom(true);
+    setRecord(record);
+  };
 
   return (
     <>
@@ -217,7 +224,7 @@ function RoomPage() {
               pageSize: pageSize,
               total: total,
               showSizeChanger: true,
-              pageSizeOptions: [ 5, 10, 20,50,100,200],
+              pageSizeOptions: [5, 10, 20, 50, 100, 200],
             }}
           />
         </div>
@@ -227,9 +234,14 @@ function RoomPage() {
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
         onConfirm={onDeleteRoom}
-        record={recordToDelete}
+        record={record}
       />
       <AddRoomModal openAddRoom={openAddRoom} setOpenAddRoom={setOpenAddRoom} />
+      <EditRoomModal
+        openEditRoom={openEditRoom}
+        setOpenEditRoom={setOpenEditRoom}
+        record={record}
+      />
     </>
   );
 }

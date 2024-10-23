@@ -37,89 +37,70 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
         }
     };
 
-    return (
-        <Modal
-            title="Add Room"
-            centered
-            visible={openAddRoom}
-            onOk={handleOk}
-            onCancel={() => {
-                setOpenAddRoom(false);
-                form.resetFields();
-            }}
-            footer={[
-                <Button
-                    key="back"
-                    onClick={() => {
-                        setOpenAddRoom(false);
-                        form.resetFields();
-                    }}
-                    className="mr-2"
-                >
-                    Cancel
-                </Button>,
-                <Button key="submit" type="primary" onClick={handleOk}>
-                    Add
-                </Button>,
-            ]}
-            width={700}
+  return (
+    <Modal
+      title="Add Room"
+      centered
+      visible={openAddRoom}
+      onOk={handleOk}
+      onCancel={() => {
+        setOpenAddRoom(false);
+        form.resetFields();
+      }
+      }
+      footer={[
+        <Button key="back" onClick={() => {
+          setOpenAddRoom(false);
+          form.resetFields();
+        }}
+        className="mr-2">
+          Cancel
+        </Button>,
+        <Button key="submit" type="primary" onClick={handleOk}>
+          Add
+        </Button>,
+      ]}
+      width={700}
+    >
+      <Form form={form} layout="vertical">
+        <Form.Item
+          name="roomName"
+          label={<span>Room Name</span>}
+          rules={[{ required: true, message: "Please input the room name!" }]}
         >
-            <Form form={form} layout="vertical">
-                <Form.Item
-                    name="roomName"
-                    label={<span>Room Name</span>}
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input the room name!",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Enter room name" />
-                </Form.Item>
-                <Form.Item
-                    name="type"
-                    label={<span>Type</span>}
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please select the room type!",
-                        },
-                    ]}
-                >
-                    <Select>
-                        {Object.values(RoomType).map((type) => (
-                            <Select.Option key={type} value={type}>
-                                {type}
-                            </Select.Option>
-                        ))}
-                    </Select>
-                </Form.Item>
-                <Form.Item
-                    name="price"
-                    label={<span>Price</span>}
-                    rules={[
-                        { required: true, message: "Please input the price!" },
-                    ]}
-                >
-                    <Input type="number" placeholder="Enter price" />
-                </Form.Item>
-
-                <Form.Item
-                    name="description"
-                    label={<span>Description</span>}
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input the description!",
-                        },
-                    ]}
-                >
-                    <Input placeholder="Enter description" />
-                </Form.Item>
-            </Form>
-        </Modal>
-    );
+          <Input placeholder="Enter RoomName" />
+        </Form.Item>
+        <Form.Item
+          name="type"
+          label={<span>Type</span>}
+          rules={[{ required: true, message: "Please select the room type!" }]}
+        >
+<Select>
+ {Object.values(RoomType).map((type) => (
+    <Select.Option key={type} value={type}>
+      {type}
+    </Select.Option>
+ ))}
+</Select>
+        </Form.Item>
+        <Form.Item
+          name="price"
+          label={<span>Price</span>}
+          rules={[{ required: true, message: "Please input the price!" }]}
+        >
+          <Input type="number" placeholder="Enter Price" />
+        </Form.Item>
+        
+       <Form.Item
+            name="description"
+            label={<span>Description</span>}
+            rules={[{ required: true, message: "Please input the description!" }]}
+            >
+            <Input placeholder="Enter Description" />
+            </Form.Item>
+      </Form>
+    </Modal>
+  );
 };
 
 export default AddRoomModal;
