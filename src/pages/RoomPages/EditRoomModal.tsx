@@ -3,11 +3,13 @@ import { Modal, Button, Input, Form, message, Select } from "antd";
 
 import { patchRoomApi } from "../../services/roomApis";
 import RoomModel, { RoomStatus, RoomType } from "../../models/RoomModel";
+
 interface Props {
     openEditRoom: boolean;
     setOpenEditRoom: (value: boolean) => void;
     record: RoomModel;
 }
+
 const EditRoomModal: React.FC<Props> = ({
     openEditRoom,
     setOpenEditRoom,
@@ -39,7 +41,7 @@ const EditRoomModal: React.FC<Props> = ({
                 values.description,
                 []
             );
-            if (response.statusCode === 2000) {
+            if (response.statusCode === 200) {
                 message.success(response.message);
                 form.resetFields();
                 setOpenEditRoom(false);
@@ -50,6 +52,7 @@ const EditRoomModal: React.FC<Props> = ({
             console.error("Validation failed:", error);
         }
     };
+
     return (
         <Modal
             centered
