@@ -11,6 +11,8 @@ import { deleteAcountApi, fecthAccountApi } from "../../services/accountApi";
 import SearchFilters from "../../components/SearchFilter";
 import AddAccountModal from "./AddAccountModal";
 import AccountModel, { Gender } from "../../models/AccountModel";
+import EditAccountModal from "./EditAccountModal";
+import DetailAccount from "./DetailAccount";
 
 function AccountPage() {
   const [accounts, setAccounts] = useState<AccountModel[]>([]);
@@ -21,12 +23,29 @@ function AccountPage() {
 
   const [openDelete, setOpenDelete] = useState(false);
   const [openAddAccount, setOpenAddAccount] = useState(false);
+  const [openEditAccount, setOpenEditAccount] = useState(false);
+  const [openDetailAccount, setOpenDetailAccount] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const [recordToDelete, setRecordToDelete] = useState<any>(null); // New state for the record to delete
+  const [record, setRecord] = useState<any>(null); // New state for the record to delete
   const columns = [
-    { title: "Id", dataIndex: "_id", key: "_id" },
+    {
+      title: "Id",
+      dataIndex: "_id",
+      key: "_id",
+      render: (_id: string, record: AccountModel) => (
+        <p
+          className="text-blue-600 hover:text-blue-300"
+          onClick={() => {
+            setOpenDetailAccount(true);
+            setRecord(record);
+          }}
+        >
+          {_id}
+        </p>
+      ),
+    },
     { title: "UserName", dataIndex: "name", key: "name" },
     { title: "Email", dataIndex: "email", key: "email" },
     { title: "Phone", dataIndex: "phone", key: "phone" },
@@ -46,24 +65,32 @@ function AccountPage() {
           className={`border ${
             role === "SUPER ADMIN"
               ? "border-red-600 bg-red-200 text-red-600"
-              : role === "NORMAL USER" &&
-                "border-green-600 bg-green-200 text-green-600"
+              : role === "NORMAL USER" ?
+                "border-green-600 bg-green-200 text-green-600": "border-blue-600 bg-blue-200 text-blue-600"
           } text-center rounded border-2 w-[120px] p-2`}
         >
           {role}
         </p>
       ),
     },
-    { title: "Gender", dataIndex: "gender", key: "gender",render:(gender:string)=>(
-      gender===Gender.Male ? <p className="text-green-600 font-bold ">{gender}</p>:
-      gender===Gender.Female ? <p className=" text-pink-600 font-bold ">{gender}</p>:
-      <p className="  text-purple-600 font-bold ">{gender}</p>
-    ) },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+      render: (gender: string) =>
+        gender === Gender.Male ? (
+          <p className="text-green-600 font-bold ">{gender}</p>
+        ) : gender === Gender.Female ? (
+          <p className=" text-pink-600 font-bold ">{gender}</p>
+        ) : (
+          <p className="  text-purple-600 font-bold ">{gender}</p>
+        ),
+    },
     {
       title: "Create at",
-      dataIndex: "createAt",
-      key: "createAt",
-      render: (createAt: string) => new Date(createAt).toLocaleDateString(),
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (createdAt: string) => new Date(createdAt).toLocaleDateString(),
     },
     {
       title: "Action",
@@ -73,9 +100,12 @@ function AccountPage() {
         record.email === "admin@gmail.com" ? null : (
           <ActionButton
             item={record}
-            onEdit={() => onEditTenant(record)}
+            onEdit={() => {
+              setOpenEditAccount(true);
+              setRecord(record);
+            }}
             onDelete={() => {
-              setRecordToDelete(record); // Set the current record to delete
+              setRecord(record); // Set the current record to delete
               setOpenDelete(true);
             }}
           />
@@ -89,7 +119,7 @@ function AccountPage() {
   const [searchParams, setSearchParams] = useState({
     name: "",
     email: "",
-    "role.name": "",
+    phone: "",
     gender: "",
   });
 
@@ -115,6 +145,7 @@ function AccountPage() {
       setIsLoading(true);
 
       const res = await fecthAccountApi(query);
+      console.log("createeAt", res);
       setIsLoading(false);
       if (res.data.result) {
         const formattedAccounts = res.data.result.map(
@@ -131,7 +162,15 @@ function AccountPage() {
       } else message.error(res.message);
     };
     getAccount();
-  }, [current, pageSize, sorted, searchParams, openAddAccount, openDelete]);
+  }, [
+    current,
+    pageSize,
+    sorted,
+    searchParams,
+    openAddAccount,
+    openDelete,
+    openEditAccount,
+  ]);
 
   const onChange = (pagination: any) => {
     if (pagination.current !== current && pagination) {
@@ -151,17 +190,12 @@ function AccountPage() {
     setSorted(e.target.value);
   };
 
-  const onEditTenant = (tenant: any) => {
-    // Logic xử lý chỉnh sửa tenant
-  };
   const onDeleteAccount = async (record: any) => {
     const res = await deleteAcountApi(record._id);
     if (res.statusCode === 200) {
       message.success(res.message);
     } else message.error(res.message);
   };
-
-  
 
   return (
     <>
@@ -233,7 +267,7 @@ function AccountPage() {
               total: total,
 
               showSizeChanger: true,
-              pageSizeOptions: [ 5, 10, 20,50,100,200],
+              pageSizeOptions: [5, 10, 20, 50, 100, 200],
             }}
             onChange={onChange}
           />
@@ -244,11 +278,21 @@ function AccountPage() {
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
         onConfirm={onDeleteAccount} // Pass the delete function
-        record={recordToDelete} // Pass the record to delete
+        record={record} // Pass the record to delete
       />
       <AddAccountModal
         openAddAccount={openAddAccount}
         setOpenAddAccount={setOpenAddAccount}
+      />
+      <EditAccountModal
+        openEditAccount={openEditAccount}
+        setOpenEditAccount={setOpenEditAccount}
+        record={record}
+      />
+      <DetailAccount
+        openDetailAccount={openDetailAccount}
+        setOpenDetailAccount={setOpenDetailAccount}
+        record={record}
       />
     </>
   );

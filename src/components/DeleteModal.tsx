@@ -15,7 +15,7 @@ const CustomModal: React.FC<Props> = ({ openDelete, setOpenDelete, onConfirm, re
     
     <Modal
       centered
-      visible={openDelete}
+      open={openDelete}
       title={<h1 className="text-2xl font-bold">Delete </h1>}
       onCancel={() => setOpenDelete(false)}
       footer={[

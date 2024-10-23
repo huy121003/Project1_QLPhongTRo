@@ -62,7 +62,7 @@ const EditServiceModal: React.FC<Props> = ({
   return (
     <Modal
       centered
-      visible={openEditService}
+      open={openEditService}
       title={<h1 className="text-3xl font-bold text-center">Edit Service</h1>}
       onCancel={() => {
         setOpenEditService(false);
