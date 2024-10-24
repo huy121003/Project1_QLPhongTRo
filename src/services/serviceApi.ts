@@ -1,28 +1,48 @@
 import { Axios } from "axios";
 import apiConfig from "../api/ApiConfig";
+import { ServiceModel, ServiceType } from "./serviceModel";
 
-export const fetchServicesApi = async (query: any): Promise<any> => {
-  return apiConfig.get(`/api/v1/dormitory-services?${query}`);
+export const fetchServiceApi = async (query: any): Promise<any> => {
+  return apiConfig.get(`/api/v1/services?${query}`);
+};
+
+export const fetchServiceByIdApi = async (id: string): Promise<any> => {
+  return apiConfig.get(`/api/v1/services/${id}`);
 };
 
 export const deleteServiceApi = async (id: string): Promise<any> => {
-  return apiConfig.delete(`/api/v1/dormitory-services/${id}`);
+  return apiConfig.delete(`/api/v1/services/${id}`);
 };
 
 export const postServiceApi = (
-  roomNumber: string,
-  wifiFee: number,
-  parkingFee: number,
-  elevatorFee: number,
-  cleaningFee: number,
-  laundryFee: number
+  serviceName: string,
+  description: string,
+  price: string,
+  unit: string,
+  type: ServiceType
 ): Promise<any> => {
-  return apiConfig.post(`/api/v1/dormitory-services`, {
-    roomNumber,
-    wifiFee: parseFloat(String(wifiFee)),
-    parkingFee: parseFloat(String(parkingFee)),
-    elevatorFee: parseFloat(String(elevatorFee)),
-    cleaningFee: parseFloat(String(cleaningFee)),
-    laundryFee: parseFloat(String(laundryFee)),
+  return apiConfig.post(`/api/v1/services`, {
+    serviceName,
+    description,
+    price,
+    unit,
+    type,
+  });
+};
+
+export const patchServiceApi = (
+  id: string,
+  serviceName: string,
+  description: string,
+  price: string,
+  unit: string,
+  type: ServiceType
+): Promise<any> => {
+  return apiConfig.patch(`/api/v1/services/${id}`, {
+    serviceName,
+    description,
+    price,
+    unit,
+    type,
   });
 };

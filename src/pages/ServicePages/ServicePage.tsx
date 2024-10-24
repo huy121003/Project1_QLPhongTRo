@@ -1,18 +1,16 @@
-import { Radio, Space, Table, message } from "antd";
 import React, { useEffect, useState } from "react";
+import { Radio, Space, Table, message } from "antd";
 import {
   ActionButton,
   AddButton,
   ColumnSelector,
   DeleteModal,
 } from "../../components";
-import {
-  deleteServiceApi,
-  fetchServicesApi,
-} from "../../services/ServiceApi";
 import SearchFilters from "../../components/SearchFilter";
+import { deleteServiceApi, fetchServiceApi } from "../../services/serviceApi";
+import { ServiceModel, ServiceType } from "../../models/ServiceModel";
 import AddServiceModal from "./AddServiceModal";
-import ServiceModel from "../../models/ServiceModel";
+import EditServiceModal from "./EditServiceModal";
 
 function ServicePage() {
   const [services, setServices] = useState<ServiceModel[]>([]);
@@ -21,30 +19,25 @@ function ServicePage() {
   const [total, setTotal] = useState(0);
   const [openDelete, setOpenDelete] = useState(false);
   const [openAddService, setOpenAddService] = useState(false);
+  const [openEditService, setOpenEditService] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [recordToDelete, setRecordToDelete] = useState<any>(null);
+  const [recordToEdit, setRecordToEdit] = useState<ServiceModel | null>(null);
 
   const columns = [
-    { title: "Id", dataIndex: "_id", key: "_id" },
-    { title: "Room Number", dataIndex: "roomNumber", key: "roomNumber" },
-    { title: "WiFi Fee", dataIndex: "wifiFee", key: "wifiFee" },
-    { title: "Parking Fee", dataIndex: "parkingFee", key: "parkingFee" },
-    { title: "Elevator Fee", dataIndex: "elevatorFee", key: "elevatorFee" },
-    { title: "Cleaning Fee", dataIndex: "cleaningFee", key: "cleaningFee" },
-    { title: "Laundry Fee", dataIndex: "laundryFee", key: "laundryFee" },
+    { title: "ID", dataIndex: "_id", key: "_id" },
+    { title: "Service Name", dataIndex: "serviceName", key: "serviceName" },
+    { title: "Description", dataIndex: "description", key: "description" },
+    { title: "Price", dataIndex: "price", key: "price" },
+    { title: "Unit", dataIndex: "unit", key: "unit" },
     {
-      title: "Total Fee",
-      key: "totalFee",
-      render: (record: ServiceModel) => (
-        <span>
-          {(
-            record.wifiFee +
-            record.parkingFee +
-            record.elevatorFee +
-            record.cleaningFee +
-            record.laundryFee
-          ).toFixed(2)}
-        </span>
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+      render: (type: ServiceType) => (
+        <p className={`font-bold ${type === ServiceType.Water ? "text-blue-600" : type === ServiceType.Electricity ? "text-yellow-600" : type === ServiceType.Internet ? "text-green-600" : "text-gray-600"}`}>
+          {type}
+        </p>
       ),
     },
     {
@@ -54,7 +47,10 @@ function ServicePage() {
       render: (_: any, record: ServiceModel) => (
         <ActionButton
           item={record}
-          onEdit={() => onEditService(record)}
+          onEdit={() => {
+            setRecordToEdit(record);
+            setOpenEditService(true);
+          }}
           onDelete={() => {
             setRecordToDelete(record);
             setOpenDelete(true);
@@ -64,45 +60,42 @@ function ServicePage() {
     },
   ];
 
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(
-    columns.map((column) => column.dataIndex)
-  );
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(columns.map((column) => column.dataIndex));
   const [sorted, setSorted] = useState<string>("");
   const [searchParams, setSearchParams] = useState({
-    roomNumber: "",
+    serviceName: "",
+    type: "",
+    price: "",
   });
 
   useEffect(() => {
-    const getServices = async () => {
+    const getService = async () => {
       const queryParams: Record<string, any> = {
-        current: current,
+        currentPage: current,
         pageSize: pageSize,
         sort: sorted,
       };
-
       Object.entries(searchParams).forEach(([key, value]) => {
-        if (value) {
-          queryParams[key] = `/${value}/i`;
-        }
+        if (value) queryParams[key] = `/${value}/i`;
       });
 
       const query = new URLSearchParams(queryParams).toString();
       setIsLoading(true);
 
-      const res = await fetchServicesApi(query);
+      const res = await fetchServiceApi(query);
       setIsLoading(false);
       if (res.data.result) {
         setServices(res.data.result);
-        setTotal(res.data.meta.total);
-      } else message.error(res.message);
+        setTotal(res.data.meta.totalDocument);
+      } else {
+        message.error(res.message);
+      }
     };
-    getServices();
-  }, [current, pageSize, sorted, searchParams, openAddService, openDelete]);
+    getService();
+  }, [current, pageSize, sorted, searchParams, openAddService, openDelete, openEditService]);
 
   const onChange = (pagination: any) => {
-    if (pagination.current !== current) {
-      setCurrent(pagination.current);
-    }
+    if (pagination.current !== current) setCurrent(pagination.current);
     if (pagination.pageSize !== pageSize) {
       setPageSize(pagination.pageSize);
       setCurrent(1);
@@ -117,15 +110,13 @@ function ServicePage() {
     setSorted(e.target.value);
   };
 
-  const onEditService = (service: any) => {
-    // Logic xử lý chỉnh sửa dịch vụ
-  };
-
   const onDeleteService = async (record: any) => {
     const res = await deleteServiceApi(record._id);
     if (res.statusCode === 200) {
       message.success(res.message);
-    } else message.error(res.message);
+    } else {
+      message.error(res.message);
+    }
   };
 
   return (
@@ -135,22 +126,37 @@ function ServicePage() {
           searchParams={searchParams}
           onSearchChange={handleSearchChange}
           fields={[
-            { label: "Room Number", field: "roomNumber", type: "text" },
+            { label: "Service Name", field: "serviceName", type: "text" },
+            {
+              label: "Type",
+              field: "type",
+              type: "select",
+              options: [
+                { value: "", label: "All Types" },
+                { value: ServiceType.Water, label: ServiceType.Water },
+                { value: ServiceType.Electricity, label: ServiceType.Electricity },
+                { value: ServiceType.Internet, label: ServiceType.Internet },
+                { value: ServiceType.Other, label: ServiceType.Other },
+              ],
+            },
+            { label: "Price", field: "price", type: "text" },
           ]}
         />
-
         <div className="bg-white p-2 rounded-lg m-2">
           <h2 className="font-bold text-xl my-3">Sort by</h2>
           <Radio.Group onChange={handleSortChange} value={sorted}>
             <Space direction="horizontal" className="justify-between">
-              <Radio value="roomNumber" className="font-bold">
-                By Room Number
+              <Radio value="serviceName" className="font-bold">
+                By Service Name
               </Radio>
-              <Radio value="wifiFee" className="font-bold">
-                By WiFi Fee
+              <Radio value="type" className="font-bold">
+                By Type
               </Radio>
-              <Radio value="totalFee" className="font-bold">
-                By Total Fee
+              <Radio value="price" className="font-bold">
+                By Price Increase
+              </Radio>
+              <Radio value="-price" className="font-bold">
+                By Price Decrease
               </Radio>
             </Space>
           </Radio.Group>
@@ -163,10 +169,7 @@ function ServicePage() {
               onChangeVisibleColumns={setVisibleColumns}
             />
           </div>
-          <AddButton
-            onClick={() => setOpenAddService(true)}
-            label="Add Service"
-          />
+          <AddButton onClick={() => setOpenAddService(true)} label="Add Service" />
         </div>
         <div className="bg-white p-2 rounded-lg m-2">
           <Table
@@ -175,6 +178,7 @@ function ServicePage() {
             columns={columns.filter((column) =>
               visibleColumns.includes(column.dataIndex)
             )}
+            onChange={onChange}
             pagination={{
               current: current,
               pageSize: pageSize,
@@ -182,7 +186,6 @@ function ServicePage() {
               showSizeChanger: true,
               pageSizeOptions: [5, 10, 20, 50, 100, 200],
             }}
-            onChange={onChange}
           />
         </div>
       </div>
@@ -196,6 +199,11 @@ function ServicePage() {
       <AddServiceModal
         openAddService={openAddService}
         setOpenAddService={setOpenAddService}
+      />
+      <EditServiceModal
+        openEditService={openEditService}
+        setOpenEditService={setOpenEditService}
+        service={recordToEdit}
       />
     </>
   );
