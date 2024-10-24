@@ -6,6 +6,19 @@ interface RoomModel {
       price:number,
       description: string,
       equipment: any[],
+      createdBy: {
+        _id: string;
+        email: string;
+        name: string;
+      };
+      createdAt: Date;
+      updatedAt: Date;
+    
+      updatedBy: {
+        _id: string;
+        email: string;
+        name: string;
+      };
 
 }
 export default RoomModel;

@@ -11,6 +11,7 @@ import RoomModel, { RoomStatus, RoomType } from "../../models/RoomModel";
 import { deleteRoomApi, fetchRoomApi } from "../../services/roomApis";
 import AddRoomModal from "./AddRoomModal";
 import EditRoomModal from "./EditRoomModal";
+import DetailRoom from "./DetailRoom";
 
 function RoomPage() {
   const [rooms, setRooms] = useState<RoomModel[]>([]);
@@ -20,10 +21,26 @@ function RoomPage() {
   const [openDelete, setOpenDelete] = useState(false);
   const [openAddRoom, setOpenAddRoom] = useState(false);
   const [openEditRoom, setOpenEditRoom] = useState(false);
+  const [openDetailRoom, setOpenDetailRoom] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null); // For delete confirmation
   const columns = [
-    { title: "ID", dataIndex: "_id", key: "_id" },
+    {
+      title: "ID",
+      dataIndex: "_id",
+      key: "_id",
+      render: (_id: string, record: RoomModel) => (
+        <p
+          className="text-blue-600 hover:text-blue-300"
+          onClick={() => {
+            setOpenDetailRoom(true);
+            setRecord(record);
+          }}
+        >
+          {_id}
+        </p>
+      ),
+    },
     { title: "Room Name", dataIndex: "roomName", key: "roomName" },
     {
       title: "Type",
@@ -115,7 +132,15 @@ function RoomPage() {
       }
     };
     getRoom();
-  }, [current, pageSize, sorted, searchParams, openAddRoom, openDelete, openEditRoom]);
+  }, [
+    current,
+    pageSize,
+    sorted,
+    searchParams,
+    openAddRoom,
+    openDelete,
+    openEditRoom,
+  ]);
 
   const onChange = (pagination: any) => {
     if (pagination.current !== current) setCurrent(pagination.current);
@@ -240,6 +265,11 @@ function RoomPage() {
       <EditRoomModal
         openEditRoom={openEditRoom}
         setOpenEditRoom={setOpenEditRoom}
+        record={record}
+      />
+      <DetailRoom
+        openDetailRoom={openDetailRoom}
+        setOpenDetailRoom={setOpenDetailRoom}
         record={record}
       />
     </>

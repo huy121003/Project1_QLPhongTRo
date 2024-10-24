@@ -64,7 +64,7 @@ function App() {
         } else message.error(res.message);
       };
       const getRole = async () => {
-        const res = await fecthRoleApi();
+        const res = await fecthRoleApi("");
         if (res?.data) {
       
           const roles = res.data.result.map((item: RoleModel) => ({

@@ -5,13 +5,13 @@ import { Gender } from "../../models/AccountModel";
 import moment from "moment"; // Import moment for date formatting
 import { resizeWidth } from "../../utils/resize";
 
-interface Recordrecord {
+interface Props {
   openDetailAccount: boolean;
   setOpenDetailAccount: (value: boolean) => void;
   record: any;
 }
 
-const DetailAccount: React.FC<Recordrecord> = ({
+const DetailAccount: React.FC<Props> = ({
   openDetailAccount,
   setOpenDetailAccount,
   record,
@@ -21,6 +21,7 @@ const DetailAccount: React.FC<Recordrecord> = ({
   };
   const width = resizeWidth();
   const items = [
+   
     {
       key: "1",
       label: "Username",

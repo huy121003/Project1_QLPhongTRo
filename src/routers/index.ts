@@ -12,6 +12,8 @@ import ContractPage from "../pages/ContractPages/ContractPage";
 
 import AccountPage from "../pages/AccountPages/AccountPage";
 import EquipmentPage from "../pages/EquipmentPages/EquipmentPage";
+import RolePage from "../pages/RolePages/RolePage";
+import PermissionPage from "../pages/PermissionPages/PermissionPage";
 
 
 
@@ -76,6 +78,20 @@ const   homeRouters:Routers[] = [
     isShowNav:true,
     icon:"fa-solid fa-tools",
     label:"Equipment"
+  },
+  {
+    path:"role",
+    component:RolePage,
+    isShowNav:true,
+    icon:"fa-solid fa-dice-five",
+    label:"Role"
+  },
+  {
+    path:"permission",
+    component:PermissionPage,
+    isShowNav:true,
+    icon:"fa-solid fa-key",
+    label:"Permission"
   }
   
 ];

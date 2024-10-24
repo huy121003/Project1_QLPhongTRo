@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
 import { Form, Input, Button, Select, notification, message, DatePicker } from "antd";
 import { apiRegister } from "../../services/authtApi"
+import { Gender } from "../../models/AccountModel";
 const { Option } = Select;
 
 function RegisterPage() {
@@ -11,12 +12,15 @@ function RegisterPage() {
     const birthdayDate = values.birthday.toDate();
     const birthdayIsoString = new Date(birthdayDate).toISOString();
     const birthdayAsDate = new Date(birthdayIsoString);
-    console.log(typeof birthdayAsDate);
+    const fullName =
+    `${values.FirstName} ${values.MiddleName} ${values.LastName}`.trim();
+
+
     const res = await apiRegister(
       values.email,
       values.phone,
       values.password,
-      values.username,
+      fullName,
       birthdayAsDate,
       values.gender,
       values.address,
@@ -30,22 +34,38 @@ function RegisterPage() {
 
   return (
     <AuthLayout>
-      <div className="bg-gradient-to-br from-purple-400 to-green-300 p-12 rounded-lg shadow-lg w-[500px] mx-auto">
+      <div className="bg-gradient-to-br from-purple-400 to-green-300 p-12 rounded-lg shadow-lg w-[800px] mx-auto">
         <h2 className="text-4xl font-bold text-center text-white mb-8">
           Register
         </h2>
         <Form layout="vertical" onFinish={handleRegister}>
-          <Form.Item
-            label="Username"
-            name="username"
-            rules={[{ required: true, message: "Please enter your username!" }]}
-          >
-            <Input
-              placeholder="Enter username"
-              className="text-lg rounded-md border-gray-300"
-            />
-          </Form.Item>
-
+        <Form.Item label={<span>Name</span>} wrapperCol={{ span: 24 }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Form.Item
+              name="FirstName"
+              rules={[
+                { required: true, message: "Please input the first name!" },
+              ]}
+              className="mr-2 flex-1"
+            >
+              <Input placeholder="First Name" />
+            </Form.Item>
+            <Form.Item name="MiddleName" className="mr-2 flex-1">
+              <Input placeholder="Middle Name" />
+            </Form.Item>
+            <Form.Item
+              name="LastName"
+              rules={[
+                { required: true, message: "Please input the last name!" },
+              ]}
+              style={{ flex: 1 }}
+            >
+              <Input placeholder="Last Name" />
+            </Form.Item>
+          </div>
+        </Form.Item>
+        <Form.Item  wrapperCol={{ span: 24 }}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <Form.Item
             label="Email"
             name="email"
@@ -53,6 +73,7 @@ function RegisterPage() {
               { required: true, message: "Please enter your email!" },
               { type: "email", message: "The input is not a valid email!" },
             ]}
+            className="mr-2 flex-1"
           >
             <Input
               placeholder="Enter email"
@@ -66,31 +87,69 @@ function RegisterPage() {
               { required: true, message: "Please enter your phone!" },
              
             ]}
+            className=" flex-1"
           >
             <Input
               placeholder="Enter phone" type="number"
               className="text-lg rounded-md border-gray-300"
             />
           </Form.Item>
+        </div>
+        </Form.Item>
+        <Form.Item  wrapperCol={{ span: 24 }}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <Form.Item
             label="Password"
             name="password"
             rules={[{ required: true, message: "Please enter your password!" }]}
+            className="mr-2 flex-1"
           >
             <Input.Password
               placeholder="Enter password"
-              className="text-lg rounded-md border-gray-300"
+           
             />
           </Form.Item>
-
           <Form.Item
-            label="Bỉrthday"
+            label={<span>IdCard </span>}
+            name="idCard"
+            rules={[{ required: true, message: "IdCard is required" }]}
+            className="mr-2 flex-1"
+          >
+            <Input type="number" placeholder="Enter account CCCD" />
+          </Form.Item>
+        </div>
+        </Form.Item>
+        <Form.Item  wrapperCol={{ span: 24 }}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <Form.Item
+            label="Birthday"
             name="birthday"
             rules={[{ required: true, message: "Please enter your Bỉrthday!" }]}
+            className="mr-2 flex-1"
           >
                <DatePicker placeholder="Enter BirthDay" />
           </Form.Item>
+          <Form.Item
+            label="Gender"
+            name="gender"
+            rules={[{ required: true, message: "Please select your gender!" }]}
+            className=" flex-1"
+          >
+            <Select
+              placeholder="Select gender"
+              className="text-lg rounded-md border-gray-300"
+            >
+            {
+              Object.values(Gender).map((gender)=>(
+                <Option value={gender} key={gender}>{gender}</Option>
 
+              )
+            )
+            }
+            </Select>
+          </Form.Item>
+        </div>
+        </Form.Item>
           <Form.Item
             label="Address"
             name="address"
@@ -101,27 +160,8 @@ function RegisterPage() {
               className="text-lg rounded-md border-gray-300"
             />
           </Form.Item>
-          <Form.Item
-            label={<span>CCCD </span>}
-            name="idCard"
-            rules={[{ required: true, message: "CCCD is required" }]}
-          >
-            <Input type="number" placeholder="Enter account CCCD" />
-          </Form.Item>
-          <Form.Item
-            label="Gender"
-            name="gender"
-            rules={[{ required: true, message: "Please select your gender!" }]}
-          >
-            <Select
-              placeholder="Select gender"
-              className="text-lg rounded-md border-gray-300"
-            >
-              <Option value="male">Male</Option>
-              <Option value="female">Female</Option>
-              <Option value="other">Other</Option>
-            </Select>
-          </Form.Item>
+        
+         
    
           <Form.Item>
             <Button

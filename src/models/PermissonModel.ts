@@ -1,8 +1,9 @@
-export interface RoleModel {
+export interface PermissionModel {
     _id: string,
     name: string,
-    description: string,
-    permissions: string[],
+    apiPath: string,
+    method: Method,
+    module: string,
     createdBy:{
         _id: string,
         email: string
@@ -13,4 +14,10 @@ export interface RoleModel {
         _id: string,
         email: string
     }
+}
+export enum Method {
+    GET = "GET",
+    POST = "POST",
+    DELETE = "DELETE",
+    PATCH = "PATCH"
 }

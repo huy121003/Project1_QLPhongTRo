@@ -1,16 +1,16 @@
 import React, { Children } from "react";
 import { Badge, Descriptions, Drawer, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
-import { Gender } from "../../models/AccountModel";
 import moment from "moment"; // Import moment for date formatting
 import { resizeWidth } from "../../utils/resize";
-import { EquipmentStatus } from "../../models/EquipmentModel";
+import { ServiceType } from "../../models/ServiceModel";
 interface Props{
-    openDetailEquipment:boolean,
-    setOpenDetailEquipment:(value: boolean) => void;
+    openDetailService:boolean,
+    setOpenDetailService:(value: boolean) => void;
     record: any;
 }
-const DetailEquipment: React.FC<Props> = ({openDetailEquipment,setOpenDetailEquipment,record})=>{
+const DetailService: React.FC<Props> = ({openDetailService,setOpenDetailService,record})=>{
+    console.log(record)
     const formatDate = (dateString: string) => {
         return moment(dateString).format("DD/MM/YYYY"); // Format date using moment
       };
@@ -18,21 +18,21 @@ const DetailEquipment: React.FC<Props> = ({openDetailEquipment,setOpenDetailEqui
       const item=[
           {
                  key:"1",
-                 label:"EquipmentName",
-                 children:record?.name,
+                 label:"ServiceName",
+                 children:record?.serviceName,
                
           },
           {
             key:"2",
-            label:"Status",
-            children:record?.status=== EquipmentStatus.New ? (
-                <p className="text-orange-600 font-bold">{EquipmentStatus.New}</p>
-              ) : record?.status === EquipmentStatus.Old ? (
-                <p className="text-purple-600 font-bold">{EquipmentStatus.Old}</p>
-              ) : record?.status === EquipmentStatus.Broken ? (
-                <p className="text-blue-600 font-bold">{EquipmentStatus.Broken}</p>
+            label:"Type",
+            children:record?.type=== ServiceType.Electricity ? (
+                <p className="text-orange-600 font-bold">{record?.type}</p>
+              ) : record?.type === ServiceType.Internet ? (
+                <p className="text-purple-600 font-bold">{record?.type}</p>
+              ) : record?.type === ServiceType.Water ? (
+                <p className="text-blue-600 font-bold">{record?.type}</p>
               ) : (
-                <p className="text-pink-600 font-bold">{EquipmentStatus.Repairing}</p>
+                <p className="text-pink-600 font-bold">{record?.type}</p>
               ),
           },
           {
@@ -42,16 +42,21 @@ const DetailEquipment: React.FC<Props> = ({openDetailEquipment,setOpenDetailEqui
           },
           {
             key:"4",
+            label:"Unit",
+            children:record?.unit
+          },
+          {
+            key:"5",
             label:"Description",
             children:record?.description
           },
           {
-            key: "5",
+            key: "6",
             label: "Created At",
             children: record?.createdAt ? formatDate(record?.createdAt) : "N/A", // Format createdAt date
           },
           {
-            key: "6",
+            key: "7",
             label: "Created By",
             children: record?.createdBy ? (
               record?.createdBy?.email
@@ -62,12 +67,12 @@ const DetailEquipment: React.FC<Props> = ({openDetailEquipment,setOpenDetailEqui
             ),
           },
           {
-            key: "7",
+            key: "8",
             label: "Updated At",
             children: record?.updatedAt ? formatDate(record?.updatedAt) : "N/A", // Format updatedAt date
           },
           {
-            key: "8",
+            key: "9",
             label: "Updated By",
             children: record?.updatedBy ? (
               record?.updatedBy?.email
@@ -77,27 +82,22 @@ const DetailEquipment: React.FC<Props> = ({openDetailEquipment,setOpenDetailEqui
               </Tag>
             ),
           },
-    
-
-
-      ]
-  return (
-     <div>
-      <Drawer
-        onClose={() => setOpenDetailEquipment(false)}
-        open={openDetailEquipment}
-        width={"100vh"}
-      >
-        <Descriptions
-          title="Equipment Detail"
-          bordered
-          items={item}
-          column={width > 750 ? 2 : 1}
-        />
-      </Drawer>
-      </div>
-  );
+      ];
+    return (
+        <div>
+        <Drawer
+          onClose={() => setOpenDetailService(false)}
+          open={openDetailService}
+          width={"100vh"}
+        >
+          <Descriptions
+            title="Service Detail"
+            bordered
+            items={item}
+            column={width > 750 ? 2 : 1}
+          />
+        </Drawer>
+        </div>
+    )
 }
-  
-
-export default DetailEquipment
+export default DetailService

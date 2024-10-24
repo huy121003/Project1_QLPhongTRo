@@ -9,15 +9,19 @@ import {
 
 import AddServiceModal from "./AddServiceModal";
 import EditServiceModal from "./EditServiceModal";
+
 import { deleteServiceApi, fetchServiceApi } from "../../services/serviceApi";
 import SearchFilters from "../../components/SearchFilter";
 import { ServiceModel, ServiceType } from "../../models/ServiceModel";
+
+import DetailService from "./DetailService";
 
 function ServicePage() {
   const [services, setServices] = useState<ServiceModel[]>([]);
   const [openDelete, setOpenDelete] = useState(false);
   const [openAddService, setOpenAddService] = useState(false);
   const [openEditService, setOpenEditService] = useState(false);
+  const [openDetailService, setOpenDetailService] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null); // New state for the record to delete
   const [paginate, setPaginate] = useState({
@@ -26,7 +30,22 @@ function ServicePage() {
     total: 0,
   });
   const columns = [
-    { title: "Id", dataIndex: "_id", key: "_id" },
+    {
+      title: "Id",
+      dataIndex: "_id",
+      key: "_id",
+      render: (_id: string, record: ServiceModel) => (
+        <p
+          className="text-blue-600 hover:text-blue-300"
+          onClick={() => {
+            setOpenDetailService(true);
+            setRecord(record);
+          }}
+        >
+          {_id}
+        </p>
+      ),
+    },
     { title: "Name", dataIndex: "serviceName", key: "serviceName" },
     { title: "Description", dataIndex: "description", key: "description" },
     {
@@ -71,7 +90,9 @@ function ServicePage() {
     },
   ];
 
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(columns.map((column) => column.dataIndex));
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(
+    columns.map((column) => column.dataIndex)
+  );
   const [sorted, setSorted] = useState<string>("");
   const [searchParams, setSearchParams] = useState({
     serviceName: "",
@@ -99,18 +120,12 @@ function ServicePage() {
       const res = await fetchServiceApi(query);
       setIsLoading(false);
       if (res.data.result && res) {
-        const formatArray = res.data.result.map((item: ServiceModel) => {
-          return {
-            _id: item._id,
-            serviceName: item.serviceName,
-            description: item.description,
-            price: item.price,
-            unit: item.unit,
-            type: item.type,
-          };
-        });
-        setServices(formatArray);
-        setPaginate((prev) => ({ ...prev, total: res.data.meta.totalDocument })); // Ensure total is set correctly
+        
+        setServices(res.data.result);
+        setPaginate((prev) => ({
+          ...prev,
+          total: res.data.meta.totalDocument,
+        })); // Ensure total is set correctly
       } else {
         message.error(res.message);
       }
@@ -137,7 +152,6 @@ function ServicePage() {
         current: 1, // Reset to first page when changing page size
       }));
     }
-   
   };
 
   const handleSearchChange = (field: string, value: string) => {
@@ -157,7 +171,6 @@ function ServicePage() {
     }
   };
 
- 
   return (
     <>
       <div className="justify-end p-2 w-full">
@@ -213,7 +226,7 @@ function ServicePage() {
               total: paginate.total,
 
               showSizeChanger: true,
-              pageSizeOptions: [ 5, 10, 20,50,100,200],
+              pageSizeOptions: [5, 10, 20, 50, 100, 200],
             }}
             onChange={onChange}
           />
@@ -235,6 +248,7 @@ function ServicePage() {
         setOpenEditService={setOpenEditService}
         record={record}
       />
+      <DetailService openDetailService={openDetailService} setOpenDetailService={setOpenDetailService} record={record} />
     </>
   );
 }
