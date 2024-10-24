@@ -26,14 +26,14 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({ searchParams, onSearchCha
       <Space direction="horizontal">
         {fields.map((field) => {
           if (field.type === "text") {
-            return (
-              <Input
-                key={field.field}
-                placeholder={`Search by ${field.label}`}
-                value={searchParams[field.field]}
-                onChange={(e) => onSearchChange(field.field, e.target.value)}
-              />
-            );
+              return (
+                <Input
+                  key={field.field}
+                  placeholder={`Search by ${field.label}`}
+                  value={searchParams[field.field]}
+                  onChange={(e) => onSearchChange(field.field, e.target.value)}
+                />
+              );
           }
           if (field.type === "select") {
             return (
@@ -45,9 +45,10 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({ searchParams, onSearchCha
                 style={{ width: 120 }}
               >
                 {field.options?.map((option) => (
-                  <Option key={option.value} value={option.value}>
+                  <Option key={option.value} value = {option.value}>
                     {option.label}
                   </Option>
+                
                 ))}
               </Select>
             );
