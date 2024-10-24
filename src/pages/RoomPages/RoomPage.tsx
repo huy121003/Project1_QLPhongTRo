@@ -129,10 +129,11 @@ function RoomPage() {
     setSearchParams((prev) => ({ ...prev, [field]: value }));
   };
 
+  
   const handleSortChange = (e: any) => {
     setSorted(e.target.value);
   };
-
+  
   const onDeleteRoom = async (record: any) => {
     const res = await deleteRoomApi(record._id);
     if (res.statusCode === 200) {
@@ -181,6 +182,7 @@ function RoomPage() {
         />
         <div className="bg-white p-2 rounded-lg m-2">
           <h2 className="font-bold text-xl my-3">Sort by</h2>
+          
           <Radio.Group onChange={handleSortChange} value={sorted}>
             <Space direction="horizontal" className="justify-between">
               <Radio value="roomName" className="font-medium">
