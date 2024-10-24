@@ -125,15 +125,15 @@ function RoomPage() {
     }
   };
 
+ 
   const handleSearchChange = (field: string, value: string) => {
     setSearchParams((prev) => ({ ...prev, [field]: value }));
   };
-
   
   const handleSortChange = (e: any) => {
     setSorted(e.target.value);
   };
-  
+
   const onDeleteRoom = async (record: any) => {
     const res = await deleteRoomApi(record._id);
     if (res.statusCode === 200) {

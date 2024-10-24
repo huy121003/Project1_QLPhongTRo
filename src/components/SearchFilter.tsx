@@ -17,6 +17,8 @@ interface SearchFiltersProps {
     fields: Field[]; // Truyền vào các trường tìm kiếm
 }
 
+
+
 const SearchFilters: React.FC<SearchFiltersProps> = ({ searchParams, onSearchChange, fields }) => {
   return (
     <div className="bg-white p-2 rounded-lg m-2 ">
