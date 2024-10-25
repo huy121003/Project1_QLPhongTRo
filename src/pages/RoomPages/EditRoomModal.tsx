@@ -27,9 +27,9 @@ const handleOk = async () => {
         const values = await form.validateFields();
         const response = await patchRoomApi(
             record._id,
-            values.roomName,
+           // values.roomName,
             values.type,
-            values.status,
+           /// values.status,
             values.price,
            
             values.description,
@@ -80,8 +80,9 @@ const handleOk = async () => {
           label="Room Name"
           name="roomName"
           rules={[{ required: true, message: "Please input room name!" }]}
+         
         >
-          <Input  placeholder="Enter RoomName"/>
+          <Input  placeholder="Enter RoomName"  disabled/>
         </Form.Item>
         <Form.Item
           label="Type"
@@ -100,7 +101,7 @@ const handleOk = async () => {
           name="status"
           rules={[{ required: true, message: "Please select room status!" }]}
         >
-          <Select>
+          <Select  disabled>
             <Select.Option value={RoomStatus.Available}>{RoomStatus.Available}</Select.Option>
             <Select.Option value={RoomStatus.Occupied}>{RoomStatus.Occupied}</Select.Option>
           </Select>

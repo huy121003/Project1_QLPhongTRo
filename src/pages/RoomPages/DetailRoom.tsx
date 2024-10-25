@@ -1,16 +1,15 @@
 import React, { Children } from "react";
 import { Badge, Descriptions, Drawer, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
-import { Gender } from "../../models/AccountModel";
 import moment from "moment"; // Import moment for date formatting
 import { resizeWidth } from "../../utils/resize";
-import { EquipmentStatus } from "../../models/EquipmentModel";
+import { RoomStatus,RoomType } from "../../models/RoomModel";
 interface Props{
-    openDetailEquipment:boolean,
-    setOpenDetailEquipment:(value: boolean) => void;
+    openDetailRoom:boolean,
+    setOpenDetailRoom:(value: boolean) => void;
     record: any;
 }
-const DetailEquipment: React.FC<Props> = ({openDetailEquipment,setOpenDetailEquipment,record})=>{
+const DetailRoom: React.FC<Props> = ({openDetailRoom,setOpenDetailRoom,record})=>{
     const formatDate = (dateString: string) => {
         return moment(dateString).format("DD/MM/YYYY"); // Format date using moment
       };
@@ -18,21 +17,21 @@ const DetailEquipment: React.FC<Props> = ({openDetailEquipment,setOpenDetailEqui
       const item=[
           {
                  key:"1",
-                 label:"EquipmentName",
-                 children:record?.name,
+                 label:"Room Name",
+                 children:record?.roomName,
                
           },
           {
             key:"2",
-            label:"Status",
-            children:record?.status=== EquipmentStatus.New ? (
-                <p className="text-orange-600 font-bold">{EquipmentStatus.New}</p>
-              ) : record?.status === EquipmentStatus.Old ? (
-                <p className="text-purple-600 font-bold">{EquipmentStatus.Old}</p>
-              ) : record?.status === EquipmentStatus.Broken ? (
-                <p className="text-blue-600 font-bold">{EquipmentStatus.Broken}</p>
+            label:"Type",
+            children:record?.type=== RoomType.Single ? (
+                <p className="text-orange-600 font-bold">{RoomType.Single}</p>
+              ) : record?.type === RoomType.Double ? (
+                <p className="text-purple-600 font-bold">{RoomType.Double}</p>
+              ) : record?.type === RoomType.Quad ? (
+                <p className="text-blue-600 font-bold">{RoomType.Quad}</p>
               ) : (
-                <p className="text-pink-600 font-bold">{EquipmentStatus.Repairing}</p>
+                <p className="text-pink-600 font-bold">{RoomType.Studio}</p>
               ),
           },
           {
@@ -47,11 +46,20 @@ const DetailEquipment: React.FC<Props> = ({openDetailEquipment,setOpenDetailEqui
           },
           {
             key: "5",
+            label: "Status",
+            children:record?.status=== RoomStatus.Available ? (
+                <p className="text-yellow-600 font-bold">{RoomStatus.Available}</p>
+              ) : (
+                <p className="text-green-600 font-bold">{RoomStatus.Occupied}</p>
+              ) 
+          },
+          {
+            key: "6",
             label: "Created At",
             children: record?.createdAt ? formatDate(record?.createdAt) : "N/A", // Format createdAt date
           },
           {
-            key: "6",
+            key: "7",
             label: "Created By",
             children: record?.createdBy ? (
               record?.createdBy?.email
@@ -62,12 +70,12 @@ const DetailEquipment: React.FC<Props> = ({openDetailEquipment,setOpenDetailEqui
             ),
           },
           {
-            key: "7",
+            key: "8",
             label: "Updated At",
             children: record?.updatedAt ? formatDate(record?.updatedAt) : "N/A", // Format updatedAt date
           },
           {
-            key: "8",
+            key: "9",
             label: "Updated By",
             children: record?.updatedBy ? (
               record?.updatedBy?.email
@@ -77,27 +85,25 @@ const DetailEquipment: React.FC<Props> = ({openDetailEquipment,setOpenDetailEqui
               </Tag>
             ),
           },
-    
-
-
       ]
-  return (
-     <div>
-      <Drawer
-        onClose={() => setOpenDetailEquipment(false)}
-        open={openDetailEquipment}
+    return (
+        <Drawer
+        
+     
+        onClose={() => setOpenDetailRoom(false)}
+        open={openDetailRoom}
+        
         width={"100vh"}
-      >
-        <Descriptions
-          title="Equipment Detail"
-          bordered
-          items={item}
-          column={width > 750 ? 2 : 1}
-        />
-      </Drawer>
-      </div>
-  );
+        >
+            <Descriptions 
+            title="Room Detail"
+             bordered
+             items={item}
+             column={width<750?1:2}
+             >
+                
+            </Descriptions>
+        </Drawer>
+    )
 }
-  
-
-export default DetailEquipment
+export default DetailRoom
