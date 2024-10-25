@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { Modal, Button, Input, Form, message, Select } from "antd";
 
 import { patchRoomApi } from "../../services/roomApis";
@@ -16,6 +16,7 @@ const EditRoomModal: React.FC<Props> = ({
     record,
 }) => {
     const [form] = Form.useForm();
+    /*
     useEffect(() => {
         if (openEditRoom && record) {
             form.setFieldsValue({
@@ -52,7 +53,54 @@ const EditRoomModal: React.FC<Props> = ({
             console.error("Validation failed:", error);
         }
     };
+*/
+    const initializeFormValues = useCallback(() => {
+        if (record) {
+            form.setFieldsValue({
+                roomName: record.roomName,
+                type: record.type,
+                price: record.price,
+                status: record.status,
+                description: record.description,
+            });
+        }
+    }, [record, form]);
 
+    useEffect(() => {
+        if (openEditRoom) {
+            initializeFormValues();
+        }
+    }, [openEditRoom, initializeFormValues]);
+
+    const handleOk = async () => {
+        try {
+            const values = await form.validateFields();
+            const { statusCode, message: responseMessage } = await patchRoomApi(
+                record._id,
+                values.roomName,
+                values.type,
+                values.status,
+                values.price,
+                values.description,
+                []
+            );
+
+            if (statusCode === 200) {
+                message.success(responseMessage);
+                form.resetFields();
+                setOpenEditRoom(false);
+            } else {
+                message.error(responseMessage);
+            }
+        } catch (error) {
+            console.error("Error while updating room:", error);
+        }
+    };
+
+    const handleCancel = () => {
+        form.resetFields();
+        setOpenEditRoom(false);
+    };
     return (
         <Modal
             centered
@@ -60,10 +108,11 @@ const EditRoomModal: React.FC<Props> = ({
             title={
                 <h1 className="text-3xl font-bold text-center">Edit Room</h1>
             }
-            onCancel={() => {
-                setOpenEditRoom(false);
-                form.resetFields(); // Reset form fields
-            }}
+            // onCancel={() => {
+            //     setOpenEditRoom(false);
+            //     form.resetFields(); // Reset form fields
+            // }}
+            onCancel={handleCancel}
             footer={[
                 <Button
                     key="back"
@@ -160,4 +209,3 @@ const EditRoomModal: React.FC<Props> = ({
 };
 
 export default EditRoomModal;
-
