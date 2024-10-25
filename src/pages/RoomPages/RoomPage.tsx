@@ -1,5 +1,5 @@
 import { Radio, Space, Table, message } from "antd";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
     ActionButton,
     AddButton,
@@ -22,66 +22,127 @@ function RoomPage() {
     const [openEditRoom, setOpenEditRoom] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [record, setRecord] = useState<any>(null); // For delete confirmation
-    const columns = [
-        { title: "ID", dataIndex: "_id", key: "_id" },
-        { title: "Room Name", dataIndex: "roomName", key: "roomName" },
-        {
-            title: "Type",
-            dataIndex: "type",
-            key: "type",
-            render: (type: string) =>
-                type === RoomType.Single ? (
-                    <p className="text-orange-600 font-bold">
-                        {RoomType.Single}
-                    </p>
-                ) : type === RoomType.Double ? (
-                    <p className="text-purple-600 font-bold">
-                        {RoomType.Double}
-                    </p>
-                ) : type === RoomType.Quad ? (
-                    <p className="text-blue-600 font-bold">{RoomType.Quad}</p>
-                ) : (
-                    <p className="text-pink-600 font-bold">{RoomType.Studio}</p>
-                ),
-        },
-        {
-            title: "Price",
-            dataIndex: "price",
-            key: "price",
-            render: (price: number) => <p>{price.toLocaleString()} đ</p>,
-        },
-        {
-            title: "Status",
-            dataIndex: "status",
-            key: "status",
-            render: (status: string) =>
-                status === RoomStatus.Available ? (
-                    <p className="rounded border-2 border-yellow-600 p-2 w-[100px] text-center text-yellow-600 bg-yellow-200">
-                        {status}
-                    </p>
-                ) : (
-                    <p className="rounded border-2 border-green-600 p-2 w-[100px] text-center text-green-600 bg-green-200">
-                        {status}
-                    </p>
-                ),
-        },
-        {
-            title: "Action",
-            dataIndex: "action",
-            key: "action",
-            render: (_: any, record: RoomModel) => (
-                <ActionButton
-                    item={record}
-                    onEdit={() => onEditRoom(record)} // For editing
-                    onDelete={() => {
-                        setRecord(record);
-                        setOpenDelete(true);
-                    }}
-                />
-            ),
-        },
-    ];
+    //-> 
+    // const columns = [
+    //     { title: "ID", dataIndex: "_id", key: "_id" },
+    //     { title: "Room Name", dataIndex: "roomName", key: "roomName" },
+    //     {
+    //         title: "Type",
+    //         dataIndex: "type",
+    //         key: "type",
+    //         render: (type: string) =>
+    //             type === RoomType.Single ? (
+    //                 <p className="text-orange-600 font-bold">
+    //                     {RoomType.Single}
+    //                 </p>
+    //             ) : type === RoomType.Double ? (
+    //                 <p className="text-purple-600 font-bold">
+    //                     {RoomType.Double}
+    //                 </p>
+    //             ) : type === RoomType.Quad ? (
+    //                 <p className="text-blue-600 font-bold">{RoomType.Quad}</p>
+    //             ) : (
+    //                 <p className="text-pink-600 font-bold">{RoomType.Studio}</p>
+    //             ),
+    //     },
+    //     {
+    //         title: "Price",
+    //         dataIndex: "price",
+    //         key: "price",
+    //         render: (price: number) => <p>{price.toLocaleString()} đ</p>,
+    //     },
+    //     {
+    //         title: "Status",
+    //         dataIndex: "status",
+    //         key: "status",
+    //         render: (status: string) =>
+    //             status === RoomStatus.Available ? (
+    //                 <p className="rounded border-2 border-yellow-600 p-2 w-[100px] text-center text-yellow-600 bg-yellow-200">
+    //                     {status}
+    //                 </p>
+    //             ) : (
+    //                 <p className="rounded border-2 border-green-600 p-2 w-[100px] text-center text-green-600 bg-green-200">
+    //                     {status}
+    //                 </p>
+    //             ),
+    //     },
+    //     {
+    //         title: "Action",
+    //         dataIndex: "action",
+    //         key: "action",
+    //         render: (_: any, record: RoomModel) => (
+    //             <ActionButton
+    //                 item={record}
+    //                 onEdit={() => onEditRoom(record)} // For editing
+    //                 onDelete={() => {
+    //                     setRecord(record);
+    //                     setOpenDelete(true);
+    //                 }}
+    //             />
+    //         ),
+    //     },
+    // ];
 
+    const columns = useMemo(
+        () => [
+            { title: 'ID', dataIndex: '_id', key: '_id' },
+            { title: 'Room Name', dataIndex: 'roomName', key: 'roomName' },
+            {
+                title: 'Type',
+                dataIndex: 'type',
+                key: 'type',
+                render: (type: string) => {
+                    const colorMap = {
+                        [RoomType.Single]: 'text-orange-600',
+                        [RoomType.Double]: 'text-purple-600',
+                        [RoomType.Quad]: 'text-blue-600',
+                        [RoomType.Studio]: 'text-pink-600'
+                    };
+                    return <p className={`${colorMap[type]} font-bold`}>{type}</p>;
+                }
+            },
+            {
+                title: 'Price',
+                dataIndex: 'price',
+                key: 'price',
+                render: (price: number) => <p>{price.toLocaleString()} đ</p>
+            },
+            {
+                title: 'Status',
+                dataIndex: 'status',
+                key: 'status',
+                render: (status: string) => (
+                    <p
+                        className={`rounded border-2 p-2 w-[100px] text-center ${
+                            status === RoomStatus.Available
+                                ? 'border-yellow-600 text-yellow-600 bg-yellow-200'
+                                : 'border-green-600 text-green-600 bg-green-200'
+                        }`}
+                    >
+                        {status}
+                    </p>
+                )
+            },
+            {
+                title: 'Action',
+                dataIndex: 'action',
+                key: 'action',
+                render: (_: any, record: RoomModel) => (
+                    <ActionButton
+                        item={record}
+                        onEdit={() => onEditRoom(record)}
+                        onDelete={() => {
+                            setRecord(record);
+                            setOpenDelete(true);
+                        }}
+                    />
+                )
+            }
+        ],
+        []
+    );
+    //<-
+    
     const [visibleColumns, setVisibleColumns] = useState<string[]>(
         columns.map((column) => column.dataIndex)
     );
@@ -93,41 +154,75 @@ function RoomPage() {
         status: "",
     });
 
+//-> 
     // Fetch rooms function
-    useEffect(() => {
-        const getRoom = async () => {
-            const queryParams: Record<string, any> = {
-                currentPage: current,
-                pageSize: pageSize,
-                sort: sorted,
-            };
-            Object.entries(searchParams).forEach(([key, value]) => {
-                if (value) queryParams[key] = `/${value}/i`;
-            });
+    // useEffect(() => {
+    //     const getRoom = async () => {
+    //         const queryParams: Record<string, any> = {
+    //             currentPage: current,
+    //             pageSize: pageSize,
+    //             sort: sorted,
+    //         };
+    //         Object.entries(searchParams).forEach(([key, value]) => {
+    //             if (value) queryParams[key] = `/${value}/i`;
+    //         });
 
-            const query = new URLSearchParams(queryParams).toString();
-            setIsLoading(true);
+    //         const query = new URLSearchParams(queryParams).toString();
+    //         setIsLoading(true);
 
+    //         const res = await fetchRoomApi(query);
+    //         console.log(res);
+    //         setIsLoading(false);
+    //         if (res.data.result) {
+    //             setRooms(res.data.result);
+    //             setTotal(res.data.meta.totalDocument);
+    //         } else {
+    //             message.error(res.message);
+    //         }
+    //     };
+    //     getRoom();
+    // }, [
+    //     current,
+    //     pageSize,
+    //     sorted,
+    //     searchParams,
+    //     openAddRoom,
+    //     openDelete,
+    //     openEditRoom,
+    // ]);
+
+    const fetchRooms = useCallback(async () => {
+        setIsLoading(true);
+        const queryParams = {
+            currentPage: current,
+            pageSize,
+            sort: sorted,
+            ...Object.fromEntries(
+                Object.entries(searchParams).filter(([_, value]) => value)
+            )
+        };
+
+        const query = new URLSearchParams(queryParams).toString();
+        try {
             const res = await fetchRoomApi(query);
-            console.log(res);
-            setIsLoading(false);
             if (res.data.result) {
                 setRooms(res.data.result);
                 setTotal(res.data.meta.totalDocument);
             } else {
                 message.error(res.message);
             }
-        };
-        getRoom();
-    }, [
-        current,
-        pageSize,
-        sorted,
-        searchParams,
-        openAddRoom,
-        openDelete,
-        openEditRoom,
-    ]);
+        } catch (error) {
+            message.error('Error fetching rooms');
+        } finally {
+            setIsLoading(false);
+        }
+    }, [current, pageSize, sorted, searchParams]);
+
+    useEffect(() => {
+        fetchRooms();
+    }, [fetchRooms, openAddRoom, openDelete, openEditRoom]);
+   //<-
+
 
     const onChange = (pagination: any) => {
         if (pagination.current !== current) setCurrent(pagination.current);
