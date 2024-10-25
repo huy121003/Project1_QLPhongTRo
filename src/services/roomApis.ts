@@ -22,7 +22,7 @@ export const postRoomApi = (
     roomName,
     type,
     status,
-    price:parseInt(price.toString()),
+    price: parseInt(price.toString()),
     description,
     equipment,
   });
@@ -30,19 +30,19 @@ export const postRoomApi = (
 
 export const patchRoomApi = (
   id: string,
- // roomName: string,
+  // roomName: string,
   type: RoomType,
-//  status: RoomStatus,
+  //  status: RoomStatus,
   price: number,
   description: string,
   equipment: any[]
 ): Promise<any> => {
   console.log("dd", price);
   return axios.patch(`/api/v1/rooms/${id}`, {
- //   roomName,
+    //   roomName,
     type,
-   // status,
-    price:parseInt(price.toString()),
+    // status,
+    price: parseInt(price.toString()),
     description,
     equipment,
   });

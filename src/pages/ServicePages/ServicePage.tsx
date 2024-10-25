@@ -120,7 +120,6 @@ function ServicePage() {
       const res = await fetchServiceApi(query);
       setIsLoading(false);
       if (res.data.result && res) {
-        
         setServices(res.data.result);
         setPaginate((prev) => ({
           ...prev,
@@ -181,6 +180,13 @@ function ServicePage() {
             { label: "Service Name", field: "serviceName", type: "text" },
             { label: "Price", field: "price", type: "text" },
             { label: "Unit", field: "unit", type: "text" },
+            { label: "Type", field: "type", type: "select", options: [
+              {value:"",label:"All Type"},
+              {value:ServiceType.Electricity,label:ServiceType.Electricity},
+              {value:ServiceType.Water,label:ServiceType.Water},
+              {value:ServiceType.Internet,label:ServiceType.Internet},
+              {value:ServiceType.Other,label:ServiceType.Other},
+            ] },
           ]}
         />
         <div className="bg-white p-2 rounded-lg m-2">
@@ -248,7 +254,11 @@ function ServicePage() {
         setOpenEditService={setOpenEditService}
         record={record}
       />
-      <DetailService openDetailService={openDetailService} setOpenDetailService={setOpenDetailService} record={record} />
+      <DetailService
+        openDetailService={openDetailService}
+        setOpenDetailService={setOpenDetailService}
+        record={record}
+      />
     </>
   );
 }

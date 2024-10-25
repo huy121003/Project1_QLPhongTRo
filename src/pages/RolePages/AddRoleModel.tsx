@@ -188,10 +188,14 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
                             >
                               {permission.method}
                             </Tag>
-                            <span className="font-bold">
-                              {permission.name}:
-                            </span>
-                            <p className="flex-1">{permission.apiPath}</p>
+                            <div className="">
+                          <span className="font-bold">
+                            Name: {permission.name}
+                          </span>
+                          <p className="flex-1">
+                            Api Path: {permission.apiPath}
+                          </p>
+                        </div>
                             <Switch
                               checked={enablePermission.includes(
                                 permission._id

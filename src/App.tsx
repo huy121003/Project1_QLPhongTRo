@@ -13,9 +13,9 @@ import Loading from "./components/Loading";
 import homeRouters from "./routers/index";
 import ProtectedRoute from "./routers/ProtectedRouter";
 import { message } from "antd";
-import { fecthRoleApi } from "./services/roleApi";
-import { RoleModel } from "./models/RoleModel";
-import { fetchRoleAction } from "./redux/slice/role/roleSlice";
+
+import ResetPasswordPage from "./pages/AuthPages/ResetPasswordPage";
+import ActiveAccountPage from "./pages/AuthPages/ActiveAccountPage";
 
 // Router setup moved outside to avoid re-creating it on every render
 const router = createBrowserRouter([
@@ -43,6 +43,7 @@ const router = createBrowserRouter([
     path: "/register",
     element: <RegisterPage />,
   },
+
 ]);
 
 function App() {
@@ -54,7 +55,8 @@ function App() {
     // Only fetch the user account if authenticated and not on the login page
     const isLoginPage =
       window.location.pathname === "/login" ||
-      window.location.pathname === "/register";
+      window.location.pathname === "/register" 
+     
     if (!isLoginPage) {
       const getAccount = async () => {
         const res = await apiFetchUser();
@@ -63,20 +65,7 @@ function App() {
           //  message.success(res.message);
         } else message.error(res.message);
       };
-      const getRole = async () => {
-        const res = await fecthRoleApi("");
-        if (res?.data) {
-      
-          const roles = res.data.result.map((item: RoleModel) => ({
-            _id: item._id,
-            name: item.name,
-            description: item.description,
-            permissions: item.permissions,
-          }));
-          dispatch(fetchRoleAction(roles));
-        } else message.error(res.message);
-      };
-      getRole();
+     
       getAccount();
     }
   }, [dispatch, isAuthenticated]); // Correct dependencies
@@ -87,6 +76,7 @@ function App() {
     window.location.pathname === "/login" ||
     window.location.pathname === "/"||
     window.location.pathname === "/register"
+
   ) {
     return <RouterProvider router={router} />;
   } else {

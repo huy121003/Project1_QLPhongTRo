@@ -3,7 +3,7 @@ import { Modal, Button, Input, Form, message, Select } from "antd";
 import { patchServiceApi } from "../../services/serviceApi";
 
 import { useAppDispatch } from "../../redux/hook";
-import { updateServiceAction } from "../../redux/slice/service/serviceSlice";
+
 import { ServiceModel, ServiceType } from "../../models/ServiceModel";
 
 interface Props {
@@ -48,7 +48,7 @@ const EditServiceModal: React.FC<Props> = ({
 
       if (response.statusCode === 200) {
         message.success(response.message);
-        dispatch(updateServiceAction(response.data)); // Update service in Redux
+      
         form.resetFields(); // Reset form fields
         setOpenEditService(false); // Close modal on success
       } else {

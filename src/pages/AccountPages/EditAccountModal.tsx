@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Button, Input, Form, message, Select, DatePicker } from "antd";
 import moment from "moment"; // Import moment for date handling
 import { patchAccountApi } from "../../services/accountApi";
 import AccountModel, { Gender } from "../../models/AccountModel";
-import { useAppSelector } from "../../redux/hook";
+
+import { RoleModel } from "../../models/RoleModel";
+import { fecthRoleApi } from "../../services/roleApi";
 
 interface Props {
   openEditAccount: boolean;
@@ -17,7 +19,16 @@ const EditAccountModal: React.FC<Props> = ({
   record,
 }) => {
   const [form] = Form.useForm();
-  const role = useAppSelector((state) => state.role.role);
+  const [role, setRole] = useState<RoleModel[]>([]);
+  useEffect(() => {
+    const getRole = async () => {
+      const res = await fecthRoleApi("");
+      if (res?.data) {
+        setRole(res.data.result);
+      } else message.error(res.message);
+    };
+    getRole();
+  }, [ openEditAccount]);
 
   useEffect(() => {
     if (openEditAccount && record) {

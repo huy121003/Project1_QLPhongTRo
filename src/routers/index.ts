@@ -86,13 +86,7 @@ const   homeRouters:Routers[] = [
     icon:"fa-solid fa-dice-five",
     label:"Role"
   },
-  {
-    path:"permission",
-    component:PermissionPage,
-    isShowNav:true,
-    icon:"fa-solid fa-key",
-    label:"Permission"
-  }
+  
   
 ];
 

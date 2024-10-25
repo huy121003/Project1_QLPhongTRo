@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Button,
@@ -7,14 +7,14 @@ import {
   Form,
   Select,
   message,
-  App,
-  Col,
-  Row,
+  
 } from "antd";
 import { postAccountApi } from "../../services/accountApi"; // Adjust the path to your API function
 
-import { useAppDispatch, useAppSelector } from "../../redux/hook";
+
 import { Gender } from "../../models/AccountModel";
+import { fecthRoleApi } from "../../services/roleApi";
+import { RoleModel } from "../../models/RoleModel";
 
 interface Props {
   openAddAccount: boolean;
@@ -27,10 +27,21 @@ const AddAccountModal: React.FC<Props> = ({
   openAddAccount,
   setOpenAddAccount,
 }) => {
-  const dispatch = useAppDispatch();
+  const [role, setRole] = useState<RoleModel[]>([]);
+  useEffect(() => {
+    const getRole = async () => {
+      const res = await fecthRoleApi("current=1&pageSize=1000");
+      if (res?.data) {
+    
+        setRole(res.data.result);
+      } else message.error(res.message);
+    };
+    getRole();
+  }
+    , [ openAddAccount]);
 
   const [form] = Form.useForm();
-  const role = useAppSelector((state) => state.role.role);
+ 
 
   const handleOk = async () => {
     // Validate the form fields
@@ -192,7 +203,14 @@ const AddAccountModal: React.FC<Props> = ({
               rules={[{ required: true, message: "Role is required" }]}
               className="mr-2 flex-1"
             >
-              <Select placeholder="Select role">
+              <Select placeholder="Select role"
+              
+              
+                dropdownRender={(menu) => (
+                  <div className="max-h-[150px] overflow-y-auto">
+                    {menu}
+                  </div>
+                )}>
                 {role.map((r) => (
                   <Option key={r._id} value={r._id}>
                     {r.name}

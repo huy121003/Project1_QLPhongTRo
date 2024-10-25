@@ -3,11 +3,13 @@ import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
 import { Form, Input, Button, Select, notification, message, DatePicker } from "antd";
 import { apiRegister } from "../../services/authtApi"
 import { Gender } from "../../models/AccountModel";
+import { useState } from "react";
+import ActiveAccountPage from "./ActiveAccountPage";
 const { Option } = Select;
 
 function RegisterPage() {
-  const navigate = useNavigate();
-
+  const [id, setId] = useState<string>("");
+const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
   const handleRegister = async (values: any) => {
     const birthdayDate = values.birthday.toDate();
     const birthdayIsoString = new Date(birthdayDate).toISOString();
@@ -27,20 +29,23 @@ function RegisterPage() {
       values.idCard
     );
     if (res.statusCode === 201) {
+      setId(res.data._id);
       message.success(res.message);
-      navigate("/login");
+     
+     setOpenActiveAccount(true);
+     
     } else message.error(res.message);
   };
 
   return (
     <AuthLayout>
-      <div className="bg-gradient-to-br from-purple-400 to-green-300 p-12 rounded-lg shadow-lg w-[800px] mx-auto">
+      <div className="bg-gradient-to-br from-purple-400 to-green-300 p-10 rounded-lg shadow-lg lg:w-[800px] mx-3">
         <h2 className="text-4xl font-bold text-center text-white mb-8">
           Register
         </h2>
         <Form layout="vertical" onFinish={handleRegister}>
         <Form.Item label={<span>Name</span>} wrapperCol={{ span: 24 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="flex justify-between">
             <Form.Item
               name="FirstName"
               rules={[
@@ -65,7 +70,7 @@ function RegisterPage() {
           </div>
         </Form.Item>
         <Form.Item  wrapperCol={{ span: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className="flex justify-between">
           <Form.Item
             label="Email"
             name="email"
@@ -97,7 +102,7 @@ function RegisterPage() {
         </div>
         </Form.Item>
         <Form.Item  wrapperCol={{ span: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className="flex justify-between">
           <Form.Item
             label="Password"
             name="password"
@@ -120,7 +125,7 @@ function RegisterPage() {
         </div>
         </Form.Item>
         <Form.Item  wrapperCol={{ span: 24 }}>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className="flex justify-between">
           <Form.Item
             label="Birthday"
             name="birthday"
@@ -182,6 +187,7 @@ function RegisterPage() {
             </Link>
           </p>
         </div>
+        <ActiveAccountPage open={openActiveAccount} setOpen={setOpenActiveAccount} id={id} />
       </div>
     </AuthLayout>
   );

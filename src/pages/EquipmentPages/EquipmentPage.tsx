@@ -17,16 +17,22 @@ import { EquipmentModel, EquipmentStatus } from "../../models/EquipmentModel";
 import DetailEquipment from "./DetailEquipment";
 
 function EquipmentPage() {
+  //contract list
   const [equipments, setEquipments] = useState<EquipmentModel[]>([]);
+  //state for modal
   const [openDelete, setOpenDelete] = useState(false);
   const [openAddEquipment, setOpenAddEquipment] = useState(false);
   const [openEditEquipment, setOpenEditEquipment] = useState(false);
   const [openDetailEquipment, setOpenDetailEquipment] = useState(false);
+  //state for loading
   const [isLoading, setIsLoading] = useState(false);
+  //state for record
   const [record, setRecord] = useState<any>(null); // New state for the record to delete
+  //state for pagination
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
+  //columns
   const columns = [
     {
       title: "Id",
@@ -92,10 +98,13 @@ function EquipmentPage() {
       ),
     },
   ];
+  //state for visible columns
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     columns.map((column) => column.dataIndex)
   );
+  //state for sorted
   const [sorted, setSorted] = useState<string>("");
+  //state for search params
   const [searchParams, setSearchParams] = useState({
     name: "",
     price: null,

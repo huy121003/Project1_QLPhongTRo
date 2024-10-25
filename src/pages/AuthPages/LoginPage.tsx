@@ -1,16 +1,19 @@
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-import { Form, Input, Button, message, Divider } from "antd";
+import { Form, Input, Button, message, Divider, Modal } from "antd";
 import { useAppDispatch } from "../../redux/hook";
-import { apiLogin } from "../../services/authtApi";
+import { apiLogin, retryCode } from "../../services/authtApi";
 import { loginaction } from "../../redux/slice/auth/authSlice";
 import { useState } from "react";
+import ResetPasswordPage from "./ResetPasswordPage";
+import RetryCodePage from "./RetryCodePage";
 
 function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const [issubmit, setIsSubmit] = useState<boolean>(false);
   const navigate = useNavigate();
-
+const [openResetPassword, setOpenResetPassword] = useState<boolean>(false);
+const [openRetryCode, setOpenRetryCode] = useState<boolean>(false);
   const handleLogin = async (value: any) => {
     const { email, password } = value;
     setIsSubmit(true);
@@ -24,13 +27,16 @@ function LoginPage(): JSX.Element {
       message.success("Login successfully!");
       navigate("/dashboard");
     } else {
-      message.error(res.message);
+      if (res?.message === "Account has not been activated!") {
+       message.error(res.message);
+        setOpenRetryCode(true);
+      } else message.error(res.message);
     }
   };
 
   return (
     <AuthLayout>
-      <div className="bg-gradient-to-br from-purple-400 to-green-300 p-12 rounded-lg shadow-lg w-[500px] mx-auto">
+      <div className="bg-gradient-to-br from-purple-400 to-green-300 p-12 rounded-lg shadow-lg lg:w-[500px] mx-2">
         <h2 className="text-4xl font-bold text-center text-white mb-8">
           Login
         </h2>
@@ -70,13 +76,18 @@ function LoginPage(): JSX.Element {
             </Button>
           </Form.Item>
         </Form>
-
+        <div className="flex-1 justify-end">
+         <Button type="link" onClick={() => setOpenResetPassword(true)}> Forgot Password ?</Button>
+        </div>
         <div className="mt-6 text-center">
           <span className="text-gray-300">Don't have an account?</span>
           <Link to="/register" className="text-white font-semibold">
             Register
           </Link>
         </div>
+       
+       <ResetPasswordPage open={openResetPassword} setOpen={setOpenResetPassword} />
+       <RetryCodePage open={openRetryCode} setOpen={setOpenRetryCode} />
       </div>
     </AuthLayout>
   );

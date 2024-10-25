@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Button, Input, Form, Select, message } from "antd";
 import { postServiceApi } from "../../services/serviceApi";
-import { addServiceAction } from "../../redux/slice/service/serviceSlice";
+
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { ServiceType } from "../../models/ServiceModel";
 interface Props {
@@ -13,7 +13,7 @@ const  AddServiceModal:React.FC<Props>=({openAddService, setOpenAddService})=> {
     const [form] = Form.useForm();
 
  const dispatch = useAppDispatch()
-  const service=useAppSelector((state)=>state.service.service)
+ 
    
     const handleOk = async () => {
       // Validate the form fields
