@@ -1,16 +1,12 @@
 import { Menu, Dropdown, Button, Space } from "antd";
-
-
 interface SortColumn {
   label: string;
   key: string;
 }
-
 interface CustomSortProps {
   columns: SortColumn[]; // Danh sách các cột để sắp xếp
   onSort: (key: string) => void; // Hàm xử lý sắp xếp
 }
-
 const CustomSort: React.FC<CustomSortProps> = ({ columns, onSort }) => {
   const menu = (
     <Menu className="text-xl">
@@ -22,6 +18,7 @@ const CustomSort: React.FC<CustomSortProps> = ({ columns, onSort }) => {
       ))}
     </Menu>
   );
+
 
   return (
     <Dropdown overlay={menu}
@@ -36,3 +33,6 @@ const CustomSort: React.FC<CustomSortProps> = ({ columns, onSort }) => {
 };
 
 export default CustomSort;
+
+
+
