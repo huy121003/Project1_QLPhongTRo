@@ -55,3 +55,14 @@ export const patchAccountApi = (
     role,
   });
 };
+export const changePasswordApi = (
+  _id: string,
+  password: string,
+  oldPassword: string
+): Promise<any> => {
+  return apiConfig.post(`/api/v1/users/change-password`, {
+    _id,
+    password,
+    oldPassword,
+  });
+};

@@ -49,10 +49,14 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
           name="code"
           rules={[{ required: true, message: 'Please input your code!' }]}
         >
-          <Input placeholder="Code" />
+          <Input placeholder="Code" 
+          size="large"
+          />
         </Form.Item>
       </Form>
-      <Button type="primary" onClick={activateAccount} loading={loading} disabled={loading}>
+      <Button type="primary" onClick={activateAccount} loading={loading} disabled={loading}
+      size="large"
+      >
         Submit
       </Button>
     </div>
@@ -64,7 +68,9 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
       <p className="text-gray-500">
         Your account has been activated successfully.
       </p>
-      <Button type="primary" onClick={() => {
+      <Button 
+      size="large"
+      type="primary" onClick={() => {
         setOpen(false);
         setCurrent(0);
         navigate("/login");

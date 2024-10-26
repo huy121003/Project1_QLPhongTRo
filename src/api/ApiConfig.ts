@@ -11,7 +11,7 @@ export const apiConfig = axios.create({
 
 // Cấu hình header mặc định cho tất cả các yêu cầu, bao gồm Authorization chứa token
 apiConfig.defaults.headers.common = {
-  Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Lấy token từ localStorage để xác thực
+  "Authorization": `Bearer ${localStorage.getItem("access_token")}`, // Lấy token từ localStorage để xác thực
 };
 
 // Thêm interceptor cho request (yêu cầu)

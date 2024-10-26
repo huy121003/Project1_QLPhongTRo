@@ -14,9 +14,6 @@ import homeRouters from "./routers/index";
 import ProtectedRoute from "./routers/ProtectedRouter";
 import { message } from "antd";
 
-import ResetPasswordPage from "./pages/AuthPages/ResetPasswordPage";
-import ActiveAccountPage from "./pages/AuthPages/ActiveAccountPage";
-
 // Router setup moved outside to avoid re-creating it on every render
 const router = createBrowserRouter([
   {
@@ -43,29 +40,26 @@ const router = createBrowserRouter([
     path: "/register",
     element: <RegisterPage />,
   },
-
 ]);
 
 function App() {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
- 
 
   useEffect(() => {
     // Only fetch the user account if authenticated and not on the login page
     const isLoginPage =
       window.location.pathname === "/login" ||
-      window.location.pathname === "/register" 
-     
+      window.location.pathname === "/register";
+
     if (!isLoginPage) {
       const getAccount = async () => {
         const res = await apiFetchUser();
         if (res?.data) {
           dispatch(getUserAction(res.data.user));
-          //  message.success(res.message);
         } else message.error(res.message);
       };
-     
+
       getAccount();
     }
   }, [dispatch, isAuthenticated]); // Correct dependencies
@@ -74,9 +68,8 @@ function App() {
   if (
     isAuthenticated === true ||
     window.location.pathname === "/login" ||
-    window.location.pathname === "/"||
+    window.location.pathname === "/" ||
     window.location.pathname === "/register"
-
   ) {
     return <RouterProvider router={router} />;
   } else {

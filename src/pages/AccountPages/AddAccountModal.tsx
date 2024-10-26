@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Button,
-  Input,
-  DatePicker,
-  Form,
-  Select,
-  message,
-  
-} from "antd";
+import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
 import { postAccountApi } from "../../services/accountApi"; // Adjust the path to your API function
-
 
 import { Gender } from "../../models/AccountModel";
 import { fecthRoleApi } from "../../services/roleApi";
@@ -32,16 +22,13 @@ const AddAccountModal: React.FC<Props> = ({
     const getRole = async () => {
       const res = await fecthRoleApi("current=1&pageSize=1000");
       if (res?.data) {
-    
         setRole(res.data.result);
       } else message.error(res.message);
     };
     getRole();
-  }
-    , [ openAddAccount]);
+  }, [openAddAccount]);
 
   const [form] = Form.useForm();
- 
 
   const handleOk = async () => {
     // Validate the form fields
@@ -49,7 +36,7 @@ const AddAccountModal: React.FC<Props> = ({
 
     // Combine first name, middle name, and last name into a single name
     const fullName =
-      `${values.FirstName} ${values.MiddleName} ${values.LastName}`.trim();
+      `${values.FirstName} ${values.MiddleName||""} ${values.LastName}`.trim();
 
     const birthdayDate = values.BirthDay.toDate();
     const birthdayIsoString = new Date(birthdayDate).toISOString();
@@ -89,6 +76,7 @@ const AddAccountModal: React.FC<Props> = ({
       }}
       footer={[
         <Button
+          size="large"
           key="back"
           onClick={() => {
             setOpenAddAccount(false);
@@ -98,7 +86,7 @@ const AddAccountModal: React.FC<Props> = ({
         >
           Cancel
         </Button>,
-        <Button key="submit" type="primary" onClick={handleOk}>
+        <Button key="submit" type="primary" onClick={handleOk} size="large">
           <p className="font-xl text-white flex">Add</p>
         </Button>,
       ]}
@@ -114,10 +102,10 @@ const AddAccountModal: React.FC<Props> = ({
               ]}
               className="mr-2 flex-1"
             >
-              <Input placeholder="First Name" />
+              <Input placeholder="First Name" size="large" />
             </Form.Item>
             <Form.Item name="MiddleName" className="mr-2 flex-1">
-              <Input placeholder="Middle Name" />
+              <Input placeholder="Middle Name" size="large" />
             </Form.Item>
             <Form.Item
               name="LastName"
@@ -126,7 +114,7 @@ const AddAccountModal: React.FC<Props> = ({
               ]}
               style={{ flex: 1 }}
             >
-              <Input placeholder="Last Name" />
+              <Input placeholder="Last Name" size="large" />
             </Form.Item>
           </div>
         </Form.Item>
@@ -138,7 +126,7 @@ const AddAccountModal: React.FC<Props> = ({
               name="Email"
               rules={[{ required: true, message: "Email is required" }]}
             >
-              <Input placeholder="Enter email" />
+              <Input placeholder="Enter email" size="large" />
             </Form.Item>
             <Form.Item
               className="mr-2 flex-1"
@@ -146,7 +134,7 @@ const AddAccountModal: React.FC<Props> = ({
               name="Phone"
               rules={[{ required: true, message: "Phone is required" }]}
             >
-              <Input type="number" placeholder="Enter phone" />
+              <Input type="number" placeholder="Enter phone" size="large" />
             </Form.Item>
           </div>
         </Form.Item>
@@ -159,7 +147,7 @@ const AddAccountModal: React.FC<Props> = ({
               rules={[{ required: true, message: "Password is required" }]}
               className="mr-2 flex-1"
             >
-              <Input.Password placeholder="Enter password" />
+              <Input.Password placeholder="Enter password" size="large" />
             </Form.Item>
             <Form.Item
               label={<span>IdCard</span>}
@@ -167,7 +155,7 @@ const AddAccountModal: React.FC<Props> = ({
               rules={[{ required: true, message: "IdCard is required" }]}
               className="mr-2 flex-1"
             >
-              <Input type="number" placeholder="Enter IdCard" />
+              <Input type="number" placeholder="Enter IdCard" size="large" />
             </Form.Item>
           </div>
         </Form.Item>
@@ -180,7 +168,7 @@ const AddAccountModal: React.FC<Props> = ({
               rules={[{ required: true, message: "Birthday is required" }]}
               className="mr-2 flex-1"
             >
-              <DatePicker placeholder="Enter Birthday" />
+              <DatePicker placeholder="Enter Birthday" size="large" />
             </Form.Item>
             <Form.Item
               label={<span>Gender</span>}
@@ -188,7 +176,7 @@ const AddAccountModal: React.FC<Props> = ({
               rules={[{ required: true, message: "Gender is required" }]}
               className="mr-2 flex-1"
             >
-              <Select placeholder="Select gender">
+              <Select placeholder="Select gender" size="large">
                 {Object.values(Gender).map((gender) => (
                   <Option key={gender} value={gender}>
                     {gender}
@@ -203,14 +191,13 @@ const AddAccountModal: React.FC<Props> = ({
               rules={[{ required: true, message: "Role is required" }]}
               className="mr-2 flex-1"
             >
-              <Select placeholder="Select role"
-              
-              
+              <Select
+                placeholder="Select role"
+                size="large"
                 dropdownRender={(menu) => (
-                  <div className="max-h-[150px] overflow-y-auto">
-                    {menu}
-                  </div>
-                )}>
+                  <div className="max-h-[150px] overflow-y-auto">{menu}</div>
+                )}
+              >
                 {role.map((r) => (
                   <Option key={r._id} value={r._id}>
                     {r.name}
@@ -225,7 +212,7 @@ const AddAccountModal: React.FC<Props> = ({
           name="Address"
           rules={[{ required: true, message: "Address is required" }]}
         >
-          <Input placeholder="Enter address" />
+          <Input placeholder="Enter address" size="large" />
         </Form.Item>
       </Form>
     </Modal>

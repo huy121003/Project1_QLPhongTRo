@@ -70,7 +70,7 @@ const EditAccountModal: React.FC<Props> = ({
       const response = await patchAccountApi(
         record._id,
         values.Phone,
-        `${values.FirstName} ${values.MiddleName} ${values.LastName}`, // Combine names back
+        `${values.FirstName} ${values.MiddleName||""} ${values.LastName}`, // Combine names back
         birthday, // Send formatted birthday
         values.Gender,
         values.Address,
@@ -124,13 +124,13 @@ const EditAccountModal: React.FC<Props> = ({
               ]}
               className="mr-2 flex-1"
             >
-              <Input placeholder="First Name" />
+              <Input placeholder="First Name" size="large"/>
             </Form.Item>
             <Form.Item
               name="MiddleName"
               style={{ flex: 1, marginRight: "8px" }}
             >
-              <Input placeholder="Middle Name" />
+              <Input placeholder="Middle Name" size="large"/>
             </Form.Item>
             <Form.Item
               name="LastName"
@@ -139,7 +139,7 @@ const EditAccountModal: React.FC<Props> = ({
               ]}
               className="flex-1"
             >
-              <Input placeholder="Last Name" />
+              <Input placeholder="Last Name" size="large" />
             </Form.Item>
           </div>
         </Form.Item>
@@ -151,7 +151,7 @@ const EditAccountModal: React.FC<Props> = ({
               rules={[{ required: true, message: "Please input the email!" }]}
               className="mr-2 flex-1"
             >
-              <Input placeholder="Enter Email" disabled />
+              <Input placeholder="Enter Email" disabled  size="large"/>
             </Form.Item>
             <Form.Item
               name="Phone"
@@ -159,7 +159,7 @@ const EditAccountModal: React.FC<Props> = ({
               rules={[{ required: true, message: "Please input the phone!" }]}
               className="flex-1"
             >
-              <Input placeholder="Enter Phone" />
+              <Input placeholder="Enter Phone" size="large"/>
             </Form.Item>
           </div>
         </Form.Item>
@@ -168,7 +168,7 @@ const EditAccountModal: React.FC<Props> = ({
           label={<span>IdCard</span>}
           rules={[{ required: true, message: "Please input the IdCard!" }]}
         >
-          <Input placeholder="Enter IdCard" type="number" />
+          <Input placeholder="Enter IdCard" type="number" size="large"/>
         </Form.Item>
         <Form.Item wrapperCol={{ span: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -178,15 +178,17 @@ const EditAccountModal: React.FC<Props> = ({
               rules={[
                 { required: true, message: "Please input the birthday!" },
               ]}
+                 className="flex-1"
             >
-              <DatePicker format="YYYY-MM-DD" />
+              <DatePicker format="YYYY-MM-DD" size="large"/>
             </Form.Item>
             <Form.Item
               name="Gender"
               label={<span>Gender</span>}
               rules={[{ required: true, message: "Please input the Gender!" }]}
+                 className="flex-1 mx-2"
             >
-              <Select>
+              <Select size="large">
                 {Object.values(Gender).map((item) => (
                   <Select.Option key={item} value={item}>
                     {item}
@@ -199,8 +201,9 @@ const EditAccountModal: React.FC<Props> = ({
               name="Role"
               label={<span>Role</span>}
               rules={[{ required: true, message: "Please input the Role!" }]}
+              className="flex-1"
             >
-              <Select>
+              <Select size="large">
                 {role.map((item) => (
                   <Select.Option key={item._id} value={item._id}>
                     {item.name}
@@ -215,7 +218,7 @@ const EditAccountModal: React.FC<Props> = ({
           label={<span>Address</span>}
           rules={[{ required: true, message: "Please input the address!" }]}
         >
-          <Input placeholder="Enter Address" />
+          <Input placeholder="Enter Address" size="large" />
         </Form.Item>
       </Form>
     </Modal>

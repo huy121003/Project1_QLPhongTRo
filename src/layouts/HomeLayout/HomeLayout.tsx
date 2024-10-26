@@ -2,27 +2,30 @@ import { useState, useEffect } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import homeRouters from "../../routers";
 import { resizeWidth } from "../../utils/resize";
-import { useAppDispatch } from "../../redux/hook";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { apiLogout } from "../../services/authtApi";
 
 import { logoutAction } from "../../redux/slice/auth/authSlice";
-import { message } from "antd";
+import { Dropdown, Menu, message } from "antd";
+import DropdownButton from "antd/es/dropdown/dropdown-button";
+import ChangePassword from "../../pages/AuthPages/ChangePassword";
 
 interface Props {
   router: any;
 }
 
 function HomeLayout() {
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const width = resizeWidth();
   const [selected, setSelected] = useState<string>(
     /* localStorage.getItem("selected") ||*/ "Dashboard"
   );
+  const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
   const [isNavOpen, setIsNavOpen] = useState<boolean>(
     /*localStorage.getItem("isNavOpen") === "true" ||*/ true
   );
+  const user = useAppSelector((state) => state.auth.user);
 
   // Lưu trữ state vào localStorage khi có thay đổi
   useEffect(() => {
@@ -42,7 +45,21 @@ function HomeLayout() {
       message.success("Success logout");
     }
   };
-
+  const handleChangePassword = () => {
+    setOpenChangePassword(true);
+  };
+  const menu = (
+    <Menu>
+      <Menu.Item key="1" onClick={handleChangePassword}>
+        Change password
+        <i className="fa fa-key m-3" />
+      </Menu.Item>
+      <Menu.Item key="2" onClick={handleLogout}>
+        Logout
+        <i className="fa fa-sign-out  m-3" />
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <div className="flex h-screen overflow-hidden">
       <nav
@@ -78,17 +95,6 @@ function HomeLayout() {
               ) : null}
             </Link>
           ))}
-        <div className="flex-1" />
-        <div
-          // to="/login"
-          onClick={handleLogout}
-          className="flex flex-row items-center bg-white text-black rounded-md px-4 py-2 w-full hover:bg-gray-300"
-        >
-          <i className="fa fa-sign-out text-2xl" />
-          {width > 680 && isNavOpen ? (
-            <p className="ml-4 text-lg">Log out</p>
-          ) : null}
-        </div>
       </nav>
 
       <div className="flex-1 bg-gray-100 transition-all duration-300">
@@ -100,7 +106,13 @@ function HomeLayout() {
             />
             <h2 className="ml-4 text-2xl">{selected}</h2>
           </div>
-          <div className="flex"></div>
+
+          <Dropdown overlay={menu} trigger={["hover"]}>
+            <div className="flex justify-center items-center hover:text-blue-500">
+              <p className=""> {user?.name}</p>
+              <i className="fa-solid fa-angle-down ml-1"></i>
+            </div>
+          </Dropdown>
         </div>
         <div
           className="flex-1 flex-row overflow-y-auto overflow-x-auto "
@@ -109,6 +121,8 @@ function HomeLayout() {
           <Outlet />
         </div>
       </div>
+      <ChangePassword open={openChangePassword} setOpen={setOpenChangePassword} />
+      
     </div>
   );
 }
