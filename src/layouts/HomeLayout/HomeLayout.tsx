@@ -7,12 +7,9 @@ import { apiLogout } from "../../services/authtApi";
 
 import { logoutAction } from "../../redux/slice/auth/authSlice";
 import { Dropdown, Menu, message } from "antd";
-import DropdownButton from "antd/es/dropdown/dropdown-button";
-import ChangePassword from "../../pages/AuthPages/ChangePassword";
 
-interface Props {
-  router: any;
-}
+import ChangePassword from "../../pages/AuthPages/ChangePassword";
+import axios from "axios";
 
 function HomeLayout() {
   const dispatch = useAppDispatch();
@@ -26,13 +23,6 @@ function HomeLayout() {
     /*localStorage.getItem("isNavOpen") === "true" ||*/ true
   );
   const user = useAppSelector((state) => state.auth.user);
-
-  // Lưu trữ state vào localStorage khi có thay đổi
-  useEffect(() => {
-    localStorage.setItem("selected", selected);
-    localStorage.setItem("isNavOpen", String(isNavOpen));
-  }, [selected, isNavOpen]);
-
   const toggleNav = () => {
     setIsNavOpen((prev) => !prev);
   };
@@ -40,7 +30,7 @@ function HomeLayout() {
     const res = await apiLogout();
     if (res && res.data) {
       dispatch(logoutAction());
-
+      delete axios.defaults.headers.common["Authorization"];
       navigate("/");
       message.success("Success logout");
     }
@@ -121,8 +111,10 @@ function HomeLayout() {
           <Outlet />
         </div>
       </div>
-      <ChangePassword open={openChangePassword} setOpen={setOpenChangePassword} />
-      
+      <ChangePassword
+        open={openChangePassword}
+        setOpen={setOpenChangePassword}
+      />
     </div>
   );
 }

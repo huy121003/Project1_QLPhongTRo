@@ -45,25 +45,24 @@ const router = createBrowserRouter([
 function App() {
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
+  const getAccount = async () => {
+    if (
+      window.location.pathname === "/login" ||
+      window.location.pathname === "/register"
+    ) {
+      return;
+    }
+    const res = await apiFetchUser();
+    console.log("ddd", res);
+    if (res?.data) {
+      dispatch(getUserAction(res.data.user));
+    } else message.error(res.message);
+  };
 
   useEffect(() => {
     // Only fetch the user account if authenticated and not on the login page
-    const isLoginPage =
-      window.location.pathname === "/login" ||
-      window.location.pathname === "/register";
-
-    if (!isLoginPage) {
-      const getAccount = async () => {
-        const res = await apiFetchUser();
-        if (res?.data) {
-          dispatch(getUserAction(res.data.user));
-        } else message.error(res.message);
-      };
-
-      getAccount();
-    }
-  }, [dispatch, isAuthenticated]); // Correct dependencies
-
+    getAccount();
+  }, []); // Correct dependencies
   // Conditional rendering logic simplified
   if (
     isAuthenticated === true ||

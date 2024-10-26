@@ -7,14 +7,15 @@ import { loginaction } from "../../redux/slice/auth/authSlice";
 import { useState } from "react";
 import ResetPasswordPage from "./ResetPasswordPage";
 import RetryCodePage from "./RetryCodePage";
+import axios from "axios";
 
 function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const [issubmit, setIsSubmit] = useState<boolean>(false);
   const navigate = useNavigate();
-const [openResetPassword, setOpenResetPassword] = useState<boolean>(false);
-const [openRetryCode, setOpenRetryCode] = useState<boolean>(false);
-const [email, setEmail] = useState<string>("");
+  const [openResetPassword, setOpenResetPassword] = useState<boolean>(false);
+  const [openRetryCode, setOpenRetryCode] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>("");
   const handleLogin = async (value: any) => {
     const { email, password } = value;
     setEmail(email);
@@ -24,13 +25,16 @@ const [email, setEmail] = useState<string>("");
     setIsSubmit(false);
     if (res?.data) {
       localStorage.setItem("access_token", res.data.access_token);
+      console.log('login',axios.defaults.headers.common["Authorization"]);
       dispatch(loginaction(res.data.user));
       // console.log(res.data.user)
       message.success("Login successfully!");
-      navigate("/dashboard");
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 2000);
     } else {
       if (res?.message === "Account has not been activated!") {
-       message.error(res.message);
+        message.error(res.message);
         setOpenRetryCode(true);
       } else message.error(res.message);
     }
@@ -82,9 +86,14 @@ const [email, setEmail] = useState<string>("");
           </Form.Item>
         </Form>
         <div className="flex-1 justify-end">
-         <Button 
-         size="large"
-         type="link" onClick={() => setOpenResetPassword(true)}> Forgot Password ?</Button>
+          <Button
+            size="large"
+            type="link"
+            onClick={() => setOpenResetPassword(true)}
+          >
+            {" "}
+            Forgot Password ?
+          </Button>
         </div>
         <div className="mt-6 text-center">
           <span className="text-gray-300">Don't have an account?</span>
@@ -92,9 +101,16 @@ const [email, setEmail] = useState<string>("");
             Register
           </Link>
         </div>
-       
-       <ResetPasswordPage open={openResetPassword} setOpen={setOpenResetPassword} />
-       <RetryCodePage open={openRetryCode} setOpen={setOpenRetryCode} email={email} />
+
+        <ResetPasswordPage
+          open={openResetPassword}
+          setOpen={setOpenResetPassword}
+        />
+        <RetryCodePage
+          open={openRetryCode}
+          setOpen={setOpenRetryCode}
+          email={email}
+        />
       </div>
     </AuthLayout>
   );

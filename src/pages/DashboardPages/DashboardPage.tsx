@@ -8,6 +8,7 @@ import { resizeWidth } from "../../utils/resize";
 import { useEffect, useState } from "react";
 import { fetchRoomApi } from "../../services/roomApis";
 import RoomModel, { RoomStatus, RoomType } from "../../models/RoomModel";
+import axios from "axios";
 
 function DashboardPage() {
   const [rooms, setRooms] = useState([]);
@@ -57,11 +58,12 @@ function DashboardPage() {
         ),
     },
   ];
+  console.log("admin", axios.defaults.headers);
   useEffect(() => {
     const getStateRooms = async () => {
       setLoading(true);
       const res = await fetchRoomApi("currentPage=1&pageSize=99999");
-      console.log(res.data);
+
       if (res.data) {
         setOccupiedRooms(
           res.data.result.filter(
@@ -74,24 +76,25 @@ function DashboardPage() {
           )
         );
       } else {
-       // message.error(res.message);
+        // message.error(res.message);
       }
     };
     const getRooms = async () => {
       const res = await fetchRoomApi(
         `currentPage=${currentPage}&pageSize=${pageSize}&status=${RoomStatus.Available}`
       );
-      console.log(res.data);
+
       if (res.data) {
-        console.log("dddd",res.data);
         setRooms(res.data.result);
         setTotal(res.data.meta.totalDocument);
       } else {
         message.error(res.message);
       }
     };
+
     getStateRooms();
     getRooms();
+
     setLoading(false);
   }, [currentPage, pageSize]);
   const onChange = (pagination: any) => {
@@ -116,7 +119,7 @@ function DashboardPage() {
             </Box>
             <Box flexGrow={1}>
               <PieChart
-              loading={loading}
+                loading={loading}
                 series={[
                   {
                     data: [
