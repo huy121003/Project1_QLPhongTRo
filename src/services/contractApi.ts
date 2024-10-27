@@ -37,29 +37,11 @@ export const postContractApi = (
 };
 export const patchContractApi = (
   id: string,
-  room: {
-    _id: string;
-    roomName: string;
-    price: number;
-  },
-  tenant: {
-    _id: string;
-    name: string;
-    idCard: string;
-    phone: string;
-  },
-  startDate: Date,
-  endDate: Date,
-  depositAmount: number,
+  
   status: string
 ): Promise<any> => {
   return apiConfig.patch(`/api/v1/contracts/${id}`, {
-    room,
-    tenant,
-
-    startDate,
-    endDate,
-    depositAmount,
+   
     status,
   });
 };

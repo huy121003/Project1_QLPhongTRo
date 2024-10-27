@@ -53,10 +53,10 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
               ]}
               className="mr-2 flex-1"
             >
-              <Input placeholder="First Name" />
+              <Input placeholder="First Name" size="large" />
             </Form.Item>
             <Form.Item name="MiddleName" className="mr-2 flex-1">
-              <Input placeholder="Middle Name" />
+              <Input placeholder="Middle Name" size="large" />
             </Form.Item>
             <Form.Item
               name="LastName"
@@ -65,7 +65,7 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
               ]}
               style={{ flex: 1 }}
             >
-              <Input placeholder="Last Name" />
+              <Input placeholder="Last Name" size="large"/>
             </Form.Item>
           </div>
         </Form.Item>
@@ -83,6 +83,7 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
             <Input
               placeholder="Enter email"
               className="text-lg rounded-md border-gray-300"
+              size="large"
             />
           </Form.Item>
           <Form.Item
@@ -97,6 +98,7 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
             <Input
               placeholder="Enter phone" type="number"
               className="text-lg rounded-md border-gray-300"
+              size="large"
             />
           </Form.Item>
         </div>
@@ -111,6 +113,7 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
           >
             <Input.Password
               placeholder="Enter password"
+              size="large"
            
             />
           </Form.Item>
@@ -120,7 +123,7 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
             rules={[{ required: true, message: "IdCard is required" }]}
             className="mr-2 flex-1"
           >
-            <Input type="number" placeholder="Enter account CCCD" />
+            <Input placeholder="Enter account IdCard" size="large"/>
           </Form.Item>
         </div>
         </Form.Item>
@@ -132,7 +135,7 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
             rules={[{ required: true, message: "Please enter your Bỉrthday!" }]}
             className="mr-2 flex-1"
           >
-               <DatePicker placeholder="Enter BirthDay" />
+               <DatePicker placeholder="Enter BirthDay" size="large" />
           </Form.Item>
           <Form.Item
             label="Gender"
@@ -141,8 +144,10 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
             className=" flex-1"
           >
             <Select
+            size="large"
               placeholder="Select gender"
-              className="text-lg rounded-md border-gray-300"
+              className="text-lg rounded-md border-gray-300 flex-1"
+            
             >
             {
               Object.values(Gender).map((gender)=>(
@@ -161,6 +166,7 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
             rules={[{ required: true, message: "Please enter your address!" }]}
           >
             <Input
+            size="large"
               placeholder="Enter address"
               className="text-lg rounded-md border-gray-300"
             />
@@ -170,6 +176,7 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
    
           <Form.Item>
             <Button
+            size="large"
               type="primary"
               htmlType="submit"
               className="w-full text-lg bg-yellow-400 hover:bg-yellow-500"

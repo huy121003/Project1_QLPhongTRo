@@ -1,18 +1,22 @@
 import { Button, Divider, Form, Input, message, Modal, Steps, Spin } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { apiActiveAccount, retryCode } from "../../services/authtApi";
 
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
+  email: string;
 }
 
-const RetryCodePage: React.FC<Props> = ({ open, setOpen }) => {
+const RetryCodePage: React.FC<Props> = ({ open, setOpen,email }) => {
   const [formEmail] = Form.useForm();
   const [formCode] = Form.useForm();
   const [id, setId] = useState<string>("");
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(false); // Loading state
+useEffect(() => {
+    formEmail.setFieldsValue({ email: email });
+  }, [email]);
 
   const getCode = async () => {
     setLoading(true); // Start loading
@@ -67,10 +71,12 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen }) => {
             { type: 'email', message: 'Please enter a valid email!' }
           ]}
         >
-          <Input placeholder="Email" />
+          <Input placeholder="Email" size="large"/>
         </Form.Item>
       </Form>
-      <Button type="primary" onClick={getCode} loading={loading} disabled={loading}>
+      <Button
+      size="large"
+      type="primary" onClick={getCode} loading={loading} disabled={loading}>
         Submit
       </Button>
     </div>
@@ -86,10 +92,12 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen }) => {
           name="code"
           rules={[{ required: true, message: 'Please input your code!' }]}
         >
-          <Input placeholder="Code" />
+          <Input placeholder="Code"  size="large"/>
         </Form.Item>
       </Form>
-      <Button type="primary" onClick={activateAccount} loading={loading} disabled={loading}>
+      <Button 
+      size="large"
+      type="primary" onClick={activateAccount} loading={loading} disabled={loading}>
         Submit
       </Button>
     </div>
@@ -98,10 +106,13 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen }) => {
   const Done = () => (
     <div className="mt-12 flex flex-col items-center">
       <i className="fa-solid fa-circle-check text-[100px] text-blue-500 mb-4"></i>
-      <p className="text-gray-500">
+      <p className="text-gray-500 mb-10">
         Your account has been activated successfully.
       </p>
-      <Button type="primary" onClick={() => setOpen(false)}>
+      <Button type="primary" onClick={() => {
+        setOpen(false);
+        setCurrent(0);
+      }}>
         Go back to login
       </Button>
     </div>
@@ -136,9 +147,7 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen }) => {
       footer={null}
       title={<h1 className="text-3xl font-bold text-center">Activate Account</h1>}
     >
-      <h2 className="text-4xl font-bold text-center text-white mb-8">
-        Activate Account
-      </h2>
+      
       <Divider />
       <Steps current={current}>
         {steps.map((item, index) => (
