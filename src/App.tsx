@@ -5,9 +5,7 @@ import { apiFetchUser } from "./services/authtApi";
 import { getUserAction } from "./redux/slice/auth/authSlice";
 
 import HomeLayout from "./layouts/HomeLayout/HomeLayout";
-import DashboardPage from "./pages/DashboardPages/DashboardPage";
-import LoginPage from "./pages/AuthPages/LoginPage";
-import RegisterPage from "./pages/AuthPages/RegisterPage";
+
 import NotFoundPage from "./components/NotFoundPage";
 import Loading from "./components/Loading";
 import homeAdminRouters from "./routers/index";
@@ -15,6 +13,9 @@ import ProtectedRoute from "./routers/ProtectedRouter";
 import { message } from "antd";
 
 import UserLayout from "./layouts/UserLayout/UserLayout";
+import DashboardPage from "./pages/Admin/DashboardPages/DashboardPage";
+import LoginPage from "./pages/AuthPages/LoginPage";
+import RegisterPage from "./pages/AuthPages/RegisterPage";
 
 // Router setup moved outside to avoid re-creating it on every render
 const router = createBrowserRouter([

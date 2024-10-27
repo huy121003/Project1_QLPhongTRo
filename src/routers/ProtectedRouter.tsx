@@ -14,7 +14,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       {isAuthenticated && roleName !== "NORMAL USER" ? (
         <>{children}</>
       ) : isAuthenticated && roleName === "NORMAL USER" ? (
-        <Navigate to="/user/:id" replace />
+        <Navigate to="/user" replace />
       ) : (
         <Navigate to="/login" replace />
       )}

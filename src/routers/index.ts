@@ -1,18 +1,13 @@
-import DashboardPage from "../pages/DashboardPages/DashboardPage";
+import AccountPage from "../pages/Admin/AccountPages/AccountPage";
+import ContractPage from "../pages/Admin/ContractPages/ContractPage";
+import DashboardPage from "../pages/Admin/DashboardPages/DashboardPage";
+import EquipmentPage from "../pages/Admin/EquipmentPages/EquipmentPage";
+import InvoicePage from "../pages/Admin/InvoicePages/InvoicePage";
+import RolePage from "../pages/Admin/RolePages/RolePage";
+import RoomPage from "../pages/Admin/RoomPages/RoomPage";
+import ServicePage from "../pages/Admin/ServicePages/ServicePage";
 
-import RoomPage from "../pages/RoomPages/RoomPage";
 
-
-import ServicePage from "../pages/ServicePages/ServicePage";
-
-import InvoicePage from "../pages/InvoicePages/InvoicePage";
-
-
-import ContractPage from "../pages/ContractPages/ContractPage";
-
-import AccountPage from "../pages/AccountPages/AccountPage";
-import EquipmentPage from "../pages/EquipmentPages/EquipmentPage";
-import RolePage from "../pages/RolePages/RolePage";
 
 
 
