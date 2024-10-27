@@ -1,11 +1,25 @@
-interface RoomModel {
-    _id: string;
-    roomName: string;
-    type: RoomType;
-    status: RoomStatus;
-    price: number;
-    description: string;
-    equipment: any[];
+interface RoomModel { 
+     _id: string,
+      roomName: string,
+      type: RoomType,
+      status: RoomStatus,
+      price:number,
+      description: string,
+      equipment: any[],
+      createdBy: {
+        _id: string;
+        email: string;
+        name: string;
+      };
+      createdAt: Date;
+      updatedAt: Date;
+    
+      updatedBy: {
+        _id: string;
+        email: string;
+        name: string;
+      };
+
 }
 export default RoomModel;
 

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 
 const baseURL = import.meta.env.VITE_BACKEND_URL; // URL cơ bản của API, được lấy từ biến môi trường
-const NO_RETRY_HEADER = 'x-no-retry'; // Tên của header dùng để tránh lặp lại việc refresh token
+const NO_RETRY_HEADER = "x-no-retry"; // Tên của header dùng để tránh lặp lại việc refresh token
 
 // Tạo instance axios để gọi API
 export const apiConfig = axios.create({
@@ -9,15 +9,14 @@ export const apiConfig = axios.create({
   withCredentials: true, // Đảm bảo cookie được gửi kèm trong các yêu cầu
 });
 
-// Cấu hình header mặc định cho tất cả các yêu cầu, bao gồm Authorization chứa token
-apiConfig.defaults.headers.common = {
-  Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Lấy token từ localStorage để xác thực
-};
-
 // Thêm interceptor cho request (yêu cầu)
 apiConfig.interceptors.request.use(
   function (config) {
     // Thực hiện thao tác trước khi gửi yêu cầu
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   function (error) {
@@ -30,7 +29,8 @@ apiConfig.interceptors.request.use(
 const handelRefreshToken = async () => {
   const res = await apiConfig.get("/api/v1/auth/refresh"); // Gửi yêu cầu để lấy token mới
   console.log(res);
-  if (res && res.data) return res.data.access_token; // Nếu có token mới, trả về token
+  if (res && res.data)
+    return res.data.access_token; // Nếu có token mới, trả về token
   else return null; // Nếu không có, trả về null
 };
 
@@ -43,16 +43,29 @@ apiConfig.interceptors.response.use(
   },
   async function (error) {
     // Nếu phản hồi có mã 401 (Unauthorized) và chưa có header NO_RETRY_HEADER
-    if (error.config && error.response && +error.response.status === 401
-      && !error.config.headers[NO_RETRY_HEADER]
+    if (
+      error.config &&
+      error.response &&
+      +error.response.status === 401 &&
+      !error.config.headers[NO_RETRY_HEADER]
     ) {
       const access_token = await handelRefreshToken(); // Gọi hàm để lấy token mới
-      error.config.headers[NO_RETRY_HEADER] = 'true'; // Đặt header để tránh việc lặp lại việc refresh
+      error.config.headers[NO_RETRY_HEADER] = "true"; // Đặt header để tránh việc lặp lại việc refresh
       if (access_token) {
         error.config.headers["Authorization"] = `Bearer ${access_token}`; // Cập nhật token mới vào header Authorization
         localStorage.setItem("access_token", access_token); // Lưu token mới vào localStorage
         return apiConfig.request(error.config); // Gửi lại yêu cầu với token mới
       }
+    }
+    if (
+      error.response &&
+      error.response.status === 400 &&
+      error.config.url === "/api/v1/auth/refresh"
+    ) {
+      // Nếu không lấy được token mới, đăng xuất khỏi hệ thống
+      localStorage.removeItem("access_token");
+
+      window.location.href = "/login";
     }
     // Xử lý lỗi cho những mã trạng thái không thuộc 2xx
     return error?.response?.data ?? Promise.reject(error); // Trả về dữ liệu lỗi hoặc lỗi được xử lý
