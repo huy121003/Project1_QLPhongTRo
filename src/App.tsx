@@ -10,14 +10,16 @@ import LoginPage from "./pages/AuthPages/LoginPage";
 import RegisterPage from "./pages/AuthPages/RegisterPage";
 import NotFoundPage from "./components/NotFoundPage";
 import Loading from "./components/Loading";
-import homeRouters from "./routers/index";
+import homeAdminRouters from "./routers/index";
 import ProtectedRoute from "./routers/ProtectedRouter";
 import { message } from "antd";
+
+import UserLayout from "./layouts/UserLayout/UserLayout";
 
 // Router setup moved outside to avoid re-creating it on every render
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/admin",
     element: (
       <ProtectedRoute>
         <HomeLayout />
@@ -26,7 +28,7 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
     children: [
       { index: true, element: <DashboardPage /> },
-      ...homeRouters.map((route) => ({
+      ...homeAdminRouters.map((route: any) => ({
         path: route.path,
         element: <route.component />, // Assuming correct JSX element rendering
       })),
@@ -39,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+  },
+  {
+    path: "user",
+    element: <UserLayout />,
   },
 ]);
 
@@ -53,7 +59,7 @@ function App() {
       return;
     }
     const res = await apiFetchUser();
-    console.log("ddd", res);
+
     if (res?.data) {
       dispatch(getUserAction(res.data.user));
     } else message.error(res.message);

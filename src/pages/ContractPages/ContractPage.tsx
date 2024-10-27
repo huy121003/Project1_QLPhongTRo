@@ -1,33 +1,37 @@
-import { Radio, Space, Table, message } from "antd";
-import React, { useEffect, useState } from "react";
+import { Popconfirm, Radio, Space, Table, message } from "antd";
+import { useEffect, useState } from "react";
 import {
-  ActionButton,
+
   AddButton,
   ColumnSelector,
-  DeleteModal,
+ 
 } from "../../components"; // Change to CustomModal
 import {
-  deleteContractApi,
+ 
   fetchContractApi,
+  patchContractApi,
 } from "../../services/contractApi";
 import SearchFilters from "../../components/SearchFilter";
 import AddContractModal from "./AddContractModal";
-import EditContractModal from "./EditContractModal";
+
 import ContractModel from "../../models/ContractModel";
 import { ContractStatus } from "../../models/ContractModel";
 import DetailContract from "./DetailContract";
-import { render } from "react-dom";
+
+import { updateRoomStatusApi } from "../../services/roomApis";
+import { RoomStatus } from "../../models/RoomModel";
 function ContractPage() {
   const [contracts, setContracts] = useState<ContractModel[]>([]);
-  const [openDelete, setOpenDelete] = useState(false);
+
   const [openAddContract, setOpenAddContract] = useState(false);
-  const [openEditContract, setOpenEditContract] = useState(false);
+
   const [openDetailContract, setOpenDetailContract] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
+
   const columns = [
     {
       title: "Id",
@@ -118,19 +122,21 @@ function ContractPage() {
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (_: any, record: ContractModel) => (
-        <ActionButton
-          item={record}
-          onEdit={() => {
-            setRecord(record);
-            setOpenEditContract(true);
-          }}
-          onDelete={() => {
-            setRecord(record);
-            setOpenDelete(true);
-          }}
-        />
-      ),
+      render: (_: any, record: ContractModel) =>
+        record.status !== ContractStatus.CANCELED &&
+        record.status !== ContractStatus.EXPIRED && (
+          <Popconfirm
+            title="Cancel a contract"
+            description="Are you sure you will cancel this contract?"
+           // onCancel={() => message.error("Click on No")}
+            onConfirm={() => handleCancelContract(record._id, record.room._id)}
+            okText="YES"
+            cancelText="No"
+            placement="leftBottom"
+          >
+            <i className="fa-solid fa-house-circle-xmark text-red-600 text-2xl"></i>
+          </Popconfirm>
+        ),
     },
   ];
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
@@ -143,27 +149,40 @@ function ContractPage() {
     status: "",
     phone: "",
   });
-  useEffect(() => {
-    const getContracts = async () => {
-      const queryParams: Record<string, any> = {
-        currentPage: current,
-        pageSize: pageSize,
-        sort: sorted,
-      };
-      Object.entries(searchParams).forEach(([key, value]) => {
-        if (value) {
-          queryParams[key] = `/${value}/i`;
-        }
-      });
-      const query = new URLSearchParams(queryParams).toString();
-      setIsLoading(true);
-      const res = await fetchContractApi(query);
-      if (res.data) {
-        setContracts(res.data.result);
-        setTotal(res.data.meta.totalDocument);
+  const handleCancelContract = async (id: string, roomId: string) => {
+    const res = await patchContractApi(id, ContractStatus.CANCELED);
+    if (res.data) {
+      const response = await updateRoomStatusApi(roomId, RoomStatus.Available);
+
+      if (response.data) {
+        message.success(res.message);
+        getContracts();
       } else message.error(res.message);
-      setIsLoading(false);
+    } else {
+      message.error(res.message);
+    }
+  };
+  const getContracts = async () => {
+    const queryParams: Record<string, any> = {
+      currentPage: current,
+      pageSize: pageSize,
+      sort: sorted,
     };
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value) {
+        queryParams[key] = `/${value}/i`;
+      }
+    });
+    const query = new URLSearchParams(queryParams).toString();
+    setIsLoading(true);
+    const res = await fetchContractApi(query);
+    if (res.data) {
+      setContracts(res.data.result);
+      setTotal(res.data.meta.totalDocument);
+    } else message.error(res.message);
+    setIsLoading(false);
+  };
+  useEffect(() => {
     getContracts();
   }, [
     current,
@@ -171,8 +190,7 @@ function ContractPage() {
     sorted,
     searchParams,
     openAddContract,
-    openEditContract,
-    openDelete,
+   
   ]);
   const onChange = (pagination: any) => {
     if (pagination.current !== current && pagination) {
@@ -192,13 +210,13 @@ function ContractPage() {
     setSorted(e.target.value);
   };
 
-  const onDeleteContract = async (record: any) => {
-    const res = await deleteContractApi(record._id);
-    if (res.data) {
-      message.success(res.message);
-      setOpenDelete(false);
-    } else message.error(res.message);
-  };
+  // const onDeleteContract = async (record: any) => {
+  //   const res = await deleteContractApi(record._id);
+  //   if (res.data) {
+  //     message.success(res.message);
+  //     setOpenDelete(false);
+  //   } else message.error(res.message);
+  // };
   return (
     <>
       <div className="justify-end p-2 w-full">
@@ -287,12 +305,7 @@ function ContractPage() {
           />
         </div>
       </div>
-      <DeleteModal
-        openDelete={openDelete}
-        setOpenDelete={setOpenDelete}
-        onConfirm={onDeleteContract}
-        record={record}
-      />
+   
       <DetailContract
         openDetailContract={openDetailContract}
         setOpenDetailContract={setOpenDetailContract}

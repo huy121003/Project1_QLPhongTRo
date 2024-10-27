@@ -7,9 +7,7 @@ const NO_RETRY_HEADER = "x-no-retry"; // Tên của header dùng để tránh l�
 export const apiConfig = axios.create({
   baseURL: baseURL, // Thiết lập URL cơ bản cho mọi yêu cầu
   withCredentials: true, // Đảm bảo cookie được gửi kèm trong các yêu cầu
- 
 });
-
 
 // Thêm interceptor cho request (yêu cầu)
 apiConfig.interceptors.request.use(
@@ -58,6 +56,16 @@ apiConfig.interceptors.response.use(
         localStorage.setItem("access_token", access_token); // Lưu token mới vào localStorage
         return apiConfig.request(error.config); // Gửi lại yêu cầu với token mới
       }
+    }
+    if (
+      error.response &&
+      error.response.status === 400 &&
+      error.config.url === "/api/v1/auth/refresh"
+    ) {
+      // Nếu không lấy được token mới, đăng xuất khỏi hệ thống
+      localStorage.removeItem("access_token");
+
+      window.location.href = "/login";
     }
     // Xử lý lỗi cho những mã trạng thái không thuộc 2xx
     return error?.response?.data ?? Promise.reject(error); // Trả về dữ liệu lỗi hoặc lỗi được xử lý

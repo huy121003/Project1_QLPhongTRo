@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import homeRouters from "../../routers";
+import homeAdminRouters from "../../routers";
 import { resizeWidth } from "../../utils/resize";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { apiLogout } from "../../services/authtApi";
@@ -68,7 +68,7 @@ function HomeLayout() {
         >
           {/* <i className="fa-solid fa-house-user text-3xl"></i> */}
         </div>
-        {homeRouters
+        {homeAdminRouters
           .filter((item) => item.label !== undefined)
           .map((item) => (
             <Link

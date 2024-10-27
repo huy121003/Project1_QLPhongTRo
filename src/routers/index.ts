@@ -13,7 +13,7 @@ import ContractPage from "../pages/ContractPages/ContractPage";
 import AccountPage from "../pages/AccountPages/AccountPage";
 import EquipmentPage from "../pages/EquipmentPages/EquipmentPage";
 import RolePage from "../pages/RolePages/RolePage";
-import PermissionPage from "../pages/PermissionPages/PermissionPage";
+
 
 
 
@@ -26,7 +26,7 @@ interface Routers{
     icon?: string;
     label?: string;
 }
-const   homeRouters:Routers[] = [
+const   homeAdminRouters:Routers[] = [
 
   {
     path: "dashboard",
@@ -90,4 +90,8 @@ const   homeRouters:Routers[] = [
   
 ];
 
-export default homeRouters;
+// const homeUserRouters:Routers[] = [
+//   {
+//   }
+// ]
+export default homeAdminRouters;

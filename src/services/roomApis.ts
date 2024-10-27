@@ -47,3 +47,11 @@ export const patchRoomApi = (
     equipment,
   });
 };
+export const updateRoomStatusApi = (
+  id: string,
+  status: RoomStatus
+): Promise<any> => {
+  return axios.patch(`/api/v1/rooms/${id}`, {
+    status,
+  });
+}
