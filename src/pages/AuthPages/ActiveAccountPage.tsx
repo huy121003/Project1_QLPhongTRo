@@ -1,7 +1,7 @@
-import { Button, Divider, Form, Input, message, Modal, Steps, Spin } from "antd";
+import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
 import React, { useState } from "react";
-import { apiActiveAccount, retryCode } from "../../services/authtApi";
-import { Navigate, useNavigate } from "react-router-dom";
+import { apiActiveAccount } from "../../services/authtApi";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   open: boolean;

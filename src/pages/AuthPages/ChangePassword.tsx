@@ -5,10 +5,9 @@ import {
   Input,
   message,
   Modal,
-  Steps,
-  Spin,
+ 
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { changePasswordApi } from "../../services/accountApi";
 import { useNavigate } from "react-router-dom";

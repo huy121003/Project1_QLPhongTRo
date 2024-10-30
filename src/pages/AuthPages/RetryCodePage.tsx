@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, message, Modal, Steps, Spin } from "antd";
+import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
 import React, { useEffect, useState } from "react";
 import { apiActiveAccount, retryCode } from "../../services/authtApi";
 
@@ -8,13 +8,13 @@ interface Props {
   email: string;
 }
 
-const RetryCodePage: React.FC<Props> = ({ open, setOpen,email }) => {
+const RetryCodePage: React.FC<Props> = ({ open, setOpen, email }) => {
   const [formEmail] = Form.useForm();
   const [formCode] = Form.useForm();
   const [id, setId] = useState<string>("");
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(false); // Loading state
-useEffect(() => {
+  useEffect(() => {
     formEmail.setFieldsValue({ email: email });
   }, [email]);
 
@@ -67,16 +67,20 @@ useEffect(() => {
         <Form.Item
           name="email"
           rules={[
-            { required: true, message: 'Please input your email!' },
-            { type: 'email', message: 'Please enter a valid email!' }
+            { required: true, message: "Please input your email!" },
+            { type: "email", message: "Please enter a valid email!" },
           ]}
         >
-          <Input placeholder="Email" size="large"/>
+          <Input placeholder="Email" size="large" />
         </Form.Item>
       </Form>
       <Button
-      size="large"
-      type="primary" onClick={getCode} loading={loading} disabled={loading}>
+        size="large"
+        type="primary"
+        onClick={getCode}
+        loading={loading}
+        disabled={loading}
+      >
         Submit
       </Button>
     </div>
@@ -85,19 +89,24 @@ useEffect(() => {
   const EnterCode = () => (
     <div className="mt-12">
       <p className="text-gray-500 mb-4">
-        A code has been sent to your email address. Please enter the code to activate your account.
+        A code has been sent to your email address. Please enter the code to
+        activate your account.
       </p>
       <Form form={formCode}>
         <Form.Item
           name="code"
-          rules={[{ required: true, message: 'Please input your code!' }]}
+          rules={[{ required: true, message: "Please input your code!" }]}
         >
-          <Input placeholder="Code"  size="large"/>
+          <Input placeholder="Code" size="large" />
         </Form.Item>
       </Form>
-      <Button 
-      size="large"
-      type="primary" onClick={activateAccount} loading={loading} disabled={loading}>
+      <Button
+        size="large"
+        type="primary"
+        onClick={activateAccount}
+        loading={loading}
+        disabled={loading}
+      >
         Submit
       </Button>
     </div>
@@ -109,10 +118,13 @@ useEffect(() => {
       <p className="text-gray-500 mb-10">
         Your account has been activated successfully.
       </p>
-      <Button type="primary" onClick={() => {
-        setOpen(false);
-        setCurrent(0);
-      }}>
+      <Button
+        type="primary"
+        onClick={() => {
+          setOpen(false);
+          setCurrent(0);
+        }}
+      >
         Go back to login
       </Button>
     </div>
@@ -145,9 +157,10 @@ useEffect(() => {
         setCurrent(0);
       }}
       footer={null}
-      title={<h1 className="text-3xl font-bold text-center">Activate Account</h1>}
+      title={
+        <h1 className="text-3xl font-bold text-center">Activate Account</h1>
+      }
     >
-      
       <Divider />
       <Steps current={current}>
         {steps.map((item, index) => (

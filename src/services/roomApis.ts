@@ -16,7 +16,7 @@ export const postRoomApi = (
   status: RoomStatus,
   price: number,
   description: string,
-  equipment: any[]
+  services: any[]
 ): Promise<any> => {
   return axios.post(`/api/v1/rooms`, {
     roomName,
@@ -24,27 +24,25 @@ export const postRoomApi = (
     status,
     price: parseInt(price.toString()),
     description,
-    equipment,
+    services,
   });
 };
 
 export const patchRoomApi = (
   id: string,
-  // roomName: string,
   type: RoomType,
-  //  status: RoomStatus,
+  status: RoomStatus,
   price: number,
   description: string,
-  equipment: any[]
+  services: any[]
 ): Promise<any> => {
   console.log("dd", price);
   return axios.patch(`/api/v1/rooms/${id}`, {
-    //   roomName,
     type,
-    // status,
+    status,
     price: parseInt(price.toString()),
     description,
-    equipment,
+    services,
   });
 };
 export const updateRoomStatusApi = (
@@ -54,4 +52,4 @@ export const updateRoomStatusApi = (
   return axios.patch(`/api/v1/rooms/${id}`, {
     status,
   });
-}
+};

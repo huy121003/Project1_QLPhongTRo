@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
-import { useNavigate } from "react-router-dom";
 import { apiResetPassword, retryCode } from "../../services/authtApi";
-
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
 }
-
 const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
   const [formEmail] = Form.useForm();
   const [formCode] = Form.useForm();
@@ -60,18 +57,13 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
       <p className="text-gray-500 mb-4">Please enter your email address.</p>
       <Form form={formEmail}>
         <Form.Item
-        
           name="email"
           rules={[{ required: true, message: "Please input your email!" }]}
         >
           <Input placeholder="Email" size="large" />
         </Form.Item>
       </Form>
-      <Button
-        size="large"
-        type="primary"
-        onClick={getCode}
-      >
+      <Button size="large" type="primary" onClick={getCode} loading={loading}>
         Submit
       </Button>
     </div>
@@ -104,11 +96,7 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
           <Input.Password placeholder="Confirm Password" size="large" />
         </Form.Item>
       </Form>
-      <Button
-        size="large"
-        type="primary"
-        onClick={resetPassword}
-      >
+      <Button size="large" type="primary" onClick={resetPassword}>
         Submit
       </Button>
     </div>

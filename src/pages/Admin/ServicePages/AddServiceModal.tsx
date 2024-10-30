@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, Button, Input, Form, Select, message } from "antd";
 import { postServiceApi } from "../../../services/serviceApi";
 
-import { useAppDispatch, useAppSelector } from "../../../redux/hook";
+
 import { ServiceType } from "../../../models/ServiceModel";
 interface Props {
     openAddService: boolean;
@@ -12,7 +12,7 @@ interface Props {
 const  AddServiceModal:React.FC<Props>=({openAddService, setOpenAddService})=> {
     const [form] = Form.useForm();
 
- const dispatch = useAppDispatch()
+
  
    
     const handleOk = async () => {

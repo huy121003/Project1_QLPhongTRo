@@ -40,11 +40,15 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
+    path: "/",
+    element: <LoginPage />,
+  },
+  {
     path: "/register",
     element: <RegisterPage />,
   },
   {
-    path: "user",
+    path: "user/:id",
     element: <UserLayout />,
   },
 ]);
@@ -67,10 +71,9 @@ function App() {
   };
 
   useEffect(() => {
-    // Only fetch the user account if authenticated and not on the login page
     getAccount();
-  }, []); // Correct dependencies
-  // Conditional rendering logic simplified
+  }, []);
+
   if (
     isAuthenticated === true ||
     window.location.pathname === "/login" ||

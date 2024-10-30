@@ -1,11 +1,7 @@
 import React, { useEffect } from "react";
 import { Modal, Button, Input, Form, message, Select } from "antd";
 import { patchServiceApi } from "../../../services/serviceApi";
-
-import { useAppDispatch } from "../../../redux/hook";
-
 import { ServiceModel, ServiceType } from "../../../models/ServiceModel";
-
 interface Props {
   openEditService: boolean;
   setOpenEditService: (value: boolean) => void;
@@ -18,7 +14,6 @@ const EditServiceModal: React.FC<Props> = ({
   record,
 }) => {
   const [form] = Form.useForm();
-  const dispatch = useAppDispatch();
   useEffect(() => {
     if (openEditService && record) {
       form.setFieldsValue({
@@ -48,7 +43,7 @@ const EditServiceModal: React.FC<Props> = ({
 
       if (response.statusCode === 200) {
         message.success(response.message);
-      
+
         form.resetFields(); // Reset form fields
         setOpenEditService(false); // Close modal on success
       } else {

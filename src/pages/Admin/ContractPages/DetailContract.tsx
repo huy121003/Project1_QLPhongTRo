@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from "react";
-import {
-  Badge,
-  Descriptions,
-  Drawer,
-  message,
-  Switch,
-  Tag,
-  Collapse,
-} from "antd";
-import { SyncOutlined } from "@ant-design/icons";
+import React from "react";
+import { Descriptions, Drawer } from "antd";
+
 import moment from "moment";
 import ContractModel, { ContractStatus } from "../../../models/ContractModel";
-import { resizeWidth } from "../../../utils/resize";
+import { getContractStatusColor } from "../../../utils/getMethodColor";
+
 interface Props {
   openDetailContract: boolean;
   setOpenDetailContract: (value: boolean) => void;
@@ -26,7 +19,7 @@ const DetailContract: React.FC<Props> = ({
   const formatDate = (date: Date) => {
     return moment(date).format("DD/MM/YYYY");
   };
-  const width = resizeWidth();
+
   const items = [
     {
       key: "1",
@@ -35,7 +28,7 @@ const DetailContract: React.FC<Props> = ({
     },
     {
       key: "2",
-      label:"Phone",
+      label: "Phone",
       children: record?.tenant.phone,
     },
     {
@@ -50,12 +43,12 @@ const DetailContract: React.FC<Props> = ({
     },
     {
       key: "5",
-      label:"Price",
+      label: "Price",
       children: record?.room.price.toLocaleString() + " đ",
     },
     {
-      key:"7",
-      label:"Innkeeper",
+      key: "7",
+      label: "Innkeeper",
       children: record?.innkeeper.name,
     },
     {
@@ -68,33 +61,32 @@ const DetailContract: React.FC<Props> = ({
       label: "End Date",
       children: formatDate(record?.endDate),
     },
-   {
+    {
       key: "10",
       label: "Deposit Amount",
       children: record?.depositAmount.toLocaleString() + " đ",
-   },
+    },
 
     {
       key: "11",
       label: "Status",
-      children: record?.status === ContractStatus.EXPIRED ? (
-        <p className="text-orange-600 font-bold">{ContractStatus.EXPIRED}</p>
-      ) :status===ContractStatus.CANCELED?  <p className="text-red-600 font-bold">{ContractStatus.CANCELED}</p>: (
-        <p className="text-green-600 font-bold">{ContractStatus.ACTIVE}</p>
-      )
+      children: (
+        <p className={`${getContractStatusColor(record?.status)} font-bold`}>
+          {record?.status}
+        </p>
+      ),
     },
     {
       key: "12",
       label: "Create at",
       children: formatDate(record?.createdAt),
     },
-   
+
     {
       key: "14",
       label: "Created By",
       children: record?.createdBy?.email,
     },
-    
   ];
   return (
     <Drawer
@@ -102,12 +94,7 @@ const DetailContract: React.FC<Props> = ({
       open={openDetailContract}
       width={"100vh"}
     >
-      <Descriptions
-        title="Contract Detail"
-        bordered
-        column={ 1}
-        items={items}
-      />
+      <Descriptions title="Contract Detail" bordered column={1} items={items} />
     </Drawer>
   );
 };
