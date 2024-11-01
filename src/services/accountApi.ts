@@ -35,9 +35,9 @@ export const postAccountApi = (
 };
 export const patchAccountApi = (
   id: string,
-  email: string,
+
   phone: number,
-  password: string,
+
   name: string,
   birthday: Date,
   gender: string,
@@ -46,14 +46,23 @@ export const patchAccountApi = (
   role: string
 ): Promise<any> => {
   return apiConfig.patch(`/api/v1/users/${id}`, {
-    email,
     phone,
-    password,
     name,
     birthday,
     gender,
     address,
     idCard,
-    role: role,
+    role,
+  });
+};
+export const changePasswordApi = (
+  _id: string,
+  password: string,
+  oldPassword: string
+): Promise<any> => {
+  return apiConfig.post(`/api/v1/users/change-password`, {
+    _id,
+    password,
+    oldPassword,
   });
 };

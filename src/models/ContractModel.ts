@@ -1,10 +1,44 @@
 interface ContractModel{
-    ContractId: string;
-    TenantId: string;
-    RoomId: string;
-    StaffId: string;
-    StartDate: string;
-    EndDate: string;
+   _id:string,
+   room:{
+         _id:string,
+         roomName:string,
+       
+         price:number,
+        
+   },
+   tenant:{
+            _id:string,
+            name:string,
+          idCard:string,
+            phone:string,
+    },
+    innkeeper:{
+        _id:string,
+        name:string,
+        
+    },
+    startDate:Date,
+    endDate:Date,
+    depositAmount:number,
+    status:ContractStatus,
+    createdAt:Date,
+    
+    updatedAt:Date,
+    createdBy:{
+        _id:string,
+        email:string,
+    },
+    updatedBy:{
+        _id:string,
+        email:string,
+    }
+    
     
 }
 export default ContractModel;
+export enum ContractStatus{
+    EXPIRED="EXPIRED",
+    ACTIVE="ACTIVE",
+    CANCELED="CANCELED"
+}

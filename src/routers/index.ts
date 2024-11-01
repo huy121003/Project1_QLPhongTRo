@@ -1,31 +1,22 @@
-import DashboardPage from "../pages/DashboardPages/DashboardPage";
+import AccountPage from "../pages/Admin/AccountPages/AccountPage";
+import ContractPage from "../pages/Admin/ContractPages/ContractPage";
+import DashboardPage from "../pages/Admin/DashboardPages/DashboardPage";
+import ElectricPage from "../pages/Admin/ElectricPages/ElectricPage";
 
-import RoomPage from "../pages/RoomPages/RoomPage";
+import InvoicePage from "../pages/Admin/InvoicePages/InvoicePage";
+import RolePage from "../pages/Admin/RolePages/RolePage";
+import RoomPage from "../pages/Admin/RoomPages/RoomPage";
+import ServicePage from "../pages/Admin/ServicePages/ServicePage";
+import WaterPage from "../pages/Admin/WaterPages/WaterPage";
 
-
-import ServicePage from "../pages/ServicePages/ServicePage";
-
-import InvoicePage from "../pages/InvoicePages/InvoicePage";
-
-
-import ContractPage from "../pages/ContractPages/ContractPage";
-
-import AccountPage from "../pages/AccountPages/AccountPage";
-import EquipmentPage from "../pages/EquipmentPages/EquipmentPage";
-
-
-
-
-
-interface Routers{
-    path: string;
-    component: any;
-    isShowNav: boolean;
-    icon?: string;
-    label?: string;
+interface Routers {
+  path: string;
+  component: any;
+  isShowNav: boolean;
+  icon?: string;
+  label?: string;
 }
-const   homeRouters:Routers[] = [
-
+const homeAdminRouters: Routers[] = [
   {
     path: "dashboard",
     component: DashboardPage,
@@ -48,6 +39,20 @@ const   homeRouters:Routers[] = [
     icon: "fa-cubes",
     label: "Service",
   },
+  {
+    path: "electricity",
+    component: ElectricPage,
+    isShowNav: true,
+    icon: "fa-bolt",
+    label: "Electricity",
+  },
+  {
+    path: "Water",
+    component: WaterPage,
+    isShowNav: true,
+    icon: "fa-water",
+    label: "Water",
+  },
 
   {
     path: "invoice",
@@ -55,7 +60,7 @@ const   homeRouters:Routers[] = [
     isShowNav: true,
     icon: "fa-money-bill",
     label: "Invoice",
-  }, 
+  },
   {
     path: "contract",
     component: ContractPage,
@@ -64,20 +69,24 @@ const   homeRouters:Routers[] = [
     label: "Contract",
   },
   {
-    path:"account",
+    path: "account",
     component: AccountPage,
-    isShowNav:true,
-    icon:"fa-solid fa-user-lock",
-    label:"Account"
+    isShowNav: true,
+    icon: "fa-solid fa-user-lock",
+    label: "Account",
   },
+
   {
-    path:"equipment",
-    component: EquipmentPage,
-    isShowNav:true,
-    icon:"fa-solid fa-tools",
-    label:"Equipment"
-  }
-  
+    path: "role",
+    component: RolePage,
+    isShowNav: true,
+    icon: "fa-solid fa-dice-five",
+    label: "Role",
+  },
 ];
 
-export default homeRouters;
+// const homeUserRouters:Routers[] = [
+//   {
+//   }
+// ]
+export default homeAdminRouters;

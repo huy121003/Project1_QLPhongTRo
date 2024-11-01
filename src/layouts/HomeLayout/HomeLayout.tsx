@@ -1,35 +1,28 @@
 import { useState, useEffect } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import homeRouters from "../../routers";
+import homeAdminRouters from "../../routers";
 import { resizeWidth } from "../../utils/resize";
-import { useAppDispatch } from "../../redux/hook";
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { apiLogout } from "../../services/authtApi";
 
 import { logoutAction } from "../../redux/slice/auth/authSlice";
-import { message } from "antd";
+import { Dropdown, Menu, message } from "antd";
 
-interface Props {
-  router: any;
-}
+import ChangePassword from "../../pages/AuthPages/ChangePassword";
+import axios from "axios";
 
 function HomeLayout() {
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const width = resizeWidth();
   const [selected, setSelected] = useState<string>(
     /* localStorage.getItem("selected") ||*/ "Dashboard"
   );
+  const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
   const [isNavOpen, setIsNavOpen] = useState<boolean>(
     /*localStorage.getItem("isNavOpen") === "true" ||*/ true
   );
-
-  // Lưu trữ state vào localStorage khi có thay đổi
-  useEffect(() => {
-    localStorage.setItem("selected", selected);
-    localStorage.setItem("isNavOpen", String(isNavOpen));
-  }, [selected, isNavOpen]);
-
+  const user = useAppSelector((state) => state.auth.user);
   const toggleNav = () => {
     setIsNavOpen((prev) => !prev);
   };
@@ -37,12 +30,26 @@ function HomeLayout() {
     const res = await apiLogout();
     if (res && res.data) {
       dispatch(logoutAction());
-
+      delete axios.defaults.headers.common["Authorization"];
       navigate("/");
       message.success("Success logout");
     }
   };
-
+  const handleChangePassword = () => {
+    setOpenChangePassword(true);
+  };
+  const menu = (
+    <Menu>
+      <Menu.Item key="1" onClick={handleChangePassword}>
+        Change password
+        <i className="fa fa-key m-3" />
+      </Menu.Item>
+      <Menu.Item key="2" onClick={handleLogout}>
+        Logout
+        <i className="fa fa-sign-out  m-3" />
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <div className="flex h-screen overflow-hidden">
       <nav
@@ -61,7 +68,7 @@ function HomeLayout() {
         >
           {/* <i className="fa-solid fa-house-user text-3xl"></i> */}
         </div>
-        {homeRouters
+        {homeAdminRouters
           .filter((item) => item.label !== undefined)
           .map((item) => (
             <Link
@@ -78,17 +85,6 @@ function HomeLayout() {
               ) : null}
             </Link>
           ))}
-        <div className="flex-1" />
-        <div
-          // to="/login"
-          onClick={handleLogout}
-          className="flex flex-row items-center bg-white text-black rounded-md px-4 py-2 w-full hover:bg-gray-300"
-        >
-          <i className="fa fa-sign-out text-2xl" />
-          {width > 680 && isNavOpen ? (
-            <p className="ml-4 text-lg">Log out</p>
-          ) : null}
-        </div>
       </nav>
 
       <div className="flex-1 bg-gray-100 transition-all duration-300">
@@ -100,15 +96,25 @@ function HomeLayout() {
             />
             <h2 className="ml-4 text-2xl">{selected}</h2>
           </div>
-          <div className="flex"></div>
+
+          <Dropdown overlay={menu} trigger={["hover"]}>
+            <div className="flex justify-center items-center hover:text-blue-500">
+              <p className=""> {user?.name}</p>
+              <i className="fa-solid fa-angle-down ml-1"></i>
+            </div>
+          </Dropdown>
         </div>
         <div
           className="flex-1 flex-row overflow-y-auto overflow-x-auto "
-          style={{ maxHeight: "calc(100vh - 4rem)" }}
+          style={{ maxHeight: "calc(100vh - 4rem)", maxWidth: "100vw" }}
         >
           <Outlet />
         </div>
       </div>
+      <ChangePassword
+        open={openChangePassword}
+        setOpen={setOpenChangePassword}
+      />
     </div>
   );
 }

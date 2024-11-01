@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 export const initialState = {
   isAuthenticated: false,
-  isLoading:true,
+  isLoading: true,
   user: {
     email: "",
     name: "",
-    role: "",
+    role: {
+      _id: "",
+      name: "",
+    },
     _id: "",
   },
 };
@@ -19,13 +21,13 @@ export const authSlice = createSlice({
     loginaction: (state, action) => {
       state.isAuthenticated = true;
       state.user = action.payload;
-      state.isLoading=false
+      state.isLoading = false;
     },
     getUserAction: (state, action) => {
       //console.log(action.payload);
       state.isAuthenticated = true;
       state.user = action.payload;
-      state.isLoading=false
+      state.isLoading = false;
     },
     logoutAction: (state) => {
       localStorage.removeItem("access_token");
@@ -33,7 +35,10 @@ export const authSlice = createSlice({
       state.user = {
         email: "",
         name: "",
-        role: "",
+        role: {
+          _id: "",
+          name: "",
+        },
         _id: "",
       };
     },
