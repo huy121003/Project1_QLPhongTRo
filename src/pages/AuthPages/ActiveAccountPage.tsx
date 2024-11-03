@@ -25,7 +25,7 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
 
       const res = await apiActiveAccount(id, code);
       if (res.statusCode === 201) {
-        message.success(res.message);
+        message.success("Account activated successfully.");
         setCurrent(current + 1);
       } else {
         message.error(res.message);

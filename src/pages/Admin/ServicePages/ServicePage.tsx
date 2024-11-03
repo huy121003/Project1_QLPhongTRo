@@ -158,7 +158,7 @@ function ServicePage() {
   const onDeleteService = async (record: any) => {
     const res = await deleteServiceApi(record._id);
     if (res.statusCode === 200) {
-      message.success(res.message);
+      message.success("Service deleted");
       getService();
     } else {
       message.error(res.message);

@@ -26,9 +26,13 @@ const AddServiceModal: React.FC<Props> = ({ openAddService, setOpenAddService })
         values.type
       );
       if (response.statusCode === 201) {
-        message.success(response.message);
-        form.resetFields();
-        setOpenAddService(false);
+
+        message.success("Service added successfully");
+        form.resetFields(); // Reset form fields
+     //   dispatch(addServiceAction(values))
+    
+        setOpenAddService(false); // Close modal on success
+
       } else {
         message.error(response.message);
       }

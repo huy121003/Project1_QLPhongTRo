@@ -1,25 +1,39 @@
-import { Popconfirm, Radio, Space, Table, message } from "antd";
+import { Button, Popconfirm, Radio, Space, Table, message } from "antd";
 import { useEffect, useState } from "react";
-import { AddButton, ColumnSelector } from "../../../components"; // Change to CustomModal
+import { AddButton, ColumnSelector, DeleteModal } from "../../../components"; // Change to CustomModal
 import InvoiceModel, { InvoiceStatus } from "../../../models/InvoiceModal";
 
 import {
   deleteInvoiceApi,
   fetchInvoiceApi,
+  patchInvoiceApi,
+  patchInvoiceStatusApi,
 } from "../../../services/invoiceApi";
 import SearchFilters from "../../../components/SearchFilter";
 import DetailInvoice from "./DetailInvoice";
-import AddInvoiceModal from "./AddInvoiceModal";
+//import AddInvoiceModal from "./AddInvoiceModal";
 import moment from "moment";
 import TableComponent from "../../../components/TableComponent";
 import { getInvoiceStatusColor } from "../../../utils/getMethodColor";
+import YearMonthSelector from "../../../components/YearMonthSelector ";
+import { fetchRoomApi } from "../../../services/roomApis";
+import ChoosenRoom from "./ChoosenRoom";
+import RoomModel from "../../../models/RoomModel";
+import StatusInvoice from "./StatusInvoice";
+import InvoiceTable from "./InvoiceTable";
+import ExportToExcel from "./ExportToExcel";
 
 const InvoicePage = () => {
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [year, setYear] = useState(currentYear);
   const [invoices, setInvoices] = useState<InvoiceModel[]>([]);
+  const [status, setStatus] = useState<InvoiceStatus | "">("");
   const [openAddInvoice, setOpenAddInvoice] = useState(false);
   const [openDetailInvoice, setOpenDetailInvoice] = useState(false);
   const [openEditInvoice, setOpenEditInvoice] = useState(false);
-  
+  const [choosenRoom, setChooenRoom] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null);
   const [current, setCurrent] = useState(1);
@@ -78,38 +92,53 @@ const InvoicePage = () => {
       title: "month",
       dataIndex: "month",
       key: "month",
-      render: (month: string) => <p>{moment(month).format("MM/YYYY")}</p>,
+      render: (month: string) => <p>{month}</p>,
     },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (record: InvoiceModel) => <></>,
+      render: (_: any, record: InvoiceModel) => (
+        <>
+          <div className="flex-1 justify-center items-center">
+            <Popconfirm
+              className="mr-2"
+              title="Payment confirmed "
+              description="Are you sure to confirm payment?"
+              // onCancel={() => message.error("Click on No")}
+              onConfirm={async () => {
+                await onPaymentConfirm(record);
+              }}
+              okText="YES"
+              cancelText="No"
+              placement="leftBottom"
+            >
+              <Button
+                icon={
+                  <i className="fa-solid fa-check text-xl text-green-600"></i>
+                }
+              />
+            </Popconfirm>
+            <DeleteModal onConfirm={onDeleteInvoice} record={record} />
+          </div>
+        </>
+      ),
     },
   ];
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     columns.map((column) => column.dataIndex)
   );
-  const [sorted, setSorted] = useState<string>("");
-  const [searchParams, setSearchParams] = useState({
-    "room.roomName": "",
-    "tenant.name": "",
-    status: "",
-    phone: "",
-    "service.name": "",
-    month: "",
-  });
+
   const getInvoices = async () => {
     const queryParams: Record<string, any> = {
       currentPage: current,
       pageSize: pageSize,
-      sort: sorted,
+      month: `${selectedMonth}-${year}`,
+      "room._id": choosenRoom,
+      status: status,
+      sort: "month",
     };
-    Object.entries(searchParams).forEach(([key, value]) => {
-      if (value) {
-        queryParams[key] = `/${value}/i`;
-      }
-    });
+
     const query = new URLSearchParams(queryParams).toString();
     setIsLoading(true);
     const res = await fetchInvoiceApi(query);
@@ -124,100 +153,39 @@ const InvoicePage = () => {
   }, [
     current,
     pageSize,
-    sorted,
-    searchParams,
-    openAddInvoice,
-  
-    openEditInvoice,
     openDetailInvoice,
+    selectedMonth,
+    year,
+    choosenRoom,
+    status,
   ]);
 
-  const onChange = (pagination: any) => {
-    if (pagination.current !== current && pagination) {
-      setCurrent(pagination.current);
-    }
-    if (pagination.pageSize !== pageSize && pagination) {
-      setPageSize(pagination.pageSize);
-      setCurrent(1);
-    }
-  };
-  const handleSearchChange = (field: string, value: string) => {
-    setSearchParams((prev) => ({ ...prev, [field]: value }));
-    setCurrent(1);
-  };
-  const handleSortChange = (e: any) => {
-    setSorted(e.target.value);
-    setCurrent(1);
-  };
   const onDeleteInvoice = async (record: any) => {
     const res = await deleteInvoiceApi(record._id);
     if (res.data) {
-      message.success(res.message);
+      message.success("Invoice deleted");
+      getInvoices();
+    } else message.error(res.message);
+  };
+  const onPaymentConfirm = async (record: any) => {
+    const res = await patchInvoiceStatusApi(record._id, InvoiceStatus.PAID);
+    if (res.data) {
+      message.success("Payment confirmed");
       getInvoices();
     } else message.error(res.message);
   };
   return (
     <>
       <div className="justify-end p-2 w-full">
-        <SearchFilters
-          searchParams={searchParams}
-          onSearchChange={handleSearchChange}
-          fields={[
-            {
-              label: "Room",
-              field: "room.roomName",
-              type: "text",
-            },
-            {
-              label: "Tenant",
-              field: "tenant.name",
-              type: "text",
-            },
-            {
-              label: "Status",
-              field: "status",
-              type: "select",
-              options: [
-                { label: "All Status", value: "" },
-                { label: "PAID", value: InvoiceStatus.PAID },
-                { label: "UNPAID", value: InvoiceStatus.UNPAID },
-              ],
-            },
-            {
-              label: "Service",
-              field: "service.name",
-              type: "text",
-            },
-            {
-              label: "Month",
-              field: "month",
-              type: "date",
-            },
-          ]}
+        <YearMonthSelector
+          selectedMonth={selectedMonth}
+          year={year}
+          setYear={setYear}
+          setSelectedMonth={setSelectedMonth}
         />
-        <div className="bg-white p-2 rounded-lg m-2">
-          <h2 className="font-bold text-xl my-3">Sort by</h2>
-          <Radio.Group onChange={handleSortChange} value={sorted}>
-            <Space direction="horizontal" className="justify-between">
-              <Radio value="room.roomName" className="font-bold">
-                By Room Name
-              </Radio>
-              <Radio value="tenant.name" className="font-bold">
-                By Tenant Name
-              </Radio>
-              <Radio value="status" className="font-bold">
-                By Status
-              </Radio>
-              <Radio value="service.name" className="font-bold">
-                By Service
-              </Radio>
-              <Radio value="month" className="font-bold">
-                By Month
-              </Radio>
-            </Space>
-          </Radio.Group>
-        </div>
-        <div className="bg-white p-2 rounded-lg m-2 justify-between flex">
+        <ChoosenRoom choosenRoom={choosenRoom} setChooenRoom={setChooenRoom} />
+        <StatusInvoice status={status} setStatus={setStatus} />
+        <div className="bg-white p-2 rounded-lg m-2 justify-between items-center flex">
           <div>
             <ColumnSelector
               columns={columns}
@@ -225,30 +193,27 @@ const InvoicePage = () => {
               onChangeVisibleColumns={setVisibleColumns}
             />
           </div>
-          <AddButton
-            onClick={() => setOpenAddInvoice(true)}
-            label="Add Invoice"
-          />
+          <ExportToExcel invoices={invoices} />
         </div>
-        <div className="bg-white p-2 rounded-lg m-2">
-          <TableComponent
-            data={invoices}
-            columns={columns}
-            visibleColumns={visibleColumns}
-            isLoading={isLoading}
-            current={current}
-            pageSize={pageSize}
-            total={total}
-            onChange={onChange}
-          />
-        </div>
+        <TableComponent
+          data={invoices}
+          columns={columns}
+          visibleColumns={visibleColumns}
+          isLoading={isLoading}
+          current={current}
+          pageSize={pageSize}
+          total={total}
+          onChange={(pagination) => {
+            setCurrent(pagination.current);
+            setPageSize(pagination.pageSize);
+          }}
+        />
       </div>
       <DetailInvoice
+        record={record}
         open={openDetailInvoice}
         setOpen={setOpenDetailInvoice}
-        record={record}
       />
-      <AddInvoiceModal open={openAddInvoice} setOpen={setOpenAddInvoice} />
     </>
   );
 };

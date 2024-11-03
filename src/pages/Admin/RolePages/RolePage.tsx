@@ -134,7 +134,7 @@ function RolePage() {
   const onDeleteRole = async (record: any) => {
     const response = await deleteRoleApi(record._id);
     if (response.data) {
-      message.success(response.message);
+      message.success("Role deleted");
       getRoles();
     } else {
       message.error(response.message);

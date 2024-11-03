@@ -30,7 +30,7 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
     );
     if (res.statusCode === 201) {
       setId(res.data._id);
-      message.success(res.message);
+      message.success("Register successfully");
      
      setOpenActiveAccount(true);
      

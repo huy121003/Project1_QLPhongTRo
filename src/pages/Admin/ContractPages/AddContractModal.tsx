@@ -85,7 +85,7 @@ const AddContractModal: React.FC<Props> = ({
         ContractStatus.ACTIVE
       );
       if (response.statusCode === 201) {
-        message.success(response.message);
+        message.success("Contract added successfully");
         form.resetFields();
         setOpenAddContract(false);
       } else {

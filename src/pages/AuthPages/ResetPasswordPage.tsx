@@ -41,7 +41,7 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
       }
       const res = await apiResetPassword(id, values.code, values.password);
       if (res.statusCode === 201) {
-        message.success(res.message);
+        message.success("Password reset successfully.");
         setCurrent(current + 1);
       } else {
         message.error(res.message);

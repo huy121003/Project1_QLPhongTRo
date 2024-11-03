@@ -71,7 +71,7 @@ const EditRoomModal: React.FC<Props> = ({
         enableService
       );
       if (response.statusCode === 200) {
-        message.success(response.message);
+        message.success("Room updated successfully");
         form.resetFields();
         setOpenEditRoom(false);
       } else {

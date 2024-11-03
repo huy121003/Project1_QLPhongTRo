@@ -116,7 +116,7 @@ function RoomPage() {
     setIsLoading(true);
 
     const res = await fetchRoomApi(query);
-    console.log(res);
+    
     setIsLoading(false);
     if (res.data.result) {
       setRooms(res.data.result);
@@ -151,7 +151,7 @@ function RoomPage() {
   const onDeleteRoom = async (record: any) => {
     const res = await deleteRoomApi(record._id);
     if (res.statusCode === 200) {
-      message.success(res.message);
+      message.success("Room deleted");
       getRoom();
     } else {
       message.error(res.message);

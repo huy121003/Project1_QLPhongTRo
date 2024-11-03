@@ -34,7 +34,7 @@ const EditServiceModal: React.FC<Props> = ({ openEditService, setOpenEditService
         values.type
       );
       if (response.statusCode === 200) {
-        message.success(response.message);
+        message.success("Service updated successfully");
 
         form.resetFields(); // Reset form fields
         setOpenEditService(false); // Close modal on success
