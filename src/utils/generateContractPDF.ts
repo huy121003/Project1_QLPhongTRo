@@ -5,8 +5,8 @@ import moment from "moment";
 
 export const downloadContractPDF = (contract: ContractModel) => {
   const doc = new jsPDF("p", "mm", "a4", true);
+ 
 
-  // Thêm font
   doc.addFont(
     "https://raw.githubusercontent.com/tienhieu03/fonts/main/Roboto-Regular.ttf",
     "Roboto",
