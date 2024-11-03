@@ -157,7 +157,7 @@ function AccountPage() {
       setAccounts(formattedAccounts);
       setTotal(res.data.meta.total);
 
-      // message.success()
+    
     } else message.error(res.message);
   };
   useEffect(() => {
@@ -194,7 +194,7 @@ function AccountPage() {
   const onDeleteAccount = async (record: any) => {
     const res = await deleteAcountApi(record._id);
     if (res.statusCode === 200) {
-      message.success(res.message);
+      message.success("Account deleted");
       getAccount();
     } else message.error(res.message);
   };

@@ -1,7 +1,7 @@
 import apiConfig from "../api/ApiConfig";
+import { InvoiceStatus } from "../models/InvoiceModal";
 
 export const fetchInvoiceApi = (query: string): Promise<any> => {
-  console.log(query);
   return apiConfig.get(`/api/v1/invoices?${query}`);
 };
 
@@ -29,27 +29,13 @@ export const postInvoiceApi = (
     unit: string;
     priceUnit: number;
   },
-  month: Date,
-  dueDate: Date,
-  totalNumber: number,
-  amount: number,
+  month: string,
+  //dueDate: Date,
+
   description: string,
   firstIndex?: number,
   finalIndex?: number
 ): Promise<any> => {
-  console.log(
-    "invoice",
-    room,
-    tenant,
-    service,
-    month,
-    dueDate,
-    totalNumber,
-    amount,
-    description,
-    firstIndex,
-    finalIndex
-  );
   return apiConfig.post(`/api/v1/invoices`, {
     room,
     tenant,
@@ -58,7 +44,26 @@ export const postInvoiceApi = (
     finalIndex,
 
     month,
-    dueDate,
+    //dueDate,
     description,
+  });
+};
+
+export const patchInvoiceApi = (
+  id: string,
+  firstIndex?: number,
+  finalIndex?: number
+): Promise<any> => {
+  return apiConfig.patch(`/api/v1/invoices/${id}`, {
+    firstIndex,
+    finalIndex,
+  });
+};
+export const patchInvoiceStatusApi = (
+  id: string,
+  status: InvoiceStatus
+): Promise<any> => {
+  return apiConfig.patch(`/api/v1/invoices/${id}`, {
+    status,
   });
 };

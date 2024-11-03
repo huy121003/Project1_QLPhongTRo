@@ -31,7 +31,7 @@ const  AddServiceModal:React.FC<Props>=({openAddService, setOpenAddService})=> {
   
      
       if (response.statusCode === 201) {
-        message.success(response.message);
+        message.success("Service added successfully");
         form.resetFields(); // Reset form fields
      //   dispatch(addServiceAction(values))
      

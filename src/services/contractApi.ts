@@ -33,15 +33,15 @@ export const postContractApi = (
     endDate,
     depositAmount,
     status,
+    rentCycleCount: 1,
   });
 };
 export const patchContractApi = (
   id: string,
-  
+
   status: string
 ): Promise<any> => {
   return apiConfig.patch(`/api/v1/contracts/${id}`, {
-   
     status,
   });
 };

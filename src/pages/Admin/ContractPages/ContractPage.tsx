@@ -1,4 +1,4 @@
-import { Popconfirm, message } from "antd";
+import { Button, Popconfirm, message } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton, ColumnSelector } from "../../../components"; // Change to CustomModal
 import {
@@ -116,7 +116,11 @@ function ContractPage() {
                 cancelText="No"
                 placement="leftBottom"
               >
-                <i className="fa-solid fa-house-circle-xmark text-red-600 text-2xl"></i>
+                <Button
+                  icon={
+                    <i className="fa-solid fa-house-circle-xmark text-red-600 text-xl"></i>
+                  }
+                />
               </Popconfirm>
             )}
         </div>
@@ -139,7 +143,7 @@ function ContractPage() {
       const response = await updateRoomStatusApi(roomId, RoomStatus.Available);
 
       if (response.data) {
-        message.success(res.message);
+        message.success("Cancel contract successfully");
         getContracts();
       } else message.error(res.message);
     } else {

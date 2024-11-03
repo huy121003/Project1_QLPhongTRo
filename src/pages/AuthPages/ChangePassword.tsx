@@ -40,7 +40,7 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
         values.password
       );
       if (res.statusCode === 201) {
-        message.success(res.message);
+        message.success("Password changed successfully.");
 
         const respone = await apiLogout();
         if (respone && respone.data) {

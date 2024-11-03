@@ -79,7 +79,7 @@ const EditAccountModal: React.FC<Props> = ({
       );
 
       if (response.statusCode === 200) {
-        message.success(response.message);
+        message.success("Account updated successfully");
         form.resetFields();
         setOpenEditAccount(false);
       } else {

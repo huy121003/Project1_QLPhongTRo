@@ -28,7 +28,7 @@ apiConfig.interceptors.request.use(
 // Hàm xử lý refresh token nếu token hết hạn
 const handelRefreshToken = async () => {
   const res = await apiConfig.get("/api/v1/auth/refresh"); // Gửi yêu cầu để lấy token mới
-  console.log(res);
+
   if (res && res.data)
     return res.data.access_token; // Nếu có token mới, trả về token
   else return null; // Nếu không có, trả về null

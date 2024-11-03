@@ -14,7 +14,6 @@ const DetailService: React.FC<Props> = ({
   setOpenDetailService,
   record,
 }) => {
-  console.log(record);
   const formatDate = (dateString: string) => {
     return moment(dateString).format("DD/MM/YYYY"); // Format date using moment
   };

@@ -56,7 +56,7 @@ const AddAccountModal: React.FC<Props> = ({
     );
 
     if (response.statusCode === 201) {
-      message.success(response.message);
+      message.success("Account added successfully");
       form.resetFields(); // Reset form fields
 
       setOpenAddAccount(false); // Close modal on success

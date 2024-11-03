@@ -36,7 +36,7 @@ export const patchRoomApi = (
   description: string,
   services: any[]
 ): Promise<any> => {
-  console.log("dd", price);
+ 
   return axios.patch(`/api/v1/rooms/${id}`, {
     type,
     status,
