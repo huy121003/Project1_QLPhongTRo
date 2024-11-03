@@ -1,6 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-import { Form, Input, Button, Select, notification, message, DatePicker } from "antd";
+import { Form, Input, Button, Select, message, DatePicker } from "antd";
 import { apiRegister } from "../../services/authtApi"
 import { Gender } from "../../models/AccountModel";
 import { useState } from "react";
@@ -30,7 +30,7 @@ const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
     );
     if (res.statusCode === 201) {
       setId(res.data._id);
-      message.success(res.message);
+      message.success("Register successfully");
      
      setOpenActiveAccount(true);
      

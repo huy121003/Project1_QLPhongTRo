@@ -1,12 +1,6 @@
-import { Radio, Space, Table, message } from "antd";
+import { Button, message } from "antd";
 import { useEffect, useState } from "react";
-import {
-  ActionButton,
-  AddButton,
-  ColumnSelector,
-  DeleteModal,
-} from "../../../components";
-import SearchFilters from "../../../components/SearchFilter";
+import { AddButton, ColumnSelector, DeleteModal } from "../../../components";
 
 import { RoleModel } from "../../../models/RoleModel";
 import { deleteRoleApi, fecthRoleApi } from "../../../services/roleApi";
@@ -14,12 +8,15 @@ import { deleteRoleApi, fecthRoleApi } from "../../../services/roleApi";
 import DetailRole from "./DetailRole";
 import AddRoleModel from "./AddRoleModel";
 import EditRoleModal from "./EditRoleModal";
+import RoleFilters from "./RoleFilters";
+import TableComponent from "../../../components/TableComponent";
+import { getRoleColor } from "../../../utils/getMethodColor";
 function RolePage() {
   const [roles, setRoles] = useState<RoleModel[]>([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
-  const [openDelete, setOpenDelete] = useState(false);
+
   const [openAddRole, setOpenAddRole] = useState(false);
   const [openEditRole, setOpenEditRole] = useState(false);
   const [openDetailRole, setOpenDetailRole] = useState(false);
@@ -49,11 +46,7 @@ function RolePage() {
       render: (name: string) => (
         <p
           className={`border ${
-            name === "SUPER ADMIN"
-              ? "border-red-600 bg-red-200 text-red-600"
-              : name === "NORMAL USER"
-              ? "border-green-600 bg-green-200 text-green-600"
-              : "border-blue-600 bg-blue-200 text-blue-600"
+            getRoleColor(name) as string
           } text-center rounded border-2 w-[120px] p-2`}
         >
           {name}
@@ -61,9 +54,7 @@ function RolePage() {
       ),
     },
     { title: "Description", dataIndex: "description", key: "description" },
-    // { title: "Permissions", dataIndex: "permissions", key: "permissions" , render: (permissions: string[]) => (
-    //    permissions.map((permission) => <p key={permission}>{permission}</p>)
-    //   )},
+
     {
       title: "Created At",
       dataIndex: "createdAt",
@@ -77,16 +68,21 @@ function RolePage() {
       render: (_: any, record: any) =>
         record.name === "SUPER ADMIN" ||
         record.name === "NORMAL USER" ? null : (
-          <ActionButton
-            item={record}
-            onEdit={() => {
-              setOpenEditRole(true), setRecord(record);
-            }}
-            onDelete={() => {
-              setOpenDelete(true);
-              setRecord(record);
-            }}
-          />
+          <div className="gap-2 flex">
+            <Button
+              icon={
+                <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
+              }
+              onClick={() => {
+                setOpenEditRole(true), setRecord(record);
+              }}
+            />
+
+            <DeleteModal
+              onConfirm={onDeleteRole} // Pass the delete function
+              record={record} // Pass the record to delete
+            />
+          </div>
         ),
     },
   ];
@@ -97,37 +93,29 @@ function RolePage() {
   const [searchParams, setSearchParams] = useState({
     name: "",
   });
-  useEffect(() => {
-    const getRoles = async () => {
-      const queryParams: Record<string, any> = {
-        current: current,
-        pageSize: pageSize,
-        sort: sorted,
-      };
-      Object.entries(searchParams).forEach(([key, value]) => {
-        if (value) queryParams[key] = `/${value}/i`;
-      });
-      const query = new URLSearchParams(queryParams).toString();
-      setIsLoading(true);
-      const response = await fecthRoleApi(query);
-      setIsLoading(false);
-      if (response.data.result) {
-        setRoles(response.data.result);
-        setTotal(response.data.meta.total);
-      } else {
-        message.error(response.message);
-      }
+  const getRoles = async () => {
+    const queryParams: Record<string, any> = {
+      current: current,
+      pageSize: pageSize,
+      sort: sorted,
     };
+    Object.entries(searchParams).forEach(([key, value]) => {
+      if (value) queryParams[key] = `/${value}/i`;
+    });
+    const query = new URLSearchParams(queryParams).toString();
+    setIsLoading(true);
+    const response = await fecthRoleApi(query);
+    setIsLoading(false);
+    if (response.data.result) {
+      setRoles(response.data.result);
+      setTotal(response.data.meta.total);
+    } else {
+      message.error(response.message);
+    }
+  };
+  useEffect(() => {
     getRoles();
-  }, [
-    current,
-    pageSize,
-    sorted,
-    searchParams,
-    openAddRole,
-    openDelete,
-    openEditRole,
-  ]);
+  }, [current, pageSize, sorted, searchParams, openAddRole, openEditRole]);
   const onChange = (pagination: any) => {
     if (pagination.current !== current) setCurrent(pagination.current);
     if (pagination.pageSize !== pageSize) {
@@ -137,14 +125,17 @@ function RolePage() {
   };
   const handleSearchChange = (field: string, value: string) => {
     setSearchParams((prev) => ({ ...prev, [field]: value }));
+    setCurrent(1);
   };
   const handleSortChange = (e: any) => {
     setSorted(e.target.value);
+    setCurrent(1);
   };
   const onDeleteRole = async (record: any) => {
     const response = await deleteRoleApi(record._id);
     if (response.data) {
-      message.success(response.message);
+      message.success("Role deleted");
+      getRoles();
     } else {
       message.error(response.message);
     }
@@ -152,20 +143,15 @@ function RolePage() {
 
   return (
     <div className="justify-end p-2 w-full">
-      <SearchFilters
+      <RoleFilters
         searchParams={searchParams}
-        onSearchChange={handleSearchChange}
-        fields={[{ label: "Role Name", field: "name", type: "text" }]}
+        handleSearchChange={handleSearchChange}
+        handleSortChange={handleSortChange}
+        sorted={sorted}
+        setVisibleColumns={setVisibleColumns}
+        columns={columns}
+        visibleColumns={visibleColumns}
       />
-      <div className="bg-white p-2 rounded-lg m-2">
-        <h2 className="font-bold text-xl my-3">Sort by</h2>
-        <Radio.Group onChange={handleSortChange} value={sorted}>
-          <Space direction="horizontal">
-            <Radio value="name">Role Name</Radio>
-            <Radio value="createdAt">Created At</Radio>
-          </Space>
-        </Radio.Group>
-      </div>
       <div className="bg-white p-2 rounded-lg m-2 justify-between flex">
         <div>
           <ColumnSelector
@@ -177,20 +163,15 @@ function RolePage() {
         <AddButton onClick={() => setOpenAddRole(true)} label="Add Role" />
       </div>
       <div className="bg-white p-2 rounded-lg m-2">
-        <Table
-          loading={isLoading}
-          dataSource={roles}
-          columns={columns.filter((column) =>
-            visibleColumns.includes(column.dataIndex)
-          )}
+        <TableComponent
+          data={roles}
+          columns={columns}
+          visibleColumns={visibleColumns}
+          isLoading={isLoading}
+          current={current}
+          pageSize={pageSize}
+          total={total}
           onChange={onChange}
-          pagination={{
-            current: current,
-            pageSize: pageSize,
-            total: total,
-            showSizeChanger: true,
-            pageSizeOptions: [5, 10, 20, 50, 100, 200],
-          }}
         />
       </div>
       <DetailRole
@@ -199,13 +180,12 @@ function RolePage() {
         record={record}
       />
       <AddRoleModel openAddRole={openAddRole} setOpenAddRole={setOpenAddRole} />
-      <DeleteModal
-        openDelete={openDelete}
-        setOpenDelete={setOpenDelete}
-        onConfirm={onDeleteRole}
+
+      <EditRoleModal
+        openEditRole={openEditRole}
+        setOpenEditRole={setOpenEditRole}
         record={record}
       />
-      <EditRoleModal openEditRole={openEditRole} setOpenEditRole={setOpenEditRole} record={record} />
     </div>
   );
 }

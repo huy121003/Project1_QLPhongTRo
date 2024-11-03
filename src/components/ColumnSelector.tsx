@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Dropdown, Button, Checkbox, MenuProps } from "antd";
+import {  Dropdown, Button, Checkbox, MenuProps } from "antd";
 
 // Prop types for ColumnSelector
 interface ColumnSelectorProps {

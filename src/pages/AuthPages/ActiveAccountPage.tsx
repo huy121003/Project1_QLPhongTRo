@@ -1,7 +1,7 @@
-import { Button, Divider, Form, Input, message, Modal, Steps, Spin } from "antd";
+import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
 import React, { useState } from "react";
-import { apiActiveAccount, retryCode } from "../../services/authtApi";
-import { Navigate, useNavigate } from "react-router-dom";
+import { apiActiveAccount } from "../../services/authtApi";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   open: boolean;
@@ -25,7 +25,7 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
 
       const res = await apiActiveAccount(id, code);
       if (res.statusCode === 201) {
-        message.success(res.message);
+        message.success("Account activated successfully.");
         setCurrent(current + 1);
       } else {
         message.error(res.message);

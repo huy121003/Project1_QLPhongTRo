@@ -1,6 +1,6 @@
 import React from 'react'
 
-function EditContractModal() {
+function InvoiceTable() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function EditContractModal() {
   )
 }
 
-export default EditContractModal
+export default InvoiceTable

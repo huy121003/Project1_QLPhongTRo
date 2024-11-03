@@ -32,7 +32,6 @@ export const patchServiceApi = (
   unit: string,
   type: string
 ): Promise<any> => {
-  console.log("dd", price);
   return axios.patch(`/api/v1/services/${id}`, {
     serviceName,
     description,

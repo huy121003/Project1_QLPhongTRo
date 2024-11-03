@@ -5,10 +5,9 @@ import {
   Input,
   message,
   Modal,
-  Steps,
-  Spin,
+ 
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { changePasswordApi } from "../../services/accountApi";
 import { useNavigate } from "react-router-dom";
@@ -41,7 +40,7 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
         values.password
       );
       if (res.statusCode === 201) {
-        message.success(res.message);
+        message.success("Password changed successfully.");
 
         const respone = await apiLogout();
         if (respone && respone.data) {
