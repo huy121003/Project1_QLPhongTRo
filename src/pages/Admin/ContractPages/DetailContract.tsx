@@ -1,9 +1,10 @@
 import React from "react";
-import { Descriptions, Drawer } from "antd";
-
+import { Descriptions, Drawer, Button } from "antd";
+import { PrinterOutlined } from '@ant-design/icons';
 import moment from "moment";
 import ContractModel, { ContractStatus } from "../../../models/ContractModel";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
+import { downloadContractPDF } from "../../../utils/generateContractPDF";
 
 interface Props {
   openDetailContract: boolean;
@@ -18,6 +19,12 @@ const DetailContract: React.FC<Props> = ({
 }) => {
   const formatDate = (date: Date) => {
     return moment(date).format("DD/MM/YYYY");
+  };
+
+  const handlePrintPDF = () => {
+    if (record) {
+      downloadContractPDF(record);
+    }
   };
 
   const items = [
@@ -93,6 +100,15 @@ const DetailContract: React.FC<Props> = ({
       onClose={() => setOpenDetailContract(false)}
       open={openDetailContract}
       width={"100vh"}
+      extra={
+        <Button 
+          type="primary" 
+          icon={<PrinterOutlined />} 
+          onClick={handlePrintPDF}
+        >
+          In hợp đồng
+        </Button>
+      }
     >
       <Descriptions title="Contract Detail" bordered column={1} items={items} />
     </Drawer>

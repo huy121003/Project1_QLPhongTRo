@@ -1,22 +1,27 @@
-import axios from "../api/ApiConfig";
+import { Axios } from "axios";
+import apiConfig from "../api/ApiConfig";
+import { ServiceModel, ServiceType } from "./serviceModel";
 
-export const fetchServiceApi = (query: any): Promise<any> => {
-  return axios.get(`/api/v1/services?${query}`);
+export const fetchServiceApi = async (query: any): Promise<any> => {
+  return apiConfig.get(`/api/v1/services?${query}`);
 };
-export const fetchServiceByIdApi = (id: string): Promise<any> => {
-  return axios.get(`/api/v1/services/${id}`);
+
+export const fetchServiceByIdApi = async (id: string): Promise<any> => {
+  return apiConfig.get(`/api/v1/services/${id}`);
 };
-export const deleteServiceApi = (id: string): Promise<any> => {
-  return axios.delete(`/api/v1/services/${id}`);
+
+export const deleteServiceApi = async (id: string): Promise<any> => {
+  return apiConfig.delete(`/api/v1/services/${id}`);
 };
+
 export const postServiceApi = (
   serviceName: string,
   description: string,
-  price: number,
+  price: string,
   unit: string,
-  type: string
+  type: ServiceType
 ): Promise<any> => {
-  return axios.post(`/api/v1/services`, {
+  return apiConfig.post(`/api/v1/services`, {
     serviceName,
     description,
     price,
@@ -24,18 +29,21 @@ export const postServiceApi = (
     type,
   });
 };
+
 export const patchServiceApi = (
   id: string,
   serviceName: string,
   description: string,
   price: string,
   unit: string,
-  type: string
+  type: ServiceType
 ): Promise<any> => {
+
   return axios.patch(`/api/v1/services/${id}`, {
+
     serviceName,
     description,
-    price: price,
+    price,
     unit,
     type,
   });

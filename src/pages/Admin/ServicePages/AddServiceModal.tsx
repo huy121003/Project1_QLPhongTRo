@@ -5,12 +5,12 @@ import { postServiceApi } from "../../../services/serviceApi";
 
 import { ServiceType } from "../../../models/ServiceModel";
 interface Props {
-    openAddService: boolean;
-    setOpenAddService: (value: boolean) => void;
+  openAddService: boolean;
+  setOpenAddService: (value: boolean) => void;
 }
 
-const  AddServiceModal:React.FC<Props>=({openAddService, setOpenAddService})=> {
-    const [form] = Form.useForm();
+const AddServiceModal: React.FC<Props> = ({ openAddService, setOpenAddService }) => {
+  const [form] = Form.useForm();
 
 
  
@@ -18,9 +18,6 @@ const  AddServiceModal:React.FC<Props>=({openAddService, setOpenAddService})=> {
     const handleOk = async () => {
       // Validate the form fields
       const values = await form.validateFields();
-    
-  
-      // Call the API to post account data
       const response = await postServiceApi(
         values.serviceName,
         values.description,
@@ -28,15 +25,14 @@ const  AddServiceModal:React.FC<Props>=({openAddService, setOpenAddService})=> {
         values.unit,
         values.type
       );
-  
-     
       if (response.statusCode === 201) {
+
         message.success("Service added successfully");
         form.resetFields(); // Reset form fields
      //   dispatch(addServiceAction(values))
-     
+    
         setOpenAddService(false); // Close modal on success
-       
+
       } else {
         message.error(response.message);
       }
@@ -143,6 +139,6 @@ const  AddServiceModal:React.FC<Props>=({openAddService, setOpenAddService})=> {
         </Form>
       </Modal>
     );
-}
+};
 
-export default AddServiceModal
+export default AddServiceModal;
