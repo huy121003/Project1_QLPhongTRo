@@ -48,7 +48,6 @@ const EditServiceModal: React.FC<Props> = ({ openEditService, setOpenEditService
 
   return (
     <Modal
-      title="Edit Service"
       centered
       open={openEditService}
       title={<h1 className="text-3xl font-bold text-center">Edit Service</h1>}
