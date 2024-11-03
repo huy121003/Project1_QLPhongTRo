@@ -1,6 +1,6 @@
 import { Axios } from "axios";
 import apiConfig from "../api/ApiConfig";
-import { ServiceModel, ServiceType } from "./serviceModel";
+import { ServiceModel, ServiceType } from "../models/ServiceModel";
 
 export const fetchServiceApi = async (query: any): Promise<any> => {
   return apiConfig.get(`/api/v1/services?${query}`);
@@ -39,7 +39,7 @@ export const patchServiceApi = (
   type: ServiceType
 ): Promise<any> => {
 
-  return axios.patch(`/api/v1/services/${id}`, {
+  return apiConfig.patch(`/api/v1/services/${id}`, {
 
     serviceName,
     description,
