@@ -1,26 +1,25 @@
-import { Button, Popconfirm, Radio, Space, Table, message } from "antd";
+import { Button, Popconfirm, message } from "antd";
 import { useEffect, useState } from "react";
-import { AddButton, ColumnSelector, DeleteModal } from "../../../components"; // Change to CustomModal
+import { ColumnSelector, DeleteModal } from "../../../components"; // Change to CustomModal
 import InvoiceModel, { InvoiceStatus } from "../../../models/InvoiceModal";
 
 import {
   deleteInvoiceApi,
   fetchInvoiceApi,
-  patchInvoiceApi,
   patchInvoiceStatusApi,
 } from "../../../services/invoiceApi";
-import SearchFilters from "../../../components/SearchFilter";
+
 import DetailInvoice from "./DetailInvoice";
 //import AddInvoiceModal from "./AddInvoiceModal";
-import moment from "moment";
+
 import TableComponent from "../../../components/TableComponent";
 import { getInvoiceStatusColor } from "../../../utils/getMethodColor";
 import YearMonthSelector from "../../../components/YearMonthSelector ";
-import { fetchRoomApi } from "../../../services/roomApis";
+
 import ChoosenRoom from "./ChoosenRoom";
-import RoomModel from "../../../models/RoomModel";
+
 import StatusInvoice from "./StatusInvoice";
-import InvoiceTable from "./InvoiceTable";
+
 import ExportToExcel from "./ExportToExcel";
 
 const InvoicePage = () => {
@@ -30,9 +29,7 @@ const InvoicePage = () => {
   const [year, setYear] = useState(currentYear);
   const [invoices, setInvoices] = useState<InvoiceModel[]>([]);
   const [status, setStatus] = useState<InvoiceStatus | "">("");
-  const [openAddInvoice, setOpenAddInvoice] = useState(false);
   const [openDetailInvoice, setOpenDetailInvoice] = useState(false);
-  const [openEditInvoice, setOpenEditInvoice] = useState(false);
   const [choosenRoom, setChooenRoom] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null);
@@ -101,24 +98,26 @@ const InvoicePage = () => {
       render: (_: any, record: InvoiceModel) => (
         <>
           <div className="flex-1 justify-center items-center">
-            <Popconfirm
-              className="mr-2"
-              title="Payment confirmed "
-              description="Are you sure to confirm payment?"
-              // onCancel={() => message.error("Click on No")}
-              onConfirm={async () => {
-                await onPaymentConfirm(record);
-              }}
-              okText="YES"
-              cancelText="No"
-              placement="leftBottom"
-            >
-              <Button
-                icon={
-                  <i className="fa-solid fa-check text-xl text-green-600"></i>
-                }
-              />
-            </Popconfirm>
+            {record.status === InvoiceStatus.UNPAID && (
+              <Popconfirm
+                className="mr-2"
+                title="Payment confirmed "
+                description="Are you sure to confirm payment?"
+                // onCancel={() => message.error("Click on No")}
+                onConfirm={async () => {
+                  await onPaymentConfirm(record);
+                }}
+                okText="YES"
+                cancelText="No"
+                placement="leftBottom"
+              >
+                <Button
+                  icon={
+                    <i className="fa-solid fa-check text-xl text-green-600"></i>
+                  }
+                />
+              </Popconfirm>
+            )}
             <DeleteModal onConfirm={onDeleteInvoice} record={record} />
           </div>
         </>

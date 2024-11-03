@@ -10,7 +10,7 @@ interface Props {
 
 const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(6);
   const [total, setTotal] = useState(0);
   const [rooms, setRooms] = useState<RoomModel[]>([]);
 

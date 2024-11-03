@@ -123,7 +123,6 @@ function ServicePage() {
   };
   // Fetch services function
   useEffect(() => {
-   
     getService();
   }, [
     current,
@@ -173,9 +172,6 @@ function ServicePage() {
           handleSearchChange={handleSearchChange}
           handleSortChange={handleSortChange}
           sorted={sorted}
-          setVisibleColumns={setVisibleColumns}
-          columns={columns}
-          visibleColumns={visibleColumns}
         />
         <div className="bg-white p-2 rounded-lg m-2 justify-between flex">
           <div>
@@ -211,7 +207,7 @@ function ServicePage() {
       <EditServiceModal
         openEditService={openEditService}
         setOpenEditService={setOpenEditService}
-        record={record}
+        service={record}
       />
       <DetailService
         openDetailService={openDetailService}
