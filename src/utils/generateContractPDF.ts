@@ -37,31 +37,49 @@ export const downloadContractPDF = (contract: ContractModel) => {
   doc.setFontSize(14);
   doc.text("I – BÊN CHO THUÊ (Bên A):", 20, 70);
   doc.setFontSize(12);
-  addWrappedText(doc, `1. Ông/Bà (chủ sở hữu ngôi nhà): ${contract.innkeeper.name}`, 30, 80, 150, 6);
+  doc.text("1. Ông/Bà (chủ sở hữu ngôi nhà): ", 30, 80);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.innkeeper.name}`, 90, 80);
+  doc.setFont("Times New Roman", "normal");
 
   // Bên thuê
   doc.setFontSize(14);
   doc.text("II – BÊN THUÊ (Bên B):", 20, 130);
   doc.setFontSize(12);
-  doc.text(`1. Ông/Bà: ${contract.tenant.name}`, 30, 140);
-  doc.text(`CCCD số: ${contract.tenant.idCard}`, 30, 150);
-
-  doc.text(`Điện thoại: ${contract.tenant.phone}`, 30, 170);
+  doc.text("1. Ông/Bà: ", 30, 140);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.tenant.name}`, 50, 140);
+  doc.setFont("Times New Roman", "normal");
+  doc.text("CCCD số: ", 30, 150);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.tenant.idCard}`, 60, 150);
+  doc.setFont("Times New Roman", "normal");
+  doc.text("Điện thoại: ", 30, 170);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.tenant.phone}`, 60, 170);
+  doc.setFont("Times New Roman", "normal");
 
   // Điều khoản hợp đồng
   doc.setFontSize(12);
   addWrappedText(doc, "Sau khi bàn bạc, hai bên đã thống nhất ký kết hợp đồng thuê nhà với các điều khoản sau:",20,200,170,6);
 
   doc.setFontSize(14);
-  addWrappedText(doc, `Điều 1: Bên A đồng ý cho Bên B thuê phòng trọ số ${contract.room.roomName} .`,20,220,170,6);
+  addWrappedText(doc, `Điều 1: Bên A đồng ý cho Bên B thuê phòng trọ số `, 20, 220, 170, 6);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.room.roomName}`, 120, 220);
+  doc.setFont("Times New Roman", "normal");
+
   doc.setFontSize(14);
   doc.text("Điều 2: Thời hạn hợp đồng:", 20, 260);
   doc.setFontSize(12);
-  addWrappedText(doc, `- Bên A đồng ý cho Bên B thuê với thời gian bắt đầu từ ngày ${moment(
-      contract.startDate
-    ).format("DD/MM/YYYY")} đến ngày ${moment(contract.endDate).format(
-      "DD/MM/YYYY"
-    )}.`,30,270,170,6);
+  addWrappedText(doc, `- Bên A đồng ý cho Bên B thuê với thời gian bắt đầu từ ngày `, 30, 270, 170, 6);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${moment(contract.startDate).format("DD/MM/YYYY")}`, 135, 270);
+  doc.setFont("Times New Roman", "normal");
+  addWrappedText(doc, ` đến ngày `, 30, 276, 170, 6);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${moment(contract.endDate).format("DD/MM/YYYY")}`, 50, 276);
+  doc.setFont("Times New Roman", "normal");
   doc.addPage();
   addWrappedText(doc, "- Hết thời hạn trên, nếu Bên B còn có nhu cầu thuê và Bên A chưa có nhu cầu sử dụng thì Bên A đồng ý ký hợp đồng tiếp dựa trên các điều khoản thoả thuận mới.",
     30,30,170,6);
@@ -71,19 +89,17 @@ export const downloadContractPDF = (contract: ContractModel) => {
   doc.setFontSize(14);
   doc.text("Điều 3: Giá và phương thức thanh toán:", 20, 60);
   doc.setFontSize(12);
-  doc.text(
-    `- Đơn giá cho thuê là: ${contract.room.price.toLocaleString(
-      "vi-VN"
-    )} VND.`,
-    30,
-    70
-  );
+  doc.text(`- Đơn giá cho thuê là: `, 30, 70);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.room.price.toLocaleString("vi-VN")} VND.`, 70, 70);
+  doc.setFont("Times New Roman", "normal");
   addWrappedText(doc, `- Đơn giá trên có giá trị trong năm ${moment(contract.startDate).format("YYYY")}, sau thời hạn này giá thuê sẽ theo giá thị trường.`,
   30,80,170,6);
   doc.text("- Phương thức thanh toán: Chuyển khoản hoặc tiền mặt.", 30, 90);
-  addWrappedText(doc, `- Đặt cọc: Bên B đặt cọc cho bên A bằng giá trị 1 tháng thuê nhà, tức là ${contract.depositAmount.toLocaleString(
-      "vi-VN"
-    )} VND ngay khi ký hợp đồng.`,30,100,170,6);
+  addWrappedText(doc, `- Đặt cọc: Bên B đặt cọc cho bên A bằng giá trị 1 tháng thuê nhà, tức là `, 30, 100, 170, 6);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.depositAmount.toLocaleString("vi-VN")} VND`, 155, 100);
+  doc.setFont("Times New Roman", "normal");
   addWrappedText(doc, "- Thời gian thanh toán: Thanh toán tiền nhà theo tháng/lần, trong vòng 5 ngày đầu tháng của tháng đầu chu kỳ thanh toán.",
     30,115,170,6);
 
