@@ -1,27 +1,17 @@
-import { Button, Popconfirm, message } from "antd";
+import { message } from "antd";
 import { useEffect, useState } from "react";
-import { ColumnSelector, DeleteModal } from "../../../components"; // Change to CustomModal
 import InvoiceModel, { InvoiceStatus } from "../../../models/InvoiceModal";
-
 import {
   deleteInvoiceApi,
   fetchInvoiceApi,
   patchInvoiceStatusApi,
-} from "../../../services/invoiceApi";
-
+} from "../../../api/invoiceApi";
 import DetailInvoice from "./DetailInvoice";
-//import AddInvoiceModal from "./AddInvoiceModal";
-
-import TableComponent from "../../../components/TableComponent";
-import { getInvoiceStatusColor } from "../../../utils/getMethodColor";
 import YearMonthSelector from "../../../components/YearMonthSelector ";
-
 import ChoosenRoom from "./ChoosenRoom";
-
 import StatusInvoice from "./StatusInvoice";
-
 import ExportToExcel from "./ExportToExcel";
-
+import InvoiceTable from "./InvoiceTable";
 const InvoicePage = () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
@@ -36,98 +26,6 @@ const InvoicePage = () => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
-  const columns = [
-    {
-      title: "Id",
-      dataIndex: "_id",
-      key: "_id",
-      render: (_id: string, record: InvoiceModel) => (
-        <p
-          className="text-blue-600 hover:text-blue-300"
-          onClick={() => {
-            setOpenDetailInvoice(true);
-            setRecord(record);
-          }}
-        >
-          {_id}
-        </p>
-      ),
-    },
-    {
-      title: "Room",
-      dataIndex: "room",
-      key: "room",
-      render: (room: any) => <p>{room.roomName}</p>,
-    },
-    {
-      title: "Tenant",
-      dataIndex: "tenant",
-      key: "tenant",
-      render: (tenant: any) => <p>{tenant.name}</p>,
-    },
-
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      render: (status: string) => (
-        <p className={`${getInvoiceStatusColor(status)} font-bold`}>{status}</p>
-      ),
-    },
-    {
-      title: "Service",
-      dataIndex: "service",
-      key: "service",
-      render: (service: any) => <p>{service.name}</p>,
-    },
-    {
-      title: "Amount",
-      dataIndex: "amount",
-      key: "amount",
-    },
-    {
-      title: "month",
-      dataIndex: "month",
-      key: "month",
-      render: (month: string) => <p>{month}</p>,
-    },
-    {
-      title: "Action",
-      dataIndex: "action",
-      key: "action",
-      render: (_: any, record: InvoiceModel) => (
-        <>
-          <div className="flex-1 justify-center items-center">
-            {record.status === InvoiceStatus.UNPAID && (
-              <Popconfirm
-                className="mr-2"
-                title="Payment confirmed "
-                description="Are you sure to confirm payment?"
-                // onCancel={() => message.error("Click on No")}
-                onConfirm={async () => {
-                  await onPaymentConfirm(record);
-                }}
-                okText="YES"
-                cancelText="No"
-                placement="leftBottom"
-              >
-                <Button
-                  icon={
-                    <i className="fa-solid fa-check text-xl text-green-600"></i>
-                  }
-                />
-              </Popconfirm>
-            )}
-            <DeleteModal onConfirm={onDeleteInvoice} record={record} />
-          </div>
-        </>
-      ),
-    },
-  ];
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(
-    columns.map((column) => column.dataIndex)
-  );
-
   const getInvoices = async () => {
     const queryParams: Record<string, any> = {
       currentPage: current,
@@ -137,7 +35,6 @@ const InvoicePage = () => {
       status: status,
       sort: "month",
     };
-
     const query = new URLSearchParams(queryParams).toString();
     setIsLoading(true);
     const res = await fetchInvoiceApi(query);
@@ -158,7 +55,15 @@ const InvoicePage = () => {
     choosenRoom,
     status,
   ]);
-
+  const onChange = (pagination: any) => {
+    if (pagination.current !== current && pagination) {
+      setCurrent(pagination.current);
+    }
+    if (pagination.pageSize !== pageSize && pagination) {
+      setPageSize(pagination.pageSize);
+      setCurrent(1);
+    }
+  };
   const onDeleteInvoice = async (record: any) => {
     const res = await deleteInvoiceApi(record._id);
     if (res.data) {
@@ -184,28 +89,21 @@ const InvoicePage = () => {
         />
         <ChoosenRoom choosenRoom={choosenRoom} setChooenRoom={setChooenRoom} />
         <StatusInvoice status={status} setStatus={setStatus} />
-        <div className="bg-white p-2 rounded-lg m-2 justify-between items-center flex">
-          <div>
-            <ColumnSelector
-              columns={columns}
-              visibleColumns={visibleColumns}
-              onChangeVisibleColumns={setVisibleColumns}
-            />
-          </div>
+        <div className="bg-white p-2 rounded-lg  justify-between items-center flex">
+          <div></div>
           <ExportToExcel invoices={invoices} />
         </div>
-        <TableComponent
-          data={invoices}
-          columns={columns}
-          visibleColumns={visibleColumns}
+        <InvoiceTable
+          invoices={invoices}
           isLoading={isLoading}
           current={current}
           pageSize={pageSize}
           total={total}
-          onChange={(pagination) => {
-            setCurrent(pagination.current);
-            setPageSize(pagination.pageSize);
-          }}
+          onChange={onChange}
+          onDeleteInvoice={onDeleteInvoice}
+          onPaymentConfirm={onPaymentConfirm}
+          setRecord={setRecord}
+          setOpenDetailInvoice={setOpenDetailInvoice}
         />
       </div>
       <DetailInvoice

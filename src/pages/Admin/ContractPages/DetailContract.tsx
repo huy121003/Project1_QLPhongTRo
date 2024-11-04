@@ -2,7 +2,7 @@ import React from "react";
 import { Descriptions, Drawer, Button } from "antd";
 import { PrinterOutlined } from '@ant-design/icons';
 import moment from "moment";
-import ContractModel, { ContractStatus } from "../../../models/ContractModel";
+import ContractModel from "../../../models/ContractModel";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
 import { downloadContractPDF } from "../../../utils/generateContractPDF";
 

@@ -1,36 +1,41 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
 import { Button } from "antd";
-import InvoiceModel from "../../../models/InvoiceModal";
+import ContractModel from "../../../models/ContractModel";
 interface Props {
-  invoices: InvoiceModel[];
+  contracts: ContractModel[];
 }
-const ExportToExcel: React.FC<Props> = ({ invoices }) => {
+const ExportToExcel: React.FC<Props> = ({ contracts }) => {
   const exportToExcel = () => {
     // Prepare data for Excel
-    const data = invoices.map((c) => ({
+    const data = contracts.map((c) => ({
+      Name: c.tenant.name,
+
+      Phone: c.tenant.phone,
+      IdCard: c.tenant.idCard,
       Room: c.room.roomName,
-      Tenant: c.tenant.name,
-      Service: c.service.name,
-      "First Index": c.firstIndex || "",
-      "Final Index": c.finalIndex || "",
-      "Total Usage": c.totalNumber || "",
-      Price: Number(c.service.priceUnit).toLocaleString(),
-      Total: Number(c.amount).toLocaleString(),
+      Price: c.room.price.toLocaleString() + " đ",
+      Innkeeper: c.innkeeper.name,
+      Status: c.status,
+      StartDate: new Date(c.startDate).toLocaleDateString(),
+      EndDate: new Date(c.endDate).toLocaleDateString(),
+      depositAmount: c.depositAmount.toLocaleString() + " đ",
     }));
 
     // Add title
-    const title = [`Invoice Report - ${invoices[0]?.month || ""}`];
+    const title = [`Contract Report`];
     const header = [
       [
+        "Name",
+        "Phone",
+        "IdCard",
         "Room",
-        "Tenant",
-        "Service",
-        "First Index",
-        "Final Index",
-        "Total Usage",
         "Price",
-        "Total",
+        "Innkeeper",
+        "Status",
+        "StartDate",
+        "EndDate",
+        "DepositAmount",
       ],
     ];
 
@@ -56,29 +61,27 @@ const ExportToExcel: React.FC<Props> = ({ invoices }) => {
 
     // Set column widths
     worksheet["!cols"] = [
+      { wch: 25 }, // Name
+      { wch: 15 }, // Phone
+      { wch: 15 }, // IdCard
       { wch: 15 }, // Room
-      { wch: 20 }, // Tenant
-      { wch: 15 }, // Service
-      { wch: 15 }, // First Index
-      { wch: 15 }, // Final Index
-      { wch: 15 }, // Total Usage
-      { wch: 20 }, // Price
-      { wch: 20 }, // Total
+      { wch: 15 }, // Price
+      { wch: 15 }, // Innkeeper
+      { wch: 15 }, // Status
+      { wch: 15 }, // StartDate
+      { wch: 15 }, // EndDate
+      { wch: 15 }, // DepositAmount
     ];
 
     // Create workbook and append the worksheet
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(
-      workbook,
-      worksheet,
-      `Invoices Usage ${invoices[0]?.month || ""}`
-    );
+    XLSX.utils.book_append_sheet(workbook, worksheet, ` Contracts Report`);
 
     // Export the file
-    XLSX.writeFile(workbook, `Invoices_${invoices[0]?.month || ""}.xlsx`);
+    XLSX.writeFile(workbook, `ContractReport.xlsx`);
   };
   return (
-    <div className="bg-white  rounded-lg  justify-end flex-1 items-center cursor flex">
+    <div className="bg-white   rounded-lg  justify-end flex-1 items-center cursor flex">
       <Button
         onClick={exportToExcel}
         type="primary"

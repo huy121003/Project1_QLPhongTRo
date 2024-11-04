@@ -1,14 +1,14 @@
-import axios from "../api/ApiConfig";
+import { apiConfig } from "./ApiConfig";
 import { RoomStatus, RoomType } from "../models/RoomModel";
 
 export const fetchRoomApi = (query: any): Promise<any> => {
-  return axios.get(`/api/v1/rooms?${query}`);
+  return apiConfig.get(`/api/v1/rooms?${query}`);
 };
 export const fetchRoomByIdApi = (id: string): Promise<any> => {
-  return axios.get(`/api/v1/rooms/${id}`);
+  return apiConfig.get(`/api/v1/rooms/${id}`);
 };
 export const deleteRoomApi = (id: string): Promise<any> => {
-  return axios.delete(`/api/v1/rooms/${id}`);
+  return apiConfig.delete(`/api/v1/rooms/${id}`);
 };
 export const postRoomApi = (
   roomName: string,
@@ -18,7 +18,7 @@ export const postRoomApi = (
   description: string,
   services: any[]
 ): Promise<any> => {
-  return axios.post(`/api/v1/rooms`, {
+  return apiConfig.post(`/api/v1/rooms`, {
     roomName,
     type,
     status,
@@ -36,8 +36,7 @@ export const patchRoomApi = (
   description: string,
   services: any[]
 ): Promise<any> => {
- 
-  return axios.patch(`/api/v1/rooms/${id}`, {
+  return apiConfig.patch(`/api/v1/rooms/${id}`, {
     type,
     status,
     price: parseInt(price.toString()),
@@ -49,7 +48,7 @@ export const updateRoomStatusApi = (
   id: string,
   status: RoomStatus
 ): Promise<any> => {
-  return axios.patch(`/api/v1/rooms/${id}`, {
+  return apiConfig.patch(`/api/v1/rooms/${id}`, {
     status,
   });
 };

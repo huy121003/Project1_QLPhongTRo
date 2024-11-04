@@ -1,4 +1,4 @@
-import apiConfig from "../api/ApiConfig";
+import apiConfig from "./ApiConfig";
 
 export const apiRegister = (
   email: string,
@@ -34,7 +34,6 @@ export const apiFetchUser = (): Promise<any> => {
 };
 
 export const apiActiveAccount = (_id: string, codeId: string): Promise<any> => {
-  
   return apiConfig.post("/api/v1/auth/check-code", { _id, codeId });
 };
 export const retryCode = (email: string): Promise<any> => {

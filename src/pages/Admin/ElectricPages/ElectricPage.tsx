@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import ContractModel from "../../../models/ContractModel";
-import { fetchContractApi } from "../../../services/contractApi";
-import { fetchInvoiceApi } from "../../../services/invoiceApi";
+import { fetchContractApi } from "../../../api/contractApi";
+import { fetchInvoiceApi } from "../../../api/invoiceApi";
 
 import YearMonthSelector from "../../../components/YearMonthSelector ";
-import { fetchServiceApi } from "../../../services/serviceApi";
+import { fetchServiceApi } from "../../../api/serviceApi";
 import { ServiceModel, ServiceType } from "../../../models/ServiceModel";
 import ElectricTable from "./ElectricTable";
 import ExportToExcel from "./ExportToExcel";
@@ -65,7 +65,7 @@ const ElectricPage = () => {
             };
           })
         );
-        //console.log("eded", initialIndices); 
+        //console.log("eded", initialIndices);
         setNumberIndex(Object.assign({}, ...initialIndices));
       }
     } catch (error) {

@@ -21,13 +21,14 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   fields,
 }) => {
   return (
-    <div className="bg-white p-2 rounded-lg m-2 ">
-      <h2 className="font-bold text-xl my-3">Search</h2>
+    <div className="bg-white p-2 rounded-lg m-2 flex ">
+      <h2 className="font-bold text-xl my-3 mr-4">Search</h2>
       <Space direction="horizontal">
         {fields.map((field) => {
           if (field.type === "text") {
             return (
               <Input
+                size="large"
                 key={field.field}
                 placeholder={`Search by ${field.label}`}
                 value={searchParams[field.field]}
@@ -38,6 +39,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
           if (field.type === "select") {
             return (
               <Select
+                size="large"
                 key={field.field}
                 placeholder={`Select ${field.label}`}
                 value={searchParams[field.field]}

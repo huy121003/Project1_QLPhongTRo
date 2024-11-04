@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Input, Spin, message } from "antd";
 import ContractModel from "../../../models/ContractModel";
-import { patchInvoiceApi, postInvoiceApi } from "../../../services/invoiceApi";
+import { patchInvoiceApi, postInvoiceApi } from "../../../api/invoiceApi";
 import { ServiceModel } from "../../../models/ServiceModel";
 
 interface Props {

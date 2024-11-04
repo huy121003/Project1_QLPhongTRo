@@ -9,9 +9,9 @@ import {
   Switch,
   Form,
 } from "antd";
-import { postRoomApi } from "../../../services/roomApis";
+import { postRoomApi } from "../../../api/roomApis";
 import { RoomStatus, RoomType } from "../../../models/RoomModel";
-import { fetchServiceApi } from "../../../services/serviceApi";
+import { fetchServiceApi } from "../../../api/serviceApi";
 import { ServiceModel } from "../../../models/ServiceModel";
 
 interface Props {
@@ -32,7 +32,6 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
         const response = await fetchServiceApi("pageSize=1000&currentPage=1");
         if (response.data) {
           setServices(response.data.result);
-         
         } else {
           message.error(response.message);
         }

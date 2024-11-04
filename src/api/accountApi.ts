@@ -1,5 +1,4 @@
-import { Axios } from "axios";
-import apiConfig from "../api/ApiConfig";
+import apiConfig from "./ApiConfig";
 
 export const fecthAccountApi = async (query: any): Promise<any> => {
   return apiConfig.get(`/api/v1/users?${query}`);

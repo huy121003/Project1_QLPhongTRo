@@ -3,7 +3,7 @@ import { Collapse, Descriptions, Drawer, message, Switch, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment"; // Import moment for date formatting
 import { ServiceModel } from "../../../models/ServiceModel";
-import { fetchServiceApi } from "../../../services/serviceApi";
+import { fetchServiceApi } from "../../../api/serviceApi";
 import {
   getRoomStatusColor,
   getRoomTypeColor,

@@ -11,7 +11,7 @@ import {
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment";
 
-import { fetchPermissionApi } from "../../../services/permissionApi";
+import { fetchPermissionApi } from "../../../api/permissionApi";
 import { Method, PermissionModel } from "../../../models/PermissonModel";
 import { getMethodColor, getRoleColor } from "../../../utils/getMethodColor";
 

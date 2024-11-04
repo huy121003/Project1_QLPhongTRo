@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
-import { apiResetPassword, retryCode } from "../../services/authtApi";
+import { apiResetPassword, retryCode } from "../../api/authtApi";
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;

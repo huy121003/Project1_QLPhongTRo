@@ -1,4 +1,4 @@
-import apiConfig from "../api/ApiConfig";
+import apiConfig from "./ApiConfig";
 export const fetchContractApi = (query: any): Promise<any> => {
   return apiConfig.get(`/api/v1/contracts?${query}`);
 };
@@ -36,6 +36,7 @@ export const postContractApi = (
     rentCycleCount: 1,
   });
 };
+
 export const patchContractApi = (
   id: string,
 

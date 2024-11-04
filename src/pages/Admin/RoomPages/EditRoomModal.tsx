@@ -10,10 +10,10 @@ import {
   Switch,
 } from "antd";
 
-import { patchRoomApi } from "../../../services/roomApis";
+import { patchRoomApi } from "../../../api/roomApis";
 import RoomModel, { RoomStatus, RoomType } from "../../../models/RoomModel";
 import { ServiceModel } from "../../../models/ServiceModel";
-import { fetchServiceApi } from "../../../services/serviceApi";
+import { fetchServiceApi } from "../../../api/serviceApi";
 interface Props {
   openEditRoom: boolean;
   setOpenEditRoom: (value: boolean) => void;
@@ -31,14 +31,14 @@ const EditRoomModal: React.FC<Props> = ({
   useEffect(() => {
     const getService = async () => {
       setIsLoading(true);
-    
-        const response = await fetchServiceApi("pageSize=1000&currentPage=1");
-        if (response.data) {
-          setServices(response.data.result);
-        } else {
-          message.error(response.message);
-        }
-        setIsLoading(false);
+
+      const response = await fetchServiceApi("pageSize=1000&currentPage=1");
+      if (response.data) {
+        setServices(response.data.result);
+      } else {
+        message.error(response.message);
+      }
+      setIsLoading(false);
     };
     getService();
   }, [record]);
@@ -65,7 +65,7 @@ const EditRoomModal: React.FC<Props> = ({
       const response = await patchRoomApi(
         record._id,
         values.type,
-        status = record.status,
+        (status = record.status),
         values.price,
         values.description,
         enableService
@@ -108,7 +108,12 @@ const EditRoomModal: React.FC<Props> = ({
         >
           Cancel
         </Button>,
-        <Button key="submit" type="primary" onClick={handleOk} loading={isLoading}>
+        <Button
+          key="submit"
+          type="primary"
+          onClick={handleOk}
+          loading={isLoading}
+        >
           Submit
         </Button>,
       ]}

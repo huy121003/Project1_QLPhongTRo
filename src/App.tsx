@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./redux/hook";
-import { apiFetchUser } from "./services/authtApi";
+import { apiFetchUser } from "./api/authtApi";
 import { getUserAction } from "./redux/slice/auth/authSlice";
 
 import HomeLayout from "./layouts/HomeLayout/HomeLayout";

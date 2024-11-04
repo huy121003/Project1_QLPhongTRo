@@ -10,7 +10,7 @@ const StatusInvoice: React.FC<Props> = ({ status, setStatus }) => {
       <div
         className={` p-4 border-2 rounded-2xl  ${
           status === ""
-            ? "border-green-400 text-green-400"
+            ? "border-blue-600 text-blue-600"
             : "border-gray-400 text-gray-400"
         } mr-2 flex-1 text-center  font-bold`}
         onClick={() => setStatus("")}
@@ -20,7 +20,7 @@ const StatusInvoice: React.FC<Props> = ({ status, setStatus }) => {
       <div
         className={` p-4 border-2 rounded-2xl  ${
           status === InvoiceStatus.UNPAID
-            ? "border-green-400 text-green-400"
+            ? "border-blue-600 text-blue-600"
             : "border-gray-400 text-gray-400"
         } mr-2 flex-1 text-center  font-bold`}
         onClick={() => setStatus(InvoiceStatus.UNPAID)}
@@ -30,7 +30,7 @@ const StatusInvoice: React.FC<Props> = ({ status, setStatus }) => {
       <div
         className={` p-4 border-2 rounded-2xl  ${
           status === InvoiceStatus.PAID
-            ? "border-green-400 text-green-400"
+            ? "border-blue-600 text-blue-600"
             : "border-gray-400 text-gray-400"
         } mr-2 flex-1 text-center  font-bold`}
         onClick={() => setStatus(InvoiceStatus.PAID)}

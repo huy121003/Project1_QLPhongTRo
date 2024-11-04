@@ -42,8 +42,8 @@ const ServiceFilters: React.FC<Props> = ({
           },
         ]}
       />
-      <div className="bg-white p-2 rounded-lg m-2">
-        <h2 className="font-bold text-xl my-3">Sort by</h2>
+      <div className="bg-white p-2 rounded-lg m-2 flex items-center">
+        <h2 className="font-bold text-xl my-3 mr-4">Sort by</h2>
         <Radio.Group onChange={handleSortChange} value={sorted}>
           <Space direction="horizontal" className="justify-between">
             <Radio value="serviceName" className="font-bold">

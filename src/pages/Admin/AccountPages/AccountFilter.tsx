@@ -2,23 +2,20 @@
 import React from "react";
 import { Radio, Space } from "antd";
 import SearchFilters from "../../../components/SearchFilter";
+import { RoleModel } from "../../../models/RoleModel";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;
   handleSortChange: (e: any) => void;
   sorted: string;
-  setVisibleColumns: (value: any) => void;
-  columns: any;
-  visibleColumns: any;
+  roles: RoleModel[];
 }
 const AccountFilters: React.FC<Props> = ({
   searchParams,
   handleSearchChange,
   handleSortChange,
   sorted,
-  setVisibleColumns,
-  columns,
-  visibleColumns,
+  roles,
 }) => {
   return (
     <div className="justify-end p-2 w-full">
@@ -41,11 +38,23 @@ const AccountFilters: React.FC<Props> = ({
               { value: "OTHER", label: "Other" },
             ],
           },
+          {
+            label: "Role",
+            field: "role",
+            type: "select",
+            options: [
+              { value: "", label: "All Role" },
+              ...roles.map((role) => ({
+                value: role._id,
+                label: role.name,
+              })),
+            ],
+          },
         ]}
       />
 
-      <div className="bg-white p-2 rounded-lg m-2">
-        <h2 className="font-bold text-xl my-3">Sort by</h2>
+      <div className="bg-white p-2 rounded-lg m-2 flex  items-center">
+        <h2 className="font-bold text-xl my-3 mr-4 ">Sort by</h2>
         <Radio.Group onChange={handleSortChange} value={sorted}>
           <Space direction="horizontal" className="justify-between">
             <Radio value="name" className="font-bold">

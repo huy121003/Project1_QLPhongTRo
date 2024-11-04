@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
 import dayjs from "dayjs";
-import { postContractApi } from "../../../services/contractApi";
+import { postContractApi } from "../../../api/contractApi";
 import { ContractStatus } from "../../../models/ContractModel";
-import { fecthAccountApi } from "../../../services/accountApi";
-import { fetchRoomApi } from "../../../services/roomApis";
+import { fecthAccountApi } from "../../../api/accountApi";
+import { fetchRoomApi } from "../../../api/roomApis";
 import AccountModel from "../../../models/AccountModel";
 import RoomModel from "../../../models/RoomModel";
 

@@ -3,7 +3,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import homeAdminRouters from "../../routers";
 import { resizeWidth } from "../../utils/resize";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { apiLogout } from "../../services/authtApi";
+import { apiLogout } from "../../api/authtApi";
 
 import { logoutAction } from "../../redux/slice/auth/authSlice";
 import { Dropdown, Menu, message } from "antd";

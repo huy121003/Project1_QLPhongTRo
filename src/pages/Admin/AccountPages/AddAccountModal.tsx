@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
-import { postAccountApi } from "../../../services/accountApi"; // Adjust the path to your API function
+import { postAccountApi } from "../../../api/accountApi"; // Adjust the path to your API function
 
 import { Gender } from "../../../models/AccountModel";
-import { fecthRoleApi } from "../../../services/roleApi";
+import { fecthRoleApi } from "../../../api/roleApi";
 import { RoleModel } from "../../../models/RoleModel";
 
 interface Props {
@@ -35,8 +35,9 @@ const AddAccountModal: React.FC<Props> = ({
     const values = await form.validateFields();
 
     // Combine first name, middle name, and last name into a single name
-    const fullName =
-      `${values.FirstName} ${values.MiddleName||""} ${values.LastName}`.trim();
+    const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
+      values.LastName
+    }`.trim();
 
     const birthdayDate = values.BirthDay.toDate();
     const birthdayIsoString = new Date(birthdayDate).toISOString();

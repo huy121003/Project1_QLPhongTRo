@@ -1,25 +1,23 @@
-import { Button, message } from "antd";
+import { message } from "antd";
 import { useEffect, useState } from "react";
-import {
- 
-  AddButton,
-  ColumnSelector,
-  DeleteModal,
-} from "../../../components"; // Change to CustomModal
+import { AddButton } from "../../../components"; // Change to CustomModal
 
-import { deleteAcountApi, fecthAccountApi } from "../../../services/accountApi";
+import { deleteAcountApi, fecthAccountApi } from "../../../api/accountApi";
 import AddAccountModal from "./AddAccountModal";
-import AccountModel, { Gender } from "../../../models/AccountModel";
+import AccountModel from "../../../models/AccountModel";
 import EditAccountModal from "./EditAccountModal";
 import DetailAccount from "./DetailAccount";
 import AccountFilters from "./AccountFilter";
-import TableComponent from "../../../components/TableComponent";
+
+import ExportToExcel from "./ExportToExcel";
+import { fecthRoleApi } from "../../../api/roleApi";
+import AccountTable from "./AccountTable";
 function AccountPage() {
   const [accounts, setAccounts] = useState<AccountModel[]>([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
- 
+  const [roles, setRoles] = useState<any[]>([]);
   const [openAddAccount, setOpenAddAccount] = useState(false);
   const [openEditAccount, setOpenEditAccount] = useState(false);
   const [openDetailAccount, setOpenDetailAccount] = useState(false);
@@ -32,98 +30,13 @@ function AccountPage() {
     phone: "",
     gender: "",
   });
-  const columns = [
-    {
-      title: "Id",
-      dataIndex: "_id",
-      key: "_id",
-      render: (_id: string, record: AccountModel) => (
-        <p
-          className="text-blue-600 hover:text-blue-300"
-          onClick={() => {
-            setOpenDetailAccount(true);
-            setRecord(record);
-          }}
-        >
-          {_id}
-        </p>
-      ),
-    },
-    { title: "UserName", dataIndex: "name", key: "name" },
-    { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Phone", dataIndex: "phone", key: "phone" },
-    { title: "IdCard", dataIndex: "idCard", key: "idCard" },
-    {
-      title: "Birthday",
-      dataIndex: "birthday",
-      key: "birthday",
-      render: (birthday: string) => new Date(birthday).toLocaleDateString(),
-    },
-    {
-      title: "Role",
-      dataIndex: "roleName",
-      key: "roleName",
-      render: (role: string) => (
-        <p
-          className={`border ${
-            role === "SUPER ADMIN"
-              ? "border-red-600 bg-red-200 text-red-600"
-              : role === "NORMAL USER"
-              ? "border-green-600 bg-green-200 text-green-600"
-              : "border-blue-600 bg-blue-200 text-blue-600"
-          } text-center rounded border-2 w-[120px] p-2`}
-        >
-          {role}
-        </p>
-      ),
-    },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-      key: "gender",
-      render: (gender: string) =>
-        gender === Gender.Male ? (
-          <p className="text-green-600 font-bold ">{gender}</p>
-        ) : gender === Gender.Female ? (
-          <p className=" text-pink-600 font-bold ">{gender}</p>
-        ) : (
-          <p className="  text-purple-600 font-bold ">{gender}</p>
-        ),
-    },
-    {
-      title: "Create at",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      render: (createdAt: string) => new Date(createdAt).toLocaleDateString(),
-    },
-    {
-      title: "Action",
-      dataIndex: "action",
-      key: "action",
-      render: (_: any, record: AccountModel) =>
-        record.email === "admin@gmail.com" ? null : (
-          <div className="gap-2 flex">
-            <Button
-              icon={
-                <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
-              }
-              onClick={() => {
-                setOpenEditAccount(true), setRecord(record);
-              }}
-            />
 
-            <DeleteModal
-              onConfirm={onDeleteAccount} // Pass the delete function
-              record={record} // Pass the record to delete
-            />
-          </div>
-        ),
-    },
-  ];
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(
-    columns.map((column) => column.dataIndex)
-  );
-
+  const getRole = async () => {
+    const res = await fecthRoleApi("current=1&pageSize=99900");
+    if (res.data.result) {
+      setRoles(res.data.result);
+    }
+  };
   // Fetch accounts function
   const getAccount = async () => {
     const queryParams: Record<string, any> = {
@@ -136,7 +49,9 @@ function AccountPage() {
 
     Object.entries(searchParams).forEach(([key, value]) => {
       if (value) {
-        queryParams[key] = `/${value}/i`;
+        if (key === "role") {
+          queryParams[key] = value;
+        } else queryParams[key] = `/${value}/i`;
       }
     });
 
@@ -156,12 +71,11 @@ function AccountPage() {
 
       setAccounts(formattedAccounts);
       setTotal(res.data.meta.total);
-
-    
     } else message.error(res.message);
   };
   useEffect(() => {
     getAccount();
+    getRole();
   }, [
     current,
     pageSize,
@@ -207,35 +121,30 @@ function AccountPage() {
           handleSearchChange={handleSearchChange}
           handleSortChange={handleSortChange}
           sorted={sorted}
-          setVisibleColumns={setVisibleColumns}
-          columns={columns}
-          visibleColumns={visibleColumns}
+          roles={roles}
         />
-        <div className="bg-white p-2 rounded-lg m-2 justify-between flex">
-          <div>
-            <ColumnSelector
-              columns={columns}
-              visibleColumns={visibleColumns}
-              onChangeVisibleColumns={setVisibleColumns}
+        <div className="bg-white p-2 rounded-lg mx-4 justify-between items-center flex">
+          <div></div>
+          <div className="flex justify-center items-center">
+            <ExportToExcel accounts={accounts} />
+            <AddButton
+              onClick={() => setOpenAddAccount(true)}
+              label="Add Account"
             />
           </div>
-          <AddButton
-            onClick={() => setOpenAddAccount(true)}
-            label="Add Account"
-          />
         </div>
-        <div className="bg-white p-2 rounded-lg m-2">
-          <TableComponent
-            data={accounts}
-            columns={columns}
-            visibleColumns={visibleColumns}
-            isLoading={isLoading}
-            current={current}
-            pageSize={pageSize}
-            total={total}
-            onChange={onChange}
-          />
-        </div>
+        <AccountTable
+          accounts={accounts}
+          isLoading={isLoading}
+          current={current}
+          pageSize={pageSize}
+          total={total}
+          onChange={onChange}
+          onDeleteAccount={onDeleteAccount}
+          setOpenEditAccount={setOpenEditAccount}
+          setOpenDetailAccount={setOpenDetailAccount}
+          setRecord={setRecord}
+        />
       </div>
 
       <AddAccountModal

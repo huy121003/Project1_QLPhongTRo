@@ -9,8 +9,8 @@ import {
   Tag,
   Switch,
 } from "antd";
-import { postRoleApi } from "../../../services/roleApi";
-import { fetchPermissionApi } from "../../../services/permissionApi";
+import { postRoleApi } from "../../../api/roleApi";
+import { fetchPermissionApi } from "../../../api/permissionApi";
 import { PermissionModel } from "../../../models/PermissonModel";
 import { getMethodColor } from "../../../utils/getMethodColor";
 
@@ -26,7 +26,6 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const getPermissions = async () => {
-
       const response = await fetchPermissionApi("pageSize=1000&current=1");
       if (response.data) {
         setPermissions(response.data.result);
@@ -39,7 +38,7 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
   const handleOk = async () => {
     const values = await form.validateFields();
     setIsLoading(true);
-   
+
     if (enablePermission.length === 0) {
       message.error("Please select at least one permission");
       setIsLoading(false);
@@ -77,7 +76,6 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
       setEnablePermission(enablePermission.filter((id) => id !== permissionId));
     }
   };
-
 
   return (
     <Modal

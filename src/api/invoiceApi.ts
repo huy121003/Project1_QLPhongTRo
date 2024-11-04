@@ -1,4 +1,4 @@
-import apiConfig from "../api/ApiConfig";
+import apiConfig from "./ApiConfig";
 import { InvoiceStatus } from "../models/InvoiceModal";
 
 export const fetchInvoiceApi = (query: string): Promise<any> => {
