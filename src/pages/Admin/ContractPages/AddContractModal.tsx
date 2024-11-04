@@ -81,7 +81,9 @@ const AddContractModal: React.FC<Props> = ({
         choosenTenant,
         values.startDate,
         endDate,
+        values.address,
         values.deposit,
+        values.rentCycleCount,
         ContractStatus.ACTIVE
       );
       if (response.statusCode === 201) {
@@ -185,6 +187,20 @@ const AddContractModal: React.FC<Props> = ({
             </Input.Group>
           </Form.Item>
         </div>
+        <Form.Item
+          label="Rent Cycel Count"
+          name="rentCycleCount"
+          rules={[{ required: true, message: "Please input rent cycle count" }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+        <Form.Item
+          label="Address"
+          name="address"
+          rules={[{ required: true, message: "Please input address" }]}
+        >
+          <Input />
+        </Form.Item>
         <Form.Item
           label="Deposit"
           name="deposit"

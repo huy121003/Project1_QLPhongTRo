@@ -55,6 +55,7 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
       setIsLoading(true);
       const response = await postRoomApi(
         values.roomName,
+        values.Area,
         values.type,
         RoomStatus.Available,
         values.price,
@@ -136,6 +137,13 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
               </Select.Option>
             ))}
           </Select>
+        </Form.Item>
+        <Form.Item
+          name="Area"
+          label={<span>Area</span>}
+          rules={[{ required: true, message: "Please input the area!" }]}
+        >
+          <Input type="number" placeholder="Enter Area" />
         </Form.Item>
         <Form.Item
           name="price"

@@ -63,7 +63,11 @@ const ContractTable: React.FC<Props> = ({
       key: "innkeeper",
       render: (innkeeper: any) => <p>{innkeeper.name}</p>,
     },
-
+    {
+      title: "Rent Cycle",
+      dataIndex: "rentCycleCount",
+      key: "rentCycle",
+    },
     {
       title: "Deposit Amount",
       dataIndex: "depositAmount",

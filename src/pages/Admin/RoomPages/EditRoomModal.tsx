@@ -50,6 +50,7 @@ const EditRoomModal: React.FC<Props> = ({
         price: record.price,
         status: record.status,
         description: record.description,
+        area: record.area,
       });
       setEnableService(record?.services);
     }
@@ -64,6 +65,7 @@ const EditRoomModal: React.FC<Props> = ({
       setIsLoading(true);
       const response = await patchRoomApi(
         record._id,
+        values.area,
         values.type,
         (status = record.status),
         values.price,
@@ -130,6 +132,13 @@ const EditRoomModal: React.FC<Props> = ({
           rules={[{ required: true, message: "Please input room name!" }]}
         >
           <Input placeholder="Enter RoomName" disabled />
+        </Form.Item>
+        <Form.Item
+          label="Area"
+          name="area"
+          rules={[{ required: true, message: "Please input area!" }]}
+        >
+          <Input type="number" placeholder="Enter area" />
         </Form.Item>
         <Form.Item
           label="Type"

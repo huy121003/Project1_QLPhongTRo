@@ -1,6 +1,6 @@
 import React from "react";
 import { Descriptions, Drawer, Button } from "antd";
-import { PrinterOutlined } from '@ant-design/icons';
+import { PrinterOutlined } from "@ant-design/icons";
 import moment from "moment";
 import ContractModel from "../../../models/ContractModel";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
@@ -29,27 +29,38 @@ const DetailContract: React.FC<Props> = ({
 
   const items = [
     {
-      key: "1",
+      key: "Tenant",
       label: "Tenant",
       children: record?.tenant.name,
     },
     {
-      key: "2",
+      key: "Phone",
       label: "Phone",
       children: record?.tenant.phone,
     },
     {
-      key: "3",
+      key: "IdCard",
       label: "IdCard",
       children: record?.tenant.idCard,
     },
     {
-      key: "4",
+      key: "Email",
+      label: "Email",
+      children: record?.tenant.email,
+    },
+    {
+      Key: "Address",
+      label: "Address Tenant",
+      children: record?.tenant.address,
+    },
+
+    {
+      key: "Room",
       label: "Room",
       children: record?.room.roomName,
     },
     {
-      key: "5",
+      key: "Price",
       label: "Price",
       children: record?.room.price.toLocaleString() + " đ",
     },
@@ -101,9 +112,9 @@ const DetailContract: React.FC<Props> = ({
       open={openDetailContract}
       width={"100vh"}
       extra={
-        <Button 
-          type="primary" 
-          icon={<PrinterOutlined />} 
+        <Button
+          type="primary"
+          icon={<PrinterOutlined />}
           onClick={handlePrintPDF}
         >
           In hợp đồng

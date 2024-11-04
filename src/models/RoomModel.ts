@@ -1,6 +1,7 @@
 interface RoomModel {
   _id: string;
   roomName: string;
+  area: number;
   type: RoomType;
   status: RoomStatus;
   price: number;

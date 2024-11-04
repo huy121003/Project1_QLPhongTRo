@@ -12,6 +12,7 @@ export const deleteRoomApi = (id: string): Promise<any> => {
 };
 export const postRoomApi = (
   roomName: string,
+  area: number,
   type: RoomType,
   status: RoomStatus,
   price: number,
@@ -20,6 +21,7 @@ export const postRoomApi = (
 ): Promise<any> => {
   return apiConfig.post(`/api/v1/rooms`, {
     roomName,
+    area: parseInt(area.toString()),
     type,
     status,
     price: parseInt(price.toString()),
@@ -30,6 +32,7 @@ export const postRoomApi = (
 
 export const patchRoomApi = (
   id: string,
+  area: number,
   type: RoomType,
   status: RoomStatus,
   price: number,
@@ -37,6 +40,7 @@ export const patchRoomApi = (
   services: any[]
 ): Promise<any> => {
   return apiConfig.patch(`/api/v1/rooms/${id}`, {
+    area: parseInt(area.toString()),
     type,
     status,
     price: parseInt(price.toString()),

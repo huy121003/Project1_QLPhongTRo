@@ -19,10 +19,14 @@ export const postContractApi = (
     name: string;
     idCard: string;
     phone: string;
+    email: string;
+    address: string;
   },
   startDate: Date,
   endDate: Date,
+  address: string,
   depositAmount: number,
+  rentCycleCount: number,
   status: string
 ): Promise<any> => {
   return apiConfig.post(`/api/v1/contracts`, {
@@ -31,9 +35,10 @@ export const postContractApi = (
 
     startDate,
     endDate,
+    address,
     depositAmount,
     status,
-    rentCycleCount: 1,
+    rentCycleCount: parseInt(rentCycleCount.toString()),
   });
 };
 
