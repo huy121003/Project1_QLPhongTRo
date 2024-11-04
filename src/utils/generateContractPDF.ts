@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import ContractModel from "../models/ContractModel";
 import moment from "moment";
+import { timesnewromanBase64 } from "../access/font/Times-New-Roman-Base64";
 
 const addWrappedText = (doc: jsPDF, text: string, x: number, y: number, maxWidth: number, lineHeight: number) => {
   const splitText = doc.splitTextToSize(text, maxWidth);
@@ -14,12 +15,9 @@ export const downloadContractPDF = (contract: ContractModel) => {
   const doc = new jsPDF("p", "mm", "a4", true);
  
 
-  doc.addFont(
-    "https://raw.githubusercontent.com/tienhieu03/fonts/main/Roboto-Regular.ttf",
-    "Roboto",
-    "normal"
-  );
-  doc.setFont("Roboto", "normal");
+  doc.addFileToVFS("Times-New-Roman.ttf", timesnewromanBase64);
+  doc.addFont("Times-New-Roman.ttf", "Times New Roman", "normal");
+  doc.setFont("Times New Roman", "normal");
 
   // Tiêu đề
   doc.setFontSize(12);
