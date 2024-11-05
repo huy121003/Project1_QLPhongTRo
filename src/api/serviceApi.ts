@@ -1,16 +1,17 @@
-import apiConfig from "./ApiConfig";
+import apiConfig, { apiRequest } from "./ApiConfig";
 import { ServiceType } from "../models/ServiceModel";
+import { ApiMethod } from "./ApiMethod";
 
 export const fetchServiceApi = async (query: any): Promise<any> => {
-  return apiConfig.get(`/api/v1/services?${query}`);
+  return apiRequest(ApiMethod.GET, `/api/v1/services?${query}`, false);
 };
 
 export const fetchServiceByIdApi = async (id: string): Promise<any> => {
-  return apiConfig.get(`/api/v1/services/${id}`);
+  return apiRequest(ApiMethod.GET, `/api/v1/services/${id}`, false);
 };
 
 export const deleteServiceApi = async (id: string): Promise<any> => {
-  return apiConfig.delete(`/api/v1/services/${id}`);
+  return apiRequest(ApiMethod.DELETE, `/api/v1/services/${id}`, false);
 };
 
 export const postServiceApi = (
@@ -20,7 +21,7 @@ export const postServiceApi = (
   unit: string,
   type: ServiceType
 ): Promise<any> => {
-  return apiConfig.post(`/api/v1/services`, {
+  return apiRequest(ApiMethod.POST, `/api/v1/services`, false, {
     serviceName,
     description,
     price,
@@ -37,7 +38,7 @@ export const patchServiceApi = (
   unit: string,
   type: ServiceType
 ): Promise<any> => {
-  return apiConfig.patch(`/api/v1/services/${id}`, {
+  return apiRequest(ApiMethod.PATCH, `/api/v1/services/${id}`, false, {
     serviceName,
     description,
     price,

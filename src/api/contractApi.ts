@@ -1,12 +1,13 @@
-import apiConfig from "./ApiConfig";
+import apiConfig, { apiRequest } from "./ApiConfig";
+import { ApiMethod } from "./ApiMethod";
 export const fetchContractApi = (query: any): Promise<any> => {
-  return apiConfig.get(`/api/v1/contracts?${query}`);
+  return apiRequest(ApiMethod.GET, `/api/v1/contracts?${query}`, false);
 };
 export const fetchContractByIdApi = (id: string): Promise<any> => {
-  return apiConfig.get(`/api/v1/contracts/${id}`);
+  return apiRequest(ApiMethod.GET, `/api/v1/contracts/${id}`, false);
 };
 export const deleteContractApi = (id: string): Promise<any> => {
-  return apiConfig.delete(`/api/v1/contracts/${id}`);
+  return apiRequest(ApiMethod.DELETE, `/api/v1/contracts/${id}`, false);
 };
 export const postContractApi = (
   room: {
@@ -29,7 +30,7 @@ export const postContractApi = (
   rentCycleCount: number,
   status: string
 ): Promise<any> => {
-  return apiConfig.post(`/api/v1/contracts`, {
+  return apiRequest(ApiMethod.POST, `/api/v1/contracts`, false, {
     room,
     tenant,
 
@@ -47,7 +48,7 @@ export const patchContractApi = (
 
   status: string
 ): Promise<any> => {
-  return apiConfig.patch(`/api/v1/contracts/${id}`, {
+  return apiRequest(ApiMethod.PATCH, `/api/v1/contracts/${id}`, false, {
     status,
   });
 };

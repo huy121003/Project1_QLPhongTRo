@@ -1,8 +1,9 @@
-import { apiConfig } from "./ApiConfig";
+import { apiConfig, apiRequest } from "./ApiConfig";
+import { ApiMethod } from "./ApiMethod";
 
 export const fetchPermissionApi = (query: any): Promise<any> => {
-  return apiConfig.get(`/api/v1/permissions?${query}`);
+  return apiRequest(ApiMethod.GET, `/api/v1/permissions?${query}`, false);
 };
 export const fetchPermissionByIdApi = (id: string): Promise<any> => {
-  return apiConfig.get(`/api/v1/permissions/${id}`);
+  return apiRequest(ApiMethod.GET, `/api/v1/permissions/${id}`, false);
 };

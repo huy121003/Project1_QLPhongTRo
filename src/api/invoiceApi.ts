@@ -1,15 +1,16 @@
-import apiConfig from "./ApiConfig";
+import apiConfig, { apiRequest } from "./ApiConfig";
 import { InvoiceStatus } from "../models/InvoiceModal";
+import { ApiMethod } from "./ApiMethod";
 
 export const fetchInvoiceApi = (query: string): Promise<any> => {
-  return apiConfig.get(`/api/v1/invoices?${query}`);
+  return apiRequest(ApiMethod.GET, `/api/v1/invoices?${query}`, false);
 };
 
 export const fetchInvoiceByIdApi = (id: string): Promise<any> => {
-  return apiConfig.get(`/api/v1/invoices/${id}`);
+  return apiRequest(ApiMethod.GET, `/api/v1/invoices/${id}`, false);
 };
 export const deleteInvoiceApi = (id: string): Promise<any> => {
-  return apiConfig.delete(`/api/v1/invoices/${id}`);
+  return apiRequest(ApiMethod.DELETE, `/api/v1/invoices/${id}`, false);
 };
 
 export const postInvoiceApi = (
@@ -36,7 +37,7 @@ export const postInvoiceApi = (
   firstIndex?: number,
   finalIndex?: number
 ): Promise<any> => {
-  return apiConfig.post(`/api/v1/invoices`, {
+  return apiRequest(ApiMethod.POST, `/api/v1/invoices`, false, {
     room,
     tenant,
     service,
@@ -54,7 +55,7 @@ export const patchInvoiceApi = (
   firstIndex?: number,
   finalIndex?: number
 ): Promise<any> => {
-  return apiConfig.patch(`/api/v1/invoices/${id}`, {
+  return apiRequest(ApiMethod.PATCH, `/api/v1/invoices/${id}`, false, {
     firstIndex,
     finalIndex,
   });
@@ -63,7 +64,7 @@ export const patchInvoiceStatusApi = (
   id: string,
   status: InvoiceStatus
 ): Promise<any> => {
-  return apiConfig.patch(`/api/v1/invoices/${id}`, {
+  return apiRequest(ApiMethod.PATCH, `/api/v1/invoices/${id}`, false, {
     status,
   });
 };

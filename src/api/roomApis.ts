@@ -1,14 +1,15 @@
-import { apiConfig } from "./ApiConfig";
+import { apiConfig, apiRequest } from "./ApiConfig";
 import { RoomStatus, RoomType } from "../models/RoomModel";
+import { ApiMethod } from "./ApiMethod";
 
 export const fetchRoomApi = (query: any): Promise<any> => {
-  return apiConfig.get(`/api/v1/rooms?${query}`);
+  return apiRequest(ApiMethod.GET, `/api/v1/rooms?${query}`, false);
 };
 export const fetchRoomByIdApi = (id: string): Promise<any> => {
-  return apiConfig.get(`/api/v1/rooms/${id}`);
+  return apiRequest(ApiMethod.GET, `/api/v1/rooms/${id}`, false);
 };
 export const deleteRoomApi = (id: string): Promise<any> => {
-  return apiConfig.delete(`/api/v1/rooms/${id}`);
+  return apiRequest(ApiMethod.DELETE, `/api/v1/rooms/${id}`, false);
 };
 export const postRoomApi = (
   roomName: string,
@@ -19,7 +20,7 @@ export const postRoomApi = (
   description: string,
   services: any[]
 ): Promise<any> => {
-  return apiConfig.post(`/api/v1/rooms`, {
+  return apiRequest(ApiMethod.POST, `/api/v1/rooms`, false, {
     roomName,
     area: parseInt(area.toString()),
     type,
@@ -39,7 +40,7 @@ export const patchRoomApi = (
   description: string,
   services: any[]
 ): Promise<any> => {
-  return apiConfig.patch(`/api/v1/rooms/${id}`, {
+  return apiRequest(ApiMethod.PATCH, `/api/v1/rooms/${id}`, false, {
     area: parseInt(area.toString()),
     type,
     status,
