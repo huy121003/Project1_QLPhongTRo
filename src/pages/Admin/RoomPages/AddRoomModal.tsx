@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+
   Modal,
   Button,
   Input,
@@ -8,6 +9,7 @@ import {
   Collapse,
   Switch,
   Form,
+
 } from "antd";
 import { postRoomApi } from "../../../api/roomApis";
 import { RoomStatus, RoomType } from "../../../models/RoomModel";
@@ -15,6 +17,7 @@ import { fetchServiceApi } from "../../../api/serviceApi";
 import { ServiceModel } from "../../../models/ServiceModel";
 
 interface Props {
+
   openAddRoom: boolean;
   setOpenAddRoom: (value: boolean) => void;
 }
@@ -185,3 +188,4 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
 };
 
 export default AddRoomModal;
+

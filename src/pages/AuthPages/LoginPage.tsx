@@ -24,6 +24,7 @@ function LoginPage(): JSX.Element {
       localStorage.setItem("access_token", res.data.access_token);
       dispatch(loginaction(res.data.user));
       message.success("Login successfully!");
+
       navigate("/admin");
     } else {
       if (res?.message === "Account has not been activated!") {
