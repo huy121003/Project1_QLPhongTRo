@@ -5,16 +5,14 @@ import {
   Input,
   Form,
   message,
-  Select,
-  DatePicker,
   Collapse,
   Tag,
   Switch,
 } from "antd";
-import { patchRoleApi } from "../../../services/roleApi";
+import { patchRoleApi } from "../../../api/roleApi";
 import { RoleModel } from "../../../models/RoleModel";
-import { fetchPermissionApi } from "../../../services/permissionApi";
-import { Method, PermissionModel } from "../../../models/PermissonModel";
+import { fetchPermissionApi } from "../../../api/permissionApi";
+import { PermissionModel } from "../../../models/PermissonModel";
 import { getMethodColor } from "../../../utils/getMethodColor";
 
 interface Props {

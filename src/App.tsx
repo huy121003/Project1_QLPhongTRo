@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./redux/hook";
-import { apiFetchUser } from "./services/authtApi";
+import { apiFetchUser } from "./api/authtApi";
 import { getUserAction } from "./redux/slice/auth/authSlice";
 
 import HomeLayout from "./layouts/HomeLayout/HomeLayout";
@@ -21,6 +21,7 @@ import DasboardUserPage from "./pages/User/DasboardUserPage/DasboardUserPage";
 
 // Router setup moved outside to avoid re-creating it on every render
 const router = createBrowserRouter([
+
     {
         path: "/admin",
         element: (
@@ -52,16 +53,41 @@ const router = createBrowserRouter([
     {
         path: "user",
         element: <UserLayout />,
-        // element: (
-        //     <ProtectedRoute>
-        //         <UserLayout />
-        //     </ProtectedRoute>
-        // ),
-        // children: homeUserRouters.map((route) => ({
-        //     path: route.path,
-        //     element: <route.component />,
-        // })),
+       
     },
+
+  {
+    path: "/admin",
+    element: (
+      <ProtectedRoute>
+        <HomeLayout />
+      </ProtectedRoute>
+    ),
+    errorElement: <NotFoundPage />,
+    children: [
+      { index: true, element: <DashboardPage /> },
+      ...homeAdminRouters.map((route: any) => ({
+        path: route.path,
+        element: <route.component />, // Assuming correct JSX element rendering
+      })),
+    ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
+  {
+    path: "/",
+    element: <LoginPage />,
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
+  },
+  {
+    path: "user/:id",
+    element: <UserLayout />,
+  },
 ]);
 
 function App() {
@@ -98,6 +124,29 @@ function App() {
     } else {
         return <Loading />;
     }
+
+    const res = await apiFetchUser();
+
+    if (res?.data) {
+      dispatch(getUserAction(res.data.user));
+    } else message.error(res.message);
+  };
+
+  useEffect(() => {
+    getAccount();
+  }, []);
+
+  if (
+    isAuthenticated === true ||
+    window.location.pathname === "/login" ||
+    window.location.pathname === "/" ||
+    window.location.pathname === "/register"
+  ) {
+    return <RouterProvider router={router} />;
+  } else {
+    return <Loading />;
+  }
+
 }
 
 export default App;

@@ -1,17 +1,11 @@
-import React, { useEffect, useState } from "react";
-import {
-  Badge,
-  Descriptions,
-  Drawer,
-  message,
-  Switch,
-  Tag,
-  Collapse,
-} from "antd";
-import { SyncOutlined } from "@ant-design/icons";
+import React from "react";
+import { Descriptions, Drawer, Button } from "antd";
+import { PrinterOutlined } from "@ant-design/icons";
 import moment from "moment";
-import ContractModel, { ContractStatus } from "../../../models/ContractModel";
-import { resizeWidth } from "../../../utils/resize";
+import ContractModel from "../../../models/ContractModel";
+import { getContractStatusColor } from "../../../utils/getMethodColor";
+import { downloadContractPDF } from "../../../utils/generateContractPDF";
+
 interface Props {
   openDetailContract: boolean;
   setOpenDetailContract: (value: boolean) => void;
@@ -26,36 +20,53 @@ const DetailContract: React.FC<Props> = ({
   const formatDate = (date: Date) => {
     return moment(date).format("DD/MM/YYYY");
   };
-  const width = resizeWidth();
+
+  const handlePrintPDF = () => {
+    if (record) {
+      downloadContractPDF(record);
+    }
+  };
+
   const items = [
     {
-      key: "1",
+      key: "Tenant",
       label: "Tenant",
       children: record?.tenant.name,
     },
     {
-      key: "2",
-      label:"Phone",
+      key: "Phone",
+      label: "Phone",
       children: record?.tenant.phone,
     },
     {
-      key: "3",
+      key: "IdCard",
       label: "IdCard",
       children: record?.tenant.idCard,
     },
     {
-      key: "4",
+      key: "Email",
+      label: "Email",
+      children: record?.tenant.email,
+    },
+    {
+      Key: "Address",
+      label: "Address Tenant",
+      children: record?.tenant.address,
+    },
+
+    {
+      key: "Room",
       label: "Room",
       children: record?.room.roomName,
     },
     {
-      key: "5",
-      label:"Price",
+      key: "Price",
+      label: "Price",
       children: record?.room.price.toLocaleString() + " đ",
     },
     {
-      key:"7",
-      label:"Innkeeper",
+      key: "7",
+      label: "Innkeeper",
       children: record?.innkeeper.name,
     },
     {
@@ -68,46 +79,49 @@ const DetailContract: React.FC<Props> = ({
       label: "End Date",
       children: formatDate(record?.endDate),
     },
-   {
+    {
       key: "10",
       label: "Deposit Amount",
       children: record?.depositAmount.toLocaleString() + " đ",
-   },
+    },
 
     {
       key: "11",
       label: "Status",
-      children: record?.status === ContractStatus.EXPIRED ? (
-        <p className="text-orange-600 font-bold">{ContractStatus.EXPIRED}</p>
-      ) :status===ContractStatus.CANCELED?  <p className="text-red-600 font-bold">{ContractStatus.CANCELED}</p>: (
-        <p className="text-green-600 font-bold">{ContractStatus.ACTIVE}</p>
-      )
+      children: (
+        <p className={`${getContractStatusColor(record?.status)} font-bold`}>
+          {record?.status}
+        </p>
+      ),
     },
     {
       key: "12",
       label: "Create at",
       children: formatDate(record?.createdAt),
     },
-   
+
     {
       key: "14",
       label: "Created By",
       children: record?.createdBy?.email,
     },
-    
   ];
   return (
     <Drawer
       onClose={() => setOpenDetailContract(false)}
       open={openDetailContract}
       width={"100vh"}
+      extra={
+        <Button
+          type="primary"
+          icon={<PrinterOutlined />}
+          onClick={handlePrintPDF}
+        >
+          In hợp đồng
+        </Button>
+      }
     >
-      <Descriptions
-        title="Contract Detail"
-        bordered
-        column={ 1}
-        items={items}
-      />
+      <Descriptions title="Contract Detail" bordered column={1} items={items} />
     </Drawer>
   );
 };

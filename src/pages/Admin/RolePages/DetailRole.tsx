@@ -10,10 +10,10 @@ import {
 } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment";
-import { resizeWidth } from "../../../utils/resize";
-import { fetchPermissionApi } from "../../../services/permissionApi";
+
+import { fetchPermissionApi } from "../../../api/permissionApi";
 import { Method, PermissionModel } from "../../../models/PermissonModel";
-import { getMethodColor } from "../../../utils/getMethodColor";
+import { getMethodColor, getRoleColor } from "../../../utils/getMethodColor";
 
 interface Props {
   openDetailRole: boolean;
@@ -49,10 +49,6 @@ const DetailRole: React.FC<Props> = ({
     };
     getPermissions();
   }, [record]);
-  console.log(permissions);
-  const width = resizeWidth();
-
-
 
   const groupedPermissions = permissions.reduce(
     // Group permissions by module
@@ -66,15 +62,13 @@ const DetailRole: React.FC<Props> = ({
     },
     {}
   );
-  console.log(groupedPermissions);
+
   const handleSwitchChange = (permissionId: string, checked: boolean) => {
-    setEnablePermission((prevPermissions) => {
-      if (checked) {
-        return [...prevPermissions, permissionId];
-      } else {
-        return prevPermissions.filter((id) => id !== permissionId);
-      }
-    });
+    setEnablePermission((prevPermissions) =>
+      checked
+        ? [...prevPermissions, permissionId]
+        : prevPermissions.filter((id) => id !== permissionId)
+    );
   };
 
   const items = [
@@ -84,11 +78,7 @@ const DetailRole: React.FC<Props> = ({
       children: (
         <p
           className={`border ${
-            record?.name === "SUPER ADMIN"
-              ? "border-red-600 bg-red-200 text-red-600"
-              : record?.name === "NORMAL USER"
-              ? "border-green-600 bg-green-200 text-green-600"
-              : "border-blue-600 bg-blue-200 text-blue-600"
+            getRoleColor(record?.name) as string
           } text-center rounded border-2 w-[120px] p-2`}
         >
           {record?.name}
@@ -141,18 +131,13 @@ const DetailRole: React.FC<Props> = ({
       onClose={() => setOpenDetailRole(false)}
       width={"100vh"}
     >
-      <Descriptions
-        bordered
-        title="Role Details"
-        items={items}
-        column={width > 750 ? 2 : 1}
-      />
+      <Descriptions bordered title="Role Details" items={items} column={1} />
       <div className="my-2" />
       <Collapse>
         <Collapse.Panel header="Permissions" key="1">
           {Object.keys(groupedPermissions).map((module) => (
             <Collapse key={module} style={{ marginBottom: "16px" }}>
-              <Collapse.Panel header={ module } key={module}>
+              <Collapse.Panel header={module} key={module}>
                 <div
                   style={{
                     display: "flex",
