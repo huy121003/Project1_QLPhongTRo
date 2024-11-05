@@ -30,7 +30,7 @@ function LoginPage(): JSX.Element {
       dispatch(loginaction(res.data.user));
       // console.log(res.data.user)
       message.success("Login successfully!");
-
+      navigate("/user")
       navigate("/admin");
     } else {
       if (res?.message === "Account has not been activated!") {
