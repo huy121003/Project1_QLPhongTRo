@@ -1,9 +1,9 @@
 import React from "react";
-import { Badge, Descriptions, Drawer, Tag } from "antd";
+import {  Descriptions, Drawer, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import { Gender } from "../../../models/AccountModel";
 import moment from "moment"; // Import moment for date formatting
-import { resizeWidth } from "../../../utils/resize";
+
 
 interface Props {
   openDetailAccount: boolean;
@@ -19,9 +19,8 @@ const DetailAccount: React.FC<Props> = ({
   const formatDate = (dateString: string) => {
     return moment(dateString).format("DD/MM/YYYY"); // Format date using moment
   };
-  const width = resizeWidth();
+ 
   const items = [
-   
     {
       key: "1",
       label: "Username",
@@ -57,8 +56,9 @@ const DetailAccount: React.FC<Props> = ({
           className={`border ${
             record?.role?.name === "SUPER ADMIN"
               ? "border-red-600 bg-red-200 text-red-600"
-              : record?.role?.name === "NORMAL USER" ?
-                "border-green-600 bg-green-200 text-green-600":"border-blue-600 bg-blue-200 text-blue-600"
+              : record?.role?.name === "NORMAL USER"
+              ? "border-green-600 bg-green-200 text-green-600"
+              : "border-blue-600 bg-blue-200 text-blue-600"
           } text-center rounded border-2 w-[120px] p-2`}
         >
           {record?.role?.name}
@@ -125,7 +125,7 @@ const DetailAccount: React.FC<Props> = ({
           title="Account Detail"
           bordered
           items={items}
-          column={width > 750 ? 2 : 1}
+          column={1}
         />
       </Drawer>
     </div>

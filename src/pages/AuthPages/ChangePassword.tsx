@@ -1,18 +1,9 @@
-import {
-  Button,
-  Divider,
-  Form,
-  Input,
-  message,
-  Modal,
-  Steps,
-  Spin,
-} from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Divider, Form, Input, message, Modal } from "antd";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { changePasswordApi } from "../../services/accountApi";
+import { changePasswordApi } from "../../api/accountApi";
 import { useNavigate } from "react-router-dom";
-import { apiLogout } from "../../services/authtApi";
+import { apiLogout } from "../../api/authtApi";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
 
 interface Props {
@@ -41,7 +32,7 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
         values.password
       );
       if (res.statusCode === 201) {
-        message.success(res.message);
+        message.success("Password changed successfully.");
 
         const respone = await apiLogout();
         if (respone && respone.data) {
