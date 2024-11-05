@@ -12,6 +12,7 @@ function AuthLayout({ children }: Props) {
         className="absolute inset-0 w-full h-full object-cover"
         src="https://wallpaperaccess.com/full/84248.png"
         alt="Background"
+
       />
 
       <div className="relative z-10">{children}</div>

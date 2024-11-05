@@ -1,110 +1,102 @@
-import DashboardPage from "../pages/Dashboard/DashboardPage";
+import AccountPage from "../pages/Admin/AccountPages/AccountPage";
+import ContractPage from "../pages/Admin/ContractPages/ContractPage";
+import DashboardPage from "../pages/Admin/DashboardPages/DashboardPage";
+import EquipmentPage from "../pages/Admin/EquipmentPages/EquipmentPage";
+import InvoicePage from "../pages/Admin/InvoicePages/InvoicePage";
+import RolePage from "../pages/Admin/RolePages/RolePage";
+import RoomPage from "../pages/Admin/RoomPages/RoomPage";
+import ServicePage from "../pages/Admin/ServicePages/ServicePage";
 
-import RoomPage from "../pages/Room/RoomPage";
-import ElectricPage from "../pages/Electric/ElectricPage";
-import WaterPage from "../pages/Water/WaterPage";
-import ServicePage from "../pages/Service/ServicePage";
-import StaffPage from "../pages/Staff/StaffPage";
-import InvoicePage from "../pages/Invoice/InvoicePage";
-import SettingPage from "../pages/Setting/SettingPage";
+import DasboardUserPage from "../pages/User/DasboardUserPage/DasboardUserPage";
+import ContractUserPage from "../pages/User/ContractUserPage/ContractUserPage";
+import InvoiceUserPage from "../pages/User/InvoiceUserPage/InvoiceUserPage";
+import ProfilePage from "../pages/User/ProfilePage/ProfilePage";
+import ServiceUserPage from "../pages/User/ServiceUserPage/ServiceUserPage";
 
-import TenantPage from "../pages/Tenant/TenantPage";
-import ContractPage from "../pages/Contract/ContractPage";
-import ReceiptPage from "../pages/Receipt/ReceiptPage";
-
-
-
-
-
-interface Routers{
+interface Routers {
     path: string;
-    component: any;
-    isShowNav: boolean;
+    // component: any;
+    component: React.ComponentType;
+    isShowNav?: boolean;
     icon?: string;
     label?: string;
 }
-const   homeRouters:Routers[] = [
+const homeAdminRouters: Routers[] = [
+    {
+        path: "dashboard",
+        component: DashboardPage,
+        isShowNav: true,
+        icon: "fa-chart-simple",
+        label: "Dashboard",
+    },
+    {
+        path: "room",
+        component: RoomPage,
+        isShowNav: true,
+        icon: "fa-bed",
+        label: "Room",
+    },
 
-  {
-    path: "dashboard",
-    component: DashboardPage,
-    isShowNav: true,
-    icon: "fa-chart-simple",
-    label: "Dashboard",
-  },
-  {
-    path: "room",
-    component: RoomPage,
-    isShowNav: true,
-    icon: "fa-bed",
-    label: "Room",
-  },
-  {
-    path: "electric",
-    component: ElectricPage,
-    isShowNav: true,
-    icon: "fa-bolt",
-    label: "Electric",
-  },
-  {
-    path: "water",
-    component: WaterPage,
-    isShowNav: true,
-    icon: "fa-shower",
-    label: "Water",
-  },
-  {
-    path: "service",
-    component: ServicePage,
-    isShowNav: true,
-    icon: "fa-cubes",
-    label: "Service",
-  },
-  {
-    path: "staff",
-    component: StaffPage,
-    isShowNav: true,
-    icon: "fa-users",
-    label: "Staff",
-  },
-  {
-    path: "invoice",
-    component: InvoicePage,
-    isShowNav: true,
-    icon: "fa-money-bill",
-    label: "Invoice",
-  },
-  {
-    path: "setting",
-    component: SettingPage,
-    isShowNav: true,
-    icon: "fa-gears",
-    label: "Setting",
-  },
+    {
+        path: "service",
+        component: ServicePage,
+        isShowNav: true,
+        icon: "fa-cubes",
+        label: "Service",
+    },
 
-  {
-    path: "tenant",
-    component: TenantPage,
-    isShowNav: true,
-    icon: "fa-users",
-    label: "Tenant",
-  },
-
-  {
-    path: "contract",
-    component: ContractPage,
-    isShowNav: true,
-    icon: "fa-file-contract",
-    label: "Contract",
-  },
-  {
-    path: "receipt",
-    component: ReceiptPage,
-    isShowNav: true,
-    icon: "fa-file-invoice",
-    label: "Receipt",
-  }
-  
+    {
+        path: "invoice",
+        component: InvoicePage,
+        isShowNav: true,
+        icon: "fa-money-bill",
+        label: "Invoice",
+    },
+    {
+        path: "contract",
+        component: ContractPage,
+        isShowNav: true,
+        icon: "fa-file-contract",
+        label: "Contract",
+    },
+    {
+        path: "account",
+        component: AccountPage,
+        isShowNav: true,
+        icon: "fa-solid fa-user-lock",
+        label: "Account",
+    },
+    {
+        path: "equipment",
+        component: EquipmentPage,
+        isShowNav: true,
+        icon: "fa-solid fa-tools",
+        label: "Equipment",
+    },
+    {
+        path: "role",
+        component: RolePage,
+        isShowNav: true,
+        icon: "fa-solid fa-dice-five",
+        label: "Role",
+    },
 ];
 
-export default homeRouters;
+export const homeUserRouters: Routers[] = [
+    // {
+    //     path: "dasboarduser",
+    //     component: DasboardUserPage,
+    //     label: "Dashboard",
+    // },
+    // {
+    //     path: "contractuser",
+    //     component: ContractUserPage,
+    //     label: "Contract",
+    // },
+    // {
+    //     path: "serviceuser",
+    //     component: ServiceUserPage,
+    //     label: "Service",
+    // },
+];
+export default homeAdminRouters;
