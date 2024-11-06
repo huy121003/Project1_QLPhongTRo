@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
 import dayjs from "dayjs";
-import { fecthRoleApi } from "../../../services/roleApi";
-import { postContractApi } from "../../../services/contractApi";
+import { postContractApi } from "../../../api/contractApi";
 import { ContractStatus } from "../../../models/ContractModel";
-import { fecthAccountApi } from "../../../services/accountApi";
-import { fetchRoomApi } from "../../../services/roomApis";
+import { fecthAccountApi } from "../../../api/accountApi";
+import { fetchRoomApi } from "../../../api/roomApis";
 import AccountModel from "../../../models/AccountModel";
 import RoomModel from "../../../models/RoomModel";
 
@@ -39,6 +38,7 @@ const AddContractModal: React.FC<Props> = ({
   useEffect(() => {
     form.setFieldsValue({
       deposit: choosenRoom?.price || 0,
+      startDate: dayjs(),
     });
   }, [choosenRoom]);
 
@@ -81,11 +81,13 @@ const AddContractModal: React.FC<Props> = ({
         choosenTenant,
         values.startDate,
         endDate,
+        values.address,
         values.deposit,
+        values.rentCycleCount,
         ContractStatus.ACTIVE
       );
       if (response.statusCode === 201) {
-        message.success(response.message);
+        message.success("Contract added successfully");
         form.resetFields();
         setOpenAddContract(false);
       } else {
@@ -99,7 +101,7 @@ const AddContractModal: React.FC<Props> = ({
   return (
     <Modal
       title="Add Contract"
-      visible={openAddContract}
+      open={openAddContract}
       onOk={handleOk}
       onCancel={() => {
         setOpenAddContract(false);
@@ -186,11 +188,25 @@ const AddContractModal: React.FC<Props> = ({
           </Form.Item>
         </div>
         <Form.Item
+          label="Rent Cycel Count"
+          name="rentCycleCount"
+          rules={[{ required: true, message: "Please input rent cycle count" }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+        <Form.Item
+          label="Address"
+          name="address"
+          rules={[{ required: true, message: "Please input address" }]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
           label="Deposit"
           name="deposit"
           rules={[{ required: true, message: "Please input deposit" }]}
         >
-          <Input />
+          <Input type="number" />
         </Form.Item>
       </Form>
     </Modal>

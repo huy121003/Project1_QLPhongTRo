@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Input, Form, message, Select, DatePicker } from "antd";
 import moment from "moment"; // Import moment for date handling
-import { patchAccountApi } from "../../../services/accountApi";
+import { patchAccountApi } from "../../../api/accountApi";
 import AccountModel, { Gender } from "../../../models/AccountModel";
 
 import { RoleModel } from "../../../models/RoleModel";
-import { fecthRoleApi } from "../../../services/roleApi";
+import { fecthRoleApi } from "../../../api/roleApi";
 
 interface Props {
   openEditAccount: boolean;
@@ -28,7 +28,7 @@ const EditAccountModal: React.FC<Props> = ({
       } else message.error(res.message);
     };
     getRole();
-  }, [ openEditAccount]);
+  }, [openEditAccount]);
 
   useEffect(() => {
     if (openEditAccount && record) {
@@ -70,7 +70,7 @@ const EditAccountModal: React.FC<Props> = ({
       const response = await patchAccountApi(
         record._id,
         values.Phone,
-        `${values.FirstName} ${values.MiddleName||""} ${values.LastName}`, // Combine names back
+        `${values.FirstName} ${values.MiddleName || ""} ${values.LastName}`, // Combine names back
         birthday, // Send formatted birthday
         values.Gender,
         values.Address,
@@ -79,7 +79,7 @@ const EditAccountModal: React.FC<Props> = ({
       );
 
       if (response.statusCode === 200) {
-        message.success(response.message);
+        message.success("Account updated successfully");
         form.resetFields();
         setOpenEditAccount(false);
       } else {
@@ -124,13 +124,13 @@ const EditAccountModal: React.FC<Props> = ({
               ]}
               className="mr-2 flex-1"
             >
-              <Input placeholder="First Name" size="large"/>
+              <Input placeholder="First Name" size="large" />
             </Form.Item>
             <Form.Item
               name="MiddleName"
               style={{ flex: 1, marginRight: "8px" }}
             >
-              <Input placeholder="Middle Name" size="large"/>
+              <Input placeholder="Middle Name" size="large" />
             </Form.Item>
             <Form.Item
               name="LastName"
@@ -151,7 +151,7 @@ const EditAccountModal: React.FC<Props> = ({
               rules={[{ required: true, message: "Please input the email!" }]}
               className="mr-2 flex-1"
             >
-              <Input placeholder="Enter Email" disabled  size="large"/>
+              <Input placeholder="Enter Email" disabled size="large" />
             </Form.Item>
             <Form.Item
               name="Phone"
@@ -159,7 +159,7 @@ const EditAccountModal: React.FC<Props> = ({
               rules={[{ required: true, message: "Please input the phone!" }]}
               className="flex-1"
             >
-              <Input placeholder="Enter Phone" size="large"/>
+              <Input placeholder="Enter Phone" size="large" />
             </Form.Item>
           </div>
         </Form.Item>
@@ -168,7 +168,7 @@ const EditAccountModal: React.FC<Props> = ({
           label={<span>IdCard</span>}
           rules={[{ required: true, message: "Please input the IdCard!" }]}
         >
-          <Input placeholder="Enter IdCard" type="number" size="large"/>
+          <Input placeholder="Enter IdCard" type="number" size="large" />
         </Form.Item>
         <Form.Item wrapperCol={{ span: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -178,15 +178,15 @@ const EditAccountModal: React.FC<Props> = ({
               rules={[
                 { required: true, message: "Please input the birthday!" },
               ]}
-                 className="flex-1"
+              className="flex-1"
             >
-              <DatePicker format="YYYY-MM-DD" size="large"/>
+              <DatePicker format="YYYY-MM-DD" size="large" />
             </Form.Item>
             <Form.Item
               name="Gender"
               label={<span>Gender</span>}
               rules={[{ required: true, message: "Please input the Gender!" }]}
-                 className="flex-1 mx-2"
+              className="flex-1 mx-2"
             >
               <Select size="large">
                 {Object.values(Gender).map((item) => (

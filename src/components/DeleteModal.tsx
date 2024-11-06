@@ -1,48 +1,27 @@
-import React, { useState } from 'react';
-import { Modal, Button } from 'antd';
-
+import React from "react";
+import { Popconfirm, Button } from "antd";
 interface Props {
-  openDelete: boolean;
-  setOpenDelete: (value: boolean) => void;
   onConfirm: (record: any) => Promise<void>; // Include record parameter
   record: any; // Add a record prop
 }
-
-const CustomModal: React.FC<Props> = ({ openDelete, setOpenDelete, onConfirm, record }) => {
- 
-  const [isLoading,setIsLoading]=useState(false)
+const DeleteModal: React.FC<Props> = ({ onConfirm, record }) => {
   return (
-    
-    <Modal
-      centered
-      open={openDelete}
-      title={<h1 className="text-2xl font-bold">Delete </h1>}
-      onCancel={() => setOpenDelete(false)}
-      footer={[
-        <Button key="back" onClick={() => setOpenDelete(false)}>
-          Cancel
-        </Button>,
-        <Button
-        loading={isLoading}
-          key="submit"
-          type="primary"
-          onClick={async () => {
-            setIsLoading(true)
-            await onConfirm(record); // Pass the record to the onConfirm function
-            setIsLoading(false)
-            setOpenDelete(false); // Close modal after action
-          }}
-          className="bg-red-600 "
-        >
-          <p className="text-white">Delete</p>
-        </Button>,
-      ]}
+    <Popconfirm
+      title="Are you sure you want to delete?"
+      onConfirm={async () => {
+        await onConfirm(record); // Pass the record to the onConfirm function
+      }}
+      okText="Delete"
+      cancelText="Cancel"
+      overlayStyle={{ textAlign: "center" }} // Optional: To center the text
     >
-      <span className="text-xl">
-        Are you sure you want to delete ?
-      </span>
-    </Modal>
+      <Button
+        icon={<i className="fa-solid fa-trash text-xl" />}
+        type="primary"
+        className="bg-red-500 text-white hover:bg-red-600 transition"
+      />
+    </Popconfirm>
   );
 };
 
-export default CustomModal;
+export default DeleteModal;
