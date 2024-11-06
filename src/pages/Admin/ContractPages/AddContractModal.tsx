@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
 import dayjs from "dayjs";
-import { postContractApi } from "../../../services/contractApi";
+import { postContractApi } from "../../../api/contractApi";
 import { ContractStatus } from "../../../models/ContractModel";
-import { fecthAccountApi } from "../../../services/accountApi";
-import { fetchRoomApi } from "../../../services/roomApis";
+import { fecthAccountApi } from "../../../api/accountApi";
+import { fetchRoomApi } from "../../../api/roomApis";
 import AccountModel from "../../../models/AccountModel";
 import RoomModel from "../../../models/RoomModel";
 
@@ -81,7 +81,9 @@ const AddContractModal: React.FC<Props> = ({
         choosenTenant,
         values.startDate,
         endDate,
+        values.address,
         values.deposit,
+        values.rentCycleCount,
         ContractStatus.ACTIVE
       );
       if (response.statusCode === 201) {
@@ -185,6 +187,20 @@ const AddContractModal: React.FC<Props> = ({
             </Input.Group>
           </Form.Item>
         </div>
+        <Form.Item
+          label="Rent Cycel Count"
+          name="rentCycleCount"
+          rules={[{ required: true, message: "Please input rent cycle count" }]}
+        >
+          <Input type="number" />
+        </Form.Item>
+        <Form.Item
+          label="Address"
+          name="address"
+          rules={[{ required: true, message: "Please input address" }]}
+        >
+          <Input />
+        </Form.Item>
         <Form.Item
           label="Deposit"
           name="deposit"

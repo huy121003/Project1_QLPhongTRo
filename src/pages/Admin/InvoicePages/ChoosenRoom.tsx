@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchRoomApi } from "../../../services/roomApis";
+import { fetchRoomApi } from "../../../api/roomApis";
 import RoomModel from "../../../models/RoomModel";
 import { message } from "antd";
 
@@ -10,7 +10,7 @@ interface Props {
 
 const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [rooms, setRooms] = useState<RoomModel[]>([]);
 
@@ -35,11 +35,11 @@ const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
   }, [current, pageSize]);
 
   return (
-    <div className="bg-white p-4 rounded-lg m-2 flex justify-between items-center">
+    <div className="bg-white p-4  rounded-lg shadow-lg border border-gray-200 m-2 flex justify-between items-center">
       <div
         className={`flex p-4 border-2 rounded-2xl cursor-pointer ${
           choosenRoom === ""
-            ? "border-green-400 text-green-400"
+            ? "border-blue-600 text-blue-600"
             : "border-gray-400 text-gray-400"
         } mr-2`}
         onClick={() => setChooenRoom("")}
@@ -58,7 +58,7 @@ const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
             key={room._id}
             className={`flex flex-1 p-4 border-2 rounded-2xl cursor-pointer text-center justify-center items-center ${
               choosenRoom === room._id
-                ? "border-green-400 text-green-400"
+                ? "border-blue-600 text-blue-600"
                 : "border-gray-400 text-gray-400"
             } mr-2`}
             onClick={() => setChooenRoom(room._id)}

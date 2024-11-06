@@ -1,6 +1,6 @@
 import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
 import React, { useState } from "react";
-import { apiActiveAccount } from "../../services/authtApi";
+import { apiActiveAccount } from "../../api/authtApi";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
@@ -9,13 +9,11 @@ interface Props {
   id: string;
 }
 const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
-   
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [formCode] = Form.useForm();
 
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(false); // Loading state
-
 
   const activateAccount = async () => {
     setLoading(true); // Start loading
@@ -37,25 +35,26 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
     }
   };
 
-  
-
   const EnterCode = () => (
     <div className="mt-12">
       <p className="text-gray-500 mb-4">
-        A code has been sent to your email address. Please enter the code to activate your account.
+        A code has been sent to your email address. Please enter the code to
+        activate your account.
       </p>
       <Form form={formCode}>
         <Form.Item
           name="code"
-          rules={[{ required: true, message: 'Please input your code!' }]}
+          rules={[{ required: true, message: "Please input your code!" }]}
         >
-          <Input placeholder="Code" 
-          size="large"
-          />
+          <Input placeholder="Code" size="large" />
         </Form.Item>
       </Form>
-      <Button type="primary" onClick={activateAccount} loading={loading} disabled={loading}
-      size="large"
+      <Button
+        type="primary"
+        onClick={activateAccount}
+        loading={loading}
+        disabled={loading}
+        size="large"
       >
         Submit
       </Button>
@@ -68,20 +67,21 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
       <p className="text-gray-500">
         Your account has been activated successfully.
       </p>
-      <Button 
-      size="large"
-      type="primary" onClick={() => {
-        setOpen(false);
-        setCurrent(0);
-        navigate("/login");
-      }}>
+      <Button
+        size="large"
+        type="primary"
+        onClick={() => {
+          setOpen(false);
+          setCurrent(0);
+          navigate("/login");
+        }}
+      >
         Go back to login
       </Button>
     </div>
   );
 
   const steps = [
-  
     {
       title: "Enter Code",
       content: <EnterCode />,
@@ -94,8 +94,8 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
     },
   ];
 
-    return(
-        <Modal
+  return (
+    <Modal
       open={open}
       centered
       onCancel={() => {
@@ -103,7 +103,9 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
         setCurrent(0);
       }}
       footer={null}
-      title={<h1 className="text-3xl font-bold text-center">Activate Account</h1>}
+      title={
+        <h1 className="text-3xl font-bold text-center">Activate Account</h1>
+      }
     >
       <h2 className="text-4xl font-bold text-center text-white mb-8">
         Activate Account
@@ -122,7 +124,6 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
       <div className="mt-8">{steps[current].content}</div>
     </Modal>
   );
-    
-}
+};
 
 export default ActiveAccountPage;

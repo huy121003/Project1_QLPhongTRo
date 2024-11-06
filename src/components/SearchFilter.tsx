@@ -1,5 +1,7 @@
 // SearchFilters.tsx
+
 import { DatePicker, Input, Select, Space } from "antd";
+
 const { Option } = Select;
 
 interface Field {
@@ -21,28 +23,31 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   fields,
 }) => {
   return (
-    <div className="bg-white p-2 rounded-lg m-2 ">
-      <h2 className="font-bold text-xl my-3">Search</h2>
-      <Space direction="horizontal">
+    <div className="bg-white p-4 rounded-lg mb-2 shadow-lg border border-gray-200 my-2 flex flex-wrap">
+      <h2 className="font-bold text-xl my-3 mr-4 w-full">Search</h2>
+      <Space direction="horizontal" wrap>
         {fields.map((field) => {
           if (field.type === "text") {
             return (
               <Input
+                size="large"
                 key={field.field}
                 placeholder={`Search by ${field.label}`}
                 value={searchParams[field.field]}
                 onChange={(e) => onSearchChange(field.field, e.target.value)}
+                className="flex-1 m-2 w-full sm:w-60" // Responsive width
               />
             );
           }
           if (field.type === "select") {
             return (
               <Select
+                size="large"
                 key={field.field}
                 placeholder={`Select ${field.label}`}
                 value={searchParams[field.field]}
                 onChange={(value) => onSearchChange(field.field, value)}
-                style={{ width: 120 }}
+                className="flex-1 m-2 w-full sm:w-40" // Responsive width
               >
                 {field.options?.map((option) => (
                   <Option key={option.value} value={option.value}>
@@ -58,7 +63,10 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                 key={field.field}
                 placeholder={`Search by ${field.label}`}
                 value={searchParams[field.field]}
-                onChange={(e) => onSearchChange(field.field, e.target.value)}
+                onChange={(date) =>
+                  onSearchChange(field.field, date?.format("YYYY-MM-DD") || "")
+                }
+                className="flex-1 m-2 w-full sm:w-60" // Responsive width
               />
             );
           }

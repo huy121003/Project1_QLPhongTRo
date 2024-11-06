@@ -2,23 +2,21 @@
 import React from "react";
 import { Radio, Space } from "antd";
 import SearchFilters from "../../../components/SearchFilter";
+import { RoleModel } from "../../../models/RoleModel";
+import SortOption from "../../../components/SortOption";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;
   handleSortChange: (e: any) => void;
   sorted: string;
-  setVisibleColumns: (value: any) => void;
-  columns: any;
-  visibleColumns: any;
+  roles: RoleModel[];
 }
 const AccountFilters: React.FC<Props> = ({
   searchParams,
   handleSearchChange,
   handleSortChange,
   sorted,
-  setVisibleColumns,
-  columns,
-  visibleColumns,
+  roles,
 }) => {
   return (
     <div className="justify-end p-2 w-full">
@@ -41,28 +39,30 @@ const AccountFilters: React.FC<Props> = ({
               { value: "OTHER", label: "Other" },
             ],
           },
+          {
+            label: "Role",
+            field: "role",
+            type: "select",
+            options: [
+              { value: "", label: "All Role" },
+              ...roles.map((role) => ({
+                value: role._id,
+                label: role.name,
+              })),
+            ],
+          },
         ]}
       />
-
-      <div className="bg-white p-2 rounded-lg m-2">
-        <h2 className="font-bold text-xl my-3">Sort by</h2>
-        <Radio.Group onChange={handleSortChange} value={sorted}>
-          <Space direction="horizontal" className="justify-between">
-            <Radio value="name" className="font-bold">
-              By Name
-            </Radio>
-            <Radio value="email" className="font-bold">
-              By Email
-            </Radio>
-            <Radio value="role" className="font-bold">
-              By Role
-            </Radio>
-            <Radio value="-createAt" className="font-bold">
-              By CreateAt
-            </Radio>
-          </Space>
-        </Radio.Group>
-      </div>
+      <SortOption
+        options={[
+          { value: "name", label: "By Name" },
+          { value: "email", label: "By Email" },
+          { value: "role", label: "By Role" },
+          { value: "-createdAt", label: "By Created At" },
+        ]}
+        onChange={handleSortChange}
+        sorted={sorted}
+      />
     </div>
   );
 };

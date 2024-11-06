@@ -1,46 +1,44 @@
 import React, { useEffect } from "react";
 import { Modal, Button, Input, Form, message, Select } from "antd";
-import { patchServiceApi } from "../../../services/serviceApi";
+import { patchServiceApi } from "../../../api/serviceApi";
 import { ServiceModel, ServiceType } from "../../../models/ServiceModel";
+import { on } from "events";
 interface Props {
   openEditService: boolean;
   setOpenEditService: (value: boolean) => void;
-  record: ServiceModel;
+  service: ServiceModel | null;
 }
 
 const EditServiceModal: React.FC<Props> = ({
   openEditService,
   setOpenEditService,
-  record,
+  service,
 }) => {
   const [form] = Form.useForm();
   useEffect(() => {
-    if (openEditService && record) {
+    if (service) {
       form.setFieldsValue({
-        serviceName: record.serviceName,
-        description: record.description,
-        price: String(record.price),
-        unit: record.unit,
-        type: record.type,
+        serviceName: service.serviceName,
+        description: service.description,
+        price: service.price,
+        unit: service.unit,
+        type: service.type,
       });
     }
-  }, [openEditService, record, form]);
+  }, [service, form, openEditService]);
 
   const handleOk = async () => {
     try {
-      // Validate the form fields
+      console.log("service", service);
       const values = await form.validateFields();
-
-      // Call the API to post account data
       const response = await patchServiceApi(
-        record._id,
+        service?._id || "",
         values.serviceName,
         values.description,
         values.price,
         values.unit,
         values.type
       );
-
       if (response.statusCode === 200) {
         message.success("Service updated successfully");
 
@@ -50,7 +48,7 @@ const EditServiceModal: React.FC<Props> = ({
         message.error(response.message);
       }
     } catch (error) {
-      console.error("Validation failed:", error);
+      message.error("Validation failed!");
     }
   };
 
@@ -61,63 +59,64 @@ const EditServiceModal: React.FC<Props> = ({
       title={<h1 className="text-3xl font-bold text-center">Edit Service</h1>}
       onCancel={() => {
         setOpenEditService(false);
-        form.resetFields(); // Reset form fields
+        form.resetFields();
       }}
       footer={[
         <Button
           key="back"
           onClick={() => {
             setOpenEditService(false);
-            form.resetFields(); // Reset form fields
+            form.resetFields();
           }}
           className="mr-2"
         >
           Cancel
         </Button>,
         <Button key="submit" type="primary" onClick={handleOk}>
-          <p className="font-xl text-white flex">Save</p>
+          Save
         </Button>,
       ]}
       width={700}
     >
       <Form form={form} layout="vertical">
         <Form.Item
-          label={<span>Name</span>}
           name="serviceName"
-          rules={[{ required: true, message: "Service name is required" }]}
+          label={<span>Service Name</span>}
+          rules={[
+            { required: true, message: "Please input the service name!" },
+          ]}
         >
-          <Input placeholder="Enter service name" />
+          <Input placeholder="Enter Service Name" />
         </Form.Item>
-
         <Form.Item
-          label={<span>Description</span>}
           name="description"
-          rules={[{ required: true, message: "Description is required" }]}
+          label={<span>Description</span>}
+          rules={[{ required: true, message: "Please input the description!" }]}
         >
-          <Input placeholder="Enter description" />
+          <Input placeholder="Enter Description" />
         </Form.Item>
-
         <Form.Item
-          label={<span>Price</span>}
           name="price"
-          rules={[{ required: true, message: "Price is required" }]}
+          label={<span>Price</span>}
+          rules={[{ required: true, message: "Please input the price!" }]}
         >
-          <Input type="text" placeholder="Enter price" />
+          <Input type="number" placeholder="Enter Price" />
         </Form.Item>
-
         <Form.Item
-          label={<span>Unit</span>}
           name="unit"
-          rules={[{ required: true, message: "Unit is required" }]}
+          label={<span>Unit</span>}
+          rules={[{ required: true, message: "Please input the unit!" }]}
         >
-          <Input placeholder="Enter unit" />
+          <Input placeholder="Enter Unit" />
         </Form.Item>
         <Form.Item
-          label={<span>Type</span>}
           name="type"
-          rules={[{ required: true, message: "Type is required" }]}
+          label={<span>Type</span>}
+          rules={[
+            { required: true, message: "Please select the service type!" },
+          ]}
         >
-          <Select>
+          <Select placeholder="Select Type">
             {Object.values(ServiceType).map((type) => (
               <Select.Option key={type} value={type}>
                 {type}

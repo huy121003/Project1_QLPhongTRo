@@ -1,6 +1,7 @@
 interface RoomModel {
   _id: string;
   roomName: string;
+  area: number;
   type: RoomType;
   status: RoomStatus;
   price: number;
@@ -23,12 +24,15 @@ interface RoomModel {
 export default RoomModel;
 
 export enum RoomType {
-  Single = "SINGLE",
-  Double = "DOUBLE",
-  Quad = "QUAD",
-  Studio = "STUDIO",
+
+    Single = "SINGLE",
+    Double = "DOUBLE",
+    Quad = "QUAD",
+    Studio = "STUDIO",
 }
+
 export enum RoomStatus {
   Occupied = "OCCUPIED", // Phòng đã được thuê
   Available = "AVAILABLE", // Phòng còn trống
+
 }

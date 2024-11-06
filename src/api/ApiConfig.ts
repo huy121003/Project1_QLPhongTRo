@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { ApiMethod } from "./ApiMethod";
 
 const baseURL = import.meta.env.VITE_BACKEND_URL; // URL cơ bản của API, được lấy từ biến môi trường
 const NO_RETRY_HEADER = "x-no-retry"; // Tên của header dùng để tránh lặp lại việc refresh token
@@ -7,7 +8,28 @@ const NO_RETRY_HEADER = "x-no-retry"; // Tên của header dùng để tránh l�
 export const apiConfig = axios.create({
   baseURL: baseURL, // Thiết lập URL cơ bản cho mọi yêu cầu
   withCredentials: true, // Đảm bảo cookie được gửi kèm trong các yêu cầu
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
+export const apiRequest = (
+  method: ApiMethod,
+  url: string,
+  isMultipart: boolean,
+  data?: any
+) => {
+  const headers = {
+    "Content-Type": isMultipart ? "multipart/form-data" : "application/json",
+    folder_type: isMultipart ? "user" : null,
+  };
+
+  return apiConfig({
+    method,
+    url,
+    headers,
+    data,
+  });
+};
 
 // Thêm interceptor cho request (yêu cầu)
 apiConfig.interceptors.request.use(

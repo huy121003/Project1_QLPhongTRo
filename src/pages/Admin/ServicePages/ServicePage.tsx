@@ -1,21 +1,19 @@
-import { Button, message } from "antd";
+import { message } from "antd";
 import { useEffect, useState } from "react";
-import { AddButton, ColumnSelector, DeleteModal } from "../../../components";
+import { AddButton } from "../../../components";
 
 import AddServiceModal from "./AddServiceModal";
 import EditServiceModal from "./EditServiceModal";
 
-import {
-  deleteServiceApi,
-  fetchServiceApi,
-} from "../../../services/serviceApi";
+import { deleteServiceApi, fetchServiceApi } from "../../../api/serviceApi";
 
 import { ServiceModel } from "../../../models/ServiceModel";
 
 import DetailService from "./DetailService";
 import ServiceFilters from "./ServiceFilters";
-import TableComponent from "../../../components/TableComponent";
-import { getServiceTypeColor } from "../../../utils/getMethodColor";
+
+import ServiceTable from "./ServiceTable";
+import ExportToExcel from "./ExportToExcel";
 
 function ServicePage() {
   const [services, setServices] = useState<ServiceModel[]>([]);
@@ -29,67 +27,6 @@ function ServicePage() {
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
 
-  const columns = [
-    {
-      title: "Id",
-      dataIndex: "_id",
-      key: "_id",
-      render: (_id: string, record: ServiceModel) => (
-        <p
-          className="text-blue-600 hover:text-blue-300"
-          onClick={() => {
-            setOpenDetailService(true);
-            setRecord(record);
-          }}
-        >
-          {_id}
-        </p>
-      ),
-    },
-    { title: "Name", dataIndex: "serviceName", key: "serviceName" },
-    { title: "Description", dataIndex: "description", key: "description" },
-    {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-      render: (price: number) => <p>{price.toLocaleString()} đ</p>,
-    },
-    { title: "Unit", dataIndex: "unit", key: "unit" },
-    {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-      render: (type: string) => (
-        <p className={`${getServiceTypeColor(type)} font-bold`}>{type}</p>
-      ),
-    },
-    {
-      title: "Action",
-      dataIndex: "action",
-      key: "action",
-      render: (_: any, record: ServiceModel) => (
-        <div className="gap-2 flex">
-          <Button
-            icon={
-              <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
-            }
-            onClick={() => {
-              setOpenEditService(true), setRecord(record);
-            }}
-          />
-
-          <DeleteModal
-            onConfirm={onDeleteService} // Pass the delete function
-            record={record} // Pass the record to delete
-          />
-        </div>
-      ),
-    },
-  ];
-
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(
-    columns.map((column) => column.dataIndex)
-  );
   const [sorted, setSorted] = useState<string>("");
   const [searchParams, setSearchParams] = useState({
     serviceName: "",
@@ -123,7 +60,6 @@ function ServicePage() {
   };
   // Fetch services function
   useEffect(() => {
-   
     getService();
   }, [
     current,
@@ -160,6 +96,7 @@ function ServicePage() {
     if (res.statusCode === 200) {
       message.success("Service deleted");
       getService();
+      setCurrent(1);
     } else {
       message.error(res.message);
     }
@@ -167,41 +104,35 @@ function ServicePage() {
 
   return (
     <>
-      <div className="justify-end p-2 w-full">
+      <div className="justify-end  w-full">
         <ServiceFilters
           searchParams={searchParams}
           handleSearchChange={handleSearchChange}
           handleSortChange={handleSortChange}
           sorted={sorted}
-          setVisibleColumns={setVisibleColumns}
-          columns={columns}
-          visibleColumns={visibleColumns}
         />
-        <div className="bg-white p-2 rounded-lg m-2 justify-between flex">
-          <div>
-            <ColumnSelector
-              columns={columns}
-              visibleColumns={visibleColumns}
-              onChangeVisibleColumns={setVisibleColumns}
+        <div className="bg-white mx-2  rounded-lg shadow-lg border border-gray-200 mt-2  justify-between flex items-center">
+          <div></div>
+          <div className="flex items-center">
+            <ExportToExcel services={services} />
+            <AddButton
+              onClick={() => setOpenAddService(true)}
+              label="Add Service"
             />
           </div>
-          <AddButton
-            onClick={() => setOpenAddService(true)}
-            label="Add Service"
-          />
         </div>
-        <div className="bg-white p-2 rounded-lg m-2">
-          <TableComponent
-            data={services}
-            columns={columns}
-            visibleColumns={visibleColumns}
-            isLoading={isLoading}
-            current={current}
-            pageSize={pageSize}
-            total={total}
-            onChange={onChange}
-          />
-        </div>
+        <ServiceTable
+          services={services}
+          onDeleteService={onDeleteService}
+          setOpenDetailService={setOpenDetailService}
+          setOpenEditService={setOpenEditService}
+          setRecord={setRecord}
+          isLoading={isLoading}
+          current={current}
+          pageSize={pageSize}
+          total={total}
+          onChange={onChange}
+        />
       </div>
 
       <AddServiceModal
@@ -211,7 +142,7 @@ function ServicePage() {
       <EditServiceModal
         openEditService={openEditService}
         setOpenEditService={setOpenEditService}
-        record={record}
+        service={record}
       />
       <DetailService
         openDetailService={openDetailService}

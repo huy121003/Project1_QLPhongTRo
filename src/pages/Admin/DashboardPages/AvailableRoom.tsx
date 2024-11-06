@@ -3,7 +3,7 @@ import {
   getRoomStatusColor,
   getRoomTypeColor,
 } from "../../../utils/getMethodColor";
-import { fetchRoomApi } from "../../../services/roomApis";
+import { fetchRoomApi } from "../../../api/roomApis";
 import { RoomStatus } from "../../../models/RoomModel";
 import { message, Table } from "antd";
 import { Box, Stack } from "@mui/material";
@@ -17,7 +17,7 @@ function AvailableRoom() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const columns = [
-    { title: "ID", dataIndex: "_id", key: "_id" },
+    // { title: "ID", dataIndex: "_id", key: "_id" },
     { title: "Room Name", dataIndex: "roomName", key: "roomName" },
     {
       title: "Type",

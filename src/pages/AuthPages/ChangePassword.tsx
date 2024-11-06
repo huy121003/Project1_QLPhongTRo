@@ -1,17 +1,9 @@
-import {
-  Button,
-  Divider,
-  Form,
-  Input,
-  message,
-  Modal,
- 
-} from "antd";
+import { Button, Divider, Form, Input, message, Modal } from "antd";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { changePasswordApi } from "../../services/accountApi";
+import { changePasswordApi } from "../../api/accountApi";
 import { useNavigate } from "react-router-dom";
-import { apiLogout } from "../../services/authtApi";
+import { apiLogout } from "../../api/authtApi";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
 
 interface Props {

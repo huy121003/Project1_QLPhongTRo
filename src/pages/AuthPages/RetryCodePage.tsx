@@ -1,6 +1,6 @@
 import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
 import React, { useEffect, useState } from "react";
-import { apiActiveAccount, retryCode } from "../../services/authtApi";
+import { apiActiveAccount, retryCode } from "../../api/authtApi";
 
 interface Props {
   open: boolean;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Table, Input, Spin, message } from "antd";
 import ContractModel from "../../../models/ContractModel";
-import { patchInvoiceApi, postInvoiceApi } from "../../../services/invoiceApi";
+import { patchInvoiceApi, postInvoiceApi } from "../../../api/invoiceApi";
 import { ServiceModel } from "../../../models/ServiceModel";
 
 interface Props {
@@ -184,13 +184,13 @@ const WaterTable: React.FC<Props> = ({
     },
   ];
   return (
-    <Spin spinning={loading}>
+    <div className="px-2">
       <Table
         columns={columns}
         dataSource={contract}
         rowKey={(record) => record._id}
       />
-    </Spin>
+    </div>
   );
 };
 

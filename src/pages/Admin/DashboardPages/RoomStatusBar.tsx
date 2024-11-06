@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import RoomModel, { RoomStatus } from "../../../models/RoomModel";
-import { fetchRoomApi } from "../../../services/roomApis";
+import { fetchRoomApi } from "../../../api/roomApis";
 import { PieChart } from "@mui/x-charts";
 import Typography from "@mui/material/Typography";
 import { Box, Stack } from "@mui/material";
@@ -30,7 +30,7 @@ function RoomStatusBar() {
       } else {
         // message.error(res.message);
       }
-        setLoading(false);
+      setLoading(false);
     };
     getStateRooms();
   }, []);

@@ -1,84 +1,70 @@
 import React from "react";
-import { Radio, Space } from "antd";
+
 import SearchFilters from "../../../components/SearchFilter";
 import { ContractStatus } from "../../../models/ContractModel";
+import SortOption from "../../../components/SortOption";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;
   handleSortChange: (e: any) => void;
   sorted: string;
-  setVisibleColumns: (value: any) => void;
-  columns: any;
-  visibleColumns: any;
 }
 const ContractFilters: React.FC<Props> = ({
   searchParams,
   handleSearchChange,
   handleSortChange,
   sorted,
-  setVisibleColumns,
-  columns,
-  visibleColumns,
 }) => {
   return (
-    <div className="justify-end p-2 w-full">
+    <div className="justify-end  w-full ">
       <SearchFilters
         searchParams={searchParams}
         onSearchChange={handleSearchChange}
         fields={[
-            {
-              label: "Room Name",
-              field: "room.roomName",
-              type: "text",
-            },
-            {
-              label: "Tenant Name",
-              field: "tenant.name",
-              type: "text",
-            },
-            {
-              label: "Phone",
-              field: "tenant.phone",
-              type: "text",
-            },
-            {
-              label: "Status",
-              field: "status",
-              type: "select",
-              options: [
-                { label: "All Status", value: "" },
-                { label: "ACTIVE", value: ContractStatus.ACTIVE },
-                { label: "EXPIRED", value: ContractStatus.EXPIRED },
-                { label: "CANCELED", value: ContractStatus.CANCELED },
-              ],
-            },
-          ]}
-        />
-        <div className="bg-white p-2 rounded-lg m-2">
-          <h2 className="font-bold text-xl my-3">Sort by</h2>
-          <Radio.Group onChange={handleSortChange} value={sorted}>
-            <Space direction="horizontal" className="justify-between">
-              <Radio value="room.roomName" className="font-bold">
-                By Room Name
-              </Radio>
-              <Radio value="tenant.name" className="font-bold">
-                By Tenant Name
-              </Radio>
-              <Radio value="status" className="font-bold">
-                By Status
-              </Radio>
-              <Radio value="-startDate" className="font-bold">
-                By Start Date
-              </Radio>
-              <Radio value="-endDate" className="font-bold">
-                By End Date
-              </Radio>
-            </Space>
-          </Radio.Group>
-        </div>
-        </div>
-    );
-}
+          {
+            label: "Room Name",
+            field: "room.roomName",
+            type: "text",
+          },
+          {
+            label: "Tenant Name",
+            field: "tenant.name",
+            type: "text",
+          },
+          {
+            label: "Phone",
+            field: "tenant.phone",
+            type: "text",
+          },
+          {
+            label: "Status",
+            field: "status",
+            type: "select",
+            options: [
+              { label: "All Status", value: "" },
+              { label: "ACTIVE", value: ContractStatus.ACTIVE },
+              { label: "EXPIRED", value: ContractStatus.EXPIRED },
+              { label: "CANCELED", value: ContractStatus.CANCELED },
+            ],
+          },
+        ]}
+      />
+      <SortOption
+        options={[
+          { value: "room.roomName", label: "By Room Name" },
+          { value: "tenant.name", label: "By Tenant Name" },
+          { value: "status", label: "By Status" },
+          { value: "startDate", label: "By Start Date" },
+          {
+            value: "endDate",
+            label: "By End Date",
+          },
+        ]}
+        onChange={handleSortChange}
+        sorted={sorted}
+      />
+    </div>
+  );
+};
 
-
-export default ContractFilters
+export default ContractFilters;

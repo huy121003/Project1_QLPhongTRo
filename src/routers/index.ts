@@ -9,6 +9,9 @@ import RoomPage from "../pages/Admin/RoomPages/RoomPage";
 import ServicePage from "../pages/Admin/ServicePages/ServicePage";
 import WaterPage from "../pages/Admin/WaterPages/WaterPage";
 
+
+
+
 interface Routers {
   path: string;
   component: any;
@@ -85,8 +88,5 @@ const homeAdminRouters: Routers[] = [
   },
 ];
 
-// const homeUserRouters:Routers[] = [
-//   {
-//   }
-// ]
+
 export default homeAdminRouters;
