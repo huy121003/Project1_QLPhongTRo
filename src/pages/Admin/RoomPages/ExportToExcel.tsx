@@ -11,6 +11,7 @@ const ExportToExcel: React.FC<Props> = ({ rooms }) => {
     const data = rooms.map((c) => ({
       RoomName: c.roomName,
       RoomType: c.type,
+      Area: c.area,
       Price: Number(c.price).toLocaleString(),
       Status: c.status,
       Description: c.description,
@@ -19,7 +20,7 @@ const ExportToExcel: React.FC<Props> = ({ rooms }) => {
     // Add title
     const title = [`Room Report`];
     const header = [
-      ["Room Name", "Room Type", "Price", "Status", "Description"],
+      ["Room Name", "Room Type", "Area", "Price", "Status", "Description"],
     ];
 
     // Create worksheet and add title and headers
@@ -46,6 +47,7 @@ const ExportToExcel: React.FC<Props> = ({ rooms }) => {
     worksheet["!cols"] = [
       { wch: 15 }, // Room Name
       { wch: 15 }, // Room Type
+      { wch: 15 }, // Area
       { wch: 15 }, // Price
       { wch: 15 }, // Status
       { wch: 50 }, // Description

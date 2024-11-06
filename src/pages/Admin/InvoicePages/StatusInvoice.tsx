@@ -6,36 +6,36 @@ interface Props {
 }
 const StatusInvoice: React.FC<Props> = ({ status, setStatus }) => {
   return (
-    <div className="bg-white p-4 rounded-lg m-2 flex justify-between items-center  flex-1 gap-3 ">
+    <div className=" px-2 pt-2 rounded-lg mt-2 flex justify-between items-center  flex-1 text-xl ">
       <div
-        className={` p-4 border-2 rounded-2xl  ${
+        className={` p-4 border-t-4 rounded-t-2xl  bg-white ${
           status === ""
             ? "border-blue-600 text-blue-600"
             : "border-gray-400 text-gray-400"
-        } mr-2 flex-1 text-center  font-bold`}
+        }  flex-1 text-center  font-bold`}
         onClick={() => setStatus("")}
       >
-        All Status
+        All
       </div>
       <div
-        className={` p-4 border-2 rounded-2xl  ${
-          status === InvoiceStatus.UNPAID
-            ? "border-blue-600 text-blue-600"
-            : "border-gray-400 text-gray-400"
-        } mr-2 flex-1 text-center  font-bold`}
-        onClick={() => setStatus(InvoiceStatus.UNPAID)}
-      >
-        {InvoiceStatus.UNPAID}
-      </div>
-      <div
-        className={` p-4 border-2 rounded-2xl  ${
+        className={` p-4 border-t-4 rounded-t-2xl bg-white  ${
           status === InvoiceStatus.PAID
-            ? "border-blue-600 text-blue-600"
+            ? "border-green-600 text-green-600"
             : "border-gray-400 text-gray-400"
-        } mr-2 flex-1 text-center  font-bold`}
+        }  flex-1 text-center  font-bold`}
         onClick={() => setStatus(InvoiceStatus.PAID)}
       >
         {InvoiceStatus.PAID}
+      </div>
+      <div
+        className={` p-4 border-t-4 rounded-t-2xl bg-white  ${
+          status === InvoiceStatus.UNPAID
+            ? "border-red-600 text-red-600"
+            : "border-gray-400 text-gray-400"
+        }  flex-1 text-center  font-bold`}
+        onClick={() => setStatus(InvoiceStatus.UNPAID)}
+      >
+        {InvoiceStatus.UNPAID}
       </div>
     </div>
   );

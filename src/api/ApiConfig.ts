@@ -20,6 +20,7 @@ export const apiRequest = (
 ) => {
   const headers = {
     "Content-Type": isMultipart ? "multipart/form-data" : "application/json",
+    folder_type: isMultipart ? "user" : null,
   };
 
   return apiConfig({

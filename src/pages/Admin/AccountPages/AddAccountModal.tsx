@@ -63,11 +63,18 @@ const AddAccountModal: React.FC<Props> = ({
       const birthdayAsDate = new Date(birthdayIsoString);
 
       // Upload images if they exist
-      const frontIdImageResponse = await postFileApi(values.frontIdImage.file);
-      const backIdImageResponse = await postFileApi(values.backIdImage.file);
-      const temporaryResidenceImageResponse = await postFileApi(
-        values.temporaryResidenceImage.file
-      );
+    const [
+      profileImageResponse,
+      frontIdImageResponse,
+      backIdImageResponse,
+      temporaryResidenceImageResponse,
+    ] = await Promise.all([
+      postFileApi(values.profileImage.file),
+      postFileApi(values.frontIdImage.file),
+      postFileApi(values.backIdImage.file),
+      postFileApi(values.temporaryResidenceImage.file),
+    ]);
+    
 
       // Call the API to post account data
       const response = await postAccountApi(
@@ -81,6 +88,7 @@ const AddAccountModal: React.FC<Props> = ({
         values.IdCard,
         values.Role,
         [
+          { imagePath: profileImageResponse.data.fileName },
           { imagePath: frontIdImageResponse.data.fileName },
           { imagePath: backIdImageResponse.data.fileName },
           { imagePath: temporaryResidenceImageResponse.data.fileName },
@@ -132,6 +140,23 @@ const AddAccountModal: React.FC<Props> = ({
       width={700}
     >
       <Form form={form} layout="vertical">
+        <Form.Item
+          label="Profile Picture"
+          name="profileImage"
+          rules={[{ required: true, message: "Profile picture is required" }]}
+          className="flex-1 justify-center items-center flex mt-5"
+        >
+          <Upload
+            listType="picture-circle"
+            accept="image/*"
+            beforeUpload={() => false}
+            className="avatar-uploader"
+            maxCount={1} // Limit to 1 image
+          >
+            <Button icon={<UploadOutlined />}></Button>
+          </Upload>
+        </Form.Item>
+
         <Form.Item label="Name" wrapperCol={{ span: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Form.Item
@@ -266,6 +291,8 @@ const AddAccountModal: React.FC<Props> = ({
           <Upload
             listType="picture"
             accept="image/*"
+            //showUploadList={{ showPreviewIcon: true }}
+            maxCount={1} // Limit to 1 image
             beforeUpload={() => false} // Prevent automatic upload
           >
             <Button icon={<UploadOutlined />}>Upload Front ID</Button>
@@ -282,6 +309,7 @@ const AddAccountModal: React.FC<Props> = ({
             listType="picture"
             accept="image/*"
             beforeUpload={() => false} // Prevent automatic upload
+            maxCount={1} // Limit to 1 image
           >
             <Button icon={<UploadOutlined />}>Upload Back ID</Button>
           </Upload>
@@ -301,6 +329,7 @@ const AddAccountModal: React.FC<Props> = ({
           <Upload
             listType="picture"
             accept="image/*"
+            maxCount={1} // Limit to 1 image
             beforeUpload={() => false} // Prevent automatic upload
           >
             <Button icon={<UploadOutlined />}>

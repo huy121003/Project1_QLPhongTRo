@@ -37,7 +37,7 @@ function RegisterPage() {
 
   return (
     <AuthLayout>
-      <div className="bg-gradient-to-br from-purple-400 to-green-300 p-10 rounded-lg shadow-lg lg:w-[800px] mx-3">
+      <div className=" p-10 rounded-lg shadow-lg lg:w-[800px] mx-3">
         <h2 className="text-4xl font-bold text-center text-white mb-8">
           Register
         </h2>

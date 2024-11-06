@@ -96,6 +96,7 @@ function ServicePage() {
     if (res.statusCode === 200) {
       message.success("Service deleted");
       getService();
+      setCurrent(1);
     } else {
       message.error(res.message);
     }
@@ -103,14 +104,14 @@ function ServicePage() {
 
   return (
     <>
-      <div className="justify-end p-2 w-full">
+      <div className="justify-end  w-full">
         <ServiceFilters
           searchParams={searchParams}
           handleSearchChange={handleSearchChange}
           handleSortChange={handleSortChange}
           sorted={sorted}
         />
-        <div className="bg-white p-2 rounded-lg  justify-between flex items-center">
+        <div className="bg-white mx-2  rounded-lg shadow-lg border border-gray-200 mt-2  justify-between flex items-center">
           <div></div>
           <div className="flex items-center">
             <ExportToExcel services={services} />

@@ -10,7 +10,7 @@ interface AccountModel{
         _id:string,
         name:string,
     },
-    
+    images:{imagePath:string}[]
     gender:Gender,
     address:string,
     createdAt:Date,

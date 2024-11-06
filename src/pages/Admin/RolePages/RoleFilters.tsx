@@ -1,6 +1,7 @@
 import React from "react";
-import { Radio, Space } from "antd";
+
 import SearchFilters from "../../../components/SearchFilter";
+import SortOption from "../../../components/SortOption";
 
 interface Props {
   searchParams: any;
@@ -21,15 +22,14 @@ const RoleFilters: React.FC<Props> = ({
         onSearchChange={handleSearchChange}
         fields={[{ label: "Role Name", field: "name", type: "text" }]}
       />
-      <div className="bg-white p-2 rounded-lg m-2 flex items-center">
-        <h2 className="font-bold text-xl my-3 mr-4">Sort by</h2>
-        <Radio.Group onChange={handleSortChange} value={sorted}>
-          <Space direction="horizontal">
-            <Radio value="name">Role Name</Radio>
-            <Radio value="createdAt">Created At</Radio>
-          </Space>
-        </Radio.Group>
-      </div>
+      <SortOption
+        options={[
+          { value: "name", label: "By Role Name" },
+          { value: "createdAt", label: "By Created At" },
+        ]}
+        sorted={sorted}
+        onChange={handleSortChange}
+      />
     </div>
   );
 };

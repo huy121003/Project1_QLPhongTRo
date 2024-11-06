@@ -1,10 +1,11 @@
 import React from "react";
-import {  Descriptions, Drawer, Tag } from "antd";
+import { Descriptions, Drawer, Image, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import { Gender } from "../../../models/AccountModel";
 import moment from "moment"; // Import moment for date formatting
 
-
+import { getGenderColor, getRoleColor } from "../../../utils/getMethodColor";
+const baseURL = import.meta.env.VITE_BACKEND_URL; // URL cơ bản của API, được lấy từ biến môi trường
 interface Props {
   openDetailAccount: boolean;
   setOpenDetailAccount: (value: boolean) => void;
@@ -16,10 +17,11 @@ const DetailAccount: React.FC<Props> = ({
   setOpenDetailAccount,
   record,
 }) => {
+  console.log(baseURL);
   const formatDate = (dateString: string) => {
     return moment(dateString).format("DD/MM/YYYY"); // Format date using moment
   };
- 
+
   const items = [
     {
       key: "1",
@@ -34,14 +36,11 @@ const DetailAccount: React.FC<Props> = ({
     {
       key: "3",
       label: "Gender",
-      children:
-        record?.gender === Gender.Male ? (
-          <p className="text-green-600 font-bold ">{record?.gender}</p>
-        ) : record?.gender === Gender.Female ? (
-          <p className=" text-pink-600 font-bold ">{record?.gender}</p>
-        ) : (
-          <p className="  text-purple-600 font-bold ">{record?.gender}</p>
-        ),
+      children: (
+        <p className={`${getGenderColor(record?.gender)} font-bold `}>
+          {record?.gender}
+        </p>
+      ),
     },
     {
       key: "4",
@@ -53,13 +52,9 @@ const DetailAccount: React.FC<Props> = ({
       label: "Role",
       children: (
         <p
-          className={`border ${
-            record?.role?.name === "SUPER ADMIN"
-              ? "border-red-600 bg-red-200 text-red-600"
-              : record?.role?.name === "NORMAL USER"
-              ? "border-green-600 bg-green-200 text-green-600"
-              : "border-blue-600 bg-blue-200 text-blue-600"
-          } text-center rounded border-2 w-[120px] p-2`}
+          className={`border ${getRoleColor(
+            record?.role?.name
+          )} text-center rounded border-2 w-[120px] p-2`}
         >
           {record?.role?.name}
         </p>
@@ -115,18 +110,21 @@ const DetailAccount: React.FC<Props> = ({
   ];
 
   return (
-    <div>
+    <div className="flex-1 ">
       <Drawer
         onClose={() => setOpenDetailAccount(false)}
         open={openDetailAccount}
         width={"100vh"}
+        title="Account Detail"
+        className="flex-1 "
       >
-        <Descriptions
-          title="Account Detail"
-          bordered
-          items={items}
-          column={1}
+        <Image
+          width={200}
+          height={200}
+          src={`${baseURL}/images/image/${record?.images[0].imagePath}`}
         />
+
+        <Descriptions bordered items={items} column={1} />
       </Drawer>
     </div>
   );

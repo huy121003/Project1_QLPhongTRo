@@ -1,4 +1,3 @@
-import apiConfig from "./ApiConfig";
 import { apiRequest } from "./ApiConfig";
 import { ApiMethod } from "./ApiMethod";
 export const apiRegister = (
@@ -20,6 +19,7 @@ export const apiRegister = (
     gender,
     address,
     idCard,
+    images: [{ imagePath: "" }, { imagePath: "" }, { imagePath: "" }],
   });
 };
 

@@ -66,19 +66,20 @@ function RolePage() {
     if (response.data) {
       message.success("Role deleted");
       getRoles();
+      setCurrent(1);
     } else {
       message.error(response.message);
     }
   };
   return (
-    <div className="justify-end p-2 w-full">
+    <div className="justify-end  flex-1">
       <RoleFilters
         searchParams={searchParams}
         handleSearchChange={handleSearchChange}
         handleSortChange={handleSortChange}
         sorted={sorted}
       />
-      <div className="bg-white p-2 rounded-lg m-2 justify-between flex items-center">
+      <div className="bg-white p-2  rounded-lg shadow-lg border border-gray-200 mx-2 justify-between flex items-center">
         <div></div>
 
         <div className="flex items-center">

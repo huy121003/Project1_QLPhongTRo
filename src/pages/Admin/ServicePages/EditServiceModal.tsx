@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Modal, Button, Input, Form, message, Select } from "antd";
 import { patchServiceApi } from "../../../api/serviceApi";
 import { ServiceModel, ServiceType } from "../../../models/ServiceModel";
+import { on } from "events";
 interface Props {
   openEditService: boolean;
   setOpenEditService: (value: boolean) => void;
@@ -24,10 +25,11 @@ const EditServiceModal: React.FC<Props> = ({
         type: service.type,
       });
     }
-  }, [service, form]);
+  }, [service, form, openEditService]);
 
   const handleOk = async () => {
     try {
+      console.log("service", service);
       const values = await form.validateFields();
       const response = await patchServiceApi(
         service?._id || "",

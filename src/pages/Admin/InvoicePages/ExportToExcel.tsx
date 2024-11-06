@@ -78,7 +78,7 @@ const ExportToExcel: React.FC<Props> = ({ invoices }) => {
     XLSX.writeFile(workbook, `Invoices_${invoices[0]?.month || ""}.xlsx`);
   };
   return (
-    <div className="bg-white  rounded-lg  justify-end flex-1 items-center cursor flex">
+    <div className="bg-white  rounded-lg shadow-lg border border-gray-200 justify-end flex-1 items-center cursor flex">
       <Button
         onClick={exportToExcel}
         type="primary"

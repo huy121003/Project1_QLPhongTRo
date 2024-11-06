@@ -1,7 +1,8 @@
 import React from "react";
-import { Radio, Space } from "antd";
+
 import SearchFilters from "../../../components/SearchFilter";
 import { RoomStatus, RoomType } from "../../../models/RoomModel";
+import SortOption from "../../../components/SortOption";
 
 interface Props {
   searchParams: any;
@@ -47,28 +48,17 @@ const RoomFilters: React.FC<Props> = ({
           },
         ]}
       />
-      <div className="bg-white p-2 rounded-lg m-2 flex items-center">
-        <h2 className="font-bold text-xl my-3 mr-4">Sort by</h2>
-        <Radio.Group onChange={handleSortChange} value={sorted}>
-          <Space direction="horizontal" className="justify-between">
-            <Radio value="roomName" className="font-bold">
-              By Room Name
-            </Radio>
-            <Radio value="type" className="font-bold">
-              By Type
-            </Radio>
-            <Radio value="price" className="font-bold">
-              By Price Increase
-            </Radio>
-            <Radio value="-price" className="font-bold">
-              By Price Decrease
-            </Radio>
-            <Radio value="status" className="font-bold">
-              By Status
-            </Radio>
-          </Space>
-        </Radio.Group>
-      </div>
+      <SortOption
+        options={[
+          { value: "roomName", label: "By Room Name" },
+          { value: "type", label: "By Type" },
+          { value: "price", label: "By Price Increase" },
+          { value: "-price", label: "By Price Decrease" },
+          { value: "status", label: "By Status" },
+        ]}
+        sorted={sorted}
+        onChange={handleSortChange}
+      />
     </div>
   );
 };

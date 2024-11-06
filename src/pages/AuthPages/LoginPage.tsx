@@ -35,7 +35,7 @@ function LoginPage(): JSX.Element {
   };
   return (
     <AuthLayout>
-      <div className="bg-gradient-to-br from-purple-400 to-green-300 p-12 rounded-lg shadow-lg lg:w-[500px] mx-2">
+      <div className=" p-12 rounded-lg shadow-lg lg:w-[500px] mx-2">
         <h2 className="text-4xl font-bold text-center text-white mb-8">
           Login
         </h2>
