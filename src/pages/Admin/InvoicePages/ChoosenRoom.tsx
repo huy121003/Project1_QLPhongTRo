@@ -35,7 +35,7 @@ const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
   }, [current, pageSize]);
 
   return (
-    <div className="bg-white p-4 rounded-lg m-2 flex justify-between items-center">
+    <div className="bg-white p-4  rounded-lg shadow-lg border border-gray-200 m-2 flex justify-between items-center">
       <div
         className={`flex p-4 border-2 rounded-2xl cursor-pointer ${
           choosenRoom === ""

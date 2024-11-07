@@ -94,7 +94,7 @@ const ElectricPage = () => {
   };
 
   return (
-    <div className="justify-end p-2 w-full">
+    <div className="justify-end  w-full">
       <YearMonthSelector
         selectedMonth={selectedMonth}
         year={year}

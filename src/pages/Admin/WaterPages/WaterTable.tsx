@@ -184,13 +184,13 @@ const WaterTable: React.FC<Props> = ({
     },
   ];
   return (
-    <Spin spinning={loading}>
+    <div className="px-2">
       <Table
         columns={columns}
         dataSource={contract}
         rowKey={(record) => record._id}
       />
-    </Spin>
+    </div>
   );
 };
 

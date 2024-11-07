@@ -1,3 +1,4 @@
+import { Gender } from "../models/AccountModel";
 import { ContractStatus } from "../models/ContractModel";
 import { InvoiceStatus } from "../models/InvoiceModal";
 import { Method } from "../models/PermissonModel";
@@ -22,11 +23,11 @@ export const getMethodColor = (method: Method) => {
 export const getRoleColor = (role: string) => {
   switch (role) {
     case "SUPER ADMIN":
-      return "border-red-600 bg-red-200 text-red-600";
+      return " text-red-600";
     case "NORMAL USER":
-      return "border-green-600 bg-green-200 text-green-600";
+      return " text-green-600";
     default:
-      return "border-blue-600 bg-blue-200 text-blue-600";
+      return "text-blue-600";
   }
 };
 export const getRoomStatusColor = (status: string) => {
@@ -78,5 +79,15 @@ export const getInvoiceStatusColor = (status: string) => {
       return "text-green-600 ";
     case InvoiceStatus.UNPAID:
       return "text-red-600 ";
+  }
+};
+export const getGenderColor = (gender: string) => {
+  switch (gender) {
+    case Gender.Male:
+      return "text-blue-600 ";
+    case Gender.Female:
+      return "text-pink-600 ";
+    default:
+      return "text-purple-600 ";
   }
 };

@@ -11,7 +11,8 @@ import AccountFilters from "./AccountFilter";
 
 import ExportToExcel from "./ExportToExcel";
 import { fecthRoleApi } from "../../../api/roleApi";
-import AccountTable from "./AccountTable";
+
+import AccountCard from "./AccountCard";
 function AccountPage() {
   const [accounts, setAccounts] = useState<AccountModel[]>([]);
   const [current, setCurrent] = useState(1);
@@ -85,14 +86,9 @@ function AccountPage() {
     openEditAccount,
   ]);
 
-  const onChange = (pagination: any) => {
-    if (pagination.current !== current && pagination) {
-      setCurrent(pagination.current);
-    }
-    if (pagination.pageSize !== pageSize && pagination) {
-      setPageSize(pagination.pageSize);
-      setCurrent(1);
-    }
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    setCurrent(page);
+    if (pageSize) setPageSize(pageSize);
   };
 
   const handleSearchChange = (field: string, value: string) => {
@@ -110,12 +106,13 @@ function AccountPage() {
     if (res.statusCode === 200) {
       message.success("Account deleted");
       getAccount();
+      setCurrent(1);
     } else message.error(res.message);
   };
 
   return (
     <>
-      <div className="justify-end p-2 w-full">
+      <div className="justify-end  w-full rounded-[20px] ">
         <AccountFilters
           searchParams={searchParams}
           handleSearchChange={handleSearchChange}
@@ -123,7 +120,7 @@ function AccountPage() {
           sorted={sorted}
           roles={roles}
         />
-        <div className="bg-white p-2 rounded-lg mx-4 justify-between items-center flex">
+        <div className="bg-white p-2 mx-2 rounded-lg mb-2 shadow-lg border border-gray-200 justify-between items-center flex">
           <div></div>
           <div className="flex justify-center items-center">
             <ExportToExcel accounts={accounts} />
@@ -133,13 +130,13 @@ function AccountPage() {
             />
           </div>
         </div>
-        <AccountTable
+        <AccountCard
           accounts={accounts}
           isLoading={isLoading}
           current={current}
           pageSize={pageSize}
           total={total}
-          onChange={onChange}
+          onChange={handlePaginationChange}
           onDeleteAccount={onDeleteAccount}
           setOpenEditAccount={setOpenEditAccount}
           setOpenDetailAccount={setOpenDetailAccount}

@@ -4,5 +4,11 @@ import DeleteModal from "./DeleteModal";
 
 import SidebarUser from "./SidebarUser";
 
-export { ActionButton, ColumnSelector, AddButton, DeleteModal, SidebarUser };
-
+import RenderUploadField from "./renderUploadField";
+export {
+  ColumnSelector,
+  AddButton,
+  DeleteModal,
+  SidebarUser,
+  RenderUploadField,
+};

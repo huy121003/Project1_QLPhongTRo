@@ -11,7 +11,8 @@ import DetailInvoice from "./DetailInvoice";
 import ChoosenRoom from "./ChoosenRoom";
 import StatusInvoice from "./StatusInvoice";
 import ExportToExcel from "./ExportToExcel";
-import InvoiceTable from "./InvoiceTable";
+
+import InvoiceCard from "./InvoiceCard";
 const InvoicePage = () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
@@ -55,20 +56,16 @@ const InvoicePage = () => {
     choosenRoom,
     status,
   ]);
-  const onChange = (pagination: any) => {
-    if (pagination.current !== current && pagination) {
-      setCurrent(pagination.current);
-    }
-    if (pagination.pageSize !== pageSize && pagination) {
-      setPageSize(pagination.pageSize);
-      setCurrent(1);
-    }
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    setCurrent(page);
+    if (pageSize) setPageSize(pageSize);
   };
   const onDeleteInvoice = async (record: any) => {
     const res = await deleteInvoiceApi(record._id);
     if (res.data) {
       message.success("Invoice deleted");
       getInvoices();
+      setCurrent(1);
     } else message.error(res.message);
   };
   const onPaymentConfirm = async (record: any) => {
@@ -80,7 +77,7 @@ const InvoicePage = () => {
   };
   return (
     <>
-      <div className="justify-end p-2 w-full">
+      <div className="justify-end  w-full">
         <YearMonthSelector
           selectedMonth={selectedMonth}
           year={year}
@@ -88,18 +85,19 @@ const InvoicePage = () => {
           setSelectedMonth={setSelectedMonth}
         />
         <ChoosenRoom choosenRoom={choosenRoom} setChooenRoom={setChooenRoom} />
-        <StatusInvoice status={status} setStatus={setStatus} />
-        <div className="bg-white p-2 rounded-lg  justify-between items-center flex">
+
+        <div className="bg-white  rounded-lg  justify-between items-center mx-2 flex">
           <div></div>
           <ExportToExcel invoices={invoices} />
         </div>
-        <InvoiceTable
+        <StatusInvoice status={status} setStatus={setStatus} />
+        <InvoiceCard
           invoices={invoices}
           isLoading={isLoading}
           current={current}
           pageSize={pageSize}
           total={total}
-          onChange={onChange}
+          onChange={handlePaginationChange}
           onDeleteInvoice={onDeleteInvoice}
           onPaymentConfirm={onPaymentConfirm}
           setRecord={setRecord}

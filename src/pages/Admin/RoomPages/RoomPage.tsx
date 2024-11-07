@@ -7,8 +7,8 @@ import AddRoomModal from "./AddRoomModal";
 import EditRoomModal from "./EditRoomModal";
 import DetailRoom from "./DetailRoom";
 import RoomFilters from "./RoomFilters";
-import RoomTable from "./RoomTable";
 import ExportToExcel from "./ExportToExcel";
+import RoomCard from "./RoomCard";
 function RoomPage() {
   const [rooms, setRooms] = useState<RoomModel[]>([]);
   const [current, setCurrent] = useState(1);
@@ -50,12 +50,9 @@ function RoomPage() {
   useEffect(() => {
     getRoom();
   }, [current, pageSize, sorted, searchParams, openAddRoom, openEditRoom]);
-  const onChange = (pagination: any) => {
-    if (pagination.current !== current) setCurrent(pagination.current);
-    if (pagination.pageSize !== pageSize) {
-      setPageSize(pagination.pageSize);
-      setCurrent(1);
-    }
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    setCurrent(page);
+    if (pageSize) setPageSize(pageSize);
   };
   const handleSearchChange = (field: string, value: string) => {
     setSearchParams((prev) => ({ ...prev, [field]: value }));
@@ -70,27 +67,28 @@ function RoomPage() {
     if (res.statusCode === 200) {
       message.success("Room deleted");
       getRoom();
+      setCurrent(1);
     } else {
       message.error(res.message);
     }
   };
   return (
     <>
-      <div className="justify-end p-2 w-full">
+      <div className="justify-end  flex-1">
         <RoomFilters
           searchParams={searchParams}
           handleSearchChange={handleSearchChange}
           handleSortChange={handleSortChange}
           sorted={sorted}
         />
-        <div className="bg-white p-2 rounded-lg m-2 justify-between flex items-center">
+        <div className="bg-white p-2 r rounded-lg shadow-lg border border-gray-200 mx-2 justify-between flex items-center">
           <div></div>
           <div className="flex items-center">
             <ExportToExcel rooms={rooms} />
             <AddButton onClick={() => setOpenAddRoom(true)} label="Add Room" />
           </div>
         </div>
-        <RoomTable
+        <RoomCard
           rooms={rooms}
           onDeleteRoom={onDeleteRoom}
           setOpenDetailRoom={setOpenDetailRoom}
@@ -100,7 +98,7 @@ function RoomPage() {
           current={current}
           pageSize={pageSize}
           total={total}
-          onChange={onChange}
+          onChange={handlePaginationChange}
         />
       </div>
       <AddRoomModal openAddRoom={openAddRoom} setOpenAddRoom={setOpenAddRoom} />

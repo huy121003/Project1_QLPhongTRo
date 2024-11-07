@@ -17,14 +17,14 @@ export const deleteServiceApi = async (id: string): Promise<any> => {
 export const postServiceApi = (
   serviceName: string,
   description: string,
-  price: string,
+  price: number,
   unit: string,
   type: ServiceType
 ): Promise<any> => {
   return apiRequest(ApiMethod.POST, `/api/v1/services`, false, {
     serviceName,
     description,
-    price,
+    price: parseInt(price.toString()),
     unit,
     type,
   });
@@ -34,14 +34,14 @@ export const patchServiceApi = (
   id: string,
   serviceName: string,
   description: string,
-  price: string,
+  price: number,
   unit: string,
   type: ServiceType
 ): Promise<any> => {
   return apiRequest(ApiMethod.PATCH, `/api/v1/services/${id}`, false, {
     serviceName,
     description,
-    price,
+    price: parseInt(price.toString()),
     unit,
     type,
   });

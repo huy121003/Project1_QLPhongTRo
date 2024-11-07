@@ -1,4 +1,3 @@
-import apiConfig from "./ApiConfig";
 import { apiRequest } from "./ApiConfig";
 import { ApiMethod } from "./ApiMethod";
 export const apiRegister = (
@@ -9,7 +8,8 @@ export const apiRegister = (
   birthday: Date,
   gender: string,
   address: string,
-  idCard: string
+  idCard: string,
+  images: { imagePath: string }[]
 ): Promise<any> => {
   return apiRequest(ApiMethod.POST, "/api/v1/auth/register", false, {
     email,
@@ -20,10 +20,12 @@ export const apiRegister = (
     gender,
     address,
     idCard,
+    images,
   });
 };
 
 export const apiLogin = (username: string, password: string): Promise<any> => {
+  console.log(username, password);
   return apiRequest(ApiMethod.POST, "/api/v1/auth/login", false, {
     username,
     password,

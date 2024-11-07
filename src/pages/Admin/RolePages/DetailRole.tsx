@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
-  Badge,
+  
   Descriptions,
   Drawer,
   message,
@@ -12,7 +12,7 @@ import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment";
 
 import { fetchPermissionApi } from "../../../api/permissionApi";
-import { Method, PermissionModel } from "../../../models/PermissonModel";
+import {  PermissionModel } from "../../../models/PermissonModel";
 import { getMethodColor, getRoleColor } from "../../../utils/getMethodColor";
 
 interface Props {

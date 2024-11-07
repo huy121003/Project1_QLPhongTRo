@@ -8,14 +8,18 @@ const DeleteModal: React.FC<Props> = ({ onConfirm, record }) => {
   return (
     <Popconfirm
       title="Are you sure you want to delete?"
-      onConfirm={async () => {  
+      onConfirm={async () => {
         await onConfirm(record); // Pass the record to the onConfirm function
       }}
       okText="Delete"
       cancelText="Cancel"
       overlayStyle={{ textAlign: "center" }} // Optional: To center the text
     >
-      <Button icon={<i className="fa-solid fa-trash text-red-600 text-xl" />} />
+      <Button
+        icon={<i className="fa-solid fa-trash text-xl" />}
+        type="primary"
+        className="bg-red-500 text-white hover:bg-red-600 transition"
+      />
     </Popconfirm>
   );
 };

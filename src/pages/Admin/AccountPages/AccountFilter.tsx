@@ -1,8 +1,9 @@
 // src/components/AccountFilters.tsx
 import React from "react";
-import { Radio, Space } from "antd";
+
 import SearchFilters from "../../../components/SearchFilter";
 import { RoleModel } from "../../../models/RoleModel";
+import SortOption from "../../../components/SortOption";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;
@@ -52,26 +53,16 @@ const AccountFilters: React.FC<Props> = ({
           },
         ]}
       />
-
-      <div className="bg-white p-2 rounded-lg m-2 flex  items-center">
-        <h2 className="font-bold text-xl my-3 mr-4 ">Sort by</h2>
-        <Radio.Group onChange={handleSortChange} value={sorted}>
-          <Space direction="horizontal" className="justify-between">
-            <Radio value="name" className="font-bold">
-              By Name
-            </Radio>
-            <Radio value="email" className="font-bold">
-              By Email
-            </Radio>
-            <Radio value="role" className="font-bold">
-              By Role
-            </Radio>
-            <Radio value="-createAt" className="font-bold">
-              By CreateAt
-            </Radio>
-          </Space>
-        </Radio.Group>
-      </div>
+      <SortOption
+        options={[
+          { value: "name", label: "By Name" },
+          { value: "email", label: "By Email" },
+          { value: "role", label: "By Role" },
+          { value: "-createdAt", label: "By Created At" },
+        ]}
+        onChange={handleSortChange}
+        sorted={sorted}
+      />
     </div>
   );
 };

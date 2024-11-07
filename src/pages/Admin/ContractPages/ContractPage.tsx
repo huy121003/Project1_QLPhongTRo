@@ -14,8 +14,8 @@ import { RoomStatus } from "../../../models/RoomModel";
 
 import ContractFilters from "./ContractFilter";
 
-import ContractTable from "./ContractTable";
 import ExportToExcel from "./ExportToExcel";
+import ContractCards from "./ContractCard";
 
 function ContractPage() {
   const [contracts, setContracts] = useState<ContractModel[]>([]);
@@ -72,16 +72,10 @@ function ContractPage() {
   useEffect(() => {
     getContracts();
   }, [current, pageSize, sorted, searchParams, openAddContract]);
-  const onChange = (pagination: any) => {
-    if (pagination.current !== current && pagination) {
-      setCurrent(pagination.current);
-    }
-    if (pagination.pageSize !== pageSize && pagination) {
-      setPageSize(pagination.pageSize);
-      setCurrent(1);
-    }
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    setCurrent(page);
+    if (pageSize) setPageSize(pageSize);
   };
-
   const handleSearchChange = (field: string, value: string) => {
     setSearchParams((prev) => ({ ...prev, [field]: value }));
     setCurrent(1);
@@ -93,14 +87,14 @@ function ContractPage() {
   };
   return (
     <>
-      <div className="justify-end p-2 w-full">
+      <div className="justify-end p-2 flex-1">
         <ContractFilters
           searchParams={searchParams}
           handleSearchChange={handleSearchChange}
           handleSortChange={handleSortChange}
           sorted={sorted}
         />
-        <div className="bg-white p-2 rounded-lg mx-4 justify-between flex items-center">
+        <div className="bg-white p-2 rounded-lg shadow-lg border border-gray-200 mt-2 justify-between flex items-center">
           <div />
 
           <div className="flex items-center">
@@ -111,7 +105,7 @@ function ContractPage() {
             />
           </div>
         </div>
-        <ContractTable
+        <ContractCards
           contracts={contracts}
           handleCancelContract={handleCancelContract}
           setOpenDetailContract={setOpenDetailContract}
@@ -120,7 +114,7 @@ function ContractPage() {
           current={current}
           pageSize={pageSize}
           total={total}
-          onChange={onChange}
+          onChange={handlePaginationChange}
         />
       </div>
 

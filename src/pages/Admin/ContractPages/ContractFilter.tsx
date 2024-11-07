@@ -1,7 +1,7 @@
 import React from "react";
-import { Radio, Space } from "antd";
 import SearchFilters from "../../../components/SearchFilter";
 import { ContractStatus } from "../../../models/ContractModel";
+import SortOption from "../../../components/SortOption";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;
@@ -15,7 +15,7 @@ const ContractFilters: React.FC<Props> = ({
   sorted,
 }) => {
   return (
-    <div className="justify-end p-2 w-full ">
+    <div className="justify-end  w-full ">
       <SearchFilters
         searchParams={searchParams}
         onSearchChange={handleSearchChange}
@@ -48,28 +48,20 @@ const ContractFilters: React.FC<Props> = ({
           },
         ]}
       />
-      <div className="bg-white p-2 rounded-lg m-2 flex  items-center">
-        <h2 className="font-bold text-xl my-3 mr-4">Sort by</h2>
-        <Radio.Group onChange={handleSortChange} value={sorted}>
-          <Space direction="horizontal" className="justify-between">
-            <Radio value="room.roomName" className="font-bold">
-              By Room Name
-            </Radio>
-            <Radio value="tenant.name" className="font-bold">
-              By Tenant Name
-            </Radio>
-            <Radio value="status" className="font-bold">
-              By Status
-            </Radio>
-            <Radio value="-startDate" className="font-bold">
-              By Start Date
-            </Radio>
-            <Radio value="-endDate" className="font-bold">
-              By End Date
-            </Radio>
-          </Space>
-        </Radio.Group>
-      </div>
+      <SortOption
+        options={[
+          { value: "room.roomName", label: "By Room Name" },
+          { value: "tenant.name", label: "By Tenant Name" },
+          { value: "status", label: "By Status" },
+          { value: "startDate", label: "By Start Date" },
+          {
+            value: "endDate",
+            label: "By End Date",
+          },
+        ]}
+        onChange={handleSortChange}
+        sorted={sorted}
+      />
     </div>
   );
 };
