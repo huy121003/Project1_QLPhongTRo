@@ -21,6 +21,7 @@ function LoginPage(): JSX.Element {
     const res = await apiLogin(email, password);
     setIsSubmit(false);
     if (res?.data) {
+      console.log(res.data);
       localStorage.setItem("access_token", res.data.access_token);
       dispatch(loginaction(res.data.user));
       message.success("Login successfully!");

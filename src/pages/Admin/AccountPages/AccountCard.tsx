@@ -46,7 +46,7 @@ const AccountCard: React.FC<Props> = ({
                 <div className="flex-1 flex flex-col items-center justify-center">
                   {account.images && account.images[0].imagePath ? (
                     <img
-                      src={`${baseURL}/images/image/${account?.images[0]?.imagePath}`}
+                      src={`${baseURL}/images/user/${account?.images[0]?.imagePath}`}
                       alt="avatar"
                       className="w-[120px] h-[120px] rounded-full border-2 border-gray-300"
                     />

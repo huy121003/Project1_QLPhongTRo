@@ -1,7 +1,6 @@
 import React from "react";
 import { Descriptions, Drawer, Image, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
-import { Gender } from "../../../models/AccountModel";
 import moment from "moment"; // Import moment for date formatting
 
 import { getGenderColor, getRoleColor } from "../../../utils/getMethodColor";
@@ -76,6 +75,77 @@ const DetailAccount: React.FC<Props> = ({
       children: record?.phone,
     },
     {
+      key: "17",
+      label: "Front ID Card",
+      children: record?.images[0].imagePath ? (
+        <Image
+          width={100}
+          height={70}
+          src={`${baseURL}/images/user/${record?.images[1].imagePath}`}
+        />
+      ) : (
+        "N/A"
+      ),
+    },
+    {
+      key: "18",
+      label: "Back ID Card",
+      children: record?.images[1].imagePath ? (
+        <Image
+          width={100}
+          height={70}
+          src={`${baseURL}/images/user/${record?.images[2].imagePath}`}
+        />
+      ) : (
+        "N/A"
+      ),
+    },
+    {
+      key: "19",
+      label: "Temporary Residence Image",
+      children: record?.images[2].imagePath ? (
+        <Image
+          width={100}
+          height={70}
+          src={`${baseURL}/images/user/${record?.images[3].imagePath}`}
+        />
+      ) : (
+        "N/A"
+      ),
+    },
+    {
+      key: "9",
+      label: "Created At",
+      children: record?.createdAt ? formatDate(record?.createdAt) : "N/A", // Format createdAt date
+    },
+    {
+      key: "10",
+      label: "Created By",
+      children: record?.createdBy ? (
+        record?.createdBy?.email
+      ) : (
+        <Tag icon={<SyncOutlined spin />} color="processing">
+          Updating
+        </Tag>
+      ),
+    },
+    {
+      key: "11",
+      label: "Updated At",
+      children: record?.updatedAt ? formatDate(record?.updatedAt) : "N/A", // Format updatedAt date
+    },
+    {
+      key: "12",
+      label: "Updated By",
+      children: record?.updatedBy ? (
+        record?.updatedBy?.email
+      ) : (
+        <Tag icon={<SyncOutlined spin />} color="processing">
+          Updating
+        </Tag>
+      ),
+    },
+    {
       key: "9",
       label: "Created At",
       children: record?.createdAt ? formatDate(record?.createdAt) : "N/A", // Format createdAt date
@@ -121,7 +191,7 @@ const DetailAccount: React.FC<Props> = ({
         <Image
           width={200}
           height={200}
-          src={`${baseURL}/images/image/${record?.images[0].imagePath}`}
+          src={`${baseURL}/images/user/${record?.images[0].imagePath}`}
         />
 
         <Descriptions bordered items={items} column={1} />

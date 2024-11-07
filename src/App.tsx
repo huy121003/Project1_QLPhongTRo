@@ -100,6 +100,7 @@ function App() {
     const res = await apiFetchUser();
 
     if (res?.data) {
+      console.log(res.data);
       dispatch(getUserAction(res.data.user));
     } else message.error(res.message);
   };

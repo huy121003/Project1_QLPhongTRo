@@ -1,5 +1,4 @@
 import React from "react";
-
 import SearchFilters from "../../../components/SearchFilter";
 import { ContractStatus } from "../../../models/ContractModel";
 import SortOption from "../../../components/SortOption";

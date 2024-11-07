@@ -1,20 +1,14 @@
 import { message } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components";
-
 import AddServiceModal from "./AddServiceModal";
 import EditServiceModal from "./EditServiceModal";
-
 import { deleteServiceApi, fetchServiceApi } from "../../../api/serviceApi";
-
 import { ServiceModel } from "../../../models/ServiceModel";
-
 import DetailService from "./DetailService";
 import ServiceFilters from "./ServiceFilters";
-
 import ServiceTable from "./ServiceTable";
 import ExportToExcel from "./ExportToExcel";
-
 function ServicePage() {
   const [services, setServices] = useState<ServiceModel[]>([]);
 
