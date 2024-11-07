@@ -3,7 +3,7 @@ import ContractModel from "../../../models/ContractModel";
 import { fetchContractApi } from "../../../api/contractApi";
 import { fetchInvoiceApi } from "../../../api/invoiceApi";
 
-import YearMonthSelector from "../../../components/YearMonthSelector ";
+// import YearMonthSelector from "../../../components/YearMonthSelector ";
 import { fetchServiceApi } from "../../../api/serviceApi";
 import { ServiceModel, ServiceType } from "../../../models/ServiceModel";
 import ElectricTable from "./ElectricTable";

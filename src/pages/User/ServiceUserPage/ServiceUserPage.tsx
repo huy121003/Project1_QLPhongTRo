@@ -1,4 +1,4 @@
-import Breadcrumb from "../../../components/Breadcrumb";
+
 
 export default function ServiceUserPage() {
     const currentServices = [
@@ -42,7 +42,21 @@ export default function ServiceUserPage() {
 
     return (
         <div className="bg-[#e0f5e4] text-[#2b6534] h-full flex flex-col">
-            <Breadcrumb />
+            <div
+                aria-label="breadcrumb"
+                className="text-xl text-[#2b6534] bg-neutral-100 px-7 py-4 shadow-lg"
+            >
+                <ol className="flex space-x-2">
+                    <li>
+                        <a
+                            href="/tai-chinh"
+                            className=" hover:underline font-semibold"
+                        >
+                            Service
+                        </a>
+                    </li>
+                </ol>
+            </div>
             <div className="bg-white rounded-lg shadow-md p-6 m-5">
                 <h2 className="text-2xl font-semibold mb-4">
                     Current Services
@@ -50,14 +64,14 @@ export default function ServiceUserPage() {
                 <table className="w-full border text-left border-collapse">
                     <thead>
                         <tr className="border">
-                            <th className="py-2 px-4 border-r">Service Name</th>
-                            <th className="py-2 px-4 border-r">Price</th>
-                            <th className="py-2 px-4">Description</th>
+                            <th className="py-2 px-4 border-r text-lg">Service Name</th>
+                            <th className="py-2 px-4 border-r text-lg">Price</th>
+                            <th className="py-2 px-4 text-lg">Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         {currentServices.map((service, index) => (
-                            <tr key={index} className="border-b">
+                            <tr key={index} className="border-b text-lg">
                                 <td className="py-2 px-4 border-r">
                                     {service.serviceName}
                                 </td>

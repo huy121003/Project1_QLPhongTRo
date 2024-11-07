@@ -4,7 +4,7 @@ import { PrinterOutlined } from "@ant-design/icons";
 import moment from "moment";
 import ContractModel from "../../../models/ContractModel";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
-import { downloadContractPDF } from "../../../utils/generateContractPDF";
+// import { downloadContractPDF } from "../../../utils/generateContractPDF";
 
 interface Props {
   openDetailContract: boolean;

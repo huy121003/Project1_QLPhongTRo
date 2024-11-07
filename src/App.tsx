@@ -51,34 +51,27 @@ const router = createBrowserRouter([
     {
         path: "user",
         element: <UserLayout />,
-        // element: (
-        //     <ProtectedRoute>
-        //         <UserLayout />
-        //     </ProtectedRoute>
-        // ),
-        // children: homeUserRouters.map((route) => ({
-        //     path: route.path,
-        //     element: <route.component />,
-        // })),
     },
 ]);
 
 function App() {
-  const dispatch = useAppDispatch();
-  const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-  const getAccount = async () => {
-    if (
-      window.location.pathname === "/login" ||
-      window.location.pathname === "/register"
-    ) {
-      return;
-    }
-    const res = await apiFetchUser();
+    const dispatch = useAppDispatch();
+    const isAuthenticated = useAppSelector(
+        (state) => state.auth.isAuthenticated
+    );
+    const getAccount = async () => {
+        if (
+            window.location.pathname === "/login" ||
+            window.location.pathname === "/register"
+        ) {
+            return;
+        }
+        const res = await apiFetchUser();
 
-    if (res?.data) {
-      dispatch(getUserAction(res.data.user));
-    } else message.error(res.message);
-  };
+        if (res?.data) {
+            dispatch(getUserAction(res.data.user));
+        } else message.error(res.message);
+    };
 
     useEffect(() => {
         // Only fetch the user account if authenticated and not on the login page

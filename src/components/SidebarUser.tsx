@@ -3,13 +3,12 @@ import React, {
     useContext,
     useState,
     ReactNode,
-    act,
+   
 } from "react";
 import logo from "../Images/logo2.png";
 import { RiMenuFold3Line, RiMenuFold4Line } from "react-icons/ri";
 import { RiArrowDropDownLine } from "react-icons/ri";
-import { homeUserRouters } from "../routers";
-import { Link } from "react-router-dom";
+
 
 // Định kiểu cho SidebarContext
 type SidebarContextType = { expanded: boolean };
@@ -118,7 +117,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({
                 )}
             </div>
             {isOpen && hasSubItems && (
-                <ul className="pl-10 transition-all duration-300">
+                <ul className="pl-6 transition-all duration-300">
                     {children}
                 </ul>
             )}

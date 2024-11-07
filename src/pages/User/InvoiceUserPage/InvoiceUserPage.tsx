@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Breadcrumb from "../../../components/Breadcrumb";
+
 import { SlPaperPlane } from "react-icons/sl";
 import { QRCode } from "antd";
 import PaymentSuccessful from "./PaymentSuccessful";
@@ -22,9 +22,24 @@ export default function InvoiceUserPage() {
     // const [showSuccess, setShowSuccess] = useState(false);
     // const [showFailed, setShowFailed] = useState(true);
     return (
-        <div className="bg-[#e0f5e4] h-full flex flex-col flex-shrink-0">
-            <Breadcrumb />
-            <div className="bg-neutral-100 flex-grow m-5 rounded-2xl p-6 shadow-lg text-[#2b6534] relative">
+        <div className="bg-[#e0f5e4] h-full flex flex-col flex-shrink-0 ">
+            <div
+                aria-label="breadcrumb"
+                className="text-xl text-[#2b6534] bg-neutral-100 px-7 py-4 shadow-lg"
+            >
+                <ol className="flex space-x-2">
+                    <li>
+                        <a href="/tai-chinh" className=" hover:underline">
+                            Finance
+                        </a>
+                    </li>
+                    <li>
+                        <span className="text-[#2b6534]">›</span>
+                    </li>
+                    <li className="font-semibold ">Pay online</li>
+                </ol>
+            </div>
+            <div className="bg-neutral-100 flex-grow m-5 rounded-2xl p-6 shadow-lg text-[#2b6534] ">
                 {/* <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg"> */}
                 {/* Thông tin cá nhân */}
                 <div className="border-b pb-4 mb-4">
@@ -32,41 +47,31 @@ export default function InvoiceUserPage() {
                         PERSONAL INFORMATION
                     </h2>
 
-                    <div className="grid grid-cols-2 gap-4 mt-4 text-xl">
+                    <div className="grid grid-cols-2 gap-4 mt-4 text-lg">
                         <div>
-                            <p className="font-medium py-2">
+                            <p className=" py-2">
                                 Full Name:{" "}
-                                <span className="font-semibold">
-                                    Lưu Huy Hiếu
-                                </span>
+                                <span className="">Lưu Huy Hiếu</span>
                             </p>
-                            <p className="font-medium py-2">
+                            <p className=" py-2">
                                 Address:{" "}
-                                <span className="font-semibold">
-                                    Cầu giấy - Hà Nội
-                                </span>
+                                <span className="">Cầu giấy - Hà Nội</span>
                             </p>
-                            <p className="font-medium py-2">
-                                Phone:{" "}
-                                <span className="font-semibold">
-                                    0343310165
-                                </span>
+                            <p className=" py-2">
+                                Phone: <span className="">0343310165</span>
                             </p>
                         </div>
                         <div>
-                            <p className="font-medium py-2">
-                                ID Card:{" "}
-                                <span className="font-semibold">240820829</span>
+                            <p className=" py-2">
+                                ID Card: <span className="">240820829</span>
                             </p>
-                            <p className="font-medium py-2">
+                            <p className=" py-2">
                                 Date of Birth:{" "}
-                                <span className="font-semibold">24/2/2000</span>
+                                <span className="">24/2/2000</span>
                             </p>
-                            <p className="font-medium py-2">
+                            <p className=" py-2">
                                 Email:{" "}
-                                <span className="font-semibold">
-                                    xeoxeo1895@gmail.com
-                                </span>
+                                <span className="">xeoxeo1895@gmail.com</span>
                             </p>
                         </div>
                     </div>

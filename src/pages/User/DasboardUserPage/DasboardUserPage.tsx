@@ -68,34 +68,48 @@ export default function DashboardUserPage() {
 
     return (
         <div className="bg-[#e0f5e4] text-[#2b6534] h-full flex flex-col box-border ">
-            <Breadcrumb />
+            <div
+                aria-label="breadcrumb"
+                className="text-xl text-[#2b6534] bg-neutral-100 px-7 py-4 shadow-lg"
+            >
+                <ol className="flex space-x-2">
+                    <li>
+                        <a
+                            href="/tai-chinh"
+                            className=" hover:underline font-semibold"
+                        >
+                            Dashboard
+                        </a>
+                    </li>
+                </ol>
+            </div>
             <div className="bg-white rounded-lg shadow-md p-6 m-5">
                 <h2 className="text-3xl font-semibold mb-4">
                     Room Information
                 </h2>
                 <div className="grid grid-cols-2 gap-10">
-                    <div className="text-lg font-medium">
+                    <div className="text-lg ">
                         <p className=" py-2 ">
                             Room Name:{" "}
-                            <span className="font-semibold">
+                            <span className="">
                                 {roomDetails.roomName}
                             </span>
                         </p>
                         <p className=" py-2 ">
                             Room Type:{" "}
-                            <span className="font-semibold">
+                            <span className="">
                                 {roomDetails.roomType}
                             </span>
                         </p>
                         <p className=" py-2 ">
                             Room Price:{" "}
-                            <span className="font-semibold">
+                            <span className="">
                                 {roomDetails.roomPrice}
                             </span>
                         </p>
                         <p className=" py-2 ">
                             Room Description:{" "}
-                            <span className="font-semibold">
+                            <span className="">
                                 {roomDetails.roomDescription}
                             </span>
                         </p>

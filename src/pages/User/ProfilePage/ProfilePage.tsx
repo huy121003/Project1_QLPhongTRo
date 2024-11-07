@@ -54,7 +54,7 @@ export default function ProfilePage() {
 
     return (
       
-            <div className="text-[#2b6534]">
+            <div className="text-[#2b6534] z-10">
                 <h2 className="text-2xl font-semibold mb-4 text-center">
                     Profile Information
                 </h2>
