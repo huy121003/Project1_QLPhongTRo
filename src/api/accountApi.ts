@@ -42,7 +42,8 @@ export const patchAccountApi = (
   gender: string,
   address: string,
   idCard: string,
-  role: string
+  role: string,
+  images: { imagePath: string }[]
 ): Promise<any> => {
   return apiRequest(ApiMethod.PATCH, `/api/v1/users/${id}`, false, {
     phone,
@@ -52,6 +53,7 @@ export const patchAccountApi = (
     address,
     idCard,
     role,
+    images,
   });
 };
 export const changePasswordApi = (

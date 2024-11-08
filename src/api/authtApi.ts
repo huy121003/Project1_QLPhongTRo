@@ -8,8 +8,7 @@ export const apiRegister = (
   birthday: Date,
   gender: string,
   address: string,
-  idCard: string,
-  images: { imagePath: string }[]
+  idCard: string
 ): Promise<any> => {
   return apiRequest(ApiMethod.POST, "/api/v1/auth/register", false, {
     email,
@@ -20,7 +19,20 @@ export const apiRegister = (
     gender,
     address,
     idCard,
-    images,
+    images: [
+      {
+        imagePath: "string",
+      },
+      {
+        imagePath: "string",
+      },
+      {
+        imagePath: "string",
+      },
+      {
+        imagePath: "string",
+      },
+    ],
   });
 };
 

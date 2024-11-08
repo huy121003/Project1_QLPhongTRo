@@ -3,9 +3,11 @@ import { Modal, Button, Input, Form, message, Select, DatePicker } from "antd";
 import moment from "moment"; // Import moment for date handling
 import { patchAccountApi } from "../../../api/accountApi";
 import AccountModel, { Gender } from "../../../models/AccountModel";
-
+const baseURL = import.meta.env.VITE_BACKEND_URL;
 import { RoleModel } from "../../../models/RoleModel";
 import { fecthRoleApi } from "../../../api/roleApi";
+import { postFileApi } from "../../../api/upfileApi";
+import { RenderUploadField } from "../../../components";
 
 interface Props {
   openEditAccount: boolean;
@@ -20,6 +22,11 @@ const EditAccountModal: React.FC<Props> = ({
 }) => {
   const [form] = Form.useForm();
   const [role, setRole] = useState<RoleModel[]>([]);
+  const [images, setImages] = useState<
+    {
+      imagePath: string;
+    }[]
+  >([]);
   useEffect(() => {
     const getRole = async () => {
       const res = await fecthRoleApi("");
@@ -42,7 +49,7 @@ const EditAccountModal: React.FC<Props> = ({
       const lastName = nameParts.pop(); // Get the last part as LastName
       const firstName = nameParts.shift(); // Get the first part as FirstName
       const middleName = nameParts.join(" "); // Join the remaining parts as MiddleName
-
+      setImages(record.images);
       form.setFieldsValue({
         Email: record.email,
         Phone: record.phone,
@@ -66,7 +73,18 @@ const EditAccountModal: React.FC<Props> = ({
       const birthday = values.BirthDay
         ? values.BirthDay.format("YYYY-MM-DD")
         : null;
+      const imageUploadResponses = await Promise.all([
+        postFileApi(values.profileImage.file),
+        postFileApi(values.frontIdImage.file),
+        postFileApi(values.backIdImage.file),
+        postFileApi(values.temporaryResidenceImage.file),
+      ]);
 
+      setImages(
+        imageUploadResponses.map((res) => ({
+          imagePath: res.data.fileName,
+        }))
+      );
       const response = await patchAccountApi(
         record._id,
         values.Phone,
@@ -75,7 +93,8 @@ const EditAccountModal: React.FC<Props> = ({
         values.Gender,
         values.Address,
         values.IdCard,
-        values.Role
+        values.Role,
+        images
       );
 
       if (response.statusCode === 200) {
@@ -115,6 +134,24 @@ const EditAccountModal: React.FC<Props> = ({
       ]}
     >
       <Form form={form} layout="vertical">
+        <RenderUploadField
+          label="Profile Picture"
+          name="profileImage"
+          message="Profile picture is required"
+          listType="picture-circle"
+          defaultFileList={
+            images
+              ? [
+                  {
+                    uid: record._id,
+                    name: "Profile Picture",
+                    url: `${baseURL}/images/user/${images[0]?.imagePath}`,
+                  },
+                ]
+              : []
+          }
+        />
+
         <Form.Item label={<span>Name</span>} wrapperCol={{ span: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Form.Item
@@ -220,6 +257,58 @@ const EditAccountModal: React.FC<Props> = ({
         >
           <Input placeholder="Enter Address" size="large" />
         </Form.Item>
+
+        <RenderUploadField
+          label="Front ID Image"
+          name="frontIdImage"
+          message="Front ID image is required"
+          listType="picture"
+          defaultFileList={
+            images
+              ? [
+                  {
+                    uid: record._id,
+                    name: "Profile Picture",
+                    url: `${baseURL}/images/user/${images[1]?.imagePath}`,
+                  },
+                ]
+              : []
+          }
+        />
+        <RenderUploadField
+          label="Back ID Image"
+          name="backIdImage"
+          message="Back ID image is required"
+          listType="picture"
+          defaultFileList={
+            images
+              ? [
+                  {
+                    uid: record._id,
+                    name: "Profile Picture",
+                    url: `${baseURL}/images/user/${images[2]?.imagePath}`,
+                  },
+                ]
+              : []
+          }
+        />
+        <RenderUploadField
+          label="Temporary Residence Image"
+          name="temporaryResidenceImage"
+          message="Temporary residence image is required"
+          listType="picture"
+          defaultFileList={
+            images
+              ? [
+                  {
+                    uid: record._id,
+                    name: "Profile Picture",
+                    url: `${baseURL}/images/user/${images[3]?.imagePath}`,
+                  },
+                ]
+              : []
+          }
+        />
       </Form>
     </Modal>
   );

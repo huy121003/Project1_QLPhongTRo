@@ -15,6 +15,7 @@ import { Gender } from "../../../models/AccountModel";
 import { fecthRoleApi } from "../../../api/roleApi"; // Note: Fixed the typo in the function name
 import { RoleModel } from "../../../models/RoleModel";
 import { postFileApi } from "../../../api/upfileApi";
+import { RenderUploadField } from "../../../components";
 
 interface Props {
   openAddAccount: boolean;
@@ -63,18 +64,16 @@ const AddAccountModal: React.FC<Props> = ({
       const birthdayAsDate = new Date(birthdayIsoString);
 
       // Upload images if they exist
-    const [
-      profileImageResponse,
-      frontIdImageResponse,
-      backIdImageResponse,
-      temporaryResidenceImageResponse,
-    ] = await Promise.all([
-      postFileApi(values.profileImage.file),
-      postFileApi(values.frontIdImage.file),
-      postFileApi(values.backIdImage.file),
-      postFileApi(values.temporaryResidenceImage.file),
-    ]);
-    
+      const imageUploadResponses = await Promise.all([
+        postFileApi(values.profileImage.file),
+        postFileApi(values.frontIdImage.file),
+        postFileApi(values.backIdImage.file),
+        postFileApi(values.temporaryResidenceImage.file),
+      ]);
+
+      const images = imageUploadResponses.map((res) => ({
+        imagePath: res.data.fileName,
+      }));
 
       // Call the API to post account data
       const response = await postAccountApi(
@@ -87,12 +86,7 @@ const AddAccountModal: React.FC<Props> = ({
         values.Address,
         values.IdCard,
         values.Role,
-        [
-          { imagePath: profileImageResponse.data.fileName },
-          { imagePath: frontIdImageResponse.data.fileName },
-          { imagePath: backIdImageResponse.data.fileName },
-          { imagePath: temporaryResidenceImageResponse.data.fileName },
-        ]
+        images
       );
 
       if (response.statusCode === 201) {
@@ -140,22 +134,12 @@ const AddAccountModal: React.FC<Props> = ({
       width={700}
     >
       <Form form={form} layout="vertical">
-        <Form.Item
+        <RenderUploadField
           label="Profile Picture"
           name="profileImage"
-          rules={[{ required: true, message: "Profile picture is required" }]}
-          className="flex-1 justify-center items-center flex mt-5"
-        >
-          <Upload
-            listType="picture-circle"
-            accept="image/*"
-            beforeUpload={() => false}
-            className="avatar-uploader"
-            maxCount={1} // Limit to 1 image
-          >
-            <Button icon={<UploadOutlined />}></Button>
-          </Upload>
-        </Form.Item>
+          message="Profile picture is required"
+          listType="picture-circle"
+        />
 
         <Form.Item label="Name" wrapperCol={{ span: 24 }}>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -282,61 +266,24 @@ const AddAccountModal: React.FC<Props> = ({
           <Input placeholder="Enter address" size="large" />
         </Form.Item>
 
-        <Form.Item
+        <RenderUploadField
           label="Front ID Image"
           name="frontIdImage"
-          rules={[{ required: true, message: "Front ID image is required" }]}
-          className="mr-2 flex-1"
-        >
-          <Upload
-            listType="picture"
-            accept="image/*"
-            //showUploadList={{ showPreviewIcon: true }}
-            maxCount={1} // Limit to 1 image
-            beforeUpload={() => false} // Prevent automatic upload
-          >
-            <Button icon={<UploadOutlined />}>Upload Front ID</Button>
-          </Upload>
-        </Form.Item>
-
-        <Form.Item
+          message="Front ID image is required"
+          listType="picture"
+        />
+        <RenderUploadField
           label="Back ID Image"
           name="backIdImage"
-          rules={[{ required: true, message: "Back ID image is required" }]}
-          className="mr-2 flex-1"
-        >
-          <Upload
-            listType="picture"
-            accept="image/*"
-            beforeUpload={() => false} // Prevent automatic upload
-            maxCount={1} // Limit to 1 image
-          >
-            <Button icon={<UploadOutlined />}>Upload Back ID</Button>
-          </Upload>
-        </Form.Item>
-
-        <Form.Item
+          message="Back ID image is required"
+          listType="picture"
+        />
+        <RenderUploadField
           label="Temporary Residence Image"
           name="temporaryResidenceImage"
-          rules={[
-            {
-              required: true,
-              message: "Temporary residence image is required",
-            },
-          ]}
-          className="mr-2 flex-1"
-        >
-          <Upload
-            listType="picture"
-            accept="image/*"
-            maxCount={1} // Limit to 1 image
-            beforeUpload={() => false} // Prevent automatic upload
-          >
-            <Button icon={<UploadOutlined />}>
-              Upload Temporary Residence
-            </Button>
-          </Upload>
-        </Form.Item>
+          message="Temporary residence image is required"
+          listType="picture"
+        />
       </Form>
     </Modal>
   );
