@@ -10,11 +10,11 @@ import {
   Upload,
 } from "antd";
 import { postAccountApi } from "../../../api/accountApi"; // Adjust the path to your API function
-import { UploadOutlined } from "@ant-design/icons";
+
 import { Gender } from "../../../models/AccountModel";
 import { fecthRoleApi } from "../../../api/roleApi"; // Note: Fixed the typo in the function name
 import { RoleModel } from "../../../models/RoleModel";
-import { postFileApi } from "../../../api/upfileApi";
+import { postAvatarApi } from "../../../api/upfileApi";
 import { RenderUploadField } from "../../../components";
 
 interface Props {
@@ -52,7 +52,6 @@ const AddAccountModal: React.FC<Props> = ({
     try {
       // Validate the form fields
       const values = await form.validateFields();
-      console.log(values);
 
       // Combine first name, middle name, and last name into a single name
       const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
@@ -65,15 +64,15 @@ const AddAccountModal: React.FC<Props> = ({
 
       // Upload images if they exist
       const imageUploadResponses = await Promise.all([
-        postFileApi(values.profileImage.file),
-        postFileApi(values.frontIdImage.file),
-        postFileApi(values.backIdImage.file),
-        postFileApi(values.temporaryResidenceImage.file),
+        postAvatarApi(values.profileImage.file),
+        postAvatarApi(values.frontIdImage.file),
+        postAvatarApi(values.backIdImage.file),
+        postAvatarApi(values.temporaryResidenceImage.file),
       ]);
-
-      const images = imageUploadResponses.map((res) => ({
-        imagePath: res.data.fileName,
-      }));
+      if (imageUploadResponses.some(response => response.statusCode !== 201)) {
+        message.error("Failed to upload one or more images.");
+        return;
+      }
 
       // Call the API to post account data
       const response = await postAccountApi(
@@ -86,7 +85,12 @@ const AddAccountModal: React.FC<Props> = ({
         values.Address,
         values.IdCard,
         values.Role,
-        images
+        imageUploadResponses[0].data.fileName,
+        [
+          imageUploadResponses[1].data.fileName,
+          imageUploadResponses[2].data.fileName,
+          imageUploadResponses[3].data.fileName,
+        ]
       );
 
       if (response.statusCode === 201) {
