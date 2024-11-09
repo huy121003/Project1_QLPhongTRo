@@ -24,10 +24,10 @@ import PaymentHistoryUserPage from "../../pages/User/PaymentHistoryUserPage/Paym
 import ServiceUserPage from "../../pages/User/ServiceUserPage/ServiceUserPage";
 
 function UserLayout() {
-  const [openProfile, setOpenProfile] = useState(false);
-  const [openProfileModal, setOpenProfileModal] = useState(false); // Thêm state này
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
+    const [openProfile, setOpenProfile] = useState(false);
+    const [openProfileModal, setOpenProfileModal] = useState(false); // Thêm state này
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const [activeItem, setActiveItem] = useState<string>("Dashboard");
     const [openChangePassword, setOpenChangePassword] =
@@ -72,66 +72,71 @@ function UserLayout() {
                     onClick={() => setActiveItem("Finance")}
                 >
                     <SidebarItem
-                        icon={<GrOverview size={30} />}
-                        text="Overview"
-                        active={activeItem === "Overview"}
-                        onClick={() => setActiveItem("Overview")}
-                    />
-                    <SidebarItem
                         icon={<LiaFileInvoiceDollarSolid size={30} />}
                         text="Pay"
-                        active={activeItem === "TPay"}
+                        active={activeItem === "Pay"}
                         onClick={() => setActiveItem("Pay")}
+                    />
+                    <SidebarItem
+                        icon={<GrOverview size={30} />}
+                        text="Payment history"
+                        active={activeItem === "Payment history"}
+                        onClick={() => setActiveItem("Payment history")}
                     />
                 </SidebarItem>
             </SidebarUser>
 
-      <div className="flex-grow flex flex-col h-full">
-        <div className=" flex bg-[#083b10]  h-16 items-center justify-end pr-7">
-          <BsBell className="text-neutral-300" size={20} />
-          <div
-            className="pl-10 relative"
-            onClick={() => setOpenProfile((prev) => !prev)}
-          >
-            <a href="#!" className="flex items-center gap-1">
-              <FaRegUserCircle size={35} className="text-neutral-300" />
-              <span className="pl-4 text-neutral-300">User</span>
-              <RiArrowDropDownLine className="text-neutral-300" />
-            </a>
-          </div>
-          {openProfile && (
-            <div className="flex flex-col absolute top-16 right-6 bg-white text-[#2b6534] w-40 rounded-xl overflow-hidden shadow-xl">
-              <div className="absolute -top-2 right-8 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8 border-b-white"></div>
-              <ul className="flex flex-col">
-                <li
-                  className="p-4 hover:bg-gray-200 transition-colors duration-200 "
-                  onClick={() => setOpenProfileModal(true)}
-                >
-                  Profile
-                </li>
-                <li
-                  className="p-4 hover:bg-gray-200 transition-colors duration-200"
-                  onClick={handleChangePassword}
-                >
-                  Change Password
-                </li>
-                <li
-                  className="p-4 hover:bg-gray-200 transition-colors duration-200"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+            <div className="flex-grow flex flex-col h-full">
+                <div className=" flex bg-[#083b10]  h-16 items-center justify-end pr-7">
+                    <BsBell className="text-neutral-300" size={20} />
+                    <div
+                        className="pl-10 relative"
+                        onClick={() => setOpenProfile((prev) => !prev)}
+                    >
+                        <a href="#!" className="flex items-center gap-1">
+                            <FaRegUserCircle
+                                size={35}
+                                className="text-neutral-300"
+                            />
+                            <span className="pl-4 text-neutral-300">User</span>
+                            <RiArrowDropDownLine className="text-neutral-300" />
+                        </a>
+                    </div>
+                    {openProfile && (
+                        <div className="flex flex-col absolute top-16 right-6 bg-white text-[#2b6534] w-40 rounded-xl overflow-hidden shadow-xl">
+                            <div className="absolute -top-2 right-8 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8 border-b-white"></div>
+                            <ul className="flex flex-col">
+                                <li
+                                    className="p-4 hover:bg-gray-200 transition-colors duration-200 "
+                                    onClick={() => setOpenProfileModal(true)}
+                                >
+                                    Profile
+                                </li>
+                                <li
+                                    className="p-4 hover:bg-gray-200 transition-colors duration-200"
+                                    onClick={handleChangePassword}
+                                >
+                                    Change Password
+                                </li>
+                                <li
+                                    className="p-4 hover:bg-gray-200 transition-colors duration-200"
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </li>
+                            </ul>
+                        </div>
+                    )}
+                </div>
 
                 <div className="flex-grow  rounded-tl-3xl rounded-bl-3xl overflow-hidden ">
                     {activeItem === "Dashboard" && <DasboardUserPage />}
                     {activeItem === "Contract" && <ContractUserPage />}
                     {activeItem === "Service" && <ServiceUserPage />}
                     {activeItem === "Finance" && <InvoiceUserPage />}
-                    {activeItem === "Overview" && <InvoiceUserPage />}
+                    {activeItem === "Payment history" && (
+                        <PaymentHistoryUserPage />
+                    )}
                     {activeItem === "Pay" && <InvoiceUserPage />}
                     {/* <Routes>
                         <Route
@@ -158,17 +163,17 @@ function UserLayout() {
                 setOpen={setOpenChangePassword}
             />
 
-      {/* Modal cho Profile */}
-      <Modal
-        title=""
-        visible={openProfileModal}
-        onCancel={() => setOpenProfileModal(false)}
-        footer={null}
-      >
-        <ProfilePage />
-      </Modal>
-    </div>
-  );
+            {/* Modal cho Profile */}
+            <Modal
+                title=""
+                visible={openProfileModal}
+                onCancel={() => setOpenProfileModal(false)}
+                footer={null}
+            >
+                <ProfilePage />
+            </Modal>
+        </div>
+    );
 }
 
 export default UserLayout;

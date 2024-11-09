@@ -19,7 +19,7 @@ export default function InvoiceUserPage() {
     //     amount: "1.999.999 VND",
     //     transferContent: "Phòng 203 đóng trọ",
     // });
-    // const [showSuccess, setShowSuccess] = useState(false);
+    // // const [showSuccess, setShowSuccess] = useState(false);
     // const [showFailed, setShowFailed] = useState(true);
     return (
         <div className="bg-[#e0f5e4] h-full flex flex-col flex-shrink-0 ">
