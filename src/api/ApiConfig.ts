@@ -8,7 +8,6 @@ const NO_RETRY_HEADER = "x-no-retry"; // Tên của header dùng để tránh l�
 export const apiConfig = axios.create({
   baseURL: baseURL, // Thiết lập URL cơ bản cho mọi yêu cầu
   withCredentials: true, // Đảm bảo cookie được gửi kèm trong các yêu cầu
-  
 });
 export const apiRequest = (
   method: ApiMethod,
@@ -18,7 +17,7 @@ export const apiRequest = (
 ) => {
   const headers = {
     "Content-Type": isMultipart ? "multipart/form-data" : "application/json",
-    folder_type: isMultipart ? "user" : "",
+    // folder_type: isMultipart ? "user" : "",
   };
 
   return apiConfig({
@@ -89,7 +88,6 @@ apiConfig.interceptors.response.use(
         window.location.pathname !== "/register"
       )
         window.location.href = "/login"; //
-     
     }
     // Xử lý lỗi cho những mã trạng thái không thuộc 2xx
     return error?.response?.data ?? Promise.reject(error); // Trả về dữ liệu lỗi hoặc lỗi được xử lý

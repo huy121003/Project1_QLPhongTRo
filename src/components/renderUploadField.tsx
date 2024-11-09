@@ -25,7 +25,11 @@ const RenderUploadField: React.FC<IRenderUploadField> = ({
     label={label}
     name={name}
     rules={[{ required: true, message }]}
-    className={`flex-1 justify-center items-center flex mt-5`}
+    className={`${
+      listType === "picture-circle"
+        ? "flex-1 justify-center items-center flex mt-5"
+        : "w-full"
+    }`}
   >
     <Upload
       listType={listType}
@@ -33,9 +37,8 @@ const RenderUploadField: React.FC<IRenderUploadField> = ({
       beforeUpload={() => false}
       maxCount={1}
       defaultFileList={defaultFileList}
-      className={` ${listType === "picture-circle" ? "avatar-uploader" : ""}`}
     >
-      <Button icon={<UploadOutlined />}>Upload {label}</Button>
+      <Button icon={<UploadOutlined />}></Button>
     </Upload>
   </Form.Item>
 );

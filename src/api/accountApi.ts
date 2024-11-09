@@ -16,9 +16,9 @@ export const postAccountApi = (
   address: string,
   idCard: string,
   role: string,
-  images: { imagePath: string }[]
+  avatar: string,
+  imagesIdCard: string[]
 ): Promise<any> => {
-  console.log("images", images);
   return apiRequest(ApiMethod.POST, `/api/v1/users`, false, {
     email,
     phone,
@@ -29,7 +29,8 @@ export const postAccountApi = (
     address,
     idCard,
     role: role,
-    images,
+    imagesIdCard,
+    avatar,
   });
 };
 export const patchAccountApi = (
@@ -42,7 +43,9 @@ export const patchAccountApi = (
   gender: string,
   address: string,
   idCard: string,
-  role: string
+  role: string,
+  avatar: string,
+  imagesIdCard: string[]
 ): Promise<any> => {
   return apiRequest(ApiMethod.PATCH, `/api/v1/users/${id}`, false, {
     phone,
@@ -52,6 +55,8 @@ export const patchAccountApi = (
     address,
     idCard,
     role,
+    imagesIdCard,
+    avatar,
   });
 };
 export const changePasswordApi = (
