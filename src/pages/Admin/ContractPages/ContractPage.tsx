@@ -1,24 +1,17 @@
 import { message } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components"; // Change to CustomModal
-import { fetchContractApi, patchContractApi } from "../../../api/contractApi";
-
 import AddContractModal from "./AddContractModal";
-
-import ContractModel from "../../../models/ContractModel";
-import { ContractStatus } from "../../../models/ContractModel";
 import DetailContract from "./DetailContract";
-
-import { updateRoomStatusApi } from "../../../api/roomApis";
-import { RoomStatus } from "../../../models/RoomModel";
-
 import ContractFilters from "./ContractFilter";
-
 import ExportToExcel from "./ExportToExcel";
 import ContractCards from "./ContractCard";
+import { IContract } from "../../../interfaces";
+import { ContractStatus, RoomStatus } from "../../../enums";
+import { contractApi, roomApi } from "../../../api";
 
 function ContractPage() {
-  const [contracts, setContracts] = useState<ContractModel[]>([]);
+  const [contracts, setContracts] = useState<IContract[]>([]);
 
   const [openAddContract, setOpenAddContract] = useState(false);
 
@@ -37,9 +30,9 @@ function ContractPage() {
     phone: "",
   });
   const handleCancelContract = async (id: string, roomId: string) => {
-    const res = await patchContractApi(id, ContractStatus.CANCELED);
+    const res = await contractApi.patchContractApi(id, ContractStatus.CANCELED);
     if (res.data) {
-      const response = await updateRoomStatusApi(roomId, RoomStatus.Available);
+      const response = await roomApi.updateRoomStatusApi(roomId, RoomStatus.Available);
 
       if (response.data) {
         message.success("Cancel contract successfully");
@@ -62,7 +55,7 @@ function ContractPage() {
     });
     const query = new URLSearchParams(queryParams).toString();
     setIsLoading(true);
-    const res = await fetchContractApi(query);
+    const res = await contractApi.fetchContractApi(query);
     if (res.data) {
       setContracts(res.data.result);
       setTotal(res.data.meta.totalDocument);

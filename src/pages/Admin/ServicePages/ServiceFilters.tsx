@@ -1,7 +1,6 @@
 import React from "react";
-import SearchFilters from "../../../components/SearchFilter";
-import { ServiceType } from "../../../models/ServiceModel";
-import SortOption from "../../../components/SortOption";
+import { SearchFilters, SortOption } from "../../../components";
+import { ServiceType } from "../../../enums";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;

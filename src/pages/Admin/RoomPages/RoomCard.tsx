@@ -1,24 +1,23 @@
 import React from "react";
-import {DeleteModal } from "../../../components";
-import RoomModel from "../../../models/RoomModel";
+import { DeleteModal, NotItem } from "../../../components";
 import {
   getRoomStatusColor,
   getRoomTypeColor,
 } from "../../../utils/getMethodColor";
 import { Button, Pagination, Spin } from "antd";
-import NotItem from "../../../components/NotItem";
+import { IRoom } from "../../../interfaces";
 
 interface Props {
-  rooms: RoomModel[];
+  rooms: IRoom[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteRoom: (record: RoomModel) => Promise<void>;
+  onDeleteRoom: (record: IRoom) => Promise<void>;
   setOpenEditRoom: (open: boolean) => void;
   setOpenDetailRoom: (open: boolean) => void;
-  setRecord: (record: RoomModel) => void;
+  setRecord: (record: IRoom) => void;
 }
 
 const RoomCard: React.FC<Props> = ({

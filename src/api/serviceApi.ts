@@ -1,20 +1,20 @@
 import apiConfig, { apiRequest } from "./ApiConfig";
-import { ServiceType } from "../models/ServiceModel";
-import { ApiMethod } from "./ApiMethod";
+import { ServiceType } from "../enums";
+import { ApiMethod } from "../enums";
 
-export const fetchServiceApi = async (query: any): Promise<any> => {
+const fetchServiceApi = async (query: any): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/services?${query}`, false);
 };
 
-export const fetchServiceByIdApi = async (id: string): Promise<any> => {
+const fetchServiceByIdApi = async (id: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/services/${id}`, false);
 };
 
-export const deleteServiceApi = async (id: string): Promise<any> => {
+const deleteServiceApi = async (id: string): Promise<any> => {
   return apiRequest(ApiMethod.DELETE, `/api/v1/services/${id}`, false);
 };
 
-export const postServiceApi = (
+const postServiceApi = (
   serviceName: string,
   description: string,
   price: number,
@@ -30,7 +30,7 @@ export const postServiceApi = (
   });
 };
 
-export const patchServiceApi = (
+const patchServiceApi = (
   id: string,
   serviceName: string,
   description: string,
@@ -45,4 +45,11 @@ export const patchServiceApi = (
     unit,
     type,
   });
+};
+export default {
+  fetchServiceApi,
+  fetchServiceByIdApi,
+  deleteServiceApi,
+  postServiceApi,
+  patchServiceApi,
 };

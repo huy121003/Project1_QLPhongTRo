@@ -1,7 +1,8 @@
 import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
 import React, { useState } from "react";
-import { apiActiveAccount } from "../../api/authtApi";
+
 import { useNavigate } from "react-router-dom";
+import { authtApi } from "../../api";
 
 interface Props {
   open: boolean;
@@ -21,7 +22,7 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
       const values = await formCode.validateFields();
       const code = values.code;
 
-      const res = await apiActiveAccount(id, code);
+      const res = await authtApi.apiActiveAccount(id, code);
       if (res.statusCode === 201) {
         message.success("Account activated successfully.");
         setCurrent(current + 1);

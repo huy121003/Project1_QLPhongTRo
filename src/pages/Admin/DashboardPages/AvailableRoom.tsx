@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getRoomStatusColor,
   getRoomTypeColor,
 } from "../../../utils/getMethodColor";
-import { fetchRoomApi } from "../../../api/roomApis";
-import { RoomStatus } from "../../../models/RoomModel";
 import { message, Table } from "antd";
 import { Box, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
-
+import { roomApi } from "../../../api";
+import { RoomStatus } from "../../../enums";
 function AvailableRoom() {
   const [rooms, setRooms] = useState([]);
-
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
@@ -45,7 +43,7 @@ function AvailableRoom() {
 
   useEffect(() => {
     const getRooms = async () => {
-      const res = await fetchRoomApi(
+      const res = await roomApi.fetchRoomApi(
         `currentPage=${currentPage}&pageSize=${pageSize}&status=${RoomStatus.Available}`
       );
 

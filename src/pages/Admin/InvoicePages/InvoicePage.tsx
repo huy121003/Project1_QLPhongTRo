@@ -1,24 +1,20 @@
 import { message } from "antd";
 import { useEffect, useState } from "react";
-import InvoiceModel, { InvoiceStatus } from "../../../models/InvoiceModal";
-import {
-  deleteInvoiceApi,
-  fetchInvoiceApi,
-  patchInvoiceStatusApi,
-} from "../../../api/invoiceApi";
 import DetailInvoice from "./DetailInvoice";
-import YearMonthSelector from "../../../components/YearMonthSelector ";
 import ChoosenRoom from "./ChoosenRoom";
 import StatusInvoice from "./StatusInvoice";
 import ExportToExcel from "./ExportToExcel";
-
 import InvoiceCard from "./InvoiceCard";
+import { IInvoice } from "../../../interfaces";
+import { InvoiceStatus } from "../../../enums";
+import { invoiceApi } from "../../../api";
+import { YearMonthSelector } from "../../../components";
 const InvoicePage = () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [year, setYear] = useState(currentYear);
-  const [invoices, setInvoices] = useState<InvoiceModel[]>([]);
+  const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [status, setStatus] = useState<InvoiceStatus | "">("");
   const [openDetailInvoice, setOpenDetailInvoice] = useState(false);
   const [choosenRoom, setChooenRoom] = useState("");
@@ -38,7 +34,7 @@ const InvoicePage = () => {
     };
     const query = new URLSearchParams(queryParams).toString();
     setIsLoading(true);
-    const res = await fetchInvoiceApi(query);
+    const res = await invoiceApi.fetchInvoiceApi(query);
     if (res.data) {
       setInvoices(res.data.result);
       setTotal(res.data.meta.totalDocument);
@@ -61,7 +57,7 @@ const InvoicePage = () => {
     if (pageSize) setPageSize(pageSize);
   };
   const onDeleteInvoice = async (record: any) => {
-    const res = await deleteInvoiceApi(record._id);
+    const res = await invoiceApi.deleteInvoiceApi(record._id);
     if (res.data) {
       message.success("Invoice deleted");
       getInvoices();
@@ -69,7 +65,10 @@ const InvoicePage = () => {
     } else message.error(res.message);
   };
   const onPaymentConfirm = async (record: any) => {
-    const res = await patchInvoiceStatusApi(record._id, InvoiceStatus.PAID);
+    const res = await invoiceApi.patchInvoiceStatusApi(
+      record._id,
+      InvoiceStatus.PAID
+    );
     if (res.data) {
       message.success("Payment confirmed");
       getInvoices();

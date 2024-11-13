@@ -1,9 +1,11 @@
 import { apiRequest } from "./ApiConfig";
-import { ApiMethod } from "./ApiMethod";
+import { ApiMethod } from "../enums";
 
-export const postFileApi = (imageFile: File): Promise<any> => {
-  console.log(imageFile);
-  return apiRequest(ApiMethod.POST, `/api/v1/files/upload`, true, {
+const postAvatarApi = (imageFile: File): Promise<any> => {
+  return apiRequest(ApiMethod.POST, `/api/v1/files`, true, {
     imageFile,
   });
+};
+export default {
+  postAvatarApi,
 };

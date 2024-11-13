@@ -1,12 +1,10 @@
 import React from "react";
-import { Table, Input, Spin, message } from "antd";
-import ContractModel from "../../../models/ContractModel";
-import { patchInvoiceApi, postInvoiceApi } from "../../../api/invoiceApi";
-import { ServiceModel } from "../../../models/ServiceModel";
-
+import { Table, Input, message, Button } from "antd";
+import { IContract, IService } from "../../../interfaces";
+import { invoiceApi } from "../../../api";
 interface Props {
-  contract: ContractModel[];
-  electric: ServiceModel;
+  contract: IContract[];
+  electric: IService;
   numberIndex: {
     [key: string]: {
       firstIndex: number;
@@ -35,9 +33,17 @@ const ElectricTable: React.FC<Props> = ({
 }) => {
   const handleOK = async (key: string) => {
     const indexData = numberIndex[key];
+    if (
+      !indexData.firstIndex ||
+      !indexData.finalIndex ||
+      indexData.firstIndex > indexData.finalIndex
+    ) {
+      message.error("Invalid index");
+      return;
+    }
     try {
       if (indexData.invoiceId) {
-        const res = await patchInvoiceApi(
+        const res = await invoiceApi.patchInvoiceApi(
           indexData.invoiceId,
           indexData.firstIndex,
           indexData.finalIndex
@@ -49,7 +55,7 @@ const ElectricTable: React.FC<Props> = ({
         const contractInfo = contract.find((c) => c._id === key);
         if (!contractInfo) return;
 
-        const res = await postInvoiceApi(
+        const res = await invoiceApi.postInvoiceApi(
           {
             _id: contractInfo.room._id,
             roomName: contractInfo.room.roomName,
@@ -97,7 +103,7 @@ const ElectricTable: React.FC<Props> = ({
       title: "First Index",
       dataIndex: "firstIndex",
       key: "firstIndex",
-      render: (_: any, record: ContractModel) => (
+      render: (_: any, record: IContract) => (
         <Input
           type="number"
           value={numberIndex[record._id]?.firstIndex}
@@ -115,7 +121,7 @@ const ElectricTable: React.FC<Props> = ({
       title: "Final Index",
       dataIndex: "finalIndex",
       key: "finalIndex",
-      render: (_: any, record: ContractModel) => (
+      render: (_: any, record: IContract) => (
         <Input
           type="number"
           value={numberIndex[record._id]?.finalIndex}
@@ -133,7 +139,7 @@ const ElectricTable: React.FC<Props> = ({
       title: "Total Index",
       dataIndex: "totalIndex",
       key: "totalIndex",
-      render: (_: any, record: ContractModel) => (
+      render: (_: any, record: IContract) => (
         <Input
           type="number"
           disabled
@@ -154,7 +160,7 @@ const ElectricTable: React.FC<Props> = ({
       title: "Total",
       dataIndex: "total",
       key: "total",
-      render: (_: any, record: ContractModel) => {
+      render: (_: any, record: IContract) => {
         return (
           <p>
             {(
@@ -174,13 +180,13 @@ const ElectricTable: React.FC<Props> = ({
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (_: any, record: ContractModel) => (
-        <div
-          className=" text-blue-500  rounded-lg w-[40px] h-[40px] flex justify-center items-center cursor-pointer border-2  border-blue-500 hover:border-blue-300 hover:text-blue-300 "
+      render: (_: any, record: IContract) => (
+        <Button
           onClick={() => handleOK(record._id)}
-        >
-          <i className="fa-solid fa-floppy-disk text-2xl"></i>
-        </div>
+          icon={
+            <i className="fa-solid fa-floppy-disk text-2xl text-green-500 p-2"></i>
+          }
+        ></Button>
       ),
     },
   ];

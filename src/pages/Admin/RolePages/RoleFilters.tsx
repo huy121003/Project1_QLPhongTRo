@@ -1,8 +1,5 @@
 import React from "react";
-
-import SearchFilters from "../../../components/SearchFilter";
-import SortOption from "../../../components/SortOption";
-
+import { SearchFilters, SortOption } from "../../../components";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;

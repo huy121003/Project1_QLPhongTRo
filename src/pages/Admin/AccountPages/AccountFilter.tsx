@@ -1,15 +1,13 @@
 // src/components/AccountFilters.tsx
 import React from "react";
-import { Radio, Space } from "antd";
-import SearchFilters from "../../../components/SearchFilter";
-import { RoleModel } from "../../../models/RoleModel";
-import SortOption from "../../../components/SortOption";
+import { IRole } from "../../../interfaces";
+import { SearchFilters, SortOption } from "../../../components";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;
   handleSortChange: (e: any) => void;
   sorted: string;
-  roles: RoleModel[];
+  roles: IRole[];
 }
 const AccountFilters: React.FC<Props> = ({
   searchParams,

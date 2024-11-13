@@ -1,8 +1,7 @@
 import React from "react";
 import { Modal, Button, Input, Form, Select, message } from "antd";
-import { postServiceApi } from "../../../api/serviceApi";
-
-import { ServiceType } from "../../../models/ServiceModel";
+import { serviceApi } from "../../../api";
+import { ServiceType } from "../../../enums";
 interface Props {
   openAddService: boolean;
   setOpenAddService: (value: boolean) => void;
@@ -17,7 +16,7 @@ const AddServiceModal: React.FC<Props> = ({
   const handleOk = async () => {
     // Validate the form fields
     const values = await form.validateFields();
-    const response = await postServiceApi(
+    const response = await serviceApi.postServiceApi(
       values.serviceName,
       values.description,
       values.price,

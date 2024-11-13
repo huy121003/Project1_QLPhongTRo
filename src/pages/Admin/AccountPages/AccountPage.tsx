@@ -1,20 +1,16 @@
 import { message } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components"; // Change to CustomModal
-
-import { deleteAcountApi, fecthAccountApi } from "../../../api/accountApi";
+import { accountApi, roleApi } from "../../../api/";
 import AddAccountModal from "./AddAccountModal";
-import AccountModel from "../../../models/AccountModel";
+import { IAccount } from "../../../interfaces";
 import EditAccountModal from "./EditAccountModal";
 import DetailAccount from "./DetailAccount";
 import AccountFilters from "./AccountFilter";
-
 import ExportToExcel from "./ExportToExcel";
-import { fecthRoleApi } from "../../../api/roleApi";
-
 import AccountCard from "./AccountCard";
 function AccountPage() {
-  const [accounts, setAccounts] = useState<AccountModel[]>([]);
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
@@ -33,7 +29,7 @@ function AccountPage() {
   });
 
   const getRole = async () => {
-    const res = await fecthRoleApi("current=1&pageSize=99900");
+    const res = await roleApi.fecthRoleApi("current=1&pageSize=99900");
     if (res.data.result) {
       setRoles(res.data.result);
     }
@@ -59,16 +55,14 @@ function AccountPage() {
     const query = new URLSearchParams(queryParams).toString();
     setIsLoading(true);
 
-    const res = await fecthAccountApi(query);
+    const res = await accountApi.fecthAccountApi(query);
 
     setIsLoading(false);
     if (res.data.result) {
-      const formattedAccounts = res.data.result.map(
-        (account: AccountModel) => ({
-          ...account,
-          roleName: account.role?.name || "Unknown Role",
-        })
-      );
+      const formattedAccounts = res.data.result.map((account: IAccount) => ({
+        ...account,
+        roleName: account.role?.name || "Unknown Role",
+      }));
 
       setAccounts(formattedAccounts);
       setTotal(res.data.meta.total);
@@ -102,7 +96,7 @@ function AccountPage() {
   };
 
   const onDeleteAccount = async (record: any) => {
-    const res = await deleteAcountApi(record._id);
+    const res = await accountApi.deleteAcountApi(record._id);
     if (res.statusCode === 200) {
       message.success("Account deleted");
       getAccount();

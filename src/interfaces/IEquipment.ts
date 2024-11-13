@@ -1,4 +1,6 @@
-export interface EquipmentModel {
+import { EquipmentStatus } from "../enums";
+
+interface IEquipment {
   _id: string;
   name: string;
   status: EquipmentStatus;
@@ -18,9 +20,4 @@ export interface EquipmentModel {
     name: string;
   };
 }
-export enum EquipmentStatus {
-  New = "NEW",
-  Old = "OLD",
-  Broken = "BROKEN",
-  Repairing = "REPAIRING",
-}
+export default IEquipment;

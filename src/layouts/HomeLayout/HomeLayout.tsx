@@ -1,13 +1,14 @@
-import { useState  } from "react";
+import { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import homeAdminRouters from "../../routers";
 import { resizeWidth } from "../../utils/resize";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { apiLogout } from "../../api/authtApi";
+import { accountApi, authtApi } from "../../api";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
 import { Dropdown, Menu, message } from "antd";
 import ChangePassword from "../../pages/AuthPages/ChangePassword";
-import axios from "axios";
+import { IAccount } from "../../interfaces";
+import EditAccountModal from "../../pages/Admin/AccountPages/EditAccountModal";
 function HomeLayout() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function HomeLayout() {
   );
   const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
   const [openEditAccount, setOpenEditAccount] = useState(false);
+  const [account, setAccount] = useState<IAccount>();
   const [isNavOpen, setIsNavOpen] = useState<boolean>(
     /*localStorage.getItem("isNavOpen") === "true" ||*/ true
   );
@@ -25,12 +27,20 @@ function HomeLayout() {
     setIsNavOpen((prev) => !prev);
   };
   const handleLogout = async () => {
-    const res = await apiLogout();
+    const res = await authtApi.apiLogout();
     if (res && res.data) {
       dispatch(logoutAction());
-      delete axios.defaults.headers.common["Authorization"];
       navigate("/");
       message.success("Success logout");
+    }
+  };
+  const handleGetUser = async () => {
+    const res = await accountApi.fetchAccountByIdApi(user?._id);
+    if (res.data) {
+      setAccount(res.data);
+      setOpenEditAccount(true);
+    } else {
+      message.error("Something went wrong");
     }
   };
   const handleChangePassword = () => {
@@ -38,7 +48,7 @@ function HomeLayout() {
   };
   const menu = (
     <Menu>
-      <Menu.Item key="3" onClick={() => setOpenEditAccount(true)}>
+      <Menu.Item key="3" onClick={handleGetUser}>
         Update Profile
         <i className="fa fa-user m-3" />
       </Menu.Item>
@@ -98,14 +108,15 @@ function HomeLayout() {
 
           <Dropdown overlay={menu} trigger={["hover"]}>
             <div className="flex justify-center items-center hover:text-blue-500">
+              <i className="fa-solid fa-user-circle text-3xl mr-3"></i>
               <p className=""> {user?.name}</p>
               <i className="fa-solid fa-angle-down ml-1"></i>
             </div>
           </Dropdown>
         </div>
         <div
-          className="flex-1 flex-row overflow-y-auto overflow-x-auto   "
-          style={{ maxHeight: "calc(100vh - 4rem)", maxWidth: "100vw" }}
+          className="flex-1 flex-row overflow-y-auto overflow-x-auto 
+          max-h-[calc(100vh-4rem)] max-w-[100vw]"
         >
           <Outlet />
         </div>
@@ -114,11 +125,13 @@ function HomeLayout() {
         open={openChangePassword}
         setOpen={setOpenChangePassword}
       />
-      {/* <EditAccountModal
-     openEditAccount={openEditAccount}
-     setOpenEditAccount={setOpenEditAccount}
-     record={user}
-     /> */}
+      {account && (
+        <EditAccountModal
+          openEditAccount={openEditAccount}
+          setOpenEditAccount={setOpenEditAccount}
+          record={account}
+        />
+      )}
     </div>
   );
 }

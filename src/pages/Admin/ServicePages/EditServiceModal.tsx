@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { Modal, Button, Input, Form, message, Select } from "antd";
-import { patchServiceApi } from "../../../api/serviceApi";
-import { ServiceModel, ServiceType } from "../../../models/ServiceModel";
-import { on } from "events";
+import { IService } from "../../../interfaces";
+import { ServiceType } from "../../../enums";
+import { serviceApi } from "../../../api";
+
 interface Props {
   openEditService: boolean;
   setOpenEditService: (value: boolean) => void;
-  service: ServiceModel | null;
+  service: IService | null;
 }
 
 const EditServiceModal: React.FC<Props> = ({
@@ -29,9 +30,9 @@ const EditServiceModal: React.FC<Props> = ({
 
   const handleOk = async () => {
     try {
-      console.log("service", service);
+
       const values = await form.validateFields();
-      const response = await patchServiceApi(
+      const response = await serviceApi.patchServiceApi(
         service?._id || "",
         values.serviceName,
         values.description,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { BsBell } from "react-icons/bs";
 import { RiArrowDropDownLine } from "react-icons/ri";
 import { MdOutlineDashboardCustomize } from "react-icons/md";
@@ -7,21 +7,18 @@ import { LiaFileContractSolid } from "react-icons/lia";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
 import { FaServicestack } from "react-icons/fa6";
 import { GrOverview } from "react-icons/gr";
-import SidebarUser, { SidebarItem } from "../../components/SidebarUser";
+import { SidebarUser } from "../../components";
 import DasboardUserPage from "../../pages/User/DasboardUserPage/DasboardUserPage";
-
-import axios from "axios";
-import { apiLogout } from "../../api/authtApi";
+import { authtApi } from "../../api";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
 import { useAppDispatch } from "../../redux/hook";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { message, Modal } from "antd";
 import ProfilePage from "../../pages/User/ProfilePage/ProfilePage";
 import ChangePassword from "../../pages/AuthPages/ChangePassword";
 import ContractUserPage from "../../pages/User/ContractUserPage/ContractUserPage";
 import InvoiceUserPage from "../../pages/User/InvoiceUserPage/InvoiceUserPage";
 import ServiceUserPage from "../../pages/User/ServiceUserPage/ServiceUserPage";
-
 function UserLayout() {
   const [openProfile, setOpenProfile] = useState(false);
   const [openProfileModal, setOpenProfileModal] = useState(false); // Thêm state này
@@ -31,10 +28,9 @@ function UserLayout() {
   const [activeItem, setActiveItem] = useState<string>("Dashboard");
   const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
   const handleLogout = async () => {
-    const res = await apiLogout();
+    const res = await authtApi.apiLogout();
     if (res && res.data) {
       dispatch(logoutAction());
-      delete axios.defaults.headers.common["Authorization"];
       navigate("/");
       message.success("Success logout");
     }
@@ -44,45 +40,45 @@ function UserLayout() {
   };
   return (
     <div className="flex h-screen bg-[#083b10] box-border">
-      <SidebarUser>
-        <SidebarItem
+      <SidebarUser.SidebarUser>
+        <SidebarUser.SidebarItem
           icon={<MdOutlineDashboardCustomize size={30} />}
           text="Dashboard"
           active={activeItem === "Dashboard"} // Kiểm tra nếu đây là mục đang active
           onClick={() => setActiveItem("Dashboard")}
         />
-        <SidebarItem
+        <SidebarUser.SidebarItem
           icon={<LiaFileContractSolid size={30} />}
           text="Contract"
           active={activeItem === "Contract"}
           onClick={() => setActiveItem("Contract")}
         />
-        <SidebarItem
+        <SidebarUser.SidebarItem
           icon={<FaServicestack size={30} />}
           text="Service"
           active={activeItem === "Service"}
           onClick={() => setActiveItem("Service")}
         />
-        <SidebarItem
+        <SidebarUser.SidebarItem
           icon={<LiaFileInvoiceDollarSolid size={30} />}
           text="Finance"
           active={activeItem === "Finance"}
           onClick={() => setActiveItem("Finance")}
         >
-          <SidebarItem
+          <SidebarUser.SidebarItem
             icon={<GrOverview size={30} />}
             text="Overview"
             active={activeItem === "Overview"}
             onClick={() => setActiveItem("Overview")}
           />
-          <SidebarItem
+          <SidebarUser.SidebarItem
             icon={<LiaFileInvoiceDollarSolid size={30} />}
             text="Pay"
             active={activeItem === "TPay"}
             onClick={() => setActiveItem("Pay")}
           />
-        </SidebarItem>
-      </SidebarUser>
+        </SidebarUser.SidebarItem>
+      </SidebarUser.SidebarUser>
 
       <div className="flex-grow flex flex-col h-full">
         <div className=" flex bg-[#083b10]  h-16 items-center justify-end pr-7">

@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
 import { Form, Input, Button, Select, message, DatePicker } from "antd";
-import { apiRegister } from "../../api/authtApi";
-import { Gender } from "../../models/AccountModel";
+
+
 import { useState } from "react";
 import ActiveAccountPage from "./ActiveAccountPage";
+import { authtApi } from "../../api";
+import { Gender } from "../../enums";
+
 const { Option } = Select;
 
 function RegisterPage() {
@@ -14,10 +17,11 @@ function RegisterPage() {
     const birthdayDate = values.birthday.toDate();
     const birthdayIsoString = new Date(birthdayDate).toISOString();
     const birthdayAsDate = new Date(birthdayIsoString);
-    const fullName =
-      `${values.FirstName} ${values.MiddleName} ${values.LastName}`.trim();
+    const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
+      values.LastName
+    }`.trim();
 
-    const res = await apiRegister(
+    const res = await authtApi.apiRegister(
       values.email,
       values.phone,
       values.password,
@@ -27,18 +31,19 @@ function RegisterPage() {
       values.address,
       values.idCard
     );
-    if (res.statusCode === 201) {
+
+    if (res.data) {
       setId(res.data._id);
       message.success("Register successfully");
-
       setOpenActiveAccount(true);
-    } else message.error(res.message);
+    } else {
+      message.error(res.message);
+    }
   };
-
   return (
     <AuthLayout>
-      <div className=" p-10 rounded-lg shadow-lg lg:w-[800px] mx-3">
-        <h2 className="text-4xl font-bold text-center text-white mb-8">
+      <div className=" p-10 rounded-lg shadow-lg lg:w-[800px] mx-3 bg-blue-100">
+        <h2 className="text-4xl font-bold text-center text-black mb-8">
           Register
         </h2>
         <Form layout="vertical" onFinish={handleRegister}>
@@ -78,31 +83,8 @@ function RegisterPage() {
                 ]}
                 className="mr-2 flex-1"
               >
-                <Input
-                  placeholder="Enter email"
-                  className="text-lg rounded-md border-gray-300"
-                  size="large"
-                />
+                <Input placeholder="Enter email" size="large" />
               </Form.Item>
-              <Form.Item
-                label="Phone"
-                name="phone"
-                rules={[
-                  { required: true, message: "Please enter your phone!" },
-                ]}
-                className=" flex-1"
-              >
-                <Input
-                  placeholder="Enter phone"
-                  type="number"
-                  className="text-lg rounded-md border-gray-300"
-                  size="large"
-                />
-              </Form.Item>
-            </div>
-          </Form.Item>
-          <Form.Item wrapperCol={{ span: 24 }}>
-            <div className="flex justify-between">
               <Form.Item
                 label="Password"
                 name="password"
@@ -113,6 +95,10 @@ function RegisterPage() {
               >
                 <Input.Password placeholder="Enter password" size="large" />
               </Form.Item>
+            </div>
+          </Form.Item>
+          <Form.Item wrapperCol={{ span: 24 }}>
+            <div className="flex justify-between">
               <Form.Item
                 label={<span>IdCard </span>}
                 name="idCard"
@@ -120,6 +106,16 @@ function RegisterPage() {
                 className="mr-2 flex-1"
               >
                 <Input placeholder="Enter account IdCard" size="large" />
+              </Form.Item>
+              <Form.Item
+                label="Phone"
+                name="phone"
+                rules={[
+                  { required: true, message: "Please enter your phone!" },
+                ]}
+                className=" flex-1"
+              >
+                <Input placeholder="Enter phone" type="number" size="large" />
               </Form.Item>
             </div>
           </Form.Item>
@@ -131,7 +127,7 @@ function RegisterPage() {
                 rules={[
                   { required: true, message: "Please enter your Bỉrthday!" },
                 ]}
-                className="mr-2 flex-1"
+                className="mr-2 "
               >
                 <DatePicker placeholder="Enter BirthDay" size="large" />
               </Form.Item>
@@ -182,9 +178,9 @@ function RegisterPage() {
         </Form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-300">
-            Already have an account?{" "}
-            <Link to="/login" className="text-white font-semibold">
+          <p className="text-gray-400">
+            Already have an account?
+            <Link to="/login" className="text-black font-semibold">
               Login
             </Link>
           </p>

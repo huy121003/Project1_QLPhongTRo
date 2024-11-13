@@ -1,5 +1,5 @@
 import { Result } from "antd";
-import React from "react";
+
 
 function NotItem() {
   return (

@@ -1,17 +1,16 @@
 import { message } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components";
-import RoomModel from "../../../models/RoomModel";
-import { deleteRoomApi, fetchRoomApi } from "../../../api/roomApis";
 import AddRoomModal from "./AddRoomModal";
 import EditRoomModal from "./EditRoomModal";
 import DetailRoom from "./DetailRoom";
 import RoomFilters from "./RoomFilters";
-
 import ExportToExcel from "./ExportToExcel";
 import RoomCard from "./RoomCard";
+import { IRoom } from "../../../interfaces";
+import { roomApi } from "../../../api";
 function RoomPage() {
-  const [rooms, setRooms] = useState<RoomModel[]>([]);
+  const [rooms, setRooms] = useState<IRoom[]>([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
@@ -38,7 +37,7 @@ function RoomPage() {
     });
     const query = new URLSearchParams(queryParams).toString();
     setIsLoading(true);
-    const res = await fetchRoomApi(query);
+    const res = await roomApi.fetchRoomApi(query);
     setIsLoading(false);
     if (res.data.result) {
       setRooms(res.data.result);
@@ -64,7 +63,7 @@ function RoomPage() {
     setCurrent(1);
   };
   const onDeleteRoom = async (record: any) => {
-    const res = await deleteRoomApi(record._id);
+    const res = await roomApi.deleteRoomApi(record._id);
     if (res.statusCode === 200) {
       message.success("Room deleted");
       getRoom();

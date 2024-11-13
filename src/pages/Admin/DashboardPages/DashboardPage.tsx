@@ -8,6 +8,9 @@ function DashboardPage() {
         <RoomStatusBar />
         <AvailableRoom />
       </div>
+      {/* <div className="flex-1 xl:flex  ">
+        <MonthlyRevenueChart />
+      </div> */}
     </>
   );
 }

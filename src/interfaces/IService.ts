@@ -1,4 +1,6 @@
-export interface ServiceModel {
+import { ServiceType } from "../enums";
+
+ interface IService {
   _id: string;
   serviceName: string;
   description: string;
@@ -19,9 +21,4 @@ export interface ServiceModel {
     name: string;
   };
 }
-export enum ServiceType {
-  Water = "WATER",
-  Electricity = "ELECTRICITY",
-  Internet = "INTERNET",
-  Other = "OTHER",
-}
+export default IService;

@@ -1,8 +1,6 @@
 import React from "react";
-
-import SearchFilters from "../../../components/SearchFilter";
-import { ContractStatus } from "../../../models/ContractModel";
-import SortOption from "../../../components/SortOption";
+import {SortOption,SearchFilters} from "../../../components";
+import { ContractStatus } from "../../../enums";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;

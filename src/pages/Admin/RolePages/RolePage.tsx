@@ -1,16 +1,16 @@
 import { message } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components";
-import { RoleModel } from "../../../models/RoleModel";
-import { deleteRoleApi, fecthRoleApi } from "../../../api/roleApi";
 import DetailRole from "./DetailRole";
 import AddRoleModel from "./AddRoleModel";
 import EditRoleModal from "./EditRoleModal";
 import RoleFilters from "./RoleFilters";
 import RoleTable from "./RoleTable";
 import ExportToExcel from "./ExportToExcel";
+import { IRole } from "../../../interfaces";
+import { roleApi } from "../../../api";
 function RolePage() {
-  const [roles, setRoles] = useState<RoleModel[]>([]);
+  const [roles, setRoles] = useState<IRole[]>([]);
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
@@ -34,7 +34,7 @@ function RolePage() {
     });
     const query = new URLSearchParams(queryParams).toString();
     setIsLoading(true);
-    const response = await fecthRoleApi(query);
+    const response = await roleApi.fecthRoleApi(query);
     setIsLoading(false);
     if (response.data.result) {
       setRoles(response.data.result);
@@ -62,7 +62,7 @@ function RolePage() {
     setCurrent(1);
   };
   const onDeleteRole = async (record: any) => {
-    const response = await deleteRoleApi(record._id);
+    const response = await roleApi.deleteRoleApi(record._id);
     if (response.data) {
       message.success("Role deleted");
       getRoles();

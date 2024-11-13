@@ -16,9 +16,14 @@ const DeleteModal: React.FC<Props> = ({ onConfirm, record }) => {
       overlayStyle={{ textAlign: "center" }} // Optional: To center the text
     >
       <Button
-        icon={<i className="fa-solid fa-trash text-xl" />}
-        type="primary"
-        className="bg-red-500 text-white hover:bg-red-600 transition"
+        icon={
+          <i
+            className="fa-solid fa-trash text-xl
+        text-red-600
+          "
+          />
+        }
+        className=" transition"
       />
     </Popconfirm>
   );

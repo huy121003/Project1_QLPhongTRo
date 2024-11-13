@@ -1,9 +1,9 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
 import { Button } from "antd";
-import { ServiceModel } from "../../../models/ServiceModel";
+import { IService } from "../../../interfaces";
 interface Props {
-  services: ServiceModel[];
+  services: IService[];
 }
 const ExportToExcel: React.FC<Props> = ({ services }) => {
   const exportToExcel = () => {

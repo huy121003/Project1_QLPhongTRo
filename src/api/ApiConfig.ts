@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from "axios";
-import { ApiMethod } from "./ApiMethod";
+import axios from "axios";
+import { ApiMethod } from "../enums";
 
 const baseURL = import.meta.env.VITE_BACKEND_URL; // URL cơ bản của API, được lấy từ biến môi trường
 const NO_RETRY_HEADER = "x-no-retry"; // Tên của header dùng để tránh lặp lại việc refresh token
@@ -8,9 +8,6 @@ const NO_RETRY_HEADER = "x-no-retry"; // Tên của header dùng để tránh l�
 export const apiConfig = axios.create({
   baseURL: baseURL, // Thiết lập URL cơ bản cho mọi yêu cầu
   withCredentials: true, // Đảm bảo cookie được gửi kèm trong các yêu cầu
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 export const apiRequest = (
   method: ApiMethod,
@@ -20,7 +17,7 @@ export const apiRequest = (
 ) => {
   const headers = {
     "Content-Type": isMultipart ? "multipart/form-data" : "application/json",
-    folder_type: isMultipart ? "user" : null,
+    // folder_type: isMultipart ? "user" : "",
   };
 
   return apiConfig({
@@ -86,8 +83,11 @@ apiConfig.interceptors.response.use(
     ) {
       // Nếu không lấy được token mới, đăng xuất khỏi hệ thống
       localStorage.removeItem("access_token");
-
-      window.location.href = "/login";
+      if (
+        window.location.pathname !== "/login" &&
+        window.location.pathname !== "/register"
+      )
+        window.location.href = "/login"; //
     }
     // Xử lý lỗi cho những mã trạng thái không thuộc 2xx
     return error?.response?.data ?? Promise.reject(error); // Trả về dữ liệu lỗi hoặc lỗi được xử lý

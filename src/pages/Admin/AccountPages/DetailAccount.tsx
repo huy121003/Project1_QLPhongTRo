@@ -1,15 +1,14 @@
 import React from "react";
 import { Descriptions, Drawer, Image, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
-import { Gender } from "../../../models/AccountModel";
 import moment from "moment"; // Import moment for date formatting
 
 import { getGenderColor, getRoleColor } from "../../../utils/getMethodColor";
-const baseURL = import.meta.env.VITE_BACKEND_URL; // URL cơ bản của API, được lấy từ biến môi trường
+import { IAccount } from "../../../interfaces";
 interface Props {
   openDetailAccount: boolean;
   setOpenDetailAccount: (value: boolean) => void;
-  record: any;
+  record: IAccount;
 }
 
 const DetailAccount: React.FC<Props> = ({
@@ -17,9 +16,8 @@ const DetailAccount: React.FC<Props> = ({
   setOpenDetailAccount,
   record,
 }) => {
-  console.log(baseURL);
-  const formatDate = (dateString: string) => {
-    return moment(dateString).format("DD/MM/YYYY"); // Format date using moment
+  const formatDate = (date: string | Date) => {
+    return moment(date).format("DD/MM/YYYY"); // Format date using moment
   };
 
   const items = [
@@ -76,6 +74,33 @@ const DetailAccount: React.FC<Props> = ({
       children: record?.phone,
     },
     {
+      key: "17",
+      label: "Front ID Card",
+      children: record?.imagesIdCard[0] ? (
+        <Image width={100} height={70} src={`${record?.imagesIdCard[0]}`} />
+      ) : (
+        <i className="fa-solid fa-id-card text-4xl text-gray-400"></i>
+      ),
+    },
+    {
+      key: "18",
+      label: "Back ID Card",
+      children: record?.imagesIdCard[1] ? (
+        <Image width={100} height={70} src={`${record?.imagesIdCard[1]}`} />
+      ) : (
+        <i className="fa-solid fa-id-card text-4xl text-gray-400"></i>
+      ),
+    },
+    {
+      key: "19",
+      label: "Temporary Residence Image",
+      children: record?.imagesIdCard[2] ? (
+        <Image width={100} height={70} src={`${record?.imagesIdCard[2]}`} />
+      ) : (
+        <i className="fa-solid fa-file-contract text-4xl text-gray-400"></i>
+      ),
+    },
+    {
       key: "9",
       label: "Created At",
       children: record?.createdAt ? formatDate(record?.createdAt) : "N/A", // Format createdAt date
@@ -118,11 +143,11 @@ const DetailAccount: React.FC<Props> = ({
         title="Account Detail"
         className="flex-1 "
       >
-        <Image
-          width={200}
-          height={200}
-          src={`${baseURL}/images/image/${record?.images[0].imagePath}`}
-        />
+        {record?.avatar ? (
+          <Image width={200} height={200} src={`${record.avatar}`} />
+        ) : (
+          <i className="fa-solid fa-user text-[120px] text-gray-500"></i>
+        )}
 
         <Descriptions bordered items={items} column={1} />
       </Drawer>

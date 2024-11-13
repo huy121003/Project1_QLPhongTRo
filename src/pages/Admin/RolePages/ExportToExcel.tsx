@@ -1,9 +1,9 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
 import { Button } from "antd";
-import { RoleModel } from "../../../models/RoleModel";
+import { IRole } from "../../../interfaces";
 interface Props {
-  roles: RoleModel[];
+  roles: IRole[];
 }
 const ExportToExcel: React.FC<Props> = ({ roles }) => {
   const exportToExcel = () => {

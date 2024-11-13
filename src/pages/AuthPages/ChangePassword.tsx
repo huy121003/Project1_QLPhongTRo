@@ -1,10 +1,9 @@
 import { Button, Divider, Form, Input, message, Modal } from "antd";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { changePasswordApi } from "../../api/accountApi";
 import { useNavigate } from "react-router-dom";
-import { apiLogout } from "../../api/authtApi";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
+import { accountApi, authtApi } from "../../api";
 
 interface Props {
   open: boolean;
@@ -25,7 +24,7 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
         message.error("new password is not same confirm password.");
         return;
       }
-      const res = await changePasswordApi(
+      const res = await accountApi.changePasswordApi(
         user._id,
 
         values.confirmPassword,
@@ -34,7 +33,7 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
       if (res.statusCode === 201) {
         message.success("Password changed successfully.");
 
-        const respone = await apiLogout();
+        const respone = await authtApi.apiLogout();
         if (respone && respone.data) {
           dispatch(logoutAction());
           setOpen(false);
@@ -73,7 +72,11 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
             name="password"
             rules={[{ required: true, message: "Please enter your password!" }]}
           >
-            <Input placeholder="Enter your password" size="large" />
+            <Input.Password
+              placeholder="Enter your password"
+              size="large"
+              type="password"
+            />
           </Form.Item>
           <Form.Item
             name="newPassword"
@@ -81,7 +84,10 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
               { required: true, message: "Please enter your new password!" },
             ]}
           >
-            <Input placeholder="Enter your new password" size="large" />
+            <Input.Password
+              placeholder="Enter your new password"
+              size="large"
+            />
           </Form.Item>
           <Form.Item
             name="confirmPassword"
@@ -92,7 +98,10 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
               },
             ]}
           >
-            <Input placeholder="Enter your confirm password" size="large" />
+            <Input.Password
+              placeholder="Enter your confirm password"
+              size="large"
+            />
           </Form.Item>
           <Form.Item>
             <Button

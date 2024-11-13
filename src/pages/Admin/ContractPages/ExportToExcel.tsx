@@ -1,9 +1,9 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
 import { Button } from "antd";
-import ContractModel from "../../../models/ContractModel";
+import { IContract } from "../../../interfaces";
 interface Props {
-  contracts: ContractModel[];
+  contracts: IContract[];
 }
 const ExportToExcel: React.FC<Props> = ({ contracts }) => {
   const exportToExcel = () => {
@@ -21,7 +21,6 @@ const ExportToExcel: React.FC<Props> = ({ contracts }) => {
       EndDate: new Date(c.endDate).toLocaleDateString(),
       depositAmount: c.depositAmount.toLocaleString() + " đ",
     }));
-
     // Add title
     const title = [`Contract Report`];
     const header = [
