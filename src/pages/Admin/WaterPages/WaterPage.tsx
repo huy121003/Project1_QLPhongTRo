@@ -45,7 +45,12 @@ const WaterPage = () => {
             const endDate = new Date(contract.endDate);
             const monthStart = new Date(year, selectedMonth - 1, 1);
             const monthEnd = new Date(year, selectedMonth, 0);
-            return startDate <= monthEnd && endDate >= monthStart;
+            const actualEndDate = new Date(contract.actualEndDate);
+            return (
+              startDate <= monthEnd &&
+              endDate >= monthStart &&
+              (actualEndDate >= monthStart || !actualEndDate)
+            );
           }
         );
         setContract(newContract);
@@ -66,7 +71,7 @@ const WaterPage = () => {
             };
           })
         );
-        //console.log("eded", initialIndices);
+     
         setNumberIndex(Object.assign({}, ...initialIndices));
       }
     } catch (error) {

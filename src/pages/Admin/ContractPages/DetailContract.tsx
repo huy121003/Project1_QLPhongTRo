@@ -76,6 +76,13 @@ const DetailContract: React.FC<Props> = ({
       ),
     },
     {
+      key: "Actual End Date",
+      label: "Actual End Date",
+      children: record?.actualEndDate
+        ? formatDate(record?.actualEndDate)
+        : "N/A",
+    },
+    {
       key: "Created At",
       label: "Created At",
       children: formatDate(record?.createdAt),

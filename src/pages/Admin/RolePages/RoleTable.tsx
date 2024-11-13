@@ -72,8 +72,7 @@ const RoleTable: React.FC<Props> = ({
       dataIndex: "action",
       key: "action",
       render: (_: any, record: any) =>
-        record.name === "SUPER ADMIN" ||
-        record.name === "NORMAL USER" ? null : (
+        record.name === "SUPER ADMIN" || record.name === "NORMAL " ? null : (
           <div className="gap-2 flex">
             <Button
               icon={

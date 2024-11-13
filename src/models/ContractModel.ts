@@ -24,7 +24,7 @@ interface ContractModel {
   status: ContractStatus;
   rentCycleCount: number;
   createdAt: Date;
-
+  actualEndDate: Date;
   updatedAt: Date;
   createdBy: {
     _id: string;

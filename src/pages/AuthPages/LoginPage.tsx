@@ -21,7 +21,6 @@ function LoginPage(): JSX.Element {
     const res = await apiLogin(email, password);
     setIsSubmit(false);
     if (res?.data) {
-      console.log(res.data);
       localStorage.setItem("access_token", res.data.access_token);
       dispatch(loginaction(res.data.user));
       message.success("Login successfully!");
@@ -36,8 +35,8 @@ function LoginPage(): JSX.Element {
   };
   return (
     <AuthLayout>
-      <div className=" p-12 rounded-lg shadow-lg lg:w-[500px] mx-2">
-        <h2 className="text-4xl font-bold text-center text-white mb-8">
+      <div className=" p-12 rounded-lg shadow-lg lg:w-[500px] mx- bg-blue-100">
+        <h2 className="text-4xl font-bold text-center text-black mb-8">
           Login
         </h2>
         <Divider />
@@ -89,8 +88,8 @@ function LoginPage(): JSX.Element {
           </Button>
         </div>
         <div className="mt-6 text-center">
-          <span className="text-gray-300">Don't have an account?</span>
-          <Link to="/register" className="text-white font-semibold">
+          <span className="text-gray-400">Don't have an account?</span>
+          <Link to="/register" className="text-black font-semibold">
             Register
           </Link>
         </div>

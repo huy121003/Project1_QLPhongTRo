@@ -73,7 +73,11 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
             name="password"
             rules={[{ required: true, message: "Please enter your password!" }]}
           >
-            <Input placeholder="Enter your password" size="large" />
+            <Input.Password
+              placeholder="Enter your password"
+              size="large"
+              type="password"
+            />
           </Form.Item>
           <Form.Item
             name="newPassword"
@@ -81,7 +85,10 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
               { required: true, message: "Please enter your new password!" },
             ]}
           >
-            <Input placeholder="Enter your new password" size="large" />
+            <Input.Password
+              placeholder="Enter your new password"
+              size="large"
+            />
           </Form.Item>
           <Form.Item
             name="confirmPassword"
@@ -92,7 +99,10 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
               },
             ]}
           >
-            <Input placeholder="Enter your confirm password" size="large" />
+            <Input.Password
+              placeholder="Enter your confirm password"
+              size="large"
+            />
           </Form.Item>
           <Form.Item>
             <Button

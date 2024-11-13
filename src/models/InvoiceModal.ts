@@ -19,7 +19,7 @@ interface InvoiceModel {
   firstIndex?: number;
   finalIndex?: number;
   totalNumber?: number;
-  month: number;
+  month: string; //(10-2024)
   description: string;
   amount: number;
   status: InvoiceStatus;

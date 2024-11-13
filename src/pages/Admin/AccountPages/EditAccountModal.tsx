@@ -3,7 +3,6 @@ import { Modal, Button, Input, Form, message, Select, DatePicker } from "antd";
 import moment from "moment"; // Import moment for date handling
 import { patchAccountApi } from "../../../api/accountApi";
 import AccountModel, { Gender } from "../../../models/AccountModel";
-const baseURL = import.meta.env.VITE_BACKEND_URL;
 import { RoleModel } from "../../../models/RoleModel";
 import { fecthRoleApi } from "../../../api/roleApi";
 import { postAvatarApi } from "../../../api/upfileApi";
@@ -21,9 +20,17 @@ const EditAccountModal: React.FC<Props> = ({
 }) => {
   const [form] = Form.useForm();
   const [role, setRole] = useState<RoleModel[]>([]);
-  const [imageIdCard, setImagesIdCard] = useState<string[]>([]);
-  const [avatar, setAvatar] = useState<string>("");
-
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [frontIdImage, setFrontIdImage] = useState<File | null>(null);
+  const [backIdImage, setBackIdImage] = useState<File | null>(null);
+  const [temporaryResidenceImage, setTemporaryResidenceImage] =
+    useState<File | null>(null);
+  const [imageAvatar, setImageAvatar] = useState<string>("");
+  const [imageFrontId, setImageFrontId] = useState<string>("");
+  const [imageBackId, setImageBackId] = useState<string>("");
+  const [imageTemporaryResidence, setImageTemporaryResidence] =
+    useState<string>("");
+  const [isLoad, setIsLoad] = useState(true);
   useEffect(() => {
     const getRole = async () => {
       const res = await fecthRoleApi("");
@@ -32,6 +39,11 @@ const EditAccountModal: React.FC<Props> = ({
       } else message.error(res.message);
     };
     getRole();
+  }, [openEditAccount]);
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoad(false);
+    }, 1000);
   }, [openEditAccount]);
   useEffect(() => {
     if (openEditAccount && record) {
@@ -47,8 +59,10 @@ const EditAccountModal: React.FC<Props> = ({
       const middleName = nameParts.join(" ");
 
       // Update avatar and imagesIdCard from the new record
-      setAvatar(record.avatar);
-      setImagesIdCard(record.imagesIdCard);
+      setImageAvatar(record.avatar);
+      setImageFrontId(record.imagesIdCard[0]);
+      setImageBackId(record.imagesIdCard[1]);
+      setImageTemporaryResidence(record.imagesIdCard[2]);
 
       // Update the form with the information
       form.setFieldsValue({
@@ -62,10 +76,6 @@ const EditAccountModal: React.FC<Props> = ({
         Address: record.address,
         IdCard: record.idCard,
         Role: record.role._id,
-        profileImage: record.avatar, // Update profile image in the form
-        frontIdImage: record.imagesIdCard[0], // Update front ID image in the form
-        backIdImage: record.imagesIdCard[1], // Update back ID image in the form
-        temporaryResidenceImage: record.imagesIdCard[2], // Update temporary residence image in the form
       });
     }
   }, [openEditAccount, record, form]);
@@ -77,52 +87,54 @@ const EditAccountModal: React.FC<Props> = ({
         ? values.BirthDay.format("YYYY-MM-DD")
         : null;
 
-      // Kiểm tra sự thay đổi của ảnh
-      const imagesToUpload = [];
-      if (values.profileImage && values.profileImage.file) {
-        imagesToUpload.push(postAvatarApi(values.profileImage.file));
-      } else {
-        setAvatar(record.avatar);
+      // Tạo biến tạm thời để lưu tên ảnh đã tải lên
+      let avatarFileName = imageAvatar;
+      let frontIdFileName = imageFrontId;
+      let backIdFileName = imageBackId;
+      let temporaryResidenceFileName = imageTemporaryResidence;
+
+      // Kiểm tra sự thay đổi của ảnh và upload nếu có
+      if (avatar) {
+        const res = await postAvatarApi(avatar);
+        if (res.statusCode === 201) {
+          avatarFileName = res.data.fileName;
+        } else {
+          message.error(res.message);
+          return;
+        }
       }
 
-      if (values.frontIdImage && values.frontIdImage.file) {
-        imagesToUpload.push(postAvatarApi(values.frontIdImage.file));
-      } else {
-        setImagesIdCard((prev) => [record.imagesIdCard[0], prev[1], prev[2]]);
+      if (frontIdImage) {
+        const res = await postAvatarApi(frontIdImage);
+        if (res.statusCode === 201) {
+          frontIdFileName = res.data.fileName;
+        } else {
+          message.error(res.message);
+          return;
+        }
       }
 
-      if (values.backIdImage && values.backIdImage.file) {
-        imagesToUpload.push(postAvatarApi(values.backIdImage.file));
-      } else {
-        setImagesIdCard((prev) => [prev[0], record.imagesIdCard[1], prev[2]]);
+      if (backIdImage) {
+        const res = await postAvatarApi(backIdImage);
+        if (res.statusCode === 201) {
+          backIdFileName = res.data.fileName;
+        } else {
+          message.error(res.message);
+          return;
+        }
       }
 
-      if (
-        values.temporaryResidenceImage &&
-        values.temporaryResidenceImage.file
-      ) {
-        imagesToUpload.push(postAvatarApi(values.temporaryResidenceImage.file));
-      } else {
-        setImagesIdCard((prev) => [prev[0], prev[1], record.imagesIdCard[2]]);
+      if (temporaryResidenceImage) {
+        const res = await postAvatarApi(temporaryResidenceImage);
+        if (res.statusCode === 201) {
+          temporaryResidenceFileName = res.data.fileName;
+        } else {
+          message.error(res.message);
+          return;
+        }
       }
 
-      const imageUploadResponses = await Promise.all(imagesToUpload);
-
-      if (
-        imageUploadResponses.some((response) => response.statusCode !== 201)
-      ) {
-        message.error("Failed to upload one or more images.");
-        return;
-      }
-
-      // Cập nhật URL mới nếu upload thành công
-      setAvatar(imageUploadResponses[0]?.data?.fileName || avatar);
-      setImagesIdCard([
-        imageUploadResponses[1]?.data?.fileName || imageIdCard[0],
-        imageUploadResponses[2]?.data?.fileName || imageIdCard[1],
-        imageUploadResponses[3]?.data?.fileName || imageIdCard[2],
-      ]);
-
+      // Gọi API cập nhật thông tin tài khoản sau khi tất cả ảnh đã được tải lên
       const response = await patchAccountApi(
         record._id,
         values.Phone,
@@ -132,14 +144,13 @@ const EditAccountModal: React.FC<Props> = ({
         values.Address,
         values.IdCard,
         values.Role,
-        avatar,
-        imageIdCard
+        avatarFileName,
+        [frontIdFileName, backIdFileName, temporaryResidenceFileName]
       );
 
       if (response.statusCode === 200) {
         message.success("Account updated successfully");
-        form.resetFields();
-        setOpenEditAccount(false);
+        refresh();
       } else {
         message.error(response.message);
       }
@@ -147,29 +158,31 @@ const EditAccountModal: React.FC<Props> = ({
       console.error("Validation failed:", error);
     }
   };
+  const refresh = () => {
+    setOpenEditAccount(false);
+    form.resetFields(); // Reset form fields
+    setAvatar(null);
+    setBackIdImage(null);
+    setFrontIdImage(null);
+    setTemporaryResidenceImage(null);
+    setImageAvatar("");
+    setImageBackId("");
+    setImageFrontId("");
+    setImageTemporaryResidence("");
+    setRole([]);
+    setIsLoad(true);
+  };
 
   return (
     <Modal
+      loading={isLoad}
       width={800}
       centered
       open={openEditAccount}
       title={<h1 className="text-3xl font-bold text-center">Edit Account</h1>}
-      onCancel={() => {
-        setOpenEditAccount(false);
-        form.resetFields(); // Reset form fields
-        setAvatar("");
-        setImagesIdCard([]);
-      }}
+      onCancel={refresh}
       footer={[
-        <Button
-          key="back"
-          onClick={() => {
-            setOpenEditAccount(false);
-            form.resetFields(); // Reset form fields
-            setAvatar("");
-            setImagesIdCard([]);
-          }}
-        >
+        <Button key="back" onClick={refresh}>
           Cancel
         </Button>,
         <Button key="submit" type="primary" onClick={handleOk}>
@@ -179,38 +192,24 @@ const EditAccountModal: React.FC<Props> = ({
     >
       <Form form={form} layout="vertical">
         <RenderUploadField
-          label="Profile Picture"
-          name="profileImage"
-          message="Profile picture is required"
-          listType="picture-circle"
-          defaultFileList={
-            record?.avatar
-              ? [
-                  {
-                    uid: record._id,
-                    name: avatar,
-                    url: `${record?.avatar}`,
-                  },
-                ]
-              : []
-          }
+          type="avatar"
+          selectedImage={avatar}
+          setSelectedImage={setAvatar}
+          imageUrl={imageAvatar}
         />
 
         <Form.Item label={<span>Name</span>} wrapperCol={{ span: 24 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="lg:flex justify-between">
             <Form.Item
               name="FirstName"
               rules={[
                 { required: true, message: "Please input the first name!" },
               ]}
-              className="mr-2 flex-1"
+              className="m-1 flex-1"
             >
               <Input placeholder="First Name" size="large" />
             </Form.Item>
-            <Form.Item
-              name="MiddleName"
-              style={{ flex: 1, marginRight: "8px" }}
-            >
+            <Form.Item name="MiddleName" className="m-1 flex-1">
               <Input placeholder="Middle Name" size="large" />
             </Form.Item>
             <Form.Item
@@ -218,19 +217,19 @@ const EditAccountModal: React.FC<Props> = ({
               rules={[
                 { required: true, message: "Please input the last name!" },
               ]}
-              className="flex-1"
+              className="flex-1 m-1"
             >
               <Input placeholder="Last Name" size="large" />
             </Form.Item>
           </div>
         </Form.Item>
         <Form.Item wrapperCol={{ span: 24 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="lg:flex justify-between">
             <Form.Item
               name="Email"
               label={<span>Email</span>}
               rules={[{ required: true, message: "Please input the email!" }]}
-              className="mr-2 flex-1"
+              className="m-1 flex-1"
             >
               <Input placeholder="Enter Email" disabled size="large" />
             </Form.Item>
@@ -238,28 +237,30 @@ const EditAccountModal: React.FC<Props> = ({
               name="Phone"
               label={<span>Phone</span>}
               rules={[{ required: true, message: "Please input the phone!" }]}
-              className="flex-1"
+              className="flex-1 m-1"
             >
               <Input placeholder="Enter Phone" size="large" />
             </Form.Item>
+            <Form.Item
+              name="IdCard"
+              label={<span>IdCard</span>}
+              rules={[{ required: true, message: "Please input the IdCard!" }]}
+              className="flex-1 m-1"
+            >
+              <Input placeholder="Enter IdCard" type="number" size="large" />
+            </Form.Item>
           </div>
         </Form.Item>
-        <Form.Item
-          name="IdCard"
-          label={<span>IdCard</span>}
-          rules={[{ required: true, message: "Please input the IdCard!" }]}
-        >
-          <Input placeholder="Enter IdCard" type="number" size="large" />
-        </Form.Item>
+
         <Form.Item wrapperCol={{ span: 24 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="lg:flex justify-between">
             <Form.Item
               name="BirthDay"
               label={<span>Birthday</span>}
               rules={[
                 { required: true, message: "Please input the birthday!" },
               ]}
-              className="flex-1"
+              className="flex-1 m-1"
             >
               <DatePicker format="YYYY-MM-DD" size="large" />
             </Form.Item>
@@ -267,7 +268,7 @@ const EditAccountModal: React.FC<Props> = ({
               name="Gender"
               label={<span>Gender</span>}
               rules={[{ required: true, message: "Please input the Gender!" }]}
-              className="flex-1 mx-2"
+              className="flex-1 m-1"
             >
               <Select size="large">
                 {Object.values(Gender).map((item) => (
@@ -282,7 +283,7 @@ const EditAccountModal: React.FC<Props> = ({
               name="Role"
               label={<span>Role</span>}
               rules={[{ required: true, message: "Please input the Role!" }]}
-              className="flex-1"
+              className="flex-1 m-1"
             >
               <Select size="large">
                 {role.map((item) => (
@@ -298,61 +299,32 @@ const EditAccountModal: React.FC<Props> = ({
           name="Address"
           label={<span>Address</span>}
           rules={[{ required: true, message: "Please input the address!" }]}
+          className="flex-1 m-1"
         >
           <Input placeholder="Enter Address" size="large" />
         </Form.Item>
-
-        <RenderUploadField
-          label="Front ID Image"
-          name="frontIdImage"
-          message="Front ID image is required"
-          listType="picture"
-          defaultFileList={
-            imageIdCard[0]
-              ? [
-                  {
-                    uid: record._id,
-                    name: imageIdCard[0],
-                    url: `${imageIdCard[0]}`,
-                  },
-                ]
-              : []
-          }
-        />
-        <RenderUploadField
-          label="Back ID Image"
-          name="backIdImage"
-          message="Back ID image is required"
-          listType="picture"
-          defaultFileList={
-            imageIdCard[1]
-              ? [
-                  {
-                    uid: record._id,
-                    name: imageIdCard[1],
-                    url: `${imageIdCard[1]}`,
-                  },
-                ]
-              : []
-          }
-        />
-        <RenderUploadField
-          label="Temporary Residence Image"
-          name="temporaryResidenceImage"
-          message="Temporary residence image is required"
-          listType="picture"
-          defaultFileList={
-            imageIdCard[2]
-              ? [
-                  {
-                    uid: record._id,
-                    name: imageIdCard[2],
-                    url: `${imageIdCard[2]}`,
-                  },
-                ]
-              : []
-          }
-        />
+        <Form.Item wrapperCol={{ span: 24 }}>
+          <div className="lg:flex justify-between">
+            <RenderUploadField
+              type="frontIdCard"
+              selectedImage={frontIdImage}
+              setSelectedImage={setFrontIdImage}
+              imageUrl={imageFrontId}
+            />
+            <RenderUploadField
+              type="backIdCard"
+              selectedImage={backIdImage}
+              setSelectedImage={setBackIdImage}
+              imageUrl={imageBackId}
+            />
+            <RenderUploadField
+              type="temporaryResidence"
+              selectedImage={temporaryResidenceImage}
+              setSelectedImage={setTemporaryResidenceImage}
+              imageUrl={imageTemporaryResidence}
+            />
+          </div>
+        </Form.Item>
       </Form>
     </Modal>
   );

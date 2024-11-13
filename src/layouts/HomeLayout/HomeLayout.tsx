@@ -1,4 +1,4 @@
-import { useState  } from "react";
+import { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import homeAdminRouters from "../../routers";
 import { resizeWidth } from "../../utils/resize";
@@ -104,8 +104,8 @@ function HomeLayout() {
           </Dropdown>
         </div>
         <div
-          className="flex-1 flex-row overflow-y-auto overflow-x-auto   "
-          style={{ maxHeight: "calc(100vh - 4rem)", maxWidth: "100vw" }}
+          className="flex-1 flex-row overflow-y-auto overflow-x-auto 
+          max-h-[calc(100vh-4rem)] max-w-[100vw]"
         >
           <Outlet />
         </div>

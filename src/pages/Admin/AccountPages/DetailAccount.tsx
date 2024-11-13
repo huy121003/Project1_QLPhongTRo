@@ -17,7 +17,7 @@ const DetailAccount: React.FC<Props> = ({
   setOpenDetailAccount,
   record,
 }) => {
-  console.log(baseURL);
+
   const formatDate = (date: string | Date) => {
     return moment(date).format("DD/MM/YYYY"); // Format date using moment
   };

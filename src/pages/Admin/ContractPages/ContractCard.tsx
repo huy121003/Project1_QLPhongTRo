@@ -50,8 +50,8 @@ const ContractCards: React.FC<Props> = ({
                     <i className="fa-solid fa-user mr-2"></i>
                     {contract.tenant.name}
                   </p>
-                  <p className="font-semibold">
-                    <i className="fa-solid fa-envelope mr-2"></i>
+                  <p className="font-semibold text-sm">
+                    <i className="fa-solid fa-envelope mr-2 "></i>
                     {contract.tenant.email}
                   </p>
                   <p className="font-semibold">
@@ -66,7 +66,9 @@ const ContractCards: React.FC<Props> = ({
                   <p className="font-semibold">
                     <i className="fa-solid fa-calendar-days mr-2"></i>
                     {new Date(contract.startDate).toLocaleDateString()} {" -> "}
-                    {new Date(contract.endDate).toLocaleDateString()}
+                    {contract.actualEndDate
+                      ? new Date(contract.actualEndDate).toLocaleDateString()
+                      : new Date(contract.endDate).toLocaleDateString()}
                   </p>
                 </div>
 

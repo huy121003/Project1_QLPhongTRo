@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Button,
-  Input,
-  DatePicker,
-  Form,
-  Select,
-  message,
-  Upload,
-} from "antd";
+import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
 import { postAccountApi } from "../../../api/accountApi"; // Adjust the path to your API function
 
 import { Gender } from "../../../models/AccountModel";
@@ -29,6 +20,11 @@ const AddAccountModal: React.FC<Props> = ({
   setOpenAddAccount,
 }) => {
   const [role, setRole] = useState<RoleModel[]>([]);
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [frontIdImage, setFrontIdImage] = useState<File | null>(null);
+  const [backIdImage, setBackIdImage] = useState<File | null>(null);
+  const [temporaryResidenceImage, setTemporaryResidenceImage] =
+    useState<File | null>(null);
 
   useEffect(() => {
     const getRole = async () => {
@@ -63,13 +59,24 @@ const AddAccountModal: React.FC<Props> = ({
       const birthdayAsDate = new Date(birthdayIsoString);
 
       // Upload images if they exist
+      if (
+        avatar === null ||
+        frontIdImage === null ||
+        backIdImage === null ||
+        temporaryResidenceImage === null
+      ) {
+        message.error("Please upload all required images.");
+        return;
+      }
       const imageUploadResponses = await Promise.all([
-        postAvatarApi(values.profileImage.file),
-        postAvatarApi(values.frontIdImage.file),
-        postAvatarApi(values.backIdImage.file),
-        postAvatarApi(values.temporaryResidenceImage.file),
+        postAvatarApi(avatar),
+        postAvatarApi(frontIdImage),
+        postAvatarApi(backIdImage),
+        postAvatarApi(temporaryResidenceImage),
       ]);
-      if (imageUploadResponses.some(response => response.statusCode !== 201)) {
+      if (
+        imageUploadResponses.some((response) => response.statusCode !== 201)
+      ) {
         message.error("Failed to upload one or more images.");
         return;
       }
@@ -99,11 +106,8 @@ const AddAccountModal: React.FC<Props> = ({
         setOpenAddAccount(false); // Close modal on success
       } else {
         // Display detailed error messages if available
-        if (Array.isArray(response.message)) {
-          response.message.forEach((msg: string) => message.error(msg));
-        } else {
-          message.error(response.message);
-        }
+
+        message.error(response.message);
       }
     } catch (error) {
       message.error("Form validation failed. Please check your input.");
@@ -118,6 +122,11 @@ const AddAccountModal: React.FC<Props> = ({
       onCancel={() => {
         setOpenAddAccount(false);
         form.resetFields(); // Reset form fields
+        setAvatar(null);
+        setFrontIdImage(null);
+        setBackIdImage(null);
+        setTemporaryResidenceImage(null);
+        setRole([]);
       }}
       footer={[
         <Button
@@ -126,6 +135,11 @@ const AddAccountModal: React.FC<Props> = ({
           onClick={() => {
             setOpenAddAccount(false);
             form.resetFields(); // Reset form fields
+            setAvatar(null);
+            setFrontIdImage(null);
+            setBackIdImage(null);
+            setTemporaryResidenceImage(null);
+            setRole([]);
           }}
           className="mr-2"
         >
@@ -139,37 +153,36 @@ const AddAccountModal: React.FC<Props> = ({
     >
       <Form form={form} layout="vertical">
         <RenderUploadField
-          label="Profile Picture"
-          name="profileImage"
-          message="Profile picture is required"
-          listType="picture-circle"
+          type="avatar"
+          selectedImage={avatar}
+          setSelectedImage={setAvatar}
         />
 
         <Form.Item label="Name" wrapperCol={{ span: 24 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="lg:flex justify-between">
             <Form.Item
               name="FirstName"
               rules={[{ required: true, message: "First name is required" }]}
-              className="mr-2 flex-1"
+              className="m-1 flex-1"
             >
               <Input placeholder="First Name" size="large" />
             </Form.Item>
-            <Form.Item name="MiddleName" className="mr-2 flex-1">
+            <Form.Item name="MiddleName" className="m-1 flex-1">
               <Input placeholder="Middle Name" size="large" />
             </Form.Item>
             <Form.Item
               name="LastName"
               rules={[{ required: true, message: "Last name is required" }]}
-              style={{ flex: 1 }}
+              className="m-1 flex-1"
             >
               <Input placeholder="Last Name" size="large" />
             </Form.Item>
           </div>
         </Form.Item>
         <Form.Item wrapperCol={{ span: 24 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="lg:flex justify-between">
             <Form.Item
-              className="mr-2 flex-1"
+              className="m-1 flex-1"
               label="Email"
               name="Email"
               rules={[
@@ -183,7 +196,7 @@ const AddAccountModal: React.FC<Props> = ({
               <Input placeholder="Enter email" size="large" />
             </Form.Item>
             <Form.Item
-              className="mr-2 flex-1"
+              className="m-1 flex-1"
               label="Phone"
               name="Phone"
               rules={[{ required: true, message: "Phone is required" }]}
@@ -194,12 +207,12 @@ const AddAccountModal: React.FC<Props> = ({
         </Form.Item>
 
         <Form.Item wrapperCol={{ span: 24 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="lg:flex justify-between">
             <Form.Item
               label="Password"
               name="Password"
               rules={[{ required: true, message: "Password is required" }]}
-              className="mr-2 flex-1"
+              className="m-1 flex-1"
             >
               <Input.Password placeholder="Enter password" size="large" />
             </Form.Item>
@@ -207,7 +220,7 @@ const AddAccountModal: React.FC<Props> = ({
               label="IdCard"
               name="IdCard"
               rules={[{ required: true, message: "IdCard is required" }]}
-              className="mr-2 flex-1"
+              className="m-1 flex-1"
             >
               <Input type="number" placeholder="Enter IdCard" size="large" />
             </Form.Item>
@@ -215,12 +228,12 @@ const AddAccountModal: React.FC<Props> = ({
         </Form.Item>
 
         <Form.Item wrapperCol={{ span: 24 }}>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div className="lg:flex justify-between">
             <Form.Item
               label="Birthday"
               name="BirthDay"
               rules={[{ required: true, message: "Birthday is required" }]}
-              className="mr-2 flex-1"
+              className="m-1 flex-1"
             >
               <DatePicker placeholder="Enter Birthday" size="large" />
             </Form.Item>
@@ -228,7 +241,7 @@ const AddAccountModal: React.FC<Props> = ({
               label="Gender"
               name="Gender"
               rules={[{ required: true, message: "Gender is required" }]}
-              className="mr-2 flex-1"
+              className="m-1 flex-1"
             >
               <Select placeholder="Select gender" size="large">
                 {Object.values(Gender).map((gender) => (
@@ -243,7 +256,7 @@ const AddAccountModal: React.FC<Props> = ({
               label="Role"
               name="Role"
               rules={[{ required: true, message: "Role is required" }]}
-              className="mr-2 flex-1"
+              className="m-1 flex-1"
             >
               <Select
                 placeholder="Select role"
@@ -266,28 +279,27 @@ const AddAccountModal: React.FC<Props> = ({
           label="Address"
           name="Address"
           rules={[{ required: true, message: "Address is required" }]}
+          className="flex-1 m-1"
         >
           <Input placeholder="Enter address" size="large" />
         </Form.Item>
-
-        <RenderUploadField
-          label="Front ID Image"
-          name="frontIdImage"
-          message="Front ID image is required"
-          listType="picture"
-        />
-        <RenderUploadField
-          label="Back ID Image"
-          name="backIdImage"
-          message="Back ID image is required"
-          listType="picture"
-        />
-        <RenderUploadField
-          label="Temporary Residence Image"
-          name="temporaryResidenceImage"
-          message="Temporary residence image is required"
-          listType="picture"
-        />
+        <div className="lg:flex justify-between">
+          <RenderUploadField
+            type="frontIdCard"
+            selectedImage={frontIdImage}
+            setSelectedImage={setFrontIdImage}
+          />
+          <RenderUploadField
+            type="backIdCard"
+            selectedImage={backIdImage}
+            setSelectedImage={setBackIdImage}
+          />
+          <RenderUploadField
+            type="temporaryResidence"
+            selectedImage={temporaryResidenceImage}
+            setSelectedImage={setTemporaryResidenceImage}
+          />
+        </div>
       </Form>
     </Modal>
   );

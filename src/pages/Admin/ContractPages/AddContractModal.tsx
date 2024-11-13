@@ -157,7 +157,7 @@ const AddContractModal: React.FC<Props> = ({
             ))}
           </Select>
         </Form.Item>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div className="flex justify-between">
           <Form.Item
             label="Start Date"
             name="startDate"
@@ -170,6 +170,7 @@ const AddContractModal: React.FC<Props> = ({
             <Input.Group compact>
               <Input
                 style={{ width: "60%" }}
+                
                 type="number"
                 placeholder="Enter duration"
                 onChange={(e) =>

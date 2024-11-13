@@ -1,16 +1,16 @@
 import { Link } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-import { Form, Input, Button, Select, message, DatePicker, Upload } from "antd";
+import { Form, Input, Button, Select, message, DatePicker } from "antd";
 import { apiRegister } from "../../api/authtApi";
 import { Gender } from "../../models/AccountModel";
-import { UploadOutlined } from "@ant-design/icons";
+
 import { useState } from "react";
 import ActiveAccountPage from "./ActiveAccountPage";
-import { postFileApi } from "../../api/upfileApi";
 import { RenderUploadField } from "../../components";
+import { postAvatarApi } from "../../api/upfileApi";
+
 const { Option } = Select;
 
-import { UploadListType } from "antd/es/upload/interface";
 function RegisterPage() {
   const [id, setId] = useState<string>("");
   const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
@@ -18,42 +18,47 @@ function RegisterPage() {
     const birthdayDate = values.birthday.toDate();
     const birthdayIsoString = new Date(birthdayDate).toISOString();
     const birthdayAsDate = new Date(birthdayIsoString);
-    const fullName =
-      `${values.FirstName} ${values.MiddleName} ${values.LastName}`.trim();
-    
+    const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
+      values.LastName
+    }`.trim();
+    const imageUpload = await postAvatarApi(values.profileImage.file);
+    if (imageUpload.data) {
+      const res = await apiRegister(
+        values.email,
+        values.phone,
+        values.password,
+        fullName,
+        birthdayAsDate,
+        values.gender,
+        values.address,
+        values.idCard,
+        imageUpload.data.fileName
+      );
 
-    const res = await apiRegister(
-      values.email,
-      values.phone,
-      values.password,
-      fullName,
-      birthdayAsDate,
-      values.gender,
-      values.address,
-      values.idCard,
-
-    );
-
-    if (res.data) {
-      setId(res.data._id);
-      message.success("Register successfully");
-
-      setOpenActiveAccount(true);
+      if (res.data) {
+        setId(res.data._id);
+        message.success("Register successfully");
+        setOpenActiveAccount(true);
+      } else {
+        message.error(res.message);
+      }
     } else {
-      
-      message.error(res.message);
+      message.error("Upload image failed");
     }
   };
-
   return (
     <AuthLayout>
-      <div className=" p-10 rounded-lg shadow-lg lg:w-[800px] mx-3">
-        <h2 className="text-4xl font-bold text-center text-white mb-8">
+      <div className=" p-10 rounded-lg shadow-lg lg:w-[800px] mx-3 bg-blue-100">
+        <h2 className="text-4xl font-bold text-center text-black mb-8">
           Register
         </h2>
         <Form layout="vertical" onFinish={handleRegister}>
-         
-
+          {/* <RenderUploadField
+            label="Profile Picture"
+            name="profileImage"
+            message="Profile picture is required"
+            listType="picture-circle"
+          /> */}
           <Form.Item label={<span>Name</span>} wrapperCol={{ span: 24 }}>
             <div className="flex justify-between">
               <Form.Item
@@ -90,31 +95,8 @@ function RegisterPage() {
                 ]}
                 className="mr-2 flex-1"
               >
-                <Input
-                  placeholder="Enter email"
-                  className="text-lg rounded-md border-gray-300"
-                  size="large"
-                />
+                <Input placeholder="Enter email" size="large" />
               </Form.Item>
-              <Form.Item
-                label="Phone"
-                name="phone"
-                rules={[
-                  { required: true, message: "Please enter your phone!" },
-                ]}
-                className=" flex-1"
-              >
-                <Input
-                  placeholder="Enter phone"
-                  type="number"
-                  className="text-lg rounded-md border-gray-300"
-                  size="large"
-                />
-              </Form.Item>
-            </div>
-          </Form.Item>
-          <Form.Item wrapperCol={{ span: 24 }}>
-            <div className="flex justify-between">
               <Form.Item
                 label="Password"
                 name="password"
@@ -125,6 +107,10 @@ function RegisterPage() {
               >
                 <Input.Password placeholder="Enter password" size="large" />
               </Form.Item>
+            </div>
+          </Form.Item>
+          <Form.Item wrapperCol={{ span: 24 }}>
+            <div className="flex justify-between">
               <Form.Item
                 label={<span>IdCard </span>}
                 name="idCard"
@@ -132,6 +118,16 @@ function RegisterPage() {
                 className="mr-2 flex-1"
               >
                 <Input placeholder="Enter account IdCard" size="large" />
+              </Form.Item>
+              <Form.Item
+                label="Phone"
+                name="phone"
+                rules={[
+                  { required: true, message: "Please enter your phone!" },
+                ]}
+                className=" flex-1"
+              >
+                <Input placeholder="Enter phone" type="number" size="large" />
               </Form.Item>
             </div>
           </Form.Item>
@@ -143,7 +139,7 @@ function RegisterPage() {
                 rules={[
                   { required: true, message: "Please enter your Bỉrthday!" },
                 ]}
-                className="mr-2 flex-1"
+                className="mr-2 "
               >
                 <DatePicker placeholder="Enter BirthDay" size="large" />
               </Form.Item>
@@ -180,7 +176,6 @@ function RegisterPage() {
               className="text-lg rounded-md border-gray-300"
             />
           </Form.Item>
-         
 
           <Form.Item>
             <Button
@@ -195,9 +190,9 @@ function RegisterPage() {
         </Form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-300">
+          <p className="text-gray-400">
             Already have an account?
-            <Link to="/login" className="text-white font-semibold">
+            <Link to="/login" className="text-black font-semibold">
               Login
             </Link>
           </p>

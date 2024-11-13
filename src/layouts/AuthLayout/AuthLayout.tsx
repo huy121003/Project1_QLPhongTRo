@@ -6,14 +6,13 @@ interface Props {
 
 function AuthLayout({ children }: Props) {
   return (
-    <div className="flex justify-center items-center h-screen relative">
+    <div className="flex justify-center items-center  relative h-screen">
       {/* Background image */}
-      <img
+      {/* <img
         className="absolute inset-0 w-full h-full object-cover"
         src="https://wallpaperaccess.com/full/84248.png"
         alt="Background"
-
-      />
+      /> */}
 
       <div className="relative z-10">{children}</div>
     </div>

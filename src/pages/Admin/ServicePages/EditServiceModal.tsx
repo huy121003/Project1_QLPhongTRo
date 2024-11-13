@@ -29,7 +29,7 @@ const EditServiceModal: React.FC<Props> = ({
 
   const handleOk = async () => {
     try {
-      console.log("service", service);
+
       const values = await form.validateFields();
       const response = await patchServiceApi(
         service?._id || "",

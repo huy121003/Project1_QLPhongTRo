@@ -35,6 +35,10 @@ const ElectricTable: React.FC<Props> = ({
 }) => {
   const handleOK = async (key: string) => {
     const indexData = numberIndex[key];
+    if(indexData.firstIndex === 0 || indexData.finalIndex === 0|| indexData.firstIndex > indexData.finalIndex){
+      message.error("Invalid index");
+      return;
+    }
     try {
       if (indexData.invoiceId) {
         const res = await patchInvoiceApi(

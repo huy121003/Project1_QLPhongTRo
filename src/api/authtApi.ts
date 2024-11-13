@@ -2,13 +2,14 @@ import { apiRequest } from "./ApiConfig";
 import { ApiMethod } from "./ApiMethod";
 export const apiRegister = (
   email: string,
-  phone: number,
+  phone: string,
   password: string,
   name: string,
   birthday: Date,
   gender: string,
   address: string,
-  idCard: string
+  idCard: string,
+  avatar: string
 ): Promise<any> => {
   return apiRequest(ApiMethod.POST, "/api/v1/auth/register", false, {
     email,
@@ -19,38 +20,24 @@ export const apiRegister = (
     gender,
     address,
     idCard,
-    images: [
-      {
-        imagePath: "string",
-      },
-      {
-        imagePath: "string",
-      },
-      {
-        imagePath: "string",
-      },
-      {
-        imagePath: "string",
-      },
-    ],
+    avatar,
+    imagesIdCard: ["", "", ""],
   });
 };
 
 export const apiLogin = (username: string, password: string): Promise<any> => {
-  console.log(username, password);
   return apiRequest(ApiMethod.POST, "/api/v1/auth/login", false, {
     username,
     password,
   });
 };
 
-export const apiLogout = (): Promise<any> => {
-  return apiRequest(ApiMethod.POST, "/api/v1/auth/logout", false);
-};
 export const apiFetchUser = (): Promise<any> => {
   return apiRequest(ApiMethod.GET, "/api/v1/auth/account", false);
 };
-
+export const apiLogout = (): Promise<any> => {
+  return apiRequest(ApiMethod.POST, "/api/v1/auth/logout", false);
+};
 export const apiActiveAccount = (_id: string, codeId: string): Promise<any> => {
   return apiRequest(ApiMethod.POST, "/api/v1/auth/check-code", false, {
     _id,

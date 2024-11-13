@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Input, Spin, message } from "antd";
+import { Table, Input, Spin, message, notification } from "antd";
 import ContractModel from "../../../models/ContractModel";
 import { patchInvoiceApi, postInvoiceApi } from "../../../api/invoiceApi";
 import { ServiceModel } from "../../../models/ServiceModel";
@@ -34,6 +34,17 @@ const WaterTable: React.FC<Props> = ({
 }) => {
   const handleOK = async (key: string) => {
     const indexData = numberIndex[key];
+    if (
+      indexData.firstIndex === 0 ||
+      indexData.finalIndex === 0 ||
+      indexData.firstIndex > indexData.finalIndex
+    ) {
+      notification.error({
+        message: "First index must be less than final index",
+      });
+
+      return;
+    }
     try {
       if (indexData.invoiceId) {
         const res = await patchInvoiceApi(

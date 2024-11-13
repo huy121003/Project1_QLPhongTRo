@@ -7,10 +7,8 @@ import InvoicePage from "../pages/Admin/InvoicePages/InvoicePage";
 import RolePage from "../pages/Admin/RolePages/RolePage";
 import RoomPage from "../pages/Admin/RoomPages/RoomPage";
 import ServicePage from "../pages/Admin/ServicePages/ServicePage";
+import StatisticalPage from "../pages/Admin/StatisticalPages/StatisticalPage";
 import WaterPage from "../pages/Admin/WaterPages/WaterPage";
-
-
-
 
 interface Routers {
   path: string;
@@ -65,6 +63,13 @@ const homeAdminRouters: Routers[] = [
     label: "Invoice",
   },
   {
+    path: "statistical",
+    component: StatisticalPage,
+    isShowNav: true,
+    icon: "fa-chart-line",
+    label: "Statistical",
+  },
+  {
     path: "contract",
     component: ContractPage,
     isShowNav: true,
@@ -87,6 +92,5 @@ const homeAdminRouters: Routers[] = [
     label: "Role",
   },
 ];
-
 
 export default homeAdminRouters;

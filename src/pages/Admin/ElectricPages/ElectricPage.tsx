@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ContractModel from "../../../models/ContractModel";
+import ContractModel, { ContractStatus } from "../../../models/ContractModel";
 import { fetchContractApi } from "../../../api/contractApi";
 import { fetchInvoiceApi } from "../../../api/invoiceApi";
 
@@ -8,11 +8,13 @@ import { fetchServiceApi } from "../../../api/serviceApi";
 import { ServiceModel, ServiceType } from "../../../models/ServiceModel";
 import ElectricTable from "./ElectricTable";
 import ExportToExcel from "./ExportToExcel";
+import { fetchRoomApi } from "../../../api/roomApis";
+import RoomModel from "../../../models/RoomModel";
+import { notification } from "antd";
 
 const ElectricPage = () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
-
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [year, setYear] = useState(currentYear);
   const [contract, setContract] = useState<ContractModel[]>([]);
@@ -42,13 +44,21 @@ const ElectricPage = () => {
           (contract: ContractModel) => {
             const startDate = new Date(contract.startDate);
             const endDate = new Date(contract.endDate);
+            const actualEndDate = new Date(contract.actualEndDate);
             const monthStart = new Date(year, selectedMonth - 1, 1);
             const monthEnd = new Date(year, selectedMonth, 0);
-            return startDate <= monthEnd && endDate >= monthStart;
+            if (contract.status === ContractStatus.ACTIVE) {
+              return startDate <= monthEnd && endDate >= monthStart;
+            }
+            if (contract.status === ContractStatus.CANCELED) {
+              return startDate <= monthEnd && actualEndDate >= monthStart;
+            }
+            if (contract.status === ContractStatus.EXPIRED) {
+              return startDate <= monthEnd && endDate >= monthStart;
+            }
           }
         );
         setContract(newContract);
-
         const initialIndices = await Promise.all(
           newContract.map(async (contract: ContractModel) => {
             const billResponse = await fetchInvoiceApi(
@@ -65,20 +75,18 @@ const ElectricPage = () => {
             };
           })
         );
-        //console.log("eded", initialIndices);
         setNumberIndex(Object.assign({}, ...initialIndices));
       }
     } catch (error) {
+     
       console.error("Failed to fetch contracts:", error);
     } finally {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     getContract();
   }, [selectedMonth, year, electric]);
-
   const handleInputChange = (
     id: string,
     field: "firstIndex" | "finalIndex",
@@ -92,7 +100,6 @@ const ElectricPage = () => {
       },
     }));
   };
-
   return (
     <div className="justify-end  w-full">
       <YearMonthSelector
@@ -120,5 +127,4 @@ const ElectricPage = () => {
     </div>
   );
 };
-
 export default ElectricPage;
