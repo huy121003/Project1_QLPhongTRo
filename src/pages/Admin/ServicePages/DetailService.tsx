@@ -2,7 +2,6 @@ import React from "react";
 import { Descriptions, Drawer, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment"; // Import moment for date formatting
-
 import { getServiceTypeColor } from "../../../utils/getMethodColor";
 interface Props {
   openDetailService: boolean;

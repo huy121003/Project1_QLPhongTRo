@@ -1,4 +1,4 @@
-export interface RoleModel {
+ interface IRole {
     _id: string,
     name: string,
     description: string,
@@ -14,3 +14,4 @@ export interface RoleModel {
         email: string
     }
 }
+export default IRole;

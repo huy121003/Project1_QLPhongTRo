@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
-import { postAccountApi } from "../../../api/accountApi"; // Adjust the path to your API function
-
-import { Gender } from "../../../models/AccountModel";
-import { fecthRoleApi } from "../../../api/roleApi"; // Note: Fixed the typo in the function name
-import { RoleModel } from "../../../models/RoleModel";
-import { postAvatarApi } from "../../../api/upfileApi";
+import { Gender } from "../../../enums";
+import { IRole } from "../../../interfaces";
 import { RenderUploadField } from "../../../components";
+import { upfileApi, roleApi, accountApi } from "../../../api";
 
 interface Props {
   openAddAccount: boolean;
@@ -19,17 +16,21 @@ const AddAccountModal: React.FC<Props> = ({
   openAddAccount,
   setOpenAddAccount,
 }) => {
-  const [role, setRole] = useState<RoleModel[]>([]);
+  const [role, setRole] = useState<IRole[]>([]);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [frontIdImage, setFrontIdImage] = useState<File | null>(null);
   const [backIdImage, setBackIdImage] = useState<File | null>(null);
   const [temporaryResidenceImage, setTemporaryResidenceImage] =
     useState<File | null>(null);
+  const [imageAvatar] = useState<string>("");
+  const [imageFrontId] = useState<string>("");
+  const [imageBackId] = useState<string>("");
+  const [imageTemporaryResidence] = useState<string>("");
 
   useEffect(() => {
     const getRole = async () => {
       try {
-        const res = await fecthRoleApi("current=1&pageSize=1000");
+        const res = await roleApi.fecthRoleApi("current=1&pageSize=1000");
         if (res?.data) {
           setRole(res.data.result);
         } else {
@@ -57,32 +58,50 @@ const AddAccountModal: React.FC<Props> = ({
       const birthdayDate = values.BirthDay.toDate();
       const birthdayIsoString = new Date(birthdayDate).toISOString();
       const birthdayAsDate = new Date(birthdayIsoString);
-
+      let avatarFileName = imageAvatar;
+      let frontIdFileName = imageFrontId;
+      let backIdFileName = imageBackId;
+      let temporaryResidenceFileName = imageTemporaryResidence;
       // Upload images if they exist
-      if (
-        avatar === null ||
-        frontIdImage === null ||
-        backIdImage === null ||
-        temporaryResidenceImage === null
-      ) {
-        message.error("Please upload all required images.");
-        return;
+      if (avatar) {
+        const response = await upfileApi.postAvatarApi(avatar);
+        if (response.statusCode === 201) {
+          avatarFileName = response.data.fileName;
+        } else {
+          message.error("Failed to upload avatar image.");
+          return;
+        }
       }
-      const imageUploadResponses = await Promise.all([
-        postAvatarApi(avatar),
-        postAvatarApi(frontIdImage),
-        postAvatarApi(backIdImage),
-        postAvatarApi(temporaryResidenceImage),
-      ]);
-      if (
-        imageUploadResponses.some((response) => response.statusCode !== 201)
-      ) {
-        message.error("Failed to upload one or more images.");
-        return;
+      if (frontIdImage) {
+        const response = await upfileApi.postAvatarApi(frontIdImage);
+        if (response.statusCode === 201) {
+          frontIdFileName = response.data.fileName;
+        } else {
+          message.error("Failed to upload front id image.");
+          return;
+        }
+      }
+      if (backIdImage) {
+        const response = await upfileApi.postAvatarApi(backIdImage);
+        if (response.statusCode === 201) {
+          backIdFileName = response.data.fileName;
+        } else {
+          message.error("Failed to upload back id image.");
+          return;
+        }
+      }
+      if (temporaryResidenceImage) {
+        const response = await upfileApi.postAvatarApi(temporaryResidenceImage);
+        if (response.statusCode === 201) {
+          temporaryResidenceFileName = response.data.fileName;
+        } else {
+          message.error("Failed to upload temporary residence image.");
+          return;
+        }
       }
 
       // Call the API to post account data
-      const response = await postAccountApi(
+      const response = await accountApi.postAccountApi(
         values.Email,
         values.Phone,
         values.Password,
@@ -92,18 +111,13 @@ const AddAccountModal: React.FC<Props> = ({
         values.Address,
         values.IdCard,
         values.Role,
-        imageUploadResponses[0].data.fileName,
-        [
-          imageUploadResponses[1].data.fileName,
-          imageUploadResponses[2].data.fileName,
-          imageUploadResponses[3].data.fileName,
-        ]
+        avatarFileName,
+        [frontIdFileName, backIdFileName, temporaryResidenceFileName]
       );
 
       if (response.statusCode === 201) {
         message.success("Account added successfully");
-        form.resetFields(); // Reset form fields
-        setOpenAddAccount(false); // Close modal on success
+        refesh();
       } else {
         // Display detailed error messages if available
 
@@ -113,36 +127,23 @@ const AddAccountModal: React.FC<Props> = ({
       message.error("Form validation failed. Please check your input.");
     }
   };
-
+  const refesh = () => {
+    setOpenAddAccount(false);
+    form.resetFields(); // Reset form fields
+    setAvatar(null);
+    setFrontIdImage(null);
+    setBackIdImage(null);
+    setTemporaryResidenceImage(null);
+    setRole([]);
+  };
   return (
     <Modal
       centered
       open={openAddAccount}
       title={<h1 className="text-3xl font-bold text-center">Add Account</h1>}
-      onCancel={() => {
-        setOpenAddAccount(false);
-        form.resetFields(); // Reset form fields
-        setAvatar(null);
-        setFrontIdImage(null);
-        setBackIdImage(null);
-        setTemporaryResidenceImage(null);
-        setRole([]);
-      }}
+      onCancel={refesh}
       footer={[
-        <Button
-          size="large"
-          key="back"
-          onClick={() => {
-            setOpenAddAccount(false);
-            form.resetFields(); // Reset form fields
-            setAvatar(null);
-            setFrontIdImage(null);
-            setBackIdImage(null);
-            setTemporaryResidenceImage(null);
-            setRole([]);
-          }}
-          className="mr-2"
-        >
+        <Button size="large" key="back" onClick={refesh} className="mr-2">
           Cancel
         </Button>,
         <Button key="submit" type="primary" onClick={handleOk} size="large">
@@ -156,6 +157,7 @@ const AddAccountModal: React.FC<Props> = ({
           type="avatar"
           selectedImage={avatar}
           setSelectedImage={setAvatar}
+          imageUrl={imageAvatar}
         />
 
         <Form.Item label="Name" wrapperCol={{ span: 24 }}>

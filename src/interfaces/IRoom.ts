@@ -1,4 +1,6 @@
-interface RoomModel {
+import { RoomStatus, RoomType } from "../enums";
+
+interface IRoom {
   _id: string;
   roomName: string;
   area: number;
@@ -21,18 +23,6 @@ interface RoomModel {
     name: string;
   };
 }
-export default RoomModel;
+export default IRoom;
 
-export enum RoomType {
 
-    Single = "SINGLE",
-    Double = "DOUBLE",
-    Quad = "QUAD",
-    Studio = "STUDIO",
-}
-
-export enum RoomStatus {
-  Occupied = "OCCUPIED", // Phòng đã được thuê
-  Available = "AVAILABLE", // Phòng còn trống
-
-}

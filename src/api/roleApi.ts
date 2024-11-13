@@ -1,11 +1,11 @@
 import apiConfig, { apiRequest } from "./ApiConfig";
-import { ApiMethod } from "./ApiMethod";
+import { ApiMethod } from "../enums";
 
-export const fecthRoleApi = async (query: string): Promise<any> => {
+const fecthRoleApi = async (query: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/roles?${query}`, false);
 };
 
-export const postRoleApi = async (
+const postRoleApi = async (
   name: string,
   description: string,
   permissions: string[]
@@ -17,13 +17,13 @@ export const postRoleApi = async (
     isActive: true,
   });
 };
-export const fetchRoleByIdApi = async (id: string): Promise<any> => {
+const fetchRoleByIdApi = async (id: string): Promise<any> => {
   return apiRequest(ApiMethod.POST, `/api/v1/roles/${id}`, false);
 };
-export const deleteRoleApi = async (id: string): Promise<any> => {
+const deleteRoleApi = async (id: string): Promise<any> => {
   return apiRequest(ApiMethod.DELETE, `/api/v1/roles/${id}`, false);
 };
-export const patchRoleApi = async (
+const patchRoleApi = async (
   id: string,
   name: string,
   description: string,
@@ -35,4 +35,11 @@ export const patchRoleApi = async (
     permissions,
     isActive: true,
   });
+};
+export default {
+  fecthRoleApi,
+  postRoleApi,
+  fetchRoleByIdApi,
+  deleteRoleApi,
+  patchRoleApi,
 };

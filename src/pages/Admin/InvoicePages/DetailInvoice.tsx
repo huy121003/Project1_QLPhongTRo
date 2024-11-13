@@ -1,13 +1,12 @@
 import React from "react";
 import { Descriptions, Drawer } from "antd";
 import moment from "moment";
-import InvoiceModel from "../../../models/InvoiceModal";
-
 import { getInvoiceStatusColor } from "../../../utils/getMethodColor";
+import { IInvoice } from "../../../interfaces";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
-  record: InvoiceModel;
+  record: IInvoice;
 }
 const DetailInvoice: React.FC<Props> = ({ open, setOpen, record }) => {
   const formatDate = (date: Date) => {

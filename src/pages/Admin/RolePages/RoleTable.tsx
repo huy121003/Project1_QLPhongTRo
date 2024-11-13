@@ -1,20 +1,21 @@
 import React, { useState } from "react";
-import TableComponent from "../../../components/TableComponent";
-import { ColumnSelector, DeleteModal } from "../../../components";
+
+import { ColumnSelector, DeleteModal, TableComponent } from "../../../components";
 import { Button } from "antd";
 import { getRoleColor } from "../../../utils/getMethodColor";
-import { RoleModel } from "../../../models/RoleModel";
+import { IRole } from "../../../interfaces";
+
 interface Props {
-  roles: RoleModel[];
+  roles: IRole[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteRole: (record: RoleModel) => Promise<void>;
+  onDeleteRole: (record: IRole) => Promise<void>;
   setOpenEditRole: (value: boolean) => void;
   setOpenDetailRole: (value: boolean) => void;
-  setRecord: (value: RoleModel) => void;
+  setRecord: (value: IRole) => void;
 }
 const RoleTable: React.FC<Props> = ({
   roles,
@@ -33,7 +34,7 @@ const RoleTable: React.FC<Props> = ({
       title: "ID",
       dataIndex: "_id",
       key: "_id",
-      render: (_id: string, record: RoleModel) => (
+      render: (_id: string, record: IRole) => (
         <p
           className="text-blue-600 hover:text-blue-300"
           onClick={() => {

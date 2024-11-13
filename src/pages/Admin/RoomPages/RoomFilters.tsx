@@ -1,9 +1,6 @@
 import React from "react";
-
-import SearchFilters from "../../../components/SearchFilter";
-import { RoomStatus, RoomType } from "../../../models/RoomModel";
-import SortOption from "../../../components/SortOption";
-
+import { SearchFilters, SortOption } from "../../../components";
+import { RoomStatus, RoomType } from "../../../enums";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;

@@ -4,12 +4,11 @@ import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment"; // Import moment for date formatting
 
 import { getGenderColor, getRoleColor } from "../../../utils/getMethodColor";
-import AccountModel from "../../../models/AccountModel";
-const baseURL = import.meta.env.VITE_BACKEND_URL; // URL cơ bản của API, được lấy từ biến môi trường
+import { IAccount } from "../../../interfaces";
 interface Props {
   openDetailAccount: boolean;
   setOpenDetailAccount: (value: boolean) => void;
-  record: AccountModel;
+  record: IAccount;
 }
 
 const DetailAccount: React.FC<Props> = ({
@@ -17,7 +16,6 @@ const DetailAccount: React.FC<Props> = ({
   setOpenDetailAccount,
   record,
 }) => {
-
   const formatDate = (date: string | Date) => {
     return moment(date).format("DD/MM/YYYY"); // Format date using moment
   };
@@ -81,7 +79,7 @@ const DetailAccount: React.FC<Props> = ({
       children: record?.imagesIdCard[0] ? (
         <Image width={100} height={70} src={`${record?.imagesIdCard[0]}`} />
       ) : (
-        "N/A"
+        <i className="fa-solid fa-id-card text-4xl text-gray-400"></i>
       ),
     },
     {
@@ -90,7 +88,7 @@ const DetailAccount: React.FC<Props> = ({
       children: record?.imagesIdCard[1] ? (
         <Image width={100} height={70} src={`${record?.imagesIdCard[1]}`} />
       ) : (
-        "N/A"
+        <i className="fa-solid fa-id-card text-4xl text-gray-400"></i>
       ),
     },
     {
@@ -99,7 +97,7 @@ const DetailAccount: React.FC<Props> = ({
       children: record?.imagesIdCard[2] ? (
         <Image width={100} height={70} src={`${record?.imagesIdCard[2]}`} />
       ) : (
-        "N/A"
+        <i className="fa-solid fa-file-contract text-4xl text-gray-400"></i>
       ),
     },
     {

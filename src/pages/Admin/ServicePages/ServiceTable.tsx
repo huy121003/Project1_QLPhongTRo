@@ -1,20 +1,25 @@
 import { useState } from "react";
-import { ColumnSelector, DeleteModal } from "../../../components";
-import TableComponent from "../../../components/TableComponent";
+import {
+  ColumnSelector,
+  DeleteModal,
+  TableComponent,
+} from "../../../components";
+
 import { Button } from "antd";
-import { ServiceModel } from "../../../models/ServiceModel";
+
 import { getServiceTypeColor } from "../../../utils/getMethodColor";
+import { IService } from "../../../interfaces";
 interface Props {
-  services: ServiceModel[];
+  services: IService[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteService: (record: ServiceModel) => Promise<void>;
+  onDeleteService: (record: IService) => Promise<void>;
   setOpenEditService: (value: boolean) => void;
   setOpenDetailService: (value: boolean) => void;
-  setRecord: (record: ServiceModel) => void;
+  setRecord: (record: IService) => void;
 }
 const ServiceTable: React.FC<Props> = ({
   services,
@@ -33,7 +38,7 @@ const ServiceTable: React.FC<Props> = ({
       title: "Id",
       dataIndex: "_id",
       key: "_id",
-      render: (_id: string, record: ServiceModel) => (
+      render: (_id: string, record: IService) => (
         <p
           className="text-blue-600 hover:text-blue-300"
           onClick={() => {
@@ -66,7 +71,7 @@ const ServiceTable: React.FC<Props> = ({
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (_: any, record: ServiceModel) => (
+      render: (_: any, record: IService) => (
         <div className="gap-2 flex">
           <Button
             icon={

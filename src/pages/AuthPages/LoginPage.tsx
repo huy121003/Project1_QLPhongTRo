@@ -2,11 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
 import { Form, Input, Button, message, Divider } from "antd";
 import { useAppDispatch } from "../../redux/hook";
-import { apiLogin } from "../../api/authtApi";
 import { loginaction } from "../../redux/slice/auth/authSlice";
 import { useState } from "react";
 import ResetPasswordPage from "./ResetPasswordPage";
 import RetryCodePage from "./RetryCodePage";
+import { authtApi } from "../../api";
 function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const [issubmit, setIsSubmit] = useState<boolean>(false);
@@ -18,7 +18,7 @@ function LoginPage(): JSX.Element {
     const { email, password } = value;
     setEmail(email);
     setIsSubmit(true);
-    const res = await apiLogin(email, password);
+    const res = await authtApi.apiLogin(email, password);
     setIsSubmit(false);
     if (res?.data) {
       localStorage.setItem("access_token", res.data.access_token);

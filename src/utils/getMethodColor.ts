@@ -1,19 +1,14 @@
-import { Gender } from "../models/AccountModel";
-import { ContractStatus } from "../models/ContractModel";
-import { InvoiceStatus } from "../models/InvoiceModal";
-import { Method } from "../models/PermissonModel";
-import { RoomStatus, RoomType } from "../models/RoomModel";
-import { ServiceType } from "../models/ServiceModel";
+import { ApiMethod, ContractStatus, Gender, InvoiceStatus, RoomStatus, RoomType, ServiceType } from "../enums";
 
-export const getMethodColor = (method: Method) => {
+export const getMethodColor = (method: ApiMethod) => {
   switch (method) {
-    case Method.GET:
+    case ApiMethod.GET:
       return "green";
-    case Method.POST:
+    case ApiMethod.POST:
       return "yellow";
-    case Method.PATCH:
+    case ApiMethod.PATCH:
       return "purple";
-    case Method.DELETE:
+    case ApiMethod.DELETE:
       return "orange";
     default:
       return "gray";

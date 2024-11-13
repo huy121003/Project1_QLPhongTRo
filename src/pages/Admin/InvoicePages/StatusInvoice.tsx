@@ -1,5 +1,6 @@
 import React from "react";
-import { InvoiceStatus } from "../../../models/InvoiceModal";
+import { InvoiceStatus } from "../../../enums";
+
 interface Props {
   status: InvoiceStatus | "";
   setStatus: (value: InvoiceStatus | "") => void;

@@ -1,8 +1,8 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import ContractModel from "../models/ContractModel";
 import moment from "moment";
 import { timesnewromanBase64 } from "./Base64";
+import { IContract } from "../interfaces";
 
 const addWrappedText = (
   doc: jsPDF,
@@ -18,7 +18,7 @@ const addWrappedText = (
   });
 };
 
-export const downloadContractPDF = (contract: ContractModel) => {
+export const downloadContractPDF = (contract: IContract) => {
   const doc = new jsPDF("p", "mm", "a4", true);
 
   doc.addFileToVFS("Times-New-Roman.ttf", timesnewromanBase64);
@@ -54,6 +54,9 @@ export const downloadContractPDF = (contract: ContractModel) => {
   doc.setFont("Times New Roman", "italic");
   doc.text(`${contract.innkeeper.name}`, 90, 80);
   doc.setFont("Times New Roman", "normal");
+  doc.text("Đia chỉ: ", 40, 90);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.address}`, 60, 90);
 
   // Bên thuê
   doc.setFontSize(14);

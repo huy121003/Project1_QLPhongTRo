@@ -1,15 +1,15 @@
-import apiConfig, { apiRequest } from "./ApiConfig";
-import { ApiMethod } from "./ApiMethod";
-export const fetchContractApi = (query: any): Promise<any> => {
+import  { apiRequest } from "./ApiConfig";
+import { ApiMethod, ContractStatus } from "../enums";
+const fetchContractApi = (query: any): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/contracts?${query}`, false);
 };
-export const fetchContractByIdApi = (id: string): Promise<any> => {
+const fetchContractByIdApi = (id: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/contracts/${id}`, false);
 };
-export const deleteContractApi = (id: string): Promise<any> => {
+const deleteContractApi = (id: string): Promise<any> => {
   return apiRequest(ApiMethod.DELETE, `/api/v1/contracts/${id}`, false);
 };
-export const postContractApi = (
+const postContractApi = (
   room: {
     _id: string;
     roomName: string;
@@ -28,7 +28,7 @@ export const postContractApi = (
   address: string,
   depositAmount: number,
   rentCycleCount: number,
-  status: string
+  status: ContractStatus
 ): Promise<any> => {
   return apiRequest(ApiMethod.POST, `/api/v1/contracts`, false, {
     room,
@@ -43,12 +43,19 @@ export const postContractApi = (
   });
 };
 
-export const patchContractApi = (
+const patchContractApi = (
   id: string,
 
-  status: string
+  status: ContractStatus
 ): Promise<any> => {
   return apiRequest(ApiMethod.PATCH, `/api/v1/contracts/${id}`, false, {
     status,
   });
+};
+export default {
+  fetchContractApi,
+  fetchContractByIdApi,
+  deleteContractApi,
+  postContractApi,
+  patchContractApi,
 };

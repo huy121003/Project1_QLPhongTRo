@@ -1,4 +1,6 @@
-interface AccountModel {
+import { Gender } from "../enums";
+
+interface IAccount {
   _id: string;
   name: string;
   email: string;
@@ -26,10 +28,5 @@ interface AccountModel {
     email: string;
   };
 }
-export default AccountModel;
+export default IAccount;
 
-export enum Gender {
-  Male = "MALE",
-  Female = "FEMALE",
-  Other = "OTHER",
-}

@@ -1,9 +1,9 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
 import { Button } from "antd";
-import RoomModel from "../../../models/RoomModel";
+import { IRoom } from "../../../interfaces";
 interface Props {
-  rooms: RoomModel[];
+  rooms: IRoom[];
 }
 const ExportToExcel: React.FC<Props> = ({ rooms }) => {
   const exportToExcel = () => {

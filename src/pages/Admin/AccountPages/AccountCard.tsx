@@ -1,26 +1,20 @@
 import React from "react";
-import AccountModel from "../../../models/AccountModel";
-import { DeleteModal } from "../../../components";
+import { IAccount } from "../../../interfaces";
+import { DeleteModal, NotItem } from "../../../components";
 import { Button, Pagination, Spin } from "antd";
-
-import NotItem from "../../../components/NotItem";
 import { getGenderColor, getRoleColor } from "../../../utils/getMethodColor";
-
-const baseURL = import.meta.env.VITE_BACKEND_URL;
-
 interface Props {
-  accounts: AccountModel[];
+  accounts: IAccount[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteAccount: (record: AccountModel) => Promise<void>;
+  onDeleteAccount: (record: IAccount) => Promise<void>;
   setOpenEditAccount: (value: boolean) => void;
   setOpenDetailAccount: (value: boolean) => void;
-  setRecord: (value: AccountModel) => void;
+  setRecord: (value: IAccount) => void;
 }
-
 const AccountCard: React.FC<Props> = ({
   accounts,
   isLoading,
@@ -91,25 +85,33 @@ const AccountCard: React.FC<Props> = ({
                   <div></div>
                   <div className="flex gap-3">
                     <Button
-                      type="primary"
                       onClick={() => {
                         setOpenDetailAccount(true);
                         setRecord(account);
                       }}
-                      icon={<i className="fa-solid fa-eye text-xl" />}
-                      className="bg-blue-500 text-white hover:bg-blue-600 transition"
+                      icon={
+                        <i
+                          className="fa-solid fa-eye text-xl
+                        text-blue-500
+                        "
+                        />
+                      }
                     />
                     {account.email === "admin@gmail.com" ? null : (
                       <div className="flex gap-2">
                         <Button
                           icon={
-                            <i className="fa-solid fa-pen-to-square text-xl" />
+                            <i
+                              className="fa-solid fa-pen-to-square text-xl
+                          text-green-600
+                            "
+                            />
                           }
                           onClick={() => {
                             setOpenEditAccount(true);
                             setRecord(account);
                           }}
-                          className="bg-green-500 text-white hover:bg-green-600 transition"
+                          className="  transition"
                         />
                         <DeleteModal
                           onConfirm={(record) => onDeleteAccount(record)}

@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
 import { Form, Input, Button, Select, message, DatePicker } from "antd";
-import { apiRegister } from "../../api/authtApi";
-import { Gender } from "../../models/AccountModel";
+
 
 import { useState } from "react";
 import ActiveAccountPage from "./ActiveAccountPage";
-import { RenderUploadField } from "../../components";
-import { postAvatarApi } from "../../api/upfileApi";
+import { authtApi } from "../../api";
+import { Gender } from "../../enums";
 
 const { Option } = Select;
 
@@ -21,29 +20,24 @@ function RegisterPage() {
     const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
       values.LastName
     }`.trim();
-    const imageUpload = await postAvatarApi(values.profileImage.file);
-    if (imageUpload.data) {
-      const res = await apiRegister(
-        values.email,
-        values.phone,
-        values.password,
-        fullName,
-        birthdayAsDate,
-        values.gender,
-        values.address,
-        values.idCard,
-        imageUpload.data.fileName
-      );
 
-      if (res.data) {
-        setId(res.data._id);
-        message.success("Register successfully");
-        setOpenActiveAccount(true);
-      } else {
-        message.error(res.message);
-      }
+    const res = await authtApi.apiRegister(
+      values.email,
+      values.phone,
+      values.password,
+      fullName,
+      birthdayAsDate,
+      values.gender,
+      values.address,
+      values.idCard
+    );
+
+    if (res.data) {
+      setId(res.data._id);
+      message.success("Register successfully");
+      setOpenActiveAccount(true);
     } else {
-      message.error("Upload image failed");
+      message.error(res.message);
     }
   };
   return (
@@ -53,12 +47,6 @@ function RegisterPage() {
           Register
         </h2>
         <Form layout="vertical" onFinish={handleRegister}>
-          {/* <RenderUploadField
-            label="Profile Picture"
-            name="profileImage"
-            message="Profile picture is required"
-            listType="picture-circle"
-          /> */}
           <Form.Item label={<span>Name</span>} wrapperCol={{ span: 24 }}>
             <div className="flex justify-between">
               <Form.Item

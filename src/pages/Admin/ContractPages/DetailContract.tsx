@@ -2,14 +2,14 @@ import React from "react";
 import { Descriptions, Drawer, Button, Typography } from "antd";
 import { PrinterOutlined } from "@ant-design/icons";
 import moment from "moment";
-import ContractModel from "../../../models/ContractModel";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
 import { downloadContractPDF } from "../../../utils/generateContractPDF";
+import { IContract } from "../../../interfaces";
 
 interface Props {
   openDetailContract: boolean;
   setOpenDetailContract: (value: boolean) => void;
-  record: ContractModel;
+  record: IContract;
 }
 
 const { Text } = Typography;

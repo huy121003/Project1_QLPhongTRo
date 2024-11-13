@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Collapse, Descriptions, Drawer, message, Switch, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment"; // Import moment for date formatting
-import { ServiceModel } from "../../../models/ServiceModel";
-import { fetchServiceApi } from "../../../api/serviceApi";
 import {
   getRoomStatusColor,
   getRoomTypeColor,
 } from "../../../utils/getMethodColor";
+import { IService } from "../../../interfaces";
+import { serviceApi } from "../../../api";
 interface Props {
   openDetailRoom: boolean;
   setOpenDetailRoom: (value: boolean) => void;
@@ -21,7 +21,7 @@ const DetailRoom: React.FC<Props> = ({
   const formatDate = (dateString: string) => {
     return moment(dateString).format("DD/MM/YYYY"); // Format date using moment
   };
-  const [services, setServices] = useState<ServiceModel[]>([]);
+  const [services, setServices] = useState<IService[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [enableService, setEnableService] = useState<string[]>([]);
   useEffect(() => {
@@ -30,7 +30,7 @@ const DetailRoom: React.FC<Props> = ({
 
       setEnableService(record?.services);
 
-      const response = await fetchServiceApi("pageSize=1000&currentPage=1");
+      const response = await serviceApi.fetchServiceApi("pageSize=1000&currentPage=1");
       if (response.data) {
         setServices(response.data.result);
       } else {

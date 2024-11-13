@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { fetchRoomApi } from "../../../api/roomApis";
-import RoomModel from "../../../models/RoomModel";
 import { message } from "antd";
+import { IRoom } from "../../../interfaces";
+import { roomApi } from "../../../api";
 
 interface Props {
   choosenRoom: string;
@@ -12,11 +12,11 @@ const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize] = useState(10);
   const [total, setTotal] = useState(0);
-  const [rooms, setRooms] = useState<RoomModel[]>([]);
+  const [rooms, setRooms] = useState<IRoom[]>([]);
 
   const getRoom = async () => {
     try {
-      const res = await fetchRoomApi(
+      const res = await roomApi.fetchRoomApi(
         `currentPage=${current}&pageSize=${pageSize}`
       );
       if (res.data) {
@@ -56,7 +56,7 @@ const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
         {rooms.map((room) => (
           <div
             key={room._id}
-            className={`flex flex-1 p-4 border-2 rounded-2xl cursor-pointer text-center justify-center items-center ${
+            className={`flex flex-1 py-4 border-2 rounded-2xl cursor-pointer text-center justify-center items-center ${
               choosenRoom === room._id
                 ? "border-blue-600 text-blue-600"
                 : "border-gray-400 text-gray-400"

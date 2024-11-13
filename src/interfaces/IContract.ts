@@ -1,4 +1,6 @@
-interface ContractModel {
+import { ContractStatus } from "../enums";
+
+interface IContract {
   _id: string;
   room: {
     _id: string;
@@ -34,10 +36,6 @@ interface ContractModel {
     _id: string;
     email: string;
   };
+  address: string;
 }
-export default ContractModel;
-export enum ContractStatus {
-  EXPIRED = "EXPIRED",
-  ACTIVE = "ACTIVE",
-  CANCELED = "CANCELED",
-}
+export default IContract;

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
 import dayjs from "dayjs";
-import { postContractApi } from "../../../api/contractApi";
-import { ContractStatus } from "../../../models/ContractModel";
-import { fecthAccountApi } from "../../../api/accountApi";
-import { fetchRoomApi } from "../../../api/roomApis";
-import AccountModel from "../../../models/AccountModel";
-import RoomModel from "../../../models/RoomModel";
+import { IAccount, IRoom } from "../../../interfaces";
+import { accountApi, contractApi, roomApi } from "../../../api";
+import { ContractStatus } from "../../../enums";
+
 
 interface Props {
   openAddContract: boolean;
@@ -22,8 +20,8 @@ const AddContractModal: React.FC<Props> = ({
     unit: "month",
   });
   const [form] = Form.useForm();
-  const [tenants, setTenants] = useState<AccountModel[]>([]);
-  const [rooms, setRooms] = useState<RoomModel[]>([]);
+  const [tenants, setTenants] = useState<IAccount[]>([]);
+  const [rooms, setRooms] = useState<IRoom[]>([]);
   const [choosenTenant, setChoosenTenant] = useState<any>({
     _id: "",
     name: "",
@@ -44,12 +42,12 @@ const AddContractModal: React.FC<Props> = ({
 
   useEffect(() => {
     const getTenant = async () => {
-      const response = await fecthAccountApi(
+      const response = await accountApi.fecthAccountApi(
         `pageSize=1000&current=1&populate=role&fields=role.name`
       );
       if (response.data) {
         const tenants = response.data.result.filter(
-          (tenant: AccountModel) => tenant.role.name === "NORMAL USER"
+          (tenant: IAccount) => tenant.role.name === "NORMAL USER"
         );
         setTenants(tenants);
       } else {
@@ -57,7 +55,7 @@ const AddContractModal: React.FC<Props> = ({
       }
     };
     const getRoom = async () => {
-      const response = await fetchRoomApi(
+      const response = await roomApi.fetchRoomApi(
         "pageSize=1000&currentPage=1&status=AVAILABLE"
       );
       if (response.data) {
@@ -76,7 +74,7 @@ const AddContractModal: React.FC<Props> = ({
       const endDate = dayjs(values.startDate)
         .add(time.number, time.unit as dayjs.ManipulateType)
         .toDate();
-      const response = await postContractApi(
+      const response = await contractApi.postContractApi(
         choosenRoom,
         choosenTenant,
         values.startDate,
@@ -170,7 +168,6 @@ const AddContractModal: React.FC<Props> = ({
             <Input.Group compact>
               <Input
                 style={{ width: "60%" }}
-                
                 type="number"
                 placeholder="Enter duration"
                 onChange={(e) =>

@@ -1,4 +1,6 @@
-interface InvoiceModel {
+import { InvoiceStatus } from "../enums";
+
+interface IInvoice {
   _id: string;
   room: {
     _id: string;
@@ -38,8 +40,5 @@ interface InvoiceModel {
   };
 }
 
-export enum InvoiceStatus {
-  PAID = "PAID",
-  UNPAID = "UNPAID",
-}
-export default InvoiceModel;
+
+export default IInvoice;

@@ -1,5 +1,5 @@
-import axios, { AxiosResponse } from "axios";
-import { ApiMethod } from "./ApiMethod";
+import axios from "axios";
+import { ApiMethod } from "../enums";
 
 const baseURL = import.meta.env.VITE_BACKEND_URL; // URL cơ bản của API, được lấy từ biến môi trường
 const NO_RETRY_HEADER = "x-no-retry"; // Tên của header dùng để tránh lặp lại việc refresh token

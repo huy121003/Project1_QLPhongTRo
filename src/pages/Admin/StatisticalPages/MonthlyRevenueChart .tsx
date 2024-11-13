@@ -10,12 +10,11 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import InvoiceModel from "../../../models/InvoiceModal";
 import { useEffect, useState } from "react";
-import { fetchInvoiceApi } from "../../../api/invoiceApi";
 import { message, Select } from "antd";
 import ExportRevenueToExcel from "./ExportRevenueToExcel";
-
+import { IInvoice } from "../../../interfaces";
+import { invoiceApi } from "../../../api";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -28,7 +27,7 @@ ChartJS.register(
 );
 
 function getMonthlyRevenue(
-  invoices: InvoiceModel[]
+  invoices: IInvoice[]
 ): { month: string; totalAmount: number }[] {
   const revenueByMonth: { [key: string]: number } = {};
 
@@ -50,14 +49,14 @@ function getMonthlyRevenue(
 }
 
 const MonthlyRevenueChart = () => {
-  const [invoices, setInvoices] = useState<InvoiceModel[]>([]);
+  const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [selectedYear, setSelectedYear] = useState<string>(
     new Date().getFullYear().toString()
   );
 
   useEffect(() => {
     const fetchInvoices = async () => {
-      const res = await fetchInvoiceApi(
+      const res = await invoiceApi.fetchInvoiceApi(
         "pageSize=99999&currentPage=1&status=PAID"
       );
       if (res.data) {

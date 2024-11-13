@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { AddButton } from "../../../components";
 import AddServiceModal from "./AddServiceModal";
 import EditServiceModal from "./EditServiceModal";
-import { deleteServiceApi, fetchServiceApi } from "../../../api/serviceApi";
-import { ServiceModel } from "../../../models/ServiceModel";
 import DetailService from "./DetailService";
 import ServiceFilters from "./ServiceFilters";
 import ServiceTable from "./ServiceTable";
 import ExportToExcel from "./ExportToExcel";
+import { IService } from "../../../interfaces";
+import { serviceApi } from "../../../api";
 function ServicePage() {
-  const [services, setServices] = useState<ServiceModel[]>([]);
+  const [services, setServices] = useState<IService[]>([]);
 
   const [openAddService, setOpenAddService] = useState(false);
   const [openEditService, setOpenEditService] = useState(false);
@@ -42,7 +42,7 @@ function ServicePage() {
     const query = new URLSearchParams(queryParams).toString();
 
     setIsLoading(true);
-    const res = await fetchServiceApi(query);
+    const res = await serviceApi.fetchServiceApi(query);
     setIsLoading(false);
     if (res.data.result && res) {
       setServices(res.data.result);
@@ -86,7 +86,7 @@ function ServicePage() {
   };
 
   const onDeleteService = async (record: any) => {
-    const res = await deleteServiceApi(record._id);
+    const res = await serviceApi.deleteServiceApi(record._id);
     if (res.statusCode === 200) {
       message.success("Service deleted");
       getService();

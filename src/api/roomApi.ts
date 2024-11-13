@@ -1,17 +1,17 @@
 import { apiConfig, apiRequest } from "./ApiConfig";
-import { RoomStatus, RoomType } from "../models/RoomModel";
-import { ApiMethod } from "./ApiMethod";
+import { RoomStatus, RoomType } from "../enums";
+import { ApiMethod } from "../enums";
 
-export const fetchRoomApi = (query: any): Promise<any> => {
+const fetchRoomApi = (query: any): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/rooms?${query}`, false);
 };
-export const fetchRoomByIdApi = (id: string): Promise<any> => {
+const fetchRoomByIdApi = (id: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/rooms/${id}`, false);
 };
-export const deleteRoomApi = (id: string): Promise<any> => {
+const deleteRoomApi = (id: string): Promise<any> => {
   return apiRequest(ApiMethod.DELETE, `/api/v1/rooms/${id}`, false);
 };
-export const postRoomApi = (
+const postRoomApi = (
   roomName: string,
   area: number,
   type: RoomType,
@@ -31,7 +31,7 @@ export const postRoomApi = (
   });
 };
 
-export const patchRoomApi = (
+const patchRoomApi = (
   id: string,
   area: number,
   type: RoomType,
@@ -49,11 +49,16 @@ export const patchRoomApi = (
     services,
   });
 };
-export const updateRoomStatusApi = (
-  id: string,
-  status: RoomStatus
-): Promise<any> => {
+const updateRoomStatusApi = (id: string, status: RoomStatus): Promise<any> => {
   return apiConfig.patch(`/api/v1/rooms/${id}`, {
     status,
   });
+};
+export default {
+  fetchRoomApi,
+  fetchRoomByIdApi,
+  deleteRoomApi,
+  postRoomApi,
+  patchRoomApi,
+  updateRoomStatusApi,
 };

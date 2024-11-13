@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Input, Form, message, Select, DatePicker } from "antd";
 import moment from "moment"; // Import moment for date handling
-import { patchAccountApi } from "../../../api/accountApi";
-import AccountModel, { Gender } from "../../../models/AccountModel";
-import { RoleModel } from "../../../models/RoleModel";
-import { fecthRoleApi } from "../../../api/roleApi";
-import { postAvatarApi } from "../../../api/upfileApi";
+
+import { IRole, IAccount } from "../../../interfaces";
 import { RenderUploadField } from "../../../components";
+import { accountApi, roleApi, upfileApi } from "../../../api";
+import { Gender } from "../../../enums";
 interface Props {
   openEditAccount: boolean;
   setOpenEditAccount: (value: boolean) => void;
-  record: AccountModel;
+  record: IAccount;
 }
 
 const EditAccountModal: React.FC<Props> = ({
@@ -19,7 +18,7 @@ const EditAccountModal: React.FC<Props> = ({
   record,
 }) => {
   const [form] = Form.useForm();
-  const [role, setRole] = useState<RoleModel[]>([]);
+  const [role, setRole] = useState<IRole[]>([]);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [frontIdImage, setFrontIdImage] = useState<File | null>(null);
   const [backIdImage, setBackIdImage] = useState<File | null>(null);
@@ -33,7 +32,7 @@ const EditAccountModal: React.FC<Props> = ({
   const [isLoad, setIsLoad] = useState(true);
   useEffect(() => {
     const getRole = async () => {
-      const res = await fecthRoleApi("");
+      const res = await roleApi.fecthRoleApi("");
       if (res?.data) {
         setRole(res.data.result);
       } else message.error(res.message);
@@ -95,7 +94,7 @@ const EditAccountModal: React.FC<Props> = ({
 
       // Kiểm tra sự thay đổi của ảnh và upload nếu có
       if (avatar) {
-        const res = await postAvatarApi(avatar);
+        const res = await upfileApi.postAvatarApi(avatar);
         if (res.statusCode === 201) {
           avatarFileName = res.data.fileName;
         } else {
@@ -105,7 +104,7 @@ const EditAccountModal: React.FC<Props> = ({
       }
 
       if (frontIdImage) {
-        const res = await postAvatarApi(frontIdImage);
+        const res = await upfileApi.postAvatarApi(frontIdImage);
         if (res.statusCode === 201) {
           frontIdFileName = res.data.fileName;
         } else {
@@ -115,7 +114,7 @@ const EditAccountModal: React.FC<Props> = ({
       }
 
       if (backIdImage) {
-        const res = await postAvatarApi(backIdImage);
+        const res = await upfileApi.postAvatarApi(backIdImage);
         if (res.statusCode === 201) {
           backIdFileName = res.data.fileName;
         } else {
@@ -125,7 +124,7 @@ const EditAccountModal: React.FC<Props> = ({
       }
 
       if (temporaryResidenceImage) {
-        const res = await postAvatarApi(temporaryResidenceImage);
+        const res = await upfileApi.postAvatarApi(temporaryResidenceImage);
         if (res.statusCode === 201) {
           temporaryResidenceFileName = res.data.fileName;
         } else {
@@ -135,7 +134,7 @@ const EditAccountModal: React.FC<Props> = ({
       }
 
       // Gọi API cập nhật thông tin tài khoản sau khi tất cả ảnh đã được tải lên
-      const response = await patchAccountApi(
+      const response = await accountApi.patchAccountApi(
         record._id,
         values.Phone,
         `${values.FirstName} ${values.MiddleName || ""} ${values.LastName}`,
@@ -303,28 +302,27 @@ const EditAccountModal: React.FC<Props> = ({
         >
           <Input placeholder="Enter Address" size="large" />
         </Form.Item>
-        <Form.Item wrapperCol={{ span: 24 }}>
-          <div className="lg:flex justify-between">
-            <RenderUploadField
-              type="frontIdCard"
-              selectedImage={frontIdImage}
-              setSelectedImage={setFrontIdImage}
-              imageUrl={imageFrontId}
-            />
-            <RenderUploadField
-              type="backIdCard"
-              selectedImage={backIdImage}
-              setSelectedImage={setBackIdImage}
-              imageUrl={imageBackId}
-            />
-            <RenderUploadField
-              type="temporaryResidence"
-              selectedImage={temporaryResidenceImage}
-              setSelectedImage={setTemporaryResidenceImage}
-              imageUrl={imageTemporaryResidence}
-            />
-          </div>
-        </Form.Item>
+
+        <div className="lg:flex justify-between">
+          <RenderUploadField
+            type="frontIdCard"
+            selectedImage={frontIdImage}
+            setSelectedImage={setFrontIdImage}
+            imageUrl={imageFrontId}
+          />
+          <RenderUploadField
+            type="backIdCard"
+            selectedImage={backIdImage}
+            setSelectedImage={setBackIdImage}
+            imageUrl={imageBackId}
+          />
+          <RenderUploadField
+            type="temporaryResidence"
+            selectedImage={temporaryResidenceImage}
+            setSelectedImage={setTemporaryResidenceImage}
+            imageUrl={imageTemporaryResidence}
+          />
+        </div>
       </Form>
     </Modal>
   );

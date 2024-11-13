@@ -1,30 +1,31 @@
 import { useEffect, useState } from "react";
-import RoomModel, { RoomStatus } from "../../../models/RoomModel";
-import { fetchRoomApi } from "../../../api/roomApis";
 import { PieChart } from "@mui/x-charts";
 import Typography from "@mui/material/Typography";
 import { Box, Stack } from "@mui/material";
 import { resizeWidth } from "../../../utils/resize";
+import { IRoom } from "../../../interfaces";
+import { roomApi } from "../../../api";
+import { RoomStatus } from "../../../enums";
 
 function RoomStatusBar() {
   const width = resizeWidth();
-  const [occupiedRooms, setOccupiedRooms] = useState<RoomModel[]>([]);
-  const [availableRooms, setAvailableRooms] = useState<RoomModel[]>([]);
+  const [occupiedRooms, setOccupiedRooms] = useState<IRoom[]>([]);
+  const [availableRooms, setAvailableRooms] = useState<IRoom[]>([]);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getStateRooms = async () => {
       setLoading(true);
-      const res = await fetchRoomApi("currentPage=1&pageSize=99999");
+      const res = await roomApi.fetchRoomApi("currentPage=1&pageSize=99999");
 
       if (res.data) {
         setOccupiedRooms(
           res.data.result.filter(
-            (room: RoomModel) => room.status === RoomStatus.Occupied
+            (room: IRoom) => room.status === RoomStatus.Occupied
           )
         );
         setAvailableRooms(
           res.data.result.filter(
-            (room: RoomModel) => room.status === RoomStatus.Available
+            (room: IRoom) => room.status === RoomStatus.Available
           )
         );
       } else {

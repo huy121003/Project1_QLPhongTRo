@@ -1,9 +1,10 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
 import { Button } from "antd";
-import InvoiceModel from "../../../models/InvoiceModal";
+import { IInvoice } from "../../../interfaces";
+
 interface Props {
-  invoices: InvoiceModel[];
+  invoices: IInvoice[];
 }
 const ExportToExcel: React.FC<Props> = ({ invoices }) => {
   const exportToExcel = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface Props {
   type: "avatar" | "frontIdCard" | "backIdCard" | "temporaryResidence";
@@ -13,24 +13,15 @@ const RenderUploadField: React.FC<Props> = ({
   setSelectedImage,
   imageUrl,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedImage(event.target.files[0]);
+      console.log(event.target.files[0]);
     }
   };
   // Mở modal để xem ảnh lớn hơn
-  const handleImageClick = () => {
-    if (selectedImage) {
-      setIsModalOpen(true);
-    }
-  };
-  // Đóng modal
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
-  const inputId = `image-upload-${type}`;
+  const uniqueId = `${type}-${Math.random().toString(36).substr(2, 9)}`;
 
   return (
     <div className="flex justify-between my-4">
@@ -60,14 +51,12 @@ const RenderUploadField: React.FC<Props> = ({
               src={URL.createObjectURL(selectedImage)}
               alt="Selected"
               className="w-full h-full object-cover cursor-pointer"
-              onClick={handleImageClick} // Xử lý khi nhấp vào ảnh
             />
           ) : imageUrl ? (
             <img
               src={imageUrl}
               alt="Selected"
               className="w-full h-full object-cover cursor-pointer"
-              onClick={handleImageClick} // Xử lý khi nhấp vào ảnh
             />
           ) : (
             <i
@@ -83,56 +72,19 @@ const RenderUploadField: React.FC<Props> = ({
         </div>
 
         {/* Biểu tượng máy ảnh để chọn ảnh */}
-        <label htmlFor={inputId}>
+        <label htmlFor={uniqueId}>
           <div className="absolute bottom-0 right-0 bg-gray-800 p-1 rounded-full">
             <i className="fa fa-camera text-white p-2"></i>
           </div>
         </label>
         <input
-          id={inputId}
+          id={uniqueId}
           type="file"
           accept="image/*"
           style={{ display: "none" }}
           onChange={handleImageChange}
         />
       </div>
-
-      {/* Modal để hiển thị ảnh lớn hơn */}
-      {/* {isModalOpen
-        ? selectedImage && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="relative bg-white p-4 rounded-lg max-w-lg">
-                <img
-                  src={URL.createObjectURL(selectedImage)}
-                  alt="Large Selected"
-                  className="w-full h-auto object-cover rounded-lg"
-                />
-                <button
-                  onClick={handleCloseModal}
-                  className="absolute top-2 right-2 px-3 py-1 text-white bg-gray-800  rounded-full"
-                >
-                  X
-                </button>
-              </div>
-            </div>
-          )
-        : imageUrl && (
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-              <div className="relative bg-white p-4 rounded-lg max-w-lg">
-                <img
-                  src={imageUrl}
-                  alt="Large Selected"
-                  className="w-full h-auto object-cover rounded-lg"
-                />
-                <button
-                  onClick={handleCloseModal}
-                  className="absolute top-2 right-2 px-3 py-1 text-white bg-gray-800  rounded-full"
-                >
-                  X
-                </button>
-              </div>
-            </div>
-          )} */}
     </div>
   );
 };

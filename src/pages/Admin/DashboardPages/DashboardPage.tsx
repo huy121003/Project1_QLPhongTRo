@@ -1,6 +1,5 @@
 import RoomStatusBar from "./RoomStatusBar";
 import AvailableRoom from "./AvailableRoom";
-import MonthlyRevenueChart from "../StatisticalPages/MonthlyRevenueChart ";
 
 function DashboardPage() {
   return (
