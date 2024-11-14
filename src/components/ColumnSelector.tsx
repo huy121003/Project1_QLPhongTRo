@@ -1,6 +1,5 @@
 import React from "react";
 import { Dropdown, Button, Checkbox, MenuProps } from "antd";
-
 // Prop types for ColumnSelector
 interface ColumnSelectorProps {
   columns: Array<{
@@ -12,7 +11,6 @@ interface ColumnSelectorProps {
   visibleColumns: string[]; // Currently visible columns
   onChangeVisibleColumns: (columns: string[]) => void; // Handler for column visibility change
 }
-
 const ColumnSelector: React.FC<ColumnSelectorProps> = ({
   columns,
   visibleColumns,
@@ -37,9 +35,7 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
       </Checkbox>
     ),
   }));
-
   // Define the menu using the items array
-
   return (
     <Dropdown menu={{ items: columnItems }}>
       <Button className="ml-2 my-1 justify-center items-center h-[40px]">
@@ -48,5 +44,4 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
     </Dropdown>
   );
 };
-
 export default ColumnSelector;

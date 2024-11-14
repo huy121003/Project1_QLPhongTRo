@@ -6,6 +6,11 @@ import { IRole, IAccount } from "../../../interfaces";
 import { RenderUploadField } from "../../../components";
 import { accountApi, roleApi, upfileApi } from "../../../api";
 import { Gender } from "../../../enums";
+import {
+  checkEmail,
+  checkIdCard,
+  checkPhoneNumberVN,
+} from "../../../utils/regex";
 interface Props {
   openEditAccount: boolean;
   setOpenEditAccount: (value: boolean) => void;
@@ -49,8 +54,7 @@ const EditAccountModal: React.FC<Props> = ({
       // Convert birthday to moment object
       const formattedBirthday = record.birthday
         ? moment(record.birthday)
-        : null;
-
+        : "00/00/0000";
       // Split the name into three parts
       const nameParts = record.name.split(" ");
       const lastName = nameParts.pop();
@@ -91,7 +95,19 @@ const EditAccountModal: React.FC<Props> = ({
       let frontIdFileName = imageFrontId;
       let backIdFileName = imageBackId;
       let temporaryResidenceFileName = imageTemporaryResidence;
+      if (!checkEmail(values.email)) {
+        message.error("Email is not correct");
+        return;
+      }
 
+      if (!checkIdCard(values.idCard)) {
+        message.error("IdCard is not correct");
+        return;
+      }
+      if (checkPhoneNumberVN(values.phone)) {
+        message.error("Phone number is not correct");
+        return;
+      }
       // Kiểm tra sự thay đổi của ảnh và upload nếu có
       if (avatar) {
         const res = await upfileApi.postAvatarApi(avatar);

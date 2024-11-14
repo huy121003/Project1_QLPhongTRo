@@ -1,5 +1,4 @@
 import { EquipmentStatus } from "../enums";
-
 interface IEquipment {
   _id: string;
   name: string;

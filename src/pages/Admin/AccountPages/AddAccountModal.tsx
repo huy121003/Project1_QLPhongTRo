@@ -4,6 +4,7 @@ import { Gender } from "../../../enums";
 import { IRole } from "../../../interfaces";
 import { RenderUploadField } from "../../../components";
 import { upfileApi, roleApi, accountApi } from "../../../api";
+import { checkEmail, checkIdCard, checkPassword, checkPhoneNumberVN } from "../../../utils/regex";
 
 interface Props {
   openAddAccount: boolean;
@@ -63,6 +64,26 @@ const AddAccountModal: React.FC<Props> = ({
       let backIdFileName = imageBackId;
       let temporaryResidenceFileName = imageTemporaryResidence;
       // Upload images if they exist
+      if (!checkEmail(values.email)) {
+        message.error("Email is not correct");
+        return;
+      }
+  
+      if (!checkPassword(values.password)) {
+        message.error(
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character"
+        );
+        return;
+      }
+  
+      if (!checkIdCard(values.idCard)) {
+        message.error("IdCard is not correct");
+        return;
+      }
+      if (checkPhoneNumberVN(values.phone)) {
+        message.error("Phone number is not correct");
+        return;
+      }
       if (avatar) {
         const response = await upfileApi.postAvatarApi(avatar);
         if (response.statusCode === 201) {

@@ -6,7 +6,6 @@ import IPermisson from "./IPermisson";
 import IService from "./IService";
 import IInvoice from "./IInvoice";
 import IEquipment from "./IEquipment";
-
 export type {
   IAccount,
   IContract,

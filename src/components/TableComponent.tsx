@@ -1,7 +1,6 @@
 // TableComponent.tsx
 import React from "react";
 import { Table } from "antd";
-
 interface TableComponentProps {
   data: any[];
   columns: any[];
@@ -12,7 +11,6 @@ interface TableComponentProps {
   total: number;
   onChange: (pagination: any) => void;
 }
-
 const TableComponent: React.FC<TableComponentProps> = ({
   data,
   columns,
@@ -42,5 +40,4 @@ const TableComponent: React.FC<TableComponentProps> = ({
     />
   );
 };
-
 export default TableComponent;

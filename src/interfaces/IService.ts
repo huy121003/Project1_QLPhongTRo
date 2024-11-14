@@ -1,5 +1,4 @@
 import { ServiceType } from "../enums";
-
  interface IService {
   _id: string;
   serviceName: string;

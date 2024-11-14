@@ -78,7 +78,6 @@ function HomeLayout() {
         <div
           className={`flex  h-[100px]  border-b-2 border-gray-200 w-full   `}
         >
-          {/* <i className="fa-solid fa-house-user text-3xl"></i> */}
         </div>
         {homeAdminRouters
           .filter((item) => item.label !== undefined)
@@ -98,14 +97,12 @@ function HomeLayout() {
             </Link>
           ))}
       </nav>
-
       <div className="flex-1  transition-all duration-300 bg-gray-100 ">
         <div className="flex items-center  text-black h-16 px-5 justify-between bg-white">
           <div className="flex hover:text-slate-300" onClick={toggleNav}>
             <i className="fa fa-bars text-2xl cursor-pointer font-bold" />
             <h2 className="ml-4 text-2xl font-bold">{selected}</h2>
           </div>
-
           <Dropdown overlay={menu} trigger={["hover"]}>
             <div className="flex justify-center items-center hover:text-blue-500">
               <i className="fa-solid fa-user-circle text-3xl mr-3"></i>
@@ -135,5 +132,4 @@ function HomeLayout() {
     </div>
   );
 }
-
 export default HomeLayout;

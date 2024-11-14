@@ -1,10 +1,8 @@
-import apiConfig, { apiRequest } from "./ApiConfig";
+import { apiRequest } from "./ApiConfig";
 import { ApiMethod } from "../enums";
-
 const fecthRoleApi = async (query: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/roles?${query}`, false);
 };
-
 const postRoleApi = async (
   name: string,
   description: string,

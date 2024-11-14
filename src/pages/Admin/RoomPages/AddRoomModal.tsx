@@ -27,7 +27,9 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
     const getService = async () => {
       setIsLoading(true);
       try {
-        const response = await serviceApi.fetchServiceApi("pageSize=1000&currentPage=1");
+        const response = await serviceApi.fetchServiceApi(
+          "pageSize=1000&currentPage=1"
+        );
         if (response.data) {
           setServices(response.data.result);
         } else {

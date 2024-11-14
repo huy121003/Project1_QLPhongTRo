@@ -23,14 +23,12 @@ const apiRegister = (
     imagesIdCard: ["", "", ""],
   });
 };
-
 const apiLogin = (username: string, password: string): Promise<any> => {
   return apiRequest(ApiMethod.POST, "/api/v1/auth/login", false, {
     username,
     password,
   });
 };
-
 const apiFetchUser = (): Promise<any> => {
   return apiRequest(ApiMethod.GET, "/api/v1/auth/account", false);
 };

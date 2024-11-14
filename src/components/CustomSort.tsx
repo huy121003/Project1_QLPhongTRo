@@ -9,28 +9,13 @@ interface CustomSortProps {
   onSort: (key: string) => void; // Hàm xử lý sắp xếp
 }
 const CustomSort: React.FC<CustomSortProps> = ({ columns, onSort }) => {
-
-//-> 
-  // const menu = (
-  //   <Menu className="text-xl">
-  //     {columns.map((column) => (
-  //       <Menu.Item key={column.key} onClick={() => onSort(column.key)} >
-  //         <p className="text-xl" >Sort by {column.label}</p>
-          
-  //       </Menu.Item>
-  //     ))}
-  //   </Menu>
-  // );
-
   const renderMenuItems = () =>
     columns.map((column) => (
       <Menu.Item key={column.key} onClick={() => onSort(column.key)}>
         <span>Sort by {column.label}</span>
       </Menu.Item>
     ));
-
   const menu = useMemo(() => <Menu>{renderMenuItems()}</Menu>, [columns, onSort]);
-//<-
   return (
     <Dropdown overlay={menu}>
       <Button className="mx-3 h-10">
@@ -41,7 +26,6 @@ const CustomSort: React.FC<CustomSortProps> = ({ columns, onSort }) => {
     </Dropdown>
   );
 };
-
 export default CustomSort;
 
 

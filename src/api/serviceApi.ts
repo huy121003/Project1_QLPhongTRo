@@ -1,19 +1,15 @@
-import apiConfig, { apiRequest } from "./ApiConfig";
+import  { apiRequest } from "./ApiConfig";
 import { ServiceType } from "../enums";
 import { ApiMethod } from "../enums";
-
 const fetchServiceApi = async (query: any): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/services?${query}`, false);
 };
-
 const fetchServiceByIdApi = async (id: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/services/${id}`, false);
 };
-
 const deleteServiceApi = async (id: string): Promise<any> => {
   return apiRequest(ApiMethod.DELETE, `/api/v1/services/${id}`, false);
 };
-
 const postServiceApi = (
   serviceName: string,
   description: string,
@@ -29,7 +25,6 @@ const postServiceApi = (
     type,
   });
 };
-
 const patchServiceApi = (
   id: string,
   serviceName: string,

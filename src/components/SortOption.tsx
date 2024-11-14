@@ -1,19 +1,16 @@
 import { Radio } from "antd";
 import React from "react";
-
 // Định nghĩa kiểu cho các tùy chọn
 interface SortOption {
   value: string;
   label: string;
 }
-
 // Định nghĩa kiểu cho các props của component
 interface SortByProps {
   options: SortOption[];
   onChange: (value: any) => void;
   sorted: string;
 }
-
 const SortOption: React.FC<SortByProps> = ({ options, onChange, sorted }) => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200 flex flex-col">
@@ -34,5 +31,4 @@ const SortOption: React.FC<SortByProps> = ({ options, onChange, sorted }) => {
     </div>
   );
 };
-
 export default SortOption;

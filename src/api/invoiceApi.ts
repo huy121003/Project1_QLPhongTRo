@@ -1,18 +1,19 @@
-import apiConfig, { apiRequest } from "./ApiConfig";
+import { apiRequest } from "./ApiConfig";
 import { InvoiceStatus } from "../enums";
 import { ApiMethod } from "../enums";
-
 const fetchInvoiceApi = (query: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/invoices?${query}`, false);
 };
-
 const fetchInvoiceByIdApi = (id: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/invoices/${id}`, false);
 };
+export const fetchInvoiceByUserId = (): Promise<any> => {
+  return apiRequest(ApiMethod.GET, `/api/v1/invoices/by-user`, false);
+};
+
 const deleteInvoiceApi = (id: string): Promise<any> => {
   return apiRequest(ApiMethod.DELETE, `/api/v1/invoices/${id}`, false);
 };
-
 const postInvoiceApi = (
   room: {
     _id: string;
@@ -31,8 +32,6 @@ const postInvoiceApi = (
     priceUnit: number;
   },
   month: string,
-  //dueDate: Date,
-
   description: string,
   firstIndex?: number,
   finalIndex?: number
@@ -43,13 +42,10 @@ const postInvoiceApi = (
     service,
     firstIndex,
     finalIndex,
-
     month,
-    //dueDate,
     description,
   });
 };
-
 const patchInvoiceApi = (
   id: string,
   firstIndex?: number,
@@ -68,7 +64,6 @@ const patchInvoiceStatusApi = (
     status,
   });
 };
-
 export default {
   fetchInvoiceApi,
   fetchInvoiceByIdApi,
@@ -76,4 +71,5 @@ export default {
   postInvoiceApi,
   patchInvoiceApi,
   patchInvoiceStatusApi,
+  fetchInvoiceByUserId,
 };

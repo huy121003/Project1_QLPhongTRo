@@ -2,11 +2,16 @@ import { Link } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
 import { Form, Input, Button, Select, message, DatePicker } from "antd";
 
-
 import { useState } from "react";
 import ActiveAccountPage from "./ActiveAccountPage";
 import { authtApi } from "../../api";
 import { Gender } from "../../enums";
+import {
+  checkEmail,
+  checkIdCard,
+  checkPassword,
+  checkPhoneNumberVN,
+} from "../../utils/regex";
 
 const { Option } = Select;
 
@@ -20,6 +25,26 @@ function RegisterPage() {
     const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
       values.LastName
     }`.trim();
+    if (!checkEmail(values.email)) {
+      message.error("Email is not correct");
+      return;
+    }
+
+    if (!checkPassword(values.password)) {
+      message.error(
+        "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character"
+      );
+      return;
+    }
+
+    if (!checkIdCard(values.idCard)) {
+      message.error("IdCard is not correct");
+      return;
+    }
+    if (checkPhoneNumberVN(values.phone)) {
+      message.error("Phone number is not correct");
+      return;
+    }
 
     const res = await authtApi.apiRegister(
       values.email,

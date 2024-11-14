@@ -1,6 +1,4 @@
 import { Result } from "antd";
-
-
 function NotItem() {
   return (
     <div className="flex-1 flex justify-center items-center">
@@ -18,5 +16,4 @@ function NotItem() {
     </div>
   );
 }
-
 export default NotItem;

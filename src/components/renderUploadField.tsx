@@ -1,12 +1,10 @@
 import React from "react";
-
 interface Props {
   type: "avatar" | "frontIdCard" | "backIdCard" | "temporaryResidence";
   selectedImage: File | null;
   setSelectedImage: React.Dispatch<React.SetStateAction<File | null>>;
   imageUrl?: string;
 }
-
 const RenderUploadField: React.FC<Props> = ({
   type,
   selectedImage,
@@ -19,10 +17,7 @@ const RenderUploadField: React.FC<Props> = ({
       console.log(event.target.files[0]);
     }
   };
-  // Mở modal để xem ảnh lớn hơn
-
   const uniqueId = `${type}-${Math.random().toString(36).substr(2, 9)}`;
-
   return (
     <div className="flex justify-between my-4">
       <div
@@ -70,7 +65,6 @@ const RenderUploadField: React.FC<Props> = ({
             ></i>
           )}
         </div>
-
         {/* Biểu tượng máy ảnh để chọn ảnh */}
         <label htmlFor={uniqueId}>
           <div className="absolute bottom-0 right-0 bg-gray-800 p-1 rounded-full">
@@ -88,5 +82,4 @@ const RenderUploadField: React.FC<Props> = ({
     </div>
   );
 };
-
 export default RenderUploadField;

@@ -1,22 +1,18 @@
 // SearchFilters.tsx
 
 import { DatePicker, Input, Select, Space } from "antd";
-
 const { Option } = Select;
-
 interface Field {
   label: string; // Label của trường
   field: string; // Tên trường trong dữ liệu
   type: "text" | "select" | "date"; // Kiểu input: text hoặc select
   options?: { value: string; label: string }[]; // Chỉ dùng khi type là select
 }
-
 interface SearchFiltersProps {
   searchParams: any;
   onSearchChange: (field: string, value: string) => void;
   fields: Field[]; // Truyền vào các trường tìm kiếm
 }
-
 const SearchFilters: React.FC<SearchFiltersProps> = ({
   searchParams,
   onSearchChange,
@@ -76,5 +72,4 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     </div>
   );
 };
-
 export default SearchFilters;
