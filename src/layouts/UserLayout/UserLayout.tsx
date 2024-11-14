@@ -89,7 +89,7 @@ function UserLayout() {
 
             <div className="flex-grow flex flex-col h-full">
                 <div className=" flex bg-[#083b10] h-16 items-center justify-end pr-7">
-                    <BsBell className="text-neutral-300" size={20} />
+                    {/* <BsBell className="text-neutral-300" size={20} /> */}
                     <div
                         className="pl-10 relative"
                         onClick={() => setOpenProfile((prev) => !prev)}

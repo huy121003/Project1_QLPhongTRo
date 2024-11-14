@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import { ServiceModel } from "../../../models/ServiceModel";
-import { fetchServiceApi, postServiceToRoomApi } from "../../../api/serviceApi";
+import { fetchServiceApi } from "../../../api/serviceApi";
 import { message } from "antd";
 
-export default function AvailableService({
-    registeredServices,
-    roomId,
-    refreshServices,
-}) {
+export default function AvailableService({ registeredServices }) {
     const [services, setServices] = useState<ServiceModel[]>([]);
 
     useEffect(() => {
@@ -27,13 +23,8 @@ export default function AvailableService({
     const isServiceRegistered = (serviceId) =>
         registeredServices.some((service) => service._id === serviceId);
 
-    // const registerService = async (serviceId) => {
-    //     const res = await postServiceToRoomApi(roomId, serviceId); // API thêm dịch vụ vào phòng
-    //     refreshServices();
-    // };
-
     return (
-        <div className="bg-white rounded-lg shadow-md p-6 mx-5 mb-5 overflow-y-auto h-[382px]">
+        <div className="bg-white rounded-lg shadow-md p-6 mx-5 mb-5 overflow-y-auto h-[382px] custom-scrollbar">
             <h2 className="text-xl font-semibold mb-4">Available Services</h2>
             <table className="w-full border text-left border-collapse">
                 <thead>
@@ -59,13 +50,7 @@ export default function AvailableService({
                                     {service.description}
                                 </td>
                                 <td className="py-2 px-4 text-center">
-                                    {/* <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-                                    Register
-                                </button> */}
                                     <button
-                                        // onClick={() =>
-                                        //     registerService(service._id)
-                                        // } // Gọi hàm đăng ký
                                         className={`px-4 py-2 rounded ${
                                             registered
                                                 ? "bg-gray-400 w-[107px] text-white cursor-not-allowed"

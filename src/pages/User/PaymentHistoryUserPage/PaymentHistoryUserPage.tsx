@@ -41,7 +41,7 @@ export default function PaymentHistoryUserPage() {
         setSelectedInvoice(null);
     };
     return (
-        <div className="bg-[#e0f5e4] text-[#2b6534] h-full flex flex-col overflow-y-auto">
+        <div className="bg-[#e0f5e4] text-[#2b6534] h-full flex flex-col overflow-y-auto custom-scrollbar">
             <div
                 aria-label="breadcrumb"
                 className="text-xl text-[#2b6534] bg-neutral-100 px-7 py-4 shadow-lg"

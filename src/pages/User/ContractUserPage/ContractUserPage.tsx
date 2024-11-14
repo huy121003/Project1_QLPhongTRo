@@ -47,7 +47,7 @@ export default function ContractUserPage() {
                     </li>
                 </ol>
             </div>
-            <div className="bg-white rounded-lg shadow-md p-6 m-5 overflow-y-auto h-[670px] ">
+            <div className="bg-white rounded-lg shadow-md p-6 m-5 overflow-y-auto h-[670px] custom-scrollbar ">
                 {contract.map((contract, index) => (
                     <div
                         key={index}

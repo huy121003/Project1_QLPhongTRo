@@ -62,7 +62,7 @@ export default function PaymentInformantion() {
         setSelectedInvoice(null);
     };
     return (
-        <div className="bg-white mb-5 mx-5 rounded-2xl p-6 shadow-lg text-[#2b6534] flex-grow overflow-y-auto h-[362px]">
+        <div className="bg-white mb-5 mx-5 rounded-2xl p-6 shadow-lg text-[#2b6534] flex-grow overflow-y-auto h-[362px] custom-scrollbar">
             <h3 className="text-xl font-semibold text-[#2b6534] mb-2">
                 Payment Information
             </h3>

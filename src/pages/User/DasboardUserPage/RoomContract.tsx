@@ -30,7 +30,6 @@ export default function RoomContract() {
                     const roomData = res2.data;
                     setRoom(roomData);
                 }
-                console.log(res2);
             }
         };
 

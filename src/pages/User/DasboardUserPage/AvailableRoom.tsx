@@ -11,7 +11,7 @@ export default function AvailableRoom() {
             const response = await fetchRoomApi(
                 "pageSize=1000&currentPage=1&status=AVAILABLE"
             );
-            console.log(response);
+
             if (response.data) {
                 setRooms(response.data.result);
             } else {
@@ -22,7 +22,7 @@ export default function AvailableRoom() {
     }, []);
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-6 mx-5 mb-5 overflow-y-auto h-[370px]">
+        <div className="bg-white rounded-lg shadow-md p-6 mx-5 mb-5 overflow-y-auto h-[370px] custom-scrollbar">
             <h3 className="text-xl font-semibold mb-4">Available Rooms</h3>
             <table className="w-full border text-left border-collapse">
                 <thead>

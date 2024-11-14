@@ -47,14 +47,3 @@ export const patchServiceApi = (
     });
 };
 
-export const postServiceToRoomApi = async (
-    roomId: string,
-    serviceId: string
-) => {
-    return apiRequest(
-        ApiMethod.POST,
-        `/api/v1/rooms/${roomId}/services`,
-        false,
-        { serviceId }
-    );
-};

@@ -6,28 +6,22 @@ import { fetchContractApi } from "../../../api/contractApi";
 import { fetchRoomApi } from "../../../api/roomApis";
 // import { ServiceModel } from "../../../models/ServiceModel";
 
-export default function ServiceRoom({
-    setServiceRooms,
-    serviceRooms,
-    setRoomId,
-}) {
+export default function ServiceRoom({ setServiceRooms, serviceRooms }) {
     // Get user ID
     const iduser = useAppSelector((state) => state.auth.user._id);
     const [contract, setContract] = useState<ContractModel[]>([]);
     // const [serviceRooms, setServiceRoom] = useState<ServiceModel[]>([]);
+
     useEffect(() => {
         const getContract = async () => {
             const res = await fetchContractApi(`tenant._id=${iduser}`);
             if (res.data) {
                 const contractData = res.data.result;
                 setContract(contractData); // Set contract data
-                if (contractData.length > 0) {
-                    setRoomId(contractData[0].room._id); // Cập nhật roomId khi có contract
-                }
             }
         };
         getContract();
-    }, [iduser, setRoomId]);
+    }, [iduser]);
 
     useEffect(() => {
         // Only fetch room data when contract is available
@@ -38,10 +32,8 @@ export default function ServiceRoom({
                 );
                 if (res2.data) {
                     const servicedata = res2.data.result[0].services;
-                    // setServiceRoom(servicedata);
                     setServiceRooms(servicedata);
                 }
-                console.log("Test", res2);
             }
         };
         fetchRoomData();
