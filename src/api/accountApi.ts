@@ -1,74 +1,77 @@
 import { apiRequest } from "./ApiConfig";
 import { ApiMethod } from "./ApiMethod";
 export const fecthAccountApi = async (query: any): Promise<any> => {
-  return apiRequest(ApiMethod.GET, `/api/v1/users?${query}`, false);
+    return apiRequest(ApiMethod.GET, `/api/v1/users?${query}`, false);
+};
+export const fecthAccountIdApi = async (id: string): Promise<any> => {
+    return apiRequest(ApiMethod.GET, `/api/v1/users/${id}`, false);
 };
 export const deleteAcountApi = async (id: string): Promise<any> => {
-  return apiRequest(ApiMethod.DELETE, `/api/v1/users/${id}`, false);
+    return apiRequest(ApiMethod.DELETE, `/api/v1/users/${id}`, false);
 };
 export const postAccountApi = (
-  email: string,
-  phone: number,
-  password: string,
-  name: string,
-  birthday: Date,
-  gender: string,
-  address: string,
-  idCard: string,
-  role: string,
-  avatar: string,
-  imagesIdCard: string[]
+    email: string,
+    phone: number,
+    password: string,
+    name: string,
+    birthday: Date,
+    gender: string,
+    address: string,
+    idCard: string,
+    role: string,
+    avatar: string,
+    imagesIdCard: string[]
 ): Promise<any> => {
-  return apiRequest(ApiMethod.POST, `/api/v1/users`, false, {
-    email,
-    phone,
-    password,
-    name,
-    birthday,
-    gender,
-    address,
-    idCard,
-    role: role,
-    imagesIdCard,
-    avatar,
-  });
+    return apiRequest(ApiMethod.POST, `/api/v1/users`, false, {
+        email,
+        phone,
+        password,
+        name,
+        birthday,
+        gender,
+        address,
+        idCard,
+        role: role,
+        imagesIdCard,
+        avatar,
+    });
 };
 export const patchAccountApi = (
-  id: string,
+    id: string,
 
-  phone: number,
+    phone: number,
 
-  name: string,
-  birthday: Date,
-  gender: string,
-  address: string,
-  idCard: string,
-  role: string,
-  avatar: string,
-  imagesIdCard: string[]
+    name: string,
+    birthday: Date,
+    gender: string,
+    address: string,
+    idCard: string,
+    role: string,
+    avatar: string,
+    imagesIdCard: string[]
 ): Promise<any> => {
-  return apiRequest(ApiMethod.PATCH, `/api/v1/users/${id}`, false, {
-    phone,
-    name,
-    birthday,
-    gender,
-    address,
-    idCard,
-    role,
-    imagesIdCard,
-    avatar,
-  });
+    return apiRequest(ApiMethod.PATCH, `/api/v1/users/${id}`, false, {
+        phone,
+        name,
+        birthday,
+        gender,
+        address,
+        idCard,
+        role,
+        imagesIdCard,
+        avatar,
+    });
 };
 export const changePasswordApi = (
-  _id: string,
-  password: string,
-  oldPassword: string
+    _id: string,
+    password: string,
+    oldPassword: string
 ): Promise<any> => {
-  return apiRequest(ApiMethod.POST, `/api/v1/users/change-password`, false, {
-    _id,
-    password,
-    oldPassword,
-  });
+    return apiRequest(ApiMethod.POST, `/api/v1/users/change-password`, false, {
+        _id,
+        password,
+        oldPassword,
+    });
 };
 
 // export const fecthAccountApi = async (query: any): Promise<any> => {

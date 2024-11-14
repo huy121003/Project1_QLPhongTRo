@@ -22,6 +22,7 @@ import ContractUserPage from "../../pages/User/ContractUserPage/ContractUserPage
 import InvoiceUserPage from "../../pages/User/InvoiceUserPage/InvoiceUserPage";
 import PaymentHistoryUserPage from "../../pages/User/PaymentHistoryUserPage/PaymentHistoryUserPage";
 import ServiceUserPage from "../../pages/User/ServiceUserPage/ServiceUserPage";
+// import PaymentSuccessful from "../../pages/User/InvoiceUserPage/PaymentSuccessful";
 
 function UserLayout() {
     const [openProfile, setOpenProfile] = useState(false);
@@ -87,7 +88,7 @@ function UserLayout() {
             </SidebarUser>
 
             <div className="flex-grow flex flex-col h-full">
-                <div className=" flex bg-[#083b10]  h-16 items-center justify-end pr-7">
+                <div className=" flex bg-[#083b10] h-16 items-center justify-end pr-7">
                     <BsBell className="text-neutral-300" size={20} />
                     <div
                         className="pl-10 relative"
@@ -138,24 +139,6 @@ function UserLayout() {
                         <PaymentHistoryUserPage />
                     )}
                     {activeItem === "Pay" && <InvoiceUserPage />}
-                    {/* <Routes>
-                        <Route
-                            path="/dashboard"
-                            element={<DasboardUserPage />}
-                        />
-                        <Route
-                            path="/contract"
-                            element={<ContractUserPage />}
-                        />
-                        <Route path="/service" element={<ServiceUserPage />} />
-                        <Route path="/finance" element={<InvoiceUserPage />} />
-                        <Route path="/overview" element={<InvoiceUserPage />} />
-                        <Route path="/pay" element={<InvoiceUserPage />} />
-                        <Route
-                            path="*"
-                            element={<Navigate to="/dashboard" />}
-                        />
-                    </Routes> */}
                 </div>
             </div>
             <ChangePassword

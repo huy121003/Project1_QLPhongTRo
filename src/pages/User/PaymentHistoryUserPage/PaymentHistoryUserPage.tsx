@@ -1,38 +1,47 @@
+import { useEffect, useState } from "react";
+import InvoiceModel from "../../../models/InvoiceModal";
+import { fetchInvoiceApi } from "../../../api/invoiceApi";
+import { message } from "antd";
+import ModalDetailInvoice from "../InvoiceUserPage/ModalDetailInvoice";
+
 export default function PaymentHistoryUserPage() {
-    const invoices = [
-        {
-            id: 1,
-            description: "Room payment for October",
-            date: "2024-10-05",
-            amount: 2000000,
-        },
-        {
-            id: 2,
-            description: "Electricity payment for October",
-            date: "2024-10-10",
-            amount: 500000,
-        },
-        {
-            id: 3,
-            description: "Water payment for October",
-            date: "2024-10-15",
-            amount: 200000,
-        },
-        {
-            id: 4,
-            description: "Internet service payment for October",
-            date: "2024-10-20",
-            amount: 300000,
-        },
-    ];
+    const [invoices, setInvoices] = useState<InvoiceModel[]>([]);
+
+    const [selectedInvoice, setSelectedInvoice] = useState<InvoiceModel | null>(
+        null
+    );
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    useEffect(() => {
+        const getInvoices = async () => {
+            const response = await fetchInvoiceApi(
+                "pageSize=1000&currentPage=1&status=PAID"
+            );
+            console.log(response);
+            if (response.data) {
+                setInvoices(response.data.result);
+            } else {
+                message.error(response.message);
+            }
+        };
+        getInvoices();
+    }, []);
 
     const totalAmount = invoices.reduce(
         (total, invoice) => total + invoice.amount,
         0
     );
 
+    const openModal = (invoice: InvoiceModel) => {
+        setSelectedInvoice(invoice);
+        setIsModalVisible(true);
+    };
+
+    const closeModal = () => {
+        setIsModalVisible(false);
+        setSelectedInvoice(null);
+    };
     return (
-        <div className="bg-[#e0f5e4] text-[#2b6534] h-full flex flex-col">
+        <div className="bg-[#e0f5e4] text-[#2b6534] h-full flex flex-col overflow-y-auto">
             <div
                 aria-label="breadcrumb"
                 className="text-xl text-[#2b6534] bg-neutral-100 px-7 py-4 shadow-lg"
@@ -50,7 +59,7 @@ export default function PaymentHistoryUserPage() {
                 </ol>
             </div>
             <div className="p-6 m-6 bg-white rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold mb-4">Payment History</h2>
+                <h2 className="text-2xl font-semibold mb-4">Payment History</h2>
                 <table className="w-full text-left table-auto border-collapse">
                     <thead>
                         <tr>
@@ -67,12 +76,18 @@ export default function PaymentHistoryUserPage() {
                     </thead>
                     <tbody>
                         {invoices.map((invoice) => (
-                            <tr key={invoice.id}>
+                            <tr
+                                key={invoice._id}
+                                onClick={() => openModal(invoice)}
+                                className="cursor-pointer"
+                            >
                                 <td className="border-b p-3 text-lg">
                                     {invoice.description}
                                 </td>
                                 <td className="border-b p-3 text-lg">
-                                    {invoice.date}
+                                    {new Date(
+                                        invoice.createdAt
+                                    ).toLocaleDateString("en-GB")}
                                 </td>
                                 <td className="border-b p-3 text-lg">
                                     {invoice.amount.toLocaleString("vi-VN")}
@@ -81,20 +96,25 @@ export default function PaymentHistoryUserPage() {
                         ))}
                     </tbody>
                     <tfoot>
-                        <tr>
+                        <tr className="text-red-600">
                             <td
                                 colSpan="2"
                                 className="p-3 font-semibold text-right border-t"
                             >
                                 Total Amount Paid:
                             </td>
-                            <td className="p-3 font-semibold border-t">
+                            <td className="p-3 font-semibold border-t ">
                                 {totalAmount.toLocaleString("vi-VN")} VND
                             </td>
                         </tr>
                     </tfoot>
                 </table>
             </div>
+            <ModalDetailInvoice
+                visible={isModalVisible}
+                onClose={closeModal}
+                invoice={selectedInvoice}
+            />
         </div>
     );
 }
