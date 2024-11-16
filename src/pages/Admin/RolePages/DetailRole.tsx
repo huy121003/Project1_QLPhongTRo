@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  Badge,
-  Descriptions,
-  Drawer,
-  message,
-  Switch,
-  Tag,
-  Collapse,
-} from "antd";
+import { Descriptions, Drawer, message, Switch, Tag, Collapse } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment";
 
-import { fetchPermissionApi } from "../../../services/permissionApi";
-import { Method, PermissionModel } from "../../../models/PermissonModel";
 import { getMethodColor, getRoleColor } from "../../../utils/getMethodColor";
+import { IPermisson } from "../../../interfaces";
+import { permissionApi } from "../../../api";
 
 interface Props {
   openDetailRole: boolean;
@@ -30,7 +22,7 @@ const DetailRole: React.FC<Props> = ({
     return moment(dateString).format("DD/MM/YYYY");
   };
 
-  const [permissions, setPermissions] = useState<PermissionModel[]>([]);
+  const [permissions, setPermissions] = useState<IPermisson[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [enablePermission, setEnablePermission] = useState<string[]>([]);
 
@@ -38,7 +30,9 @@ const DetailRole: React.FC<Props> = ({
     const getPermissions = async () => {
       setIsLoading(true);
       setEnablePermission(record?.permissions);
-      const response = await fetchPermissionApi("pageSize=1000&current=1");
+      const response = await permissionApi.fetchPermissionApi(
+        "pageSize=1000&current=1"
+      );
       if (response.data) {
         setPermissions(response.data.result);
       } else {
@@ -52,7 +46,7 @@ const DetailRole: React.FC<Props> = ({
 
   const groupedPermissions = permissions.reduce(
     // Group permissions by module
-    (groups: any, permission: PermissionModel) => {
+    (groups: any, permission: IPermisson) => {
       const { module } = permission; //
       if (!groups[module]) {
         groups[module] = [];
@@ -145,37 +139,33 @@ const DetailRole: React.FC<Props> = ({
                     gap: "8px",
                   }}
                 >
-                  {groupedPermissions[module].map(
-                    (permission: PermissionModel) => (
-                      <div
-                        key={permission._id}
-                        className="flex items-center p-2 border border-gray-200 rounded-md bg-gray-100"
+                  {groupedPermissions[module].map((permission: IPermisson) => (
+                    <div
+                      key={permission._id}
+                      className="flex items-center p-2 border border-gray-200 rounded-md bg-gray-100"
+                    >
+                      <Tag
+                        color={getMethodColor(permission.method)}
+                        className="mr-[10px] w-[60px] text-center"
                       >
-                        <Tag
-                          color={getMethodColor(permission.method)}
-                          className="mr-[10px] w-[60px] text-center"
-                        >
-                          {permission.method}
-                        </Tag>
-                        <div className="">
-                          <span className="font-bold">
-                            Name: {permission.name}
-                          </span>
-                          <p className="flex-1">
-                            Api Path: {permission.apiPath}
-                          </p>
-                        </div>
-                        <Switch
-                          disabled
-                          checked={enablePermission?.includes(permission._id)}
-                          onChange={(checked: boolean) =>
-                            handleSwitchChange(permission._id, checked)
-                          }
-                          className="ml-auto"
-                        />
+                        {permission.method}
+                      </Tag>
+                      <div className="">
+                        <span className="font-bold">
+                          Name: {permission.name}
+                        </span>
+                        <p className="flex-1">Api Path: {permission.apiPath}</p>
                       </div>
-                    )
-                  )}
+                      <Switch
+                        disabled
+                        checked={enablePermission?.includes(permission._id)}
+                        onChange={(checked: boolean) =>
+                          handleSwitchChange(permission._id, checked)
+                        }
+                        className="ml-auto"
+                      />
+                    </div>
+                  ))}
                 </div>
               </Collapse.Panel>
             </Collapse>

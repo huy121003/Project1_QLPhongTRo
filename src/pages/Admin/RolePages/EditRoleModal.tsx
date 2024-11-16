@@ -5,21 +5,18 @@ import {
   Input,
   Form,
   message,
-  
   Collapse,
   Tag,
   Switch,
 } from "antd";
-import { patchRoleApi } from "../../../services/roleApi";
-import { RoleModel } from "../../../models/RoleModel";
-import { fetchPermissionApi } from "../../../services/permissionApi";
-import {  PermissionModel } from "../../../models/PermissonModel";
 import { getMethodColor } from "../../../utils/getMethodColor";
+import { IPermisson, IRole } from "../../../interfaces";
+import { permissionApi, roleApi } from "../../../api";
 
 interface Props {
   openEditRole: boolean;
   setOpenEditRole: (value: boolean) => void;
-  record: RoleModel;
+  record: IRole;
 }
 
 const EditRoleModal: React.FC<Props> = ({
@@ -28,7 +25,7 @@ const EditRoleModal: React.FC<Props> = ({
   record,
 }) => {
   const [form] = Form.useForm();
-  const [permissions, setPermissions] = useState<PermissionModel[]>([]);
+  const [permissions, setPermissions] = useState<IPermisson[]>([]);
   const [enablePermission, setEnablePermission] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
@@ -43,7 +40,9 @@ const EditRoleModal: React.FC<Props> = ({
   useEffect(() => {
     const getPermissions = async () => {
       setEnablePermission(record.permissions);
-      const response = await fetchPermissionApi("pageSize=1000&current=1");
+      const response = await permissionApi.fetchPermissionApi(
+        "pageSize=1000&current=1"
+      );
       if (response.data) {
         setPermissions(response.data.result);
       } else {
@@ -60,7 +59,7 @@ const EditRoleModal: React.FC<Props> = ({
       setIsLoading(false);
       return;
     }
-    const response = await patchRoleApi(
+    const response = await roleApi.patchRoleApi(
       record._id,
       values.Name.toUpperCase(),
       values.Description,
@@ -78,7 +77,7 @@ const EditRoleModal: React.FC<Props> = ({
 
   const groupedPermissions = permissions.reduce(
     // Group permissions by module
-    (groups: any, permission: PermissionModel) => {
+    (groups: any, permission: IPermisson) => {
       const { module } = permission; //
       if (!groups[module]) {
         groups[module] = [];
@@ -157,21 +156,8 @@ const EditRoleModal: React.FC<Props> = ({
                       gap: "8px",
                     }}
                   >
-                    {/* <div className="flex items-center p-2 border border-gray-200 rounded-md bg-gray-100" >
-                        <p>Select All</p>
-                        <div className="flex-1"/>
-                        <Switch
-                          
-                       
-                       checked={enablePermission.length === permissions.filter((permission) => permission.module === module).length}
-                           onChange={(checked: boolean) =>
-                            handleSelectAll(module, checked)  
-                           }
-                          className="ml-auto"
-                        />
-                      </div> */}
                     {groupedPermissions[module].map(
-                      (permission: PermissionModel) => (
+                      (permission: IPermisson) => (
                         <div
                           key={permission._id}
                           className="flex items-center p-2 border border-gray-200 rounded-md bg-gray-100"

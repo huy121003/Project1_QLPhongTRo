@@ -1,14 +1,20 @@
 import React, { useEffect } from "react";
 import { Modal, Button, Input, Form, message, Select } from "antd";
-import { patchServiceApi } from "../../../services/serviceApi";
-import { ServiceModel, ServiceType } from "../../../models/ServiceModel";
+import { IService } from "../../../interfaces";
+import { ServiceType } from "../../../enums";
+import { serviceApi } from "../../../api";
+
 interface Props {
   openEditService: boolean;
   setOpenEditService: (value: boolean) => void;
-  service: ServiceModel | null;
+  service: IService | null;
 }
 
-const EditServiceModal: React.FC<Props> = ({ openEditService, setOpenEditService, service }) => {
+const EditServiceModal: React.FC<Props> = ({
+  openEditService,
+  setOpenEditService,
+  service,
+}) => {
   const [form] = Form.useForm();
   useEffect(() => {
     if (service) {
@@ -20,12 +26,13 @@ const EditServiceModal: React.FC<Props> = ({ openEditService, setOpenEditService
         type: service.type,
       });
     }
-  }, [service, form]);
+  }, [service, form, openEditService]);
 
   const handleOk = async () => {
     try {
+
       const values = await form.validateFields();
-      const response = await patchServiceApi(
+      const response = await serviceApi.patchServiceApi(
         service?._id || "",
         values.serviceName,
         values.description,
@@ -76,7 +83,9 @@ const EditServiceModal: React.FC<Props> = ({ openEditService, setOpenEditService
         <Form.Item
           name="serviceName"
           label={<span>Service Name</span>}
-          rules={[{ required: true, message: "Please input the service name!" }]}
+          rules={[
+            { required: true, message: "Please input the service name!" },
+          ]}
         >
           <Input placeholder="Enter Service Name" />
         </Form.Item>
@@ -104,7 +113,9 @@ const EditServiceModal: React.FC<Props> = ({ openEditService, setOpenEditService
         <Form.Item
           name="type"
           label={<span>Type</span>}
-          rules={[{ required: true, message: "Please select the service type!" }]}
+          rules={[
+            { required: true, message: "Please select the service type!" },
+          ]}
         >
           <Select placeholder="Select Type">
             {Object.values(ServiceType).map((type) => (

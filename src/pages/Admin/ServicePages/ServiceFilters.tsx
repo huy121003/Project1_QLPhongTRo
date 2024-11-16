@@ -1,9 +1,6 @@
 import React from "react";
-import { Radio, Space } from "antd";
-import SearchFilters from "../../../components/SearchFilter";
-
-import { ServiceType } from "../../../models/ServiceModel";
-
+import { SearchFilters, SortOption } from "../../../components";
+import { ServiceType } from "../../../enums";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;
@@ -17,7 +14,7 @@ const ServiceFilters: React.FC<Props> = ({
   sorted,
 }) => {
   return (
-    <div className="justify-end p-2 w-full">
+    <div className="justify-end mx-2  flex-1">
       <SearchFilters
         searchParams={searchParams}
         onSearchChange={handleSearchChange}
@@ -42,22 +39,16 @@ const ServiceFilters: React.FC<Props> = ({
           },
         ]}
       />
-      <div className="bg-white p-2 rounded-lg m-2">
-        <h2 className="font-bold text-xl my-3">Sort by</h2>
-        <Radio.Group onChange={handleSortChange} value={sorted}>
-          <Space direction="horizontal" className="justify-between">
-            <Radio value="serviceName" className="font-bold">
-              By Name
-            </Radio>
-            <Radio value="price" className="font-bold">
-              By Price Increase
-            </Radio>
-            <Radio value="-price" className="font-bold">
-              By Price Decrease
-            </Radio>
-          </Space>
-        </Radio.Group>
-      </div>
+      <SortOption
+        options={[
+          { value: "serviceName", label: "By Service Name" },
+          { value: "price", label: "By Price Increase" },
+          { value: "-price", label: "By Price Decrease" },
+          { value: "type", label: "By Type" },
+        ]}
+        sorted={sorted}
+        onChange={handleSortChange}
+      />
     </div>
   );
 };

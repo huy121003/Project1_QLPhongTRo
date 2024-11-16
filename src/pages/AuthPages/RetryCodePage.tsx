@@ -1,7 +1,6 @@
 import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
 import React, { useEffect, useState } from "react";
-import { apiActiveAccount, retryCode } from "../../services/authtApi";
-
+import { authtApi } from "../../api";
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -24,7 +23,7 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen, email }) => {
       const values = await formEmail.validateFields();
       const email = values.email;
 
-      const res = await retryCode(email);
+      const res = await authtApi.retryCode(email);
       if (res.statusCode === 201) {
         setId(res.data._id);
         setCurrent(current + 1);
@@ -44,7 +43,7 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen, email }) => {
       const values = await formCode.validateFields();
       const code = values.code;
 
-      const res = await apiActiveAccount(id, code);
+      const res = await authtApi.apiActiveAccount(id, code);
       if (res.statusCode === 201) {
         message.success("Account activated successfully.");
         setCurrent(current + 1);

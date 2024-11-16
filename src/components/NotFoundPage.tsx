@@ -1,12 +1,8 @@
-import { Result } from 'antd';
+import { Result } from "antd";
 function NotFoundPage() {
- 
-
-
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div className="flex justify-center items-center  relative h-screen">
       <Result
-    
         status="404"
         title="404"
         subTitle="Sorry, the page you visited does not exist."
@@ -15,5 +11,4 @@ function NotFoundPage() {
     </div>
   );
 }
-
 export default NotFoundPage;

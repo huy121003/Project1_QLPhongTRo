@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
-import { apiResetPassword, retryCode } from "../../services/authtApi";
+import { authtApi } from "../../api";
+
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -17,7 +18,7 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
       const values = await formEmail.validateFields();
       const email = values.email;
 
-      const res = await retryCode(email);
+      const res = await authtApi.retryCode(email);
       if (res.statusCode === 201) {
         setId(res.data._id);
         setCurrent(current + 1);
@@ -39,7 +40,11 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
         message.error("Password and Confirm Password must be the same.");
         return;
       }
-      const res = await apiResetPassword(id, values.code, values.password);
+      const res = await authtApi.apiResetPassword(
+        id,
+        values.code,
+        values.password
+      );
       if (res.statusCode === 201) {
         message.success("Password reset successfully.");
         setCurrent(current + 1);

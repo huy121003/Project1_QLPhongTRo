@@ -1,12 +1,10 @@
 import React from "react";
-
 interface YearMonthSelectorProps {
   selectedMonth: number;
   year: number;
   setYear: (year: number) => void;
   setSelectedMonth: (month: number) => void;
 }
-
 const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
   selectedMonth,
   year,
@@ -15,9 +13,8 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
 }) => {
   const handlePreviousYear = () => setYear(year - 1);
   const handleNextYear = () => setYear(year + 1);
-
   return (
-    <div className="flex items-center bg-gray-100 p-4 rounded-lg flex-1">
+    <div className="flex items-center bg-gray-100 mt-2 mx-2 rounded-lg flex-1">
       <button
         onClick={handlePreviousYear}
         className="text-blue-500 font-bold mr-4 hover:bg-blue-200 w-[50px] h-[50px] rounded-full border border-blue-500"
@@ -28,7 +25,7 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
         {Array.from({ length: 12 }, (_, i) => (
           <div
             key={i}
-            className={`flex flex-col items-center px-10 py-2 rounded-lg cursor-pointer ${
+            className={`flex flex-col items-center px-2 py-2 rounded-lg cursor-pointer flex-1 ${
               selectedMonth === i + 1
                 ? "bg-green-100 text-blue-500 border-2 border-blue-500"
                 : "bg-white text-gray-700"
@@ -49,5 +46,4 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
     </div>
   );
 };
-
 export default YearMonthSelector;

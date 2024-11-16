@@ -1,10 +1,9 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
-import ContractModel from "../../../models/ContractModel";
 import { Button } from "antd";
-import { ServiceModel } from "../../../models/ServiceModel";
+import { IContract, IService } from "../../../interfaces";
 interface Props {
-  contract: ContractModel[];
+  contract: IContract[];
   numberIndex: {
     [key: string]: {
       firstIndex: number;
@@ -14,7 +13,7 @@ interface Props {
   };
   selectedMonth: number;
   year: number;
-  electric: ServiceModel;
+  electric: IService;
 }
 const ExportToExcel: React.FC<Props> = ({
   contract,
@@ -98,8 +97,12 @@ const ExportToExcel: React.FC<Props> = ({
     XLSX.writeFile(workbook, `ElectricUsage_${selectedMonth}-${year}.xlsx`);
   };
   return (
-    <div className="bg-white  m-2 rounded-lg  justify-end flex-1 items-center cursor flex">
-      <Button onClick={exportToExcel} type="primary" className="m-4 py-6 px-2">
+    <div className="bg-white  m-2  rounded-lg shadow-lg border border-gray-200  justify-end flex-1 items-center cursor flex">
+      <Button
+        onClick={exportToExcel}
+        type="primary"
+        className="m-4 py-6 px-2 bg-green-600"
+      >
         <i className="fa-solid fa-file-export"></i> Export to Excel
       </Button>
     </div>

@@ -9,10 +9,9 @@ import {
   Tag,
   Switch,
 } from "antd";
-import { postRoleApi } from "../../../services/roleApi";
-import { fetchPermissionApi } from "../../../services/permissionApi";
-import { PermissionModel } from "../../../models/PermissonModel";
 import { getMethodColor } from "../../../utils/getMethodColor";
+import { IPermisson } from "../../../interfaces";
+import { permissionApi, roleApi } from "../../../api";
 
 interface Props {
   openAddRole: boolean;
@@ -21,13 +20,14 @@ interface Props {
 
 const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
   const [form] = Form.useForm();
-  const [permissions, setPermissions] = useState<PermissionModel[]>([]);
+  const [permissions, setPermissions] = useState<IPermisson[]>([]);
   const [enablePermission, setEnablePermission] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     const getPermissions = async () => {
-
-      const response = await fetchPermissionApi("pageSize=1000&current=1");
+      const response = await permissionApi.fetchPermissionApi(
+        "pageSize=1000&current=1"
+      );
       if (response.data) {
         setPermissions(response.data.result);
       } else {
@@ -39,13 +39,13 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
   const handleOk = async () => {
     const values = await form.validateFields();
     setIsLoading(true);
-   
+
     if (enablePermission.length === 0) {
       message.error("Please select at least one permission");
       setIsLoading(false);
       return;
     }
-    const response = await postRoleApi(
+    const response = await roleApi.postRoleApi(
       values.Name.toUpperCase(),
       values.Description,
       enablePermission
@@ -60,7 +60,7 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
   };
   const groupedPermissions = permissions.reduce(
     // Group permissions by module
-    (groups: any, permission: PermissionModel) => {
+    (groups: any, permission: IPermisson) => {
       const { module } = permission; //
       if (!groups[module]) {
         groups[module] = [];
@@ -77,7 +77,6 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
       setEnablePermission(enablePermission.filter((id) => id !== permissionId));
     }
   };
-
 
   return (
     <Modal
@@ -142,7 +141,7 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
                     }}
                   >
                     {groupedPermissions[module].map(
-                      (permission: PermissionModel) => (
+                      (permission: IPermisson) => (
                         <div
                           key={permission._id}
                           className="flex items-center p-2 border border-gray-200 rounded-md bg-gray-100"

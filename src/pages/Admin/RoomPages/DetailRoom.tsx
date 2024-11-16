@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import { Collapse, Descriptions, Drawer, message, Switch, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment"; // Import moment for date formatting
-import { ServiceModel } from "../../../models/ServiceModel";
-import { fetchServiceApi } from "../../../services/serviceApi";
 import {
   getRoomStatusColor,
   getRoomTypeColor,
 } from "../../../utils/getMethodColor";
+import { IService } from "../../../interfaces";
+import { serviceApi } from "../../../api";
 interface Props {
   openDetailRoom: boolean;
   setOpenDetailRoom: (value: boolean) => void;
@@ -21,7 +21,7 @@ const DetailRoom: React.FC<Props> = ({
   const formatDate = (dateString: string) => {
     return moment(dateString).format("DD/MM/YYYY"); // Format date using moment
   };
-  const [services, setServices] = useState<ServiceModel[]>([]);
+  const [services, setServices] = useState<IService[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [enableService, setEnableService] = useState<string[]>([]);
   useEffect(() => {
@@ -30,7 +30,7 @@ const DetailRoom: React.FC<Props> = ({
 
       setEnableService(record?.services);
 
-      const response = await fetchServiceApi("pageSize=1000&currentPage=1");
+      const response = await serviceApi.fetchServiceApi("pageSize=1000&currentPage=1");
       if (response.data) {
         setServices(response.data.result);
       } else {
@@ -58,16 +58,21 @@ const DetailRoom: React.FC<Props> = ({
     },
     {
       key: "3",
+      label: "Area",
+      children: <>{record?.area} m2</>,
+    },
+    {
+      key: "4",
       label: "Price",
       children: <>{record?.price.toLocaleString("vi-VN")} đ</>,
     },
     {
-      key: "4",
+      key: "5",
       label: "Description",
       children: record?.description,
     },
     {
-      key: "5",
+      key: "6",
       label: "Status",
       children: (
         <p
@@ -80,12 +85,12 @@ const DetailRoom: React.FC<Props> = ({
       ),
     },
     {
-      key: "6",
+      key: "7",
       label: "Created At",
       children: record?.createdAt ? formatDate(record?.createdAt) : "N/A", // Format createdAt date
     },
     {
-      key: "7",
+      key: "8",
       label: "Created By",
       children: record?.createdBy ? (
         record?.createdBy?.email
@@ -96,12 +101,12 @@ const DetailRoom: React.FC<Props> = ({
       ),
     },
     {
-      key: "8",
+      key: "9",
       label: "Updated At",
       children: record?.updatedAt ? formatDate(record?.updatedAt) : "N/A", // Format updatedAt date
     },
     {
-      key: "9",
+      key: "10",
       label: "Updated By",
       children: record?.updatedBy ? (
         record?.updatedBy?.email

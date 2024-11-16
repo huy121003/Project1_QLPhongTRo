@@ -9,15 +9,15 @@ import {
   Collapse,
   Switch,
 } from "antd";
+import { IRoom, IService } from "../../../interfaces";
+import { roomApi, serviceApi } from "../../../api";
+import { RoomStatus, RoomType } from "../../../enums";
 
-import { patchRoomApi } from "../../../services/roomApis";
-import RoomModel, { RoomStatus, RoomType } from "../../../models/RoomModel";
-import { ServiceModel } from "../../../models/ServiceModel";
-import { fetchServiceApi } from "../../../services/serviceApi";
+
 interface Props {
   openEditRoom: boolean;
   setOpenEditRoom: (value: boolean) => void;
-  record: RoomModel;
+  record: IRoom;
 }
 const EditRoomModal: React.FC<Props> = ({
   openEditRoom,
@@ -25,20 +25,20 @@ const EditRoomModal: React.FC<Props> = ({
   record,
 }) => {
   const [form] = Form.useForm();
-  const [services, setServices] = useState<ServiceModel[]>([]);
+  const [services, setServices] = useState<IService[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [enableService, setEnableService] = useState<string[]>([]);
   useEffect(() => {
     const getService = async () => {
       setIsLoading(true);
-    
-        const response = await fetchServiceApi("pageSize=1000&currentPage=1");
-        if (response.data) {
-          setServices(response.data.result);
-        } else {
-          message.error(response.message);
-        }
-        setIsLoading(false);
+
+      const response = await serviceApi.fetchServiceApi("pageSize=1000&currentPage=1");
+      if (response.data) {
+        setServices(response.data.result);
+      } else {
+        message.error(response.message);
+      }
+      setIsLoading(false);
     };
     getService();
   }, [record]);
@@ -50,6 +50,7 @@ const EditRoomModal: React.FC<Props> = ({
         price: record.price,
         status: record.status,
         description: record.description,
+        area: record.area,
       });
       setEnableService(record?.services);
     }
@@ -62,10 +63,11 @@ const EditRoomModal: React.FC<Props> = ({
         return;
       }
       setIsLoading(true);
-      const response = await patchRoomApi(
+      const response = await roomApi.patchRoomApi(
         record._id,
+        values.area,
         values.type,
-        status = record.status,
+        (status = record.status),
         values.price,
         values.description,
         enableService
@@ -108,7 +110,12 @@ const EditRoomModal: React.FC<Props> = ({
         >
           Cancel
         </Button>,
-        <Button key="submit" type="primary" onClick={handleOk} loading={isLoading}>
+        <Button
+          key="submit"
+          type="primary"
+          onClick={handleOk}
+          loading={isLoading}
+        >
           Submit
         </Button>,
       ]}
@@ -125,6 +132,13 @@ const EditRoomModal: React.FC<Props> = ({
           rules={[{ required: true, message: "Please input room name!" }]}
         >
           <Input placeholder="Enter RoomName" disabled />
+        </Form.Item>
+        <Form.Item
+          label="Area"
+          name="area"
+          rules={[{ required: true, message: "Please input area!" }]}
+        >
+          <Input type="number" placeholder="Enter area" />
         </Form.Item>
         <Form.Item
           label="Type"

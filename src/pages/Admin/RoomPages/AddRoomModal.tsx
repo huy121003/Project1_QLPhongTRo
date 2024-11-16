@@ -9,11 +9,9 @@ import {
   Switch,
   Form,
 } from "antd";
-import { postRoomApi } from "../../../services/roomApis";
-import { RoomStatus, RoomType } from "../../../models/RoomModel";
-import { fetchServiceApi } from "../../../services/serviceApi";
-import { ServiceModel } from "../../../models/ServiceModel";
-
+import { IService } from "../../../interfaces";
+import { roomApi, serviceApi } from "../../../api";
+import { RoomStatus, RoomType } from "../../../enums";
 interface Props {
   openAddRoom: boolean;
   setOpenAddRoom: (value: boolean) => void;
@@ -21,7 +19,7 @@ interface Props {
 
 const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
   const [form] = Form.useForm();
-  const [services, setServices] = useState<ServiceModel[]>([]);
+  const [services, setServices] = useState<IService[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [enableService, setEnableService] = useState<string[]>([]);
 
@@ -29,10 +27,11 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
     const getService = async () => {
       setIsLoading(true);
       try {
-        const response = await fetchServiceApi("pageSize=1000&currentPage=1");
+        const response = await serviceApi.fetchServiceApi(
+          "pageSize=1000&currentPage=1"
+        );
         if (response.data) {
           setServices(response.data.result);
-         
         } else {
           message.error(response.message);
         }
@@ -54,8 +53,9 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
       }
 
       setIsLoading(true);
-      const response = await postRoomApi(
+      const response = await roomApi.postRoomApi(
         values.roomName,
+        values.Area,
         values.type,
         RoomStatus.Available,
         values.price,
@@ -137,6 +137,13 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
               </Select.Option>
             ))}
           </Select>
+        </Form.Item>
+        <Form.Item
+          name="Area"
+          label={<span>Area</span>}
+          rules={[{ required: true, message: "Please input the area!" }]}
+        >
+          <Input type="number" placeholder="Enter Area" />
         </Form.Item>
         <Form.Item
           name="price"

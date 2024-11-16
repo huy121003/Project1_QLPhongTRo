@@ -1,18 +1,14 @@
-import { ContractStatus } from "../models/ContractModel";
-import { InvoiceStatus } from "../models/InvoiceModal";
-import { Method } from "../models/PermissonModel";
-import { RoomStatus, RoomType } from "../models/RoomModel";
-import { ServiceType } from "../models/ServiceModel";
+import { ApiMethod, ContractStatus, Gender, InvoiceStatus, RoomStatus, RoomType, ServiceType } from "../enums";
 
-export const getMethodColor = (method: Method) => {
+export const getMethodColor = (method: ApiMethod) => {
   switch (method) {
-    case Method.GET:
+    case ApiMethod.GET:
       return "green";
-    case Method.POST:
+    case ApiMethod.POST:
       return "yellow";
-    case Method.PATCH:
+    case ApiMethod.PATCH:
       return "purple";
-    case Method.DELETE:
+    case ApiMethod.DELETE:
       return "orange";
     default:
       return "gray";
@@ -22,11 +18,11 @@ export const getMethodColor = (method: Method) => {
 export const getRoleColor = (role: string) => {
   switch (role) {
     case "SUPER ADMIN":
-      return "border-red-600 bg-red-200 text-red-600";
+      return " text-red-600";
     case "NORMAL USER":
-      return "border-green-600 bg-green-200 text-green-600";
+      return " text-green-600";
     default:
-      return "border-blue-600 bg-blue-200 text-blue-600";
+      return "text-blue-600";
   }
 };
 export const getRoomStatusColor = (status: string) => {
@@ -78,5 +74,15 @@ export const getInvoiceStatusColor = (status: string) => {
       return "text-green-600 ";
     case InvoiceStatus.UNPAID:
       return "text-red-600 ";
+  }
+};
+export const getGenderColor = (gender: string) => {
+  switch (gender) {
+    case Gender.Male:
+      return "text-blue-600 ";
+    case Gender.Female:
+      return "text-pink-600 ";
+    default:
+      return "text-purple-600 ";
   }
 };

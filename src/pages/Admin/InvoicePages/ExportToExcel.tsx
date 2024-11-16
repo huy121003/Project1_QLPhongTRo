@@ -1,11 +1,10 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
-import ContractModel from "../../../models/ContractModel";
 import { Button } from "antd";
-import { ServiceModel } from "../../../models/ServiceModel";
-import InvoiceModel from "../../../models/InvoiceModal";
+import { IInvoice } from "../../../interfaces";
+
 interface Props {
-  invoices: InvoiceModel[];
+  invoices: IInvoice[];
 }
 const ExportToExcel: React.FC<Props> = ({ invoices }) => {
   const exportToExcel = () => {
@@ -22,7 +21,7 @@ const ExportToExcel: React.FC<Props> = ({ invoices }) => {
     }));
 
     // Add title
-    const title = [`Electric Usage Report - ${invoices[0]?.month || ""}`];
+    const title = [`Invoice Report - ${invoices[0]?.month || ""}`];
     const header = [
       [
         "Room",
@@ -80,8 +79,12 @@ const ExportToExcel: React.FC<Props> = ({ invoices }) => {
     XLSX.writeFile(workbook, `Invoices_${invoices[0]?.month || ""}.xlsx`);
   };
   return (
-    <div className="bg-white  m-2 rounded-lg  justify-end flex-1 items-center cursor flex">
-      <Button onClick={exportToExcel} type="primary" className="m-4 py-6 px-2">
+    <div className="bg-white  rounded-lg shadow-lg border border-gray-200 justify-end flex-1 items-center cursor flex">
+      <Button
+        onClick={exportToExcel}
+        type="primary"
+        className="m-2 py-6 px-2 bg-green-600"
+      >
         <i className="fa-solid fa-file-export"></i> Export to Excel
       </Button>
     </div>

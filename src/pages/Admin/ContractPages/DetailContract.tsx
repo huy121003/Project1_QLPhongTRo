@@ -1,16 +1,18 @@
 import React from "react";
-import { Descriptions, Drawer, Button } from "antd";
-import { PrinterOutlined } from '@ant-design/icons';
+import { Descriptions, Drawer, Button, Typography } from "antd";
+import { PrinterOutlined } from "@ant-design/icons";
 import moment from "moment";
-import ContractModel, { ContractStatus } from "../../../models/ContractModel";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
 import { downloadContractPDF } from "../../../utils/generateContractPDF";
+import { IContract } from "../../../interfaces";
 
 interface Props {
   openDetailContract: boolean;
   setOpenDetailContract: (value: boolean) => void;
-  record: ContractModel;
+  record: IContract;
 }
+
+const { Text } = Typography;
 
 const DetailContract: React.FC<Props> = ({
   openDetailContract,
@@ -28,89 +30,95 @@ const DetailContract: React.FC<Props> = ({
   };
 
   const items = [
+    { key: "Tenant", label: "Tenant", children: record?.tenant.name },
+    { key: "Phone", label: "Phone", children: record?.tenant.phone },
+    { key: "IdCard", label: "IdCard", children: record?.tenant.idCard },
+    { key: "Email", label: "Email", children: record?.tenant.email },
     {
-      key: "1",
-      label: "Tenant",
-      children: record?.tenant.name,
+      key: "Address",
+      label: "Address Tenant",
+      children: record?.tenant.address,
     },
+    { key: "Room", label: "Room", children: record?.room.roomName },
     {
-      key: "2",
-      label: "Phone",
-      children: record?.tenant.phone,
-    },
-    {
-      key: "3",
-      label: "IdCard",
-      children: record?.tenant.idCard,
-    },
-    {
-      key: "4",
-      label: "Room",
-      children: record?.room.roomName,
-    },
-    {
-      key: "5",
+      key: "Price",
       label: "Price",
-      children: record?.room.price.toLocaleString() + " đ",
+      children: `${record?.room.price.toLocaleString()} đ`,
     },
+    { key: "Innkeeper", label: "Innkeeper", children: record?.innkeeper.name },
     {
-      key: "7",
-      label: "Innkeeper",
-      children: record?.innkeeper.name,
-    },
-    {
-      key: "8",
+      key: "Start Date",
       label: "Start Date",
       children: formatDate(record?.startDate),
     },
     {
-      key: "9",
+      key: "End Date",
       label: "End Date",
       children: formatDate(record?.endDate),
     },
     {
-      key: "10",
-      label: "Deposit Amount",
-      children: record?.depositAmount.toLocaleString() + " đ",
+      key: "Rent Cycle Count",
+      label: "Rent Cycle Count",
+      children: record?.rentCycleCount,
     },
-
     {
-      key: "11",
+      key: "Deposit Amount",
+      label: "Deposit Amount",
+      children: `${record?.depositAmount.toLocaleString()} đ`,
+    },
+    {
+      key: "Status",
       label: "Status",
       children: (
-        <p className={`${getContractStatusColor(record?.status)} font-bold`}>
+        <Text className={getContractStatusColor(record?.status)} strong>
           {record?.status}
-        </p>
+        </Text>
       ),
     },
     {
-      key: "12",
-      label: "Create at",
+      key: "Actual End Date",
+      label: "Actual End Date",
+      children: record?.actualEndDate
+        ? formatDate(record?.actualEndDate)
+        : "N/A",
+    },
+    {
+      key: "Created At",
+      label: "Created At",
       children: formatDate(record?.createdAt),
     },
-
     {
-      key: "14",
+      key: "Created By",
       label: "Created By",
       children: record?.createdBy?.email,
     },
   ];
+
   return (
     <Drawer
       onClose={() => setOpenDetailContract(false)}
       open={openDetailContract}
-      width={"100vh"}
+      width="100vh"
       extra={
-        <Button 
-          type="primary" 
-          icon={<PrinterOutlined />} 
+        <Button
+          type="primary"
+          size="large"
+          className="bg-orange-600 hover:bg-orange-700 transition duration-200"
+          icon={<PrinterOutlined />}
           onClick={handlePrintPDF}
         >
-          In hợp đồng
+          Print Contract
         </Button>
       }
     >
-      <Descriptions title="Contract Detail" bordered column={1} items={items} />
+      <Typography.Title level={4}>Contract Detail</Typography.Title>
+      <Descriptions bordered column={1}>
+        {items.map((item) => (
+          <Descriptions.Item key={item.key} label={item.label}>
+            {item.children}
+          </Descriptions.Item>
+        ))}
+      </Descriptions>
     </Drawer>
   );
 };
