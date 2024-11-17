@@ -6,6 +6,8 @@ import IPermisson from "./IPermisson";
 import IService from "./IService";
 import IInvoice from "./IInvoice";
 import IEquipment from "./IEquipment";
+import IPayment from "./IPayment";
+import IRegisterService from "./IRegisterService";
 export type {
   IAccount,
   IContract,
@@ -15,4 +17,6 @@ export type {
   IService,
   IInvoice,
   IEquipment,
+  IPayment,
+  IRegisterService,
 };

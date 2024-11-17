@@ -1,4 +1,12 @@
-import { Button, Divider, Form, Input, message, Modal } from "antd";
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  message,
+  Modal,
+  notification,
+} from "antd";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { useNavigate } from "react-router-dom";
@@ -18,36 +26,41 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
   const enterPassword = async () => {
     setLoading(true); // Start loading
 
-    try {
-      const values = await form.validateFields();
-      if (values.newPassword !== values.confirmPassword) {
-        message.error("new password is not same confirm password.");
-        return;
-      }
-      const res = await accountApi.changePasswordApi(
-        user._id,
+    const values = await form.validateFields();
+    if (values.newPassword !== values.confirmPassword) {
+      notification.error({
+        message: "Error",
+        description: "new password is not same confirm password.",
+      });
 
-        values.confirmPassword,
-        values.password
-      );
-      if (res.statusCode === 201) {
-        message.success("Password changed successfully.");
-
-        const respone = await authtApi.apiLogout();
-        if (respone && respone.data) {
-          dispatch(logoutAction());
-          setOpen(false);
-          navigate("/");
-          message.success(
-            "You have successfully changed your password. Please login again."
-          );
-        }
-      }
-    } catch (error) {
-      message.error("Please enter a valid code.");
-    } finally {
-      setLoading(false); // End loading
+      return;
     }
+    const res = await accountApi.changePasswordApi(
+      user._id,
+
+      values.confirmPassword,
+      values.password
+    );
+    if (res.statusCode === 201) {
+      message.success("Password changed successfully.");
+
+      const respone = await authtApi.apiLogout();
+      if (respone && respone.data) {
+        dispatch(logoutAction());
+        setOpen(false);
+        navigate("/");
+        message.success(
+          "You have successfully changed your password. Please login again."
+        );
+      } else {
+        notification.error({
+          message: "Error",
+          description: respone.message,
+        });
+      }
+    }
+
+    setLoading(false); // End loading
   };
 
   return (

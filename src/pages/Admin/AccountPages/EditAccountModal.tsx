@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Input, Form, message, Select, DatePicker } from "antd";
+import {
+  Modal,
+  Button,
+  Input,
+  Form,
+  message,
+  Select,
+  DatePicker,
+  notification,
+} from "antd";
 import moment from "moment"; // Import moment for date handling
 
 import { IRole, IAccount } from "../../../interfaces";
@@ -11,6 +20,7 @@ import {
   checkIdCard,
   checkPhoneNumberVN,
 } from "../../../utils/regex";
+import dayjs from "dayjs";
 interface Props {
   openEditAccount: boolean;
   setOpenEditAccount: (value: boolean) => void;
@@ -40,7 +50,12 @@ const EditAccountModal: React.FC<Props> = ({
       const res = await roleApi.fecthRoleApi("");
       if (res?.data) {
         setRole(res.data.result);
-      } else message.error(res.message);
+      } else {
+        notification.error({
+          message: "Error",
+          description:res.message,
+        });
+      }
     };
     getRole();
   }, [openEditAccount]);
@@ -51,10 +66,6 @@ const EditAccountModal: React.FC<Props> = ({
   }, [openEditAccount]);
   useEffect(() => {
     if (openEditAccount && record) {
-      // Convert birthday to moment object
-      const formattedBirthday = record.birthday
-        ? moment(record.birthday)
-        : "00/00/0000";
       // Split the name into three parts
       const nameParts = record.name.split(" ");
       const lastName = nameParts.pop();
@@ -74,7 +85,7 @@ const EditAccountModal: React.FC<Props> = ({
         FirstName: firstName,
         MiddleName: middleName,
         LastName: lastName,
-        BirthDay: formattedBirthday,
+        BirthDay: record.birthday ? dayjs(record.birthday) : undefined,
         Gender: record.gender,
         Address: record.address,
         IdCard: record.idCard,
@@ -84,93 +95,112 @@ const EditAccountModal: React.FC<Props> = ({
   }, [openEditAccount, record, form]);
 
   const handleOk = async () => {
-    try {
-      const values = await form.validateFields();
-      const birthday = values.BirthDay
-        ? values.BirthDay.format("YYYY-MM-DD")
-        : null;
+    const values = await form.validateFields();
+    const birthday = values.BirthDay
+      ? values.BirthDay.format("YYYY-MM-DD")
+      : null;
 
-      // Tạo biến tạm thời để lưu tên ảnh đã tải lên
-      let avatarFileName = imageAvatar;
-      let frontIdFileName = imageFrontId;
-      let backIdFileName = imageBackId;
-      let temporaryResidenceFileName = imageTemporaryResidence;
-      if (!checkEmail(values.email)) {
-        message.error("Email is not correct");
-        return;
-      }
+    // Tạo biến tạm thời để lưu tên ảnh đã tải lên
+    let avatarFileName = imageAvatar;
+    let frontIdFileName = imageFrontId;
+    let backIdFileName = imageBackId;
+    let temporaryResidenceFileName = imageTemporaryResidence;
 
-      if (!checkIdCard(values.idCard)) {
-        message.error("IdCard is not correct");
-        return;
-      }
-      if (checkPhoneNumberVN(values.phone)) {
-        message.error("Phone number is not correct");
-        return;
-      }
-      // Kiểm tra sự thay đổi của ảnh và upload nếu có
-      if (avatar) {
-        const res = await upfileApi.postAvatarApi(avatar);
-        if (res.statusCode === 201) {
-          avatarFileName = res.data.fileName;
-        } else {
-          message.error(res.message);
-          return;
-        }
-      }
+    if (!checkIdCard(values.idCard)) {
+      notification.error({
+        message: "Error",
+        description: "IdCard is not correct",
+      });
 
-      if (frontIdImage) {
-        const res = await upfileApi.postAvatarApi(frontIdImage);
-        if (res.statusCode === 201) {
-          frontIdFileName = res.data.fileName;
-        } else {
-          message.error(res.message);
-          return;
-        }
-      }
+      return;
+    }
+    if (checkPhoneNumberVN(values.phone)) {
+      notification.error({
+        message: "Error",
+        description: "Phone number is not correct",
+      });
 
-      if (backIdImage) {
-        const res = await upfileApi.postAvatarApi(backIdImage);
-        if (res.statusCode === 201) {
-          backIdFileName = res.data.fileName;
-        } else {
-          message.error(res.message);
-          return;
-        }
-      }
-
-      if (temporaryResidenceImage) {
-        const res = await upfileApi.postAvatarApi(temporaryResidenceImage);
-        if (res.statusCode === 201) {
-          temporaryResidenceFileName = res.data.fileName;
-        } else {
-          message.error(res.message);
-          return;
-        }
-      }
-
-      // Gọi API cập nhật thông tin tài khoản sau khi tất cả ảnh đã được tải lên
-      const response = await accountApi.patchAccountApi(
-        record._id,
-        values.Phone,
-        `${values.FirstName} ${values.MiddleName || ""} ${values.LastName}`,
-        birthday,
-        values.Gender,
-        values.Address,
-        values.IdCard,
-        values.Role,
-        avatarFileName,
-        [frontIdFileName, backIdFileName, temporaryResidenceFileName]
-      );
-
-      if (response.statusCode === 200) {
-        message.success("Account updated successfully");
-        refresh();
+      return;
+    }
+    // Kiểm tra sự thay đổi của ảnh và upload nếu có
+    if (avatar) {
+      const res = await upfileApi.postAvatarApi(avatar);
+      if (res.statusCode === 201) {
+        avatarFileName = res.data.fileName;
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description: "Upload avatar failed",
+        });
+
+        return;
       }
-    } catch (error) {
-      console.error("Validation failed:", error);
+    }
+
+    if (frontIdImage) {
+      const res = await upfileApi.postAvatarApi(frontIdImage);
+      if (res.statusCode === 201) {
+        frontIdFileName = res.data.fileName;
+      } else {
+        notification.error({
+          message: "Error",
+          description: "Upload frontId failed",
+        });
+
+        return;
+      }
+    }
+
+    if (backIdImage) {
+      const res = await upfileApi.postAvatarApi(backIdImage);
+      if (res.statusCode === 201) {
+        backIdFileName = res.data.fileName;
+      } else {
+        notification.error({
+          message: "Error",
+          description: "Upload backId failed",
+        });
+
+        return;
+      }
+    }
+
+    if (temporaryResidenceImage) {
+      const res = await upfileApi.postAvatarApi(temporaryResidenceImage);
+      if (res.statusCode === 201) {
+        temporaryResidenceFileName = res.data.fileName;
+      } else {
+        notification.error({
+          message: "Error",
+          description: "Upload temporaryResidence failed",
+        });
+
+        return;
+      }
+    }
+
+    // Gọi API cập nhật thông tin tài khoản sau khi tất cả ảnh đã được tải lên
+    const response = await accountApi.patchAccountApi(
+      record._id,
+      values.Phone,
+      `${values.FirstName} ${values.MiddleName || ""} ${values.LastName}`,
+      birthday,
+      values.Gender,
+      values.Address,
+      values.IdCard,
+      values.Role,
+      avatarFileName,
+      [frontIdFileName, backIdFileName, temporaryResidenceFileName]
+    );
+
+    if (response.statusCode === 200) {
+      message.success("Account updated successfully");
+      refresh();
+    } else {
+      notification.error({
+        message: "Error",
+        description: response.message,
+      });
     }
   };
   const refresh = () => {
@@ -277,7 +307,7 @@ const EditAccountModal: React.FC<Props> = ({
               ]}
               className="flex-1 m-1"
             >
-              <DatePicker format="YYYY-MM-DD" size="large" />
+              <DatePicker size="large" placeholder="Select Birthday" />
             </Form.Item>
             <Form.Item
               name="Gender"

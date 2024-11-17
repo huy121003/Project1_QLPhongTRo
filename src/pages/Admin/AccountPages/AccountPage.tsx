@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components"; // Change to CustomModal
 import { accountApi, roleApi } from "../../../api/";
@@ -12,7 +12,7 @@ import AccountCard from "./AccountCard";
 function AccountPage() {
   const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(4);
   const [total, setTotal] = useState(0);
   const [roles, setRoles] = useState<any[]>([]);
   const [openAddAccount, setOpenAddAccount] = useState(false);
@@ -66,7 +66,12 @@ function AccountPage() {
 
       setAccounts(formattedAccounts);
       setTotal(res.data.meta.total);
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
   useEffect(() => {
     getAccount();
@@ -101,7 +106,12 @@ function AccountPage() {
       message.success("Account deleted");
       getAccount();
       setCurrent(1);
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
 
   return (

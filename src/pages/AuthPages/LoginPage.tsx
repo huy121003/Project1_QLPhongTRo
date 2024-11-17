@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-import { Form, Input, Button, message, Divider } from "antd";
+import { Form, Input, Button, message, Divider, notification } from "antd";
 import { useAppDispatch } from "../../redux/hook";
 import { loginaction } from "../../redux/slice/auth/authSlice";
 import { useState } from "react";
@@ -28,14 +28,18 @@ function LoginPage(): JSX.Element {
       navigate("/admin");
     } else {
       if (res?.message === "Account has not been activated!") {
-        message.error(res.message);
+        notification.error({
+          message: "Error",
+          description: res.message,
+        });
+
         setOpenRetryCode(true);
-      } else message.error(res.message);
+      } else notification.error({ message: "Error", description: res.message });
     }
   };
   return (
     <AuthLayout>
-      <div className=" p-12 rounded-lg shadow-lg lg:w-[500px] mx- bg-blue-100">
+      <div className=" p-12 rounded-3xl shadow-xl lg:w-[500px] mx- bg-gray-200">
         <h2 className="text-4xl font-bold text-center text-black mb-8">
           Login
         </h2>

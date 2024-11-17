@@ -8,6 +8,7 @@ import {
   Collapse,
   Tag,
   Switch,
+  notification,
 } from "antd";
 import { getMethodColor } from "../../../utils/getMethodColor";
 import { IPermisson, IRole } from "../../../interfaces";
@@ -46,7 +47,10 @@ const EditRoleModal: React.FC<Props> = ({
       if (response.data) {
         setPermissions(response.data.result);
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
       }
     };
     getPermissions();
@@ -55,7 +59,10 @@ const EditRoleModal: React.FC<Props> = ({
     const values = await form.validateFields();
     setIsLoading(true);
     if (enablePermission.length === 0) {
-      message.error("Please select at least one permission");
+      notification.error({
+        message: "Please select at least one permission",
+      });
+
       setIsLoading(false);
       return;
     }
@@ -70,7 +77,10 @@ const EditRoleModal: React.FC<Props> = ({
       form.resetFields();
       setOpenEditRole(false);
     } else {
-      message.error(response.message);
+      notification.error({
+        message: "Error",
+        description: response.message,
+      });
     }
     setIsLoading(false);
   };

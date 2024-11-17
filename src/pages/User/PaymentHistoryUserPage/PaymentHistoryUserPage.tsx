@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { message } from "antd";
+import { message, notification } from "antd";
 import ModalDetailInvoice from "../InvoiceUserPage/ModalDetailInvoice";
 import { IInvoice } from "../../../interfaces";
 import { invoiceApi } from "../../../api";
@@ -21,7 +21,11 @@ export default function PaymentHistoryUserPage() {
             if (response.data) {
                 setInvoices(response.data.result);
             } else {
-                message.error(response.message);
+                notification.error({
+                    message: "Error",
+                    description: response.message,
+                });
+           
             }
         };
         getInvoices();

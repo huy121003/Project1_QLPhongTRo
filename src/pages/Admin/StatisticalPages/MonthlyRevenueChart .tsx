@@ -11,7 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import { useEffect, useState } from "react";
-import { message, Select } from "antd";
+import { message, notification, Select } from "antd";
 import ExportRevenueToExcel from "./ExportRevenueToExcel";
 import { IInvoice } from "../../../interfaces";
 import { invoiceApi } from "../../../api";
@@ -62,7 +62,11 @@ const MonthlyRevenueChart = () => {
       if (res.data) {
         setInvoices(res.data.result);
       } else {
-        message.error(res.message);
+        notification.error({
+          message: "Error",
+          description: res.message,
+        });
+   
       }
     };
     fetchInvoices();

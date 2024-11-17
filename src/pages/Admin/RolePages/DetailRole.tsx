@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Descriptions, Drawer, message, Switch, Tag, Collapse } from "antd";
+import { Descriptions, Drawer, message, Switch, Tag, Collapse, notification } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment";
 
@@ -36,7 +36,11 @@ const DetailRole: React.FC<Props> = ({
       if (response.data) {
         setPermissions(response.data.result);
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
+       
       }
 
       setIsLoading(false);

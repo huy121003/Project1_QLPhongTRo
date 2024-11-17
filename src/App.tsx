@@ -1,12 +1,16 @@
 import { useEffect } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./redux/hook";
 import { getUserAction } from "./redux/slice/auth/authSlice";
 import HomeLayout from "./layouts/HomeLayout/HomeLayout";
 import { NotFoundPage, Loading } from "./components";
 import homeAdminRouters from "./routers/index";
 import ProtectedRoute from "./routers/ProtectedRouter";
-import { message } from "antd";
+import { message, notification } from "antd";
 import UserLayout from "./layouts/UserLayout/UserLayout";
 import DashboardPage from "./pages/Admin/DashboardPages/DashboardPage";
 import LoginPage from "./pages/AuthPages/LoginPage";
@@ -36,8 +40,8 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: "/",
-    element: <LoginPage />,
+    path: "/", // /admin
+    element: <Navigate to="/admin" />, // Redirects / to /admin
   },
   {
     path: "/register",
@@ -96,7 +100,12 @@ function App() {
 
     if (res?.data) {
       dispatch(getUserAction(res.data.user));
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
 
   useEffect(() => {

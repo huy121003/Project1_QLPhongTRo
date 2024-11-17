@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useAppSelector } from "../../../redux/hook";
 
-import { message } from "antd";
+import { message, notification } from "antd";
 import { IAccount } from "../../../interfaces";
 import { accountApi } from "../../../api";
 
@@ -17,7 +17,11 @@ export default function ProfilePage() {
             if (response.data) {
                 setAccount(response.data);
             } else {
-                message.error(response.message);
+                notification.error({
+                    message: "Error",
+                    description: response.message,
+                });
+             
             }
         };
         getAccount();

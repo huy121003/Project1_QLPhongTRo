@@ -44,7 +44,7 @@ const WaterTable: React.FC<Props> = ({
 
       return;
     }
-    try {
+   
       if (indexData.invoiceId) {
         const res = await invoiceApi.patchInvoiceApi(
           indexData.invoiceId,
@@ -53,7 +53,10 @@ const WaterTable: React.FC<Props> = ({
         );
         res.statusCode === 200
           ? message.success("Updated successfully")
-          : message.error(res.message);
+          : notification.error({
+              message: "Error",
+              description: res.message,
+            });
       } else {
         const contractInfo = contract.find((c) => c._id === key);
         if (!contractInfo) return;
@@ -82,11 +85,12 @@ const WaterTable: React.FC<Props> = ({
         );
         res.statusCode === 201
           ? message.success("Created successfully")
-          : message.error(res.message);
+          : notification.error({
+              message: "Error",
+              description: res.message,
+            });
       }
-    } catch (error) {
-      message.error("Something went wrong");
-    }
+
   };
   const columns = [
     {

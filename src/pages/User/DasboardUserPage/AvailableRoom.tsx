@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { message } from "antd";
+import { message, notification } from "antd";
 import { IRoom } from "../../../interfaces";
 import { roomApi } from "../../../api";
 
@@ -17,7 +17,11 @@ export default function AvailableRoom() {
             if (response.data) {
                 setRooms(response.data.result);
             } else {
-                message.error(response.message);
+                notification.error({
+                    message: "Error",
+                    description: response.message,
+                });
+              
             }
         };
         getRoom();

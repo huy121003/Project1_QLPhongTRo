@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components";
 import AddRoomModal from "./AddRoomModal";
@@ -12,7 +12,7 @@ import { roomApi } from "../../../api";
 function RoomPage() {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(4);
   const [total, setTotal] = useState(0);
   const [openAddRoom, setOpenAddRoom] = useState(false);
   const [openEditRoom, setOpenEditRoom] = useState(false);
@@ -43,7 +43,11 @@ function RoomPage() {
       setRooms(res.data.result);
       setTotal(res.data.meta.totalDocument);
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+
     }
   };
   // Fetch rooms function
@@ -69,7 +73,11 @@ function RoomPage() {
       getRoom();
       setCurrent(1);
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+     
     }
   };
   return (

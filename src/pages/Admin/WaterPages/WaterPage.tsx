@@ -5,6 +5,7 @@ import { IContract, IService } from "../../../interfaces";
 import { ContractStatus, ServiceType } from "../../../enums";
 import { contractApi, invoiceApi, serviceApi } from "../../../api";
 import { YearMonthSelector } from "../../../components";
+import { notification } from "antd";
 const WaterPage = () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
@@ -23,7 +24,11 @@ const WaterPage = () => {
     if (res.data) {
       setWater(res.data.result[0]);
     } else {
-      // message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+
     }
   };
   useEffect(() => {

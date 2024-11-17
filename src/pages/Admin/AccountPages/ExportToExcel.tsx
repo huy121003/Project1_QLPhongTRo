@@ -65,7 +65,10 @@ const ExportToExcel: React.FC<Props> = ({ accounts }) => {
   };
   return (
     <div className="bg-white   rounded-lg  justify-end flex-1 items-center cursor flex">
-      <Button onClick={exportToExcel} className="m-2 py-6 px-2 bg-green-600">
+      <Button
+        onClick={exportToExcel}
+        className="m-2 py-6 px-2 bg-green-600 text-white "
+      >
         <i className="fa-solid fa-file-export"></i> Export to Excel
       </Button>
     </div>

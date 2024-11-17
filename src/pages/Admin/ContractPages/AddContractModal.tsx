@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
+import {
+  Modal,
+  Button,
+  Input,
+  DatePicker,
+  Form,
+  Select,
+  message,
+  notification,
+} from "antd";
 import dayjs from "dayjs";
 import { IAccount, IRoom } from "../../../interfaces";
 import { accountApi, contractApi, roomApi } from "../../../api";
 import { ContractStatus } from "../../../enums";
-
 
 interface Props {
   openAddContract: boolean;
@@ -51,7 +59,10 @@ const AddContractModal: React.FC<Props> = ({
         );
         setTenants(tenants);
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description:response.message,
+        });
       }
     };
     const getRoom = async () => {
@@ -61,7 +72,10 @@ const AddContractModal: React.FC<Props> = ({
       if (response.data) {
         setRooms(response.data.result);
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
       }
     };
     getTenant();
@@ -69,30 +83,29 @@ const AddContractModal: React.FC<Props> = ({
   }, [openAddContract]);
 
   const handleOk = async () => {
-    try {
-      const values = await form.validateFields();
-      const endDate = dayjs(values.startDate)
-        .add(time.number, time.unit as dayjs.ManipulateType)
-        .toDate();
-      const response = await contractApi.postContractApi(
-        choosenRoom,
-        choosenTenant,
-        values.startDate,
-        endDate,
-        values.address,
-        values.deposit,
-        values.rentCycleCount,
-        ContractStatus.ACTIVE
-      );
-      if (response.statusCode === 201) {
-        message.success("Contract added successfully");
-        form.resetFields();
-        setOpenAddContract(false);
-      } else {
-        message.error(response.message);
-      }
-    } catch (error) {
-      message.error("Please fill all required fields correctly.");
+    const values = await form.validateFields();
+    const endDate = dayjs(values.startDate)
+      .add(time.number, time.unit as dayjs.ManipulateType)
+      .toDate();
+    const response = await contractApi.postContractApi(
+      choosenRoom,
+      choosenTenant,
+      values.startDate,
+      endDate,
+      values.address,
+      values.deposit,
+      values.rentCycleCount,
+      ContractStatus.ACTIVE
+    );
+    if (response.statusCode === 201) {
+      message.success("Contract added successfully");
+      form.resetFields();
+      setOpenAddContract(false);
+    } else {
+      notification.error({
+        message: "Error",
+        description: response.message,
+      });
     }
   };
 

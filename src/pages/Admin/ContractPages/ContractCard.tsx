@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Popconfirm, Pagination, Spin } from "antd";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
-import {NotItem} from "../../../components";
+import { NotItem } from "../../../components";
 import { IContract } from "../../../interfaces";
 import { ContractStatus } from "../../../enums";
 interface Props {
@@ -31,7 +31,7 @@ const ContractCards: React.FC<Props> = ({
     <Spin spinning={isLoading}>
       {contracts.length > 0 ? (
         <div className="m-4 flex-1">
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             {contracts.map((contract) => (
               <div
                 key={contract._id}
@@ -138,6 +138,7 @@ const ContractCards: React.FC<Props> = ({
               total={total}
               onChange={onChange}
               showSizeChanger
+              pageSizeOptions={["4", "8", "16", "32", "64", "128", "999999"]}
             />
           </div>
         </div>

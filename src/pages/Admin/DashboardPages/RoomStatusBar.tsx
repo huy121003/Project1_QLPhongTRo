@@ -6,6 +6,7 @@ import { resizeWidth } from "../../../utils/resize";
 import { IRoom } from "../../../interfaces";
 import { roomApi } from "../../../api";
 import { RoomStatus } from "../../../enums";
+import { notification } from "antd";
 
 function RoomStatusBar() {
   const width = resizeWidth();
@@ -29,7 +30,10 @@ function RoomStatusBar() {
           )
         );
       } else {
-        // message.error(res.message);
+        notification.error({
+          message: "Error",
+          description: res.message,
+        });
       }
       setLoading(false);
     };

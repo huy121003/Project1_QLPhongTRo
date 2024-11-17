@@ -36,7 +36,7 @@ const RoomCard: React.FC<Props> = ({
     <Spin spinning={isLoading}>
       {rooms.length > 0 ? (
         <div className="m-4 flex-1">
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             {rooms.map((room) => (
               <div
                 key={room._id}
@@ -75,18 +75,20 @@ const RoomCard: React.FC<Props> = ({
                   <div />
                   <div className="flex gap-3">
                     <Button
-                      type="primary"
-                      className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
+                      className=" transition duration-300"
                       onClick={() => {
                         setOpenDetailRoom(true);
                         setRecord(room);
                       }}
-                      icon={<i className="fa-solid fa-eye text-xl" />}
+                      icon={
+                        <i className="fa-solid fa-eye text-xl text-blue-500" />
+                      }
                     />
                     <Button
-                      type="primary"
-                      className="bg-green-500 text-white hover:bg-green-600 transition duration-300"
-                      icon={<i className="fa-solid fa-pen-to-square text-xl" />}
+                      className="transition duration-300"
+                      icon={
+                        <i className="fa-solid fa-pen-to-square text-xl text-green-500" />
+                      }
                       onClick={() => {
                         setOpenEditRoom(true);
                         setRecord(room);
@@ -105,7 +107,7 @@ const RoomCard: React.FC<Props> = ({
               total={total}
               onChange={onChange}
               showSizeChanger
-              className="text-sm"
+              pageSizeOptions={["4", "8", "16", "32", "64", "128", "999999"]}
             />
           </div>
         </div>

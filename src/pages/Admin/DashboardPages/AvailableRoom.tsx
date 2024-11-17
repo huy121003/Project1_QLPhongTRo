@@ -3,7 +3,7 @@ import {
   getRoomStatusColor,
   getRoomTypeColor,
 } from "../../../utils/getMethodColor";
-import { message, Table } from "antd";
+import { message, notification, Table } from "antd";
 import { Box, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { roomApi } from "../../../api";
@@ -51,7 +51,11 @@ function AvailableRoom() {
         setRooms(res.data.result);
         setTotal(res.data.meta.totalDocument);
       } else {
-        message.error(res.message);
+        notification.error({
+          message: "Error",
+          description: res.message,
+        });
+      
       }
     };
 

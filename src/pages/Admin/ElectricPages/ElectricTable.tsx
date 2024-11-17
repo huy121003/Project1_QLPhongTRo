@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Input, message, Button } from "antd";
+import { Table, Input, message, Button, notification } from "antd";
 import { IContract, IService } from "../../../interfaces";
 import { invoiceApi } from "../../../api";
 interface Props {
@@ -38,51 +38,57 @@ const ElectricTable: React.FC<Props> = ({
       !indexData.finalIndex ||
       indexData.firstIndex > indexData.finalIndex
     ) {
-      message.error("Invalid index");
+      notification.error({
+        message: "Invalid index",
+        description: "Please check your input",
+      });
       return;
     }
-    try {
-      if (indexData.invoiceId) {
-        const res = await invoiceApi.patchInvoiceApi(
-          indexData.invoiceId,
-          indexData.firstIndex,
-          indexData.finalIndex
-        );
-        res.statusCode === 200
-          ? message.success("Electric  updated successfully")
-          : message.error(res.message);
-      } else {
-        const contractInfo = contract.find((c) => c._id === key);
-        if (!contractInfo) return;
 
-        const res = await invoiceApi.postInvoiceApi(
-          {
-            _id: contractInfo.room._id,
-            roomName: contractInfo.room.roomName,
-          },
-          {
-            _id: contractInfo.tenant._id,
-            name: contractInfo.tenant.name,
-            idCard: contractInfo.tenant.idCard,
-            phone: contractInfo.tenant.phone,
-          },
-          {
-            _id: electric._id,
-            name: electric.serviceName,
-            unit: electric.unit,
-            priceUnit: parseFloat(electric.price),
-          },
-          `${selectedMonth}-${year}`,
-          `Electric bill for ${selectedMonth}-${year}`,
-          indexData.firstIndex,
-          indexData.finalIndex
-        );
-        res.statusCode === 201
-          ? message.success(res.message)
-          : message.error(res.message);
-      }
-    } catch (error) {
-      message.error("An error occurred while saving the invoice.");
+    if (indexData.invoiceId) {
+      const res = await invoiceApi.patchInvoiceApi(
+        indexData.invoiceId,
+        indexData.firstIndex,
+        indexData.finalIndex
+      );
+      res.statusCode === 200
+        ? message.success("Electric  updated successfully")
+        : notification.error({
+            message: "Error",
+            description: res.message,
+          });
+    } else {
+      const contractInfo = contract.find((c) => c._id === key);
+      if (!contractInfo) return;
+
+      const res = await invoiceApi.postInvoiceApi(
+        {
+          _id: contractInfo.room._id,
+          roomName: contractInfo.room.roomName,
+        },
+        {
+          _id: contractInfo.tenant._id,
+          name: contractInfo.tenant.name,
+          idCard: contractInfo.tenant.idCard,
+          phone: contractInfo.tenant.phone,
+        },
+        {
+          _id: electric._id,
+          name: electric.serviceName,
+          unit: electric.unit,
+          priceUnit: parseFloat(electric.price),
+        },
+        `${selectedMonth}-${year}`,
+        `Electric bill for ${selectedMonth}-${year}`,
+        indexData.firstIndex,
+        indexData.finalIndex
+      );
+      res.statusCode === 201
+        ? message.success(res.message)
+        : notification.error({
+            message: "Error",
+            description: res.message,
+          });
     }
   };
 

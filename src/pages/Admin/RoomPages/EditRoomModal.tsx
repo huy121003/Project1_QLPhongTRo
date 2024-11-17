@@ -8,6 +8,7 @@ import {
   Select,
   Collapse,
   Switch,
+  notification,
 } from "antd";
 import { IRoom, IService } from "../../../interfaces";
 import { roomApi, serviceApi } from "../../../api";
@@ -36,7 +37,12 @@ const EditRoomModal: React.FC<Props> = ({
       if (response.data) {
         setServices(response.data.result);
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
+
+  
       }
       setIsLoading(false);
     };
@@ -59,7 +65,10 @@ const EditRoomModal: React.FC<Props> = ({
     try {
       const values = await form.validateFields();
       if (enableService.length === 0) {
-        message.error("Please select at least one service");
+        notification.error({
+          message: "Please select at least one service",
+        });
+      
         return;
       }
       setIsLoading(true);
@@ -77,7 +86,11 @@ const EditRoomModal: React.FC<Props> = ({
         form.resetFields();
         setOpenEditRoom(false);
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
+
       }
     } catch (error) {
       console.error("Validation failed:", error);

@@ -8,6 +8,7 @@ import {
   Collapse,
   Switch,
   Form,
+  notification,
 } from "antd";
 import { IService } from "../../../interfaces";
 import { roomApi, serviceApi } from "../../../api";
@@ -26,55 +27,56 @@ const AddRoomModal: React.FC<Props> = ({ openAddRoom, setOpenAddRoom }) => {
   useEffect(() => {
     const getService = async () => {
       setIsLoading(true);
-      try {
-        const response = await serviceApi.fetchServiceApi(
-          "pageSize=1000&currentPage=1"
-        );
-        if (response.data) {
-          setServices(response.data.result);
-        } else {
-          message.error(response.message);
-        }
-      } catch (error) {
-        message.error("Failed to fetch services");
-      } finally {
-        setIsLoading(false);
+
+      const response = await serviceApi.fetchServiceApi(
+        "pageSize=1000&currentPage=1"
+      );
+      if (response.data) {
+        setServices(response.data.result);
+      } else {
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
       }
+
+      setIsLoading(false);
     };
     getService();
   }, []);
 
   const handleOk = async () => {
-    try {
-      const values = await form.validateFields();
-      if (enableService.length === 0) {
-        message.error("Please select at least one service");
-        return;
-      }
-
-      setIsLoading(true);
-      const response = await roomApi.postRoomApi(
-        values.roomName,
-        values.Area,
-        values.type,
-        RoomStatus.Available,
-        values.price,
-        values.description,
-        enableService
-      );
-
-      if (response.statusCode === 201) {
-        message.success("Room created successfully");
-        form.resetFields();
-        setOpenAddRoom(false);
-      } else {
-        message.error(response.message);
-      }
-    } catch (error) {
-      message.error("Failed to create room");
-    } finally {
-      setIsLoading(false);
+    const values = await form.validateFields();
+    if (enableService.length === 0) {
+      notification.error({
+        message: "Please select at least one service",
+      });
+      return;
     }
+
+    setIsLoading(true);
+    const response = await roomApi.postRoomApi(
+      values.roomName,
+      values.Area,
+      values.type,
+      RoomStatus.Available,
+      values.price,
+      values.description,
+      enableService
+    );
+
+    if (response.statusCode === 201) {
+      message.success("Room created successfully");
+      form.resetFields();
+      setOpenAddRoom(false);
+    } else {
+      notification.error({
+        message: "Error",
+        description: response.message,
+      });
+    }
+
+    setIsLoading(false);
   };
 
   const handleSwitchChange = (checked: boolean, id: string) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Collapse, Descriptions, Drawer, message, Switch, Tag } from "antd";
+import { Collapse, Descriptions, Drawer, message, notification, Switch, Tag } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment"; // Import moment for date formatting
 import {
@@ -34,7 +34,11 @@ const DetailRoom: React.FC<Props> = ({
       if (response.data) {
         setServices(response.data.result);
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
+       
       }
       setIsLoading(false);
     };

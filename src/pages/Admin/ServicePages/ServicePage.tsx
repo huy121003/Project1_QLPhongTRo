@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components";
 import AddServiceModal from "./AddServiceModal";
@@ -49,7 +49,10 @@ function ServicePage() {
 
       setTotal(res.data.meta.totalDocument); // Ensure total is set correctly
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
   // Fetch services function
@@ -92,7 +95,10 @@ function ServicePage() {
       getService();
       setCurrent(1);
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
 

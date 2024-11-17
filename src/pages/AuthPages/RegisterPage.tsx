@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-import { Form, Input, Button, Select, message, DatePicker } from "antd";
+import { Form, Input, Button, Select, message, DatePicker, notification } from "antd";
 
 import { useState } from "react";
 import ActiveAccountPage from "./ActiveAccountPage";
@@ -26,23 +26,38 @@ function RegisterPage() {
       values.LastName
     }`.trim();
     if (!checkEmail(values.email)) {
-      message.error("Email is not correct");
+      notification.error({
+        message: "Error",
+        description: "Email is not correct",
+      });
+     
       return;
     }
 
     if (!checkPassword(values.password)) {
-      message.error(
-        "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character"
-      );
+      notification.error({
+        message: "Error",
+        description:
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character",
+      });
+     
       return;
     }
 
     if (!checkIdCard(values.idCard)) {
-      message.error("IdCard is not correct");
+      notification.error({
+        message: "Error",
+        description: "IdCard is not correct",
+      });
+      
       return;
     }
     if (checkPhoneNumberVN(values.phone)) {
-      message.error("Phone number is not correct");
+      notification.error({
+        message: "Error",
+        description: "Phone number is not correct",
+      });
+     
       return;
     }
 
@@ -62,15 +77,19 @@ function RegisterPage() {
       message.success("Register successfully");
       setOpenActiveAccount(true);
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+     
     }
   };
   return (
     <AuthLayout>
-      <div className=" p-10 rounded-lg shadow-lg lg:w-[800px] mx-3 bg-blue-100">
-        <h2 className="text-4xl font-bold text-center text-black mb-8">
+      <div className=" p-10 rounded-3xl shadow-lg lg:w-[800px] mx-3 bg-gray-200 ">
+        {/* <h2 className="text-4xl font-bold text-center text-black mb-8">
           Register
-        </h2>
+        </h2> */}
         <Form layout="vertical" onFinish={handleRegister}>
           <Form.Item label={<span>Name</span>} wrapperCol={{ span: 24 }}>
             <div className="flex justify-between">

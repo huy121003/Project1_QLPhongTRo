@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Modal, Button, Input, Form, message, Select } from "antd";
+import { Modal, Button, Input, Form, message, Select, notification } from "antd";
 import { IService } from "../../../interfaces";
 import { ServiceType } from "../../../enums";
 import { serviceApi } from "../../../api";
@@ -29,8 +29,7 @@ const EditServiceModal: React.FC<Props> = ({
   }, [service, form, openEditService]);
 
   const handleOk = async () => {
-    try {
-
+   
       const values = await form.validateFields();
       const response = await serviceApi.patchServiceApi(
         service?._id || "",
@@ -46,11 +45,13 @@ const EditServiceModal: React.FC<Props> = ({
         form.resetFields(); // Reset form fields
         setOpenEditService(false); // Close modal on success
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
+ 
       }
-    } catch (error) {
-      message.error("Validation failed!");
-    }
+   
   };
 
   return (

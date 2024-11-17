@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { Button, message, notification } from "antd";
 import { useEffect, useState } from "react";
 import DetailInvoice from "./DetailInvoice";
 import ChoosenRoom from "./ChoosenRoom";
@@ -9,6 +9,7 @@ import { IInvoice } from "../../../interfaces";
 import { InvoiceStatus } from "../../../enums";
 import { invoiceApi } from "../../../api";
 import { YearMonthSelector } from "../../../components";
+import PaymentConfirm from "./PaymentConfirm";
 const InvoicePage = () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
@@ -17,11 +18,12 @@ const InvoicePage = () => {
   const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [status, setStatus] = useState<InvoiceStatus | "">("");
   const [openDetailInvoice, setOpenDetailInvoice] = useState(false);
+  const [openPaymentConfirm, setOpenPaymentConfirm] = useState(false);
   const [choosenRoom, setChooenRoom] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(4);
   const [total, setTotal] = useState(0);
   const getInvoices = async () => {
     const queryParams: Record<string, any> = {
@@ -38,7 +40,12 @@ const InvoicePage = () => {
     if (res.data) {
       setInvoices(res.data.result);
       setTotal(res.data.meta.totalDocument);
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
     setIsLoading(false);
   };
   useEffect(() => {
@@ -62,7 +69,12 @@ const InvoicePage = () => {
       message.success("Invoice deleted");
       getInvoices();
       setCurrent(1);
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
   const onPaymentConfirm = async (record: any) => {
     const res = await invoiceApi.patchInvoiceStatusApi(
@@ -72,7 +84,12 @@ const InvoicePage = () => {
     if (res.data) {
       message.success("Payment confirmed");
       getInvoices();
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
   return (
     <>
@@ -87,7 +104,18 @@ const InvoicePage = () => {
 
         <div className="bg-white  rounded-lg  justify-between items-center mx-2 flex">
           <div></div>
-          <ExportToExcel invoices={invoices} />
+          <div className="bg-white  rounded-lg shadow-lg border border-gray-200 justify-end flex-1 items-center cursor flex">
+            <Button
+              size="large"
+              onClick={() => setOpenPaymentConfirm(true)}
+              className="m-2 py-6 px-2 bg-purple-600 text-white"
+            >
+              <i className="fa-solid fa-credit-card"></i>
+              Payment Confirm
+            </Button>
+
+            <ExportToExcel invoices={invoices} />
+          </div>
         </div>
         <StatusInvoice status={status} setStatus={setStatus} />
         <InvoiceCard
@@ -107,6 +135,10 @@ const InvoicePage = () => {
         record={record}
         open={openDetailInvoice}
         setOpen={setOpenDetailInvoice}
+      />
+      <PaymentConfirm
+        open={openPaymentConfirm}
+        setOpen={setOpenPaymentConfirm}
       />
     </>
   );

@@ -8,6 +8,7 @@ import {
   Collapse,
   Tag,
   Switch,
+  notification,
 } from "antd";
 import { getMethodColor } from "../../../utils/getMethodColor";
 import { IPermisson } from "../../../interfaces";
@@ -31,7 +32,10 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
       if (response.data) {
         setPermissions(response.data.result);
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
       }
     };
     getPermissions();
@@ -41,7 +45,10 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
     setIsLoading(true);
 
     if (enablePermission.length === 0) {
-      message.error("Please select at least one permission");
+      notification.error({
+        message: "Please select at least one permission",
+      });
+
       setIsLoading(false);
       return;
     }
@@ -54,7 +61,10 @@ const AddRoleModel: React.FC<Props> = ({ openAddRole, setOpenAddRole }) => {
       message.success("Role created successfully");
       setOpenAddRole(false);
     } else {
-      message.error(response.message);
+      notification.error({
+        message: "Error",
+        description: response.message,
+      });
     }
     setIsLoading(false);
   };

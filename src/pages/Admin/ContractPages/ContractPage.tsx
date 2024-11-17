@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components"; // Change to CustomModal
 import AddContractModal from "./AddContractModal";
@@ -19,7 +19,7 @@ function ContractPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(4);
   const [total, setTotal] = useState(0);
 
   const [sorted, setSorted] = useState<string>("");
@@ -32,14 +32,25 @@ function ContractPage() {
   const handleCancelContract = async (id: string, roomId: string) => {
     const res = await contractApi.patchContractApi(id, ContractStatus.CANCELED);
     if (res.data) {
-      const response = await roomApi.updateRoomStatusApi(roomId, RoomStatus.Available);
+      const response = await roomApi.updateRoomStatusApi(
+        roomId,
+        RoomStatus.Available
+      );
 
       if (response.data) {
         message.success("Cancel contract successfully");
         getContracts();
-      } else message.error(res.message);
+      } else {
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
+      }
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
   const getContracts = async () => {
@@ -59,7 +70,12 @@ function ContractPage() {
     if (res.data) {
       setContracts(res.data.result);
       setTotal(res.data.meta.totalDocument);
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
     setIsLoading(false);
   };
   useEffect(() => {

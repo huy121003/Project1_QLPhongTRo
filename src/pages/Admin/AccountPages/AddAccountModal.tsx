@@ -1,10 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
+import {
+  Modal,
+  Button,
+  Input,
+  DatePicker,
+  Form,
+  Select,
+  message,
+  notification,
+} from "antd";
 import { Gender } from "../../../enums";
 import { IRole } from "../../../interfaces";
 import { RenderUploadField } from "../../../components";
 import { upfileApi, roleApi, accountApi } from "../../../api";
-import { checkEmail, checkIdCard, checkPassword, checkPhoneNumberVN } from "../../../utils/regex";
+import {
+  checkEmail,
+  checkIdCard,
+  checkPassword,
+  checkPhoneNumberVN,
+} from "../../../utils/regex";
 
 interface Props {
   openAddAccount: boolean;
@@ -30,15 +44,14 @@ const AddAccountModal: React.FC<Props> = ({
 
   useEffect(() => {
     const getRole = async () => {
-      try {
-        const res = await roleApi.fecthRoleApi("current=1&pageSize=1000");
-        if (res?.data) {
-          setRole(res.data.result);
-        } else {
-          message.error(res.message);
-        }
-      } catch (error) {
-        message.error("Failed to fetch roles.");
+      const res = await roleApi.fecthRoleApi("current=1&pageSize=1000");
+      if (res?.data) {
+        setRole(res.data.result);
+      } else {
+        notification.error({
+          message: "Error",
+          description: res.message,
+        });
       }
     };
     getRole();
@@ -47,105 +60,135 @@ const AddAccountModal: React.FC<Props> = ({
   const [form] = Form.useForm();
 
   const handleOk = async () => {
-    try {
-      // Validate the form fields
-      const values = await form.validateFields();
+    // Validate the form fields
+    const values = await form.validateFields();
 
-      // Combine first name, middle name, and last name into a single name
-      const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
-        values.LastName
-      }`.trim();
+    // Combine first name, middle name, and last name into a single name
+    const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
+      values.LastName
+    }`.trim();
 
-      const birthdayDate = values.BirthDay.toDate();
-      const birthdayIsoString = new Date(birthdayDate).toISOString();
-      const birthdayAsDate = new Date(birthdayIsoString);
-      let avatarFileName = imageAvatar;
-      let frontIdFileName = imageFrontId;
-      let backIdFileName = imageBackId;
-      let temporaryResidenceFileName = imageTemporaryResidence;
-      // Upload images if they exist
-      if (!checkEmail(values.email)) {
-        message.error("Email is not correct");
-        return;
-      }
-  
-      if (!checkPassword(values.password)) {
-        message.error(
-          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character"
-        );
-        return;
-      }
-  
-      if (!checkIdCard(values.idCard)) {
-        message.error("IdCard is not correct");
-        return;
-      }
-      if (checkPhoneNumberVN(values.phone)) {
-        message.error("Phone number is not correct");
-        return;
-      }
-      if (avatar) {
-        const response = await upfileApi.postAvatarApi(avatar);
-        if (response.statusCode === 201) {
-          avatarFileName = response.data.fileName;
-        } else {
-          message.error("Failed to upload avatar image.");
-          return;
-        }
-      }
-      if (frontIdImage) {
-        const response = await upfileApi.postAvatarApi(frontIdImage);
-        if (response.statusCode === 201) {
-          frontIdFileName = response.data.fileName;
-        } else {
-          message.error("Failed to upload front id image.");
-          return;
-        }
-      }
-      if (backIdImage) {
-        const response = await upfileApi.postAvatarApi(backIdImage);
-        if (response.statusCode === 201) {
-          backIdFileName = response.data.fileName;
-        } else {
-          message.error("Failed to upload back id image.");
-          return;
-        }
-      }
-      if (temporaryResidenceImage) {
-        const response = await upfileApi.postAvatarApi(temporaryResidenceImage);
-        if (response.statusCode === 201) {
-          temporaryResidenceFileName = response.data.fileName;
-        } else {
-          message.error("Failed to upload temporary residence image.");
-          return;
-        }
-      }
+    const birthdayDate = values.BirthDay.toDate();
+    const birthdayIsoString = new Date(birthdayDate).toISOString();
+    const birthdayAsDate = new Date(birthdayIsoString);
+    let avatarFileName = imageAvatar;
+    let frontIdFileName = imageFrontId;
+    let backIdFileName = imageBackId;
+    let temporaryResidenceFileName = imageTemporaryResidence;
+    // Upload images if they exist
+    if (!checkEmail(values.email)) {
+      notification.error({
+        message: "Error",
+        description: "Email is not correct",
+      });
 
-      // Call the API to post account data
-      const response = await accountApi.postAccountApi(
-        values.Email,
-        values.Phone,
-        values.Password,
-        fullName, // Use the combined full name
-        birthdayAsDate,
-        values.Gender,
-        values.Address,
-        values.IdCard,
-        values.Role,
-        avatarFileName,
-        [frontIdFileName, backIdFileName, temporaryResidenceFileName]
-      );
+      return;
+    }
 
+    if (!checkPassword(values.password)) {
+      notification.error({
+        message: "Error",
+        description:
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character",
+      });
+
+      return;
+    }
+
+    if (!checkIdCard(values.idCard)) {
+      notification.error({
+        message: "Error",
+        description: "IdCard is not correct",
+      });
+
+      return;
+    }
+    if (checkPhoneNumberVN(values.phone)) {
+      notification.error({
+        message: "Error",
+        description: "Phone number is not correct",
+      });
+
+      return;
+    }
+    if (avatar) {
+      const response = await upfileApi.postAvatarApi(avatar);
       if (response.statusCode === 201) {
-        message.success("Account added successfully");
-        refesh();
+        avatarFileName = response.data.fileName;
       } else {
-        // Display detailed error messages if available
+        notification.error({
+          message: "Error",
+          description: "Failed to upload avatar image.",
+        });
 
-        message.error(response.message);
+        return;
       }
-    } catch (error) {
-      message.error("Form validation failed. Please check your input.");
+    }
+    if (frontIdImage) {
+      const response = await upfileApi.postAvatarApi(frontIdImage);
+      if (response.statusCode === 201) {
+        frontIdFileName = response.data.fileName;
+      } else {
+        notification.error({
+          message: "Error",
+          description: "Failed to upload front id image.",
+        });
+
+        return;
+      }
+    }
+    if (backIdImage) {
+      const response = await upfileApi.postAvatarApi(backIdImage);
+      if (response.statusCode === 201) {
+        backIdFileName = response.data.fileName;
+      } else {
+        notification.error({
+          message: "Error",
+          description: "Failed to upload back id image.",
+        });
+
+        return;
+      }
+    }
+    if (temporaryResidenceImage) {
+      const response = await upfileApi.postAvatarApi(temporaryResidenceImage);
+      if (response.statusCode === 201) {
+        temporaryResidenceFileName = response.data.fileName;
+      } else {
+        notification.error({
+          message: "Error",
+          description: "Failed to upload temporary residence image.",
+        });
+
+        return;
+      }
+    }
+
+    // Call the API to post account data
+    const response = await accountApi.postAccountApi(
+      values.Email,
+      values.Phone,
+      values.Password,
+      fullName, // Use the combined full name
+      birthdayAsDate,
+      values.Gender,
+      values.Address,
+      values.IdCard,
+      values.Role,
+      avatarFileName,
+      [frontIdFileName, backIdFileName, temporaryResidenceFileName]
+    );
+
+    if (response.statusCode === 201) {
+      message.success("Account added successfully");
+      refesh();
+    } else {
+      // Display detailed error messages if available
+
+      notification.error({
+        message: "Error",
+        description: response.message,
+      });
     }
   };
   const refesh = () => {

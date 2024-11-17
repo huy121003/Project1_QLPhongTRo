@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Button, Input, Form, Select, message } from "antd";
+import { Modal, Button, Input, Form, Select, message, notification } from "antd";
 import { serviceApi } from "../../../api";
 import { ServiceType } from "../../../enums";
 interface Props {
@@ -30,7 +30,11 @@ const AddServiceModal: React.FC<Props> = ({
 
       setOpenAddService(false); // Close modal on success
     } else {
-      message.error(response.message);
+      notification.error({
+        message: "Error",
+        description: response.message,
+      });
+      
     }
   };
 

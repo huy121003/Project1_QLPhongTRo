@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  message,
+  Modal,
+  notification,
+  Steps,
+} from "antd";
 import { authtApi } from "../../api";
 
 interface Props {
@@ -14,48 +23,52 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
   const [loading, setLoading] = useState(false); // Loading state
   const getCode = async () => {
     setLoading(true); // Start loading
-    try {
-      const values = await formEmail.validateFields();
-      const email = values.email;
 
-      const res = await authtApi.retryCode(email);
-      if (res.statusCode === 201) {
-        setId(res.data._id);
-        setCurrent(current + 1);
-      } else {
-        message.error(res.message);
-      }
-    } catch (error) {
-      message.error("Please enter a valid email address.");
-    } finally {
-      setLoading(false); // End loading
+    const values = await formEmail.validateFields();
+    const email = values.email;
+
+    const res = await authtApi.retryCode(email);
+    if (res.statusCode === 201) {
+      setId(res.data._id);
+      setCurrent(current + 1);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
+
+    setLoading(false); // End loading
   };
   const resetPassword = async () => {
     setLoading(true); // Start loading
-    try {
-      const values = await formCode.validateFields();
 
-      if (values.password !== values.confirmPassword) {
-        message.error("Password and Confirm Password must be the same.");
-        return;
-      }
-      const res = await authtApi.apiResetPassword(
-        id,
-        values.code,
-        values.password
-      );
-      if (res.statusCode === 201) {
-        message.success("Password reset successfully.");
-        setCurrent(current + 1);
-      } else {
-        message.error(res.message);
-      }
-    } catch (error) {
-      message.error("Please enter a valid code.");
-    } finally {
-      setLoading(false); // End loading
+    const values = await formCode.validateFields();
+
+    if (values.password !== values.confirmPassword) {
+      notification.error({
+        message: "Error",
+        description: "Password and Confirm Password must be the same.",
+      });
+
+      return;
     }
+    const res = await authtApi.apiResetPassword(
+      id,
+      values.code,
+      values.password
+    );
+    if (res.statusCode === 201) {
+      message.success("Password reset successfully.");
+      setCurrent(current + 1);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
+
+    setLoading(false); // End loading
   };
   const EnterEmail = () => (
     <div className="mt-12">

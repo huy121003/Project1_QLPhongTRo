@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
+import { Button, Divider, Form, Input, message, Modal, notification, Steps } from "antd";
 import React, { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
 
   const activateAccount = async () => {
     setLoading(true); // Start loading
-    try {
+
       const values = await formCode.validateFields();
       const code = values.code;
 
@@ -27,13 +27,15 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
         message.success("Account activated successfully.");
         setCurrent(current + 1);
       } else {
-        message.error(res.message);
+        notification.error({
+          message: "Error",
+          description: res.message,
+        });
+       
       }
-    } catch (error) {
-      message.error("Please enter a valid code.");
-    } finally {
+  
       setLoading(false); // End loading
-    }
+    
   };
 
   const EnterCode = () => (

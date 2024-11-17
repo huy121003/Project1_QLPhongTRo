@@ -5,10 +5,11 @@ import { resizeWidth } from "../../utils/resize";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { accountApi, authtApi } from "../../api";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
-import { Dropdown, Menu, message } from "antd";
+import { Badge, Dropdown, Menu, message, notification } from "antd";
 import ChangePassword from "../../pages/AuthPages/ChangePassword";
 import { IAccount } from "../../interfaces";
 import EditAccountModal from "../../pages/Admin/AccountPages/EditAccountModal";
+import RegisterServiceModal from "../../pages/Admin/ServicePages/RegisterServiceModal";
 function HomeLayout() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ function HomeLayout() {
   );
   const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
   const [openEditAccount, setOpenEditAccount] = useState(false);
+  const [openRegisterService, setOpenRegisterService] =
+    useState<boolean>(false);
   const [account, setAccount] = useState<IAccount>();
   const [isNavOpen, setIsNavOpen] = useState<boolean>(
     /*localStorage.getItem("isNavOpen") === "true" ||*/ true
@@ -40,7 +43,10 @@ function HomeLayout() {
       setAccount(res.data);
       setOpenEditAccount(true);
     } else {
-      message.error("Something went wrong");
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
   const handleChangePassword = () => {
@@ -71,13 +77,23 @@ function HomeLayout() {
               ? "w-16 px-1"
               : "w-0"
             : isNavOpen
-            ? " px-1 w-[250px]"
+            ? " px-1 w-[200px]"
             : "w-16"
         } `}
       >
-        <div
-          className={`flex  h-[100px]  border-b-2 border-gray-200 w-full   `}
-        >
+        <div className="border-b-2   w-full justify-center items-center flex">
+          <img
+            src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4"
+            alt="logo"
+            className={`${
+              width >= 780 ? "w-16 h-16" : "w-12 h-12"
+            } rounded-full  my-4`}
+          />
+          <>
+            {isNavOpen && width > 680 && (
+              <span className="text-2xl font-bold text-center"> For Admin</span>
+            )}
+          </>
         </div>
         {homeAdminRouters
           .filter((item) => item.label !== undefined)
@@ -103,13 +119,33 @@ function HomeLayout() {
             <i className="fa fa-bars text-2xl cursor-pointer font-bold" />
             <h2 className="ml-4 text-2xl font-bold">{selected}</h2>
           </div>
-          <Dropdown overlay={menu} trigger={["hover"]}>
-            <div className="flex justify-center items-center hover:text-blue-500">
-              <i className="fa-solid fa-user-circle text-3xl mr-3"></i>
-              <p className=""> {user?.name}</p>
-              <i className="fa-solid fa-angle-down ml-1"></i>
+          <div className="flex justify-center items-center">
+            <div className="mx-4">
+              <Badge
+                count={5}
+                onClick={() => {
+                  setOpenRegisterService(true);
+                }}
+              >
+                <i className="fa fa-bell text-2xl cursor-pointer  text-red-600" />
+              </Badge>
             </div>
-          </Dropdown>
+            <Dropdown overlay={menu} trigger={["hover"]}>
+              <div className="flex justify-center items-center hover:text-blue-500">
+                {user?.avatar ? (
+                  <img
+                    src={user?.avatar}
+                    alt="avatar"
+                    className="w-10 h-10 rounded-full mr-2"
+                  />
+                ) : (
+                  <i className="fa fa-user-circle text-2xl mr-2" />
+                )}
+                <p className=""> {user?.name}</p>
+                <i className="fa-solid fa-angle-down ml-1"></i>
+              </div>
+            </Dropdown>
+          </div>
         </div>
         <div
           className="flex-1 flex-row overflow-y-auto overflow-x-auto 
@@ -129,6 +165,10 @@ function HomeLayout() {
           record={account}
         />
       )}
+      <RegisterServiceModal
+        open={openRegisterService}
+        setOpen={setOpenRegisterService}
+      />
     </div>
   );
 }

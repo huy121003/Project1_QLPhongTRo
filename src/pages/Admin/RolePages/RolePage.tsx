@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components";
 import DetailRole from "./DetailRole";
@@ -40,7 +40,11 @@ function RolePage() {
       setRoles(response.data.result);
       setTotal(response.data.meta.total);
     } else {
-      message.error(response.message);
+      notification.error({
+        message: "Error",
+        description: response.message,
+      });
+      
     }
   };
   useEffect(() => {
@@ -68,7 +72,12 @@ function RolePage() {
       getRoles();
       setCurrent(1);
     } else {
-      message.error(response.message);
+      notification.error({
+        message: "Error",
+        description: response.message,
+      });
+
+     
     }
   };
   return (
