@@ -2,26 +2,32 @@ import { useEffect, useState } from "react";
 
 import { useAppSelector } from "../../../redux/hook";
 
-import { message, notification } from "antd";
+
+import { notification } from "antd";
 import { IAccount } from "../../../interfaces";
 import { accountApi } from "../../../api";
-
 export default function ProfilePage() {
     const [accounts, setAccount] = useState<IAccount>();
+
     const iduser = useAppSelector((state) => state.auth.user._id); // Sửa tên biến id nếu cần thiết
 
     useEffect(() => {
         const getAccount = async () => {
+
+
             const response = await accountApi.fetchAccountByIdApi(iduser);
+
 
             if (response.data) {
                 setAccount(response.data);
             } else {
+
                 notification.error({
                     message: "Error",
                     description: response.message,
                 });
              
+
             }
         };
         getAccount();
@@ -48,7 +54,9 @@ export default function ProfilePage() {
                     <span className="text-lg py-3">Phone: {accounts?.phone}</span>
                     <span className="text-lg py-3">
                         Birthday:
+
                         {new Date(accounts?.birthday ?? "").toLocaleDateString(
+
                             "en-GB"
                         )}
                     </span>

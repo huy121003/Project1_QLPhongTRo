@@ -1,3 +1,4 @@
+
 import  { apiRequest } from "./ApiConfig";
 import { ServiceType } from "../enums";
 import { ApiMethod } from "../enums";
@@ -16,15 +17,17 @@ const postServiceApi = (
   price: number,
   unit: string,
   type: ServiceType
+
 ): Promise<any> => {
-  return apiRequest(ApiMethod.POST, `/api/v1/services`, false, {
-    serviceName,
-    description,
-    price: parseInt(price.toString()),
-    unit,
-    type,
-  });
+    return apiRequest(ApiMethod.POST, `/api/v1/services`, false, {
+        serviceName,
+        description,
+        price: parseInt(price.toString()),
+        unit,
+        type,
+    });
 };
+
 const patchServiceApi = (
   id: string,
   serviceName: string,
@@ -32,15 +35,17 @@ const patchServiceApi = (
   price: number,
   unit: string,
   type: ServiceType
+
 ): Promise<any> => {
-  return apiRequest(ApiMethod.PATCH, `/api/v1/services/${id}`, false, {
-    serviceName,
-    description,
-    price: parseInt(price.toString()),
-    unit,
-    type,
-  });
+    return apiRequest(ApiMethod.PATCH, `/api/v1/services/${id}`, false, {
+        serviceName,
+        description,
+        price: parseInt(price.toString()),
+        unit,
+        type,
+    });
 };
+
 export default {
   fetchServiceApi,
   fetchServiceByIdApi,

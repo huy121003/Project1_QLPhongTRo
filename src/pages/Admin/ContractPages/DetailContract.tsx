@@ -3,8 +3,10 @@ import { Descriptions, Drawer, Button, Typography } from "antd";
 import { PrinterOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
+
 import { downloadContractPDF } from "../../../utils/generateContractPDF";
 import { IContract } from "../../../interfaces";
+
 
 interface Props {
   openDetailContract: boolean;

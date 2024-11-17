@@ -21,57 +21,62 @@ const postAccountApi = (
   role: string,
   avatar: string,
   imagesIdCard: string[]
+
 ): Promise<any> => {
-  return apiRequest(ApiMethod.POST, `/api/v1/users`, false, {
-    email,
-    phone,
-    password,
-    name,
-    birthday,
-    gender,
-    address,
-    idCard,
-    role: role,
-    imagesIdCard,
-    avatar,
-  });
+    return apiRequest(ApiMethod.POST, `/api/v1/users`, false, {
+        email,
+        phone,
+        password,
+        name,
+        birthday,
+        gender,
+        address,
+        idCard,
+        role: role,
+        imagesIdCard,
+        avatar,
+    });
 };
+
 const patchAccountApi = (
   id: string,
 
-  phone: number,
 
-  name: string,
-  birthday: Date,
-  gender: string,
-  address: string,
-  idCard: string,
-  role: string,
-  avatar: string,
-  imagesIdCard: string[]
+    phone: number,
+
+    name: string,
+    birthday: Date,
+    gender: string,
+    address: string,
+    idCard: string,
+    role: string,
+    avatar: string,
+    imagesIdCard: string[]
 ): Promise<any> => {
-  return apiRequest(ApiMethod.PATCH, `/api/v1/users/${id}`, false, {
-    phone,
-    name,
-    birthday,
-    gender,
-    address,
-    idCard,
-    role,
-    imagesIdCard,
-    avatar,
-  });
+    return apiRequest(ApiMethod.PATCH, `/api/v1/users/${id}`, false, {
+        phone,
+        name,
+        birthday,
+        gender,
+        address,
+        idCard,
+        role,
+        imagesIdCard,
+        avatar,
+    });
 };
+
 const changePasswordApi = (
   _id: string,
   password: string,
   oldPassword: string
+
 ): Promise<any> => {
-  return apiRequest(ApiMethod.POST, `/api/v1/users/change-password`, false, {
-    _id,
-    password,
-    oldPassword,
-  });
+    return apiRequest(ApiMethod.POST, `/api/v1/users/change-password`, false, {
+        _id,
+        password,
+        oldPassword,
+    });
 };
 export default {
   fecthAccountApi,

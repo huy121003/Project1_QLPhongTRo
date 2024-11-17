@@ -8,6 +8,7 @@ import IInvoice from "./IInvoice";
 import IEquipment from "./IEquipment";
 import IPayment from "./IPayment";
 import IRegisterService from "./IRegisterService";
+import IRouter from "./IRouter";
 export type {
   IAccount,
   IContract,
@@ -19,4 +20,5 @@ export type {
   IEquipment,
   IPayment,
   IRegisterService,
+  IRouter
 };

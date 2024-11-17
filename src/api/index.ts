@@ -7,7 +7,8 @@ import roleApi from "./roleApi";
 import roomApi from "./roomApi";
 import serviceApi from "./serviceApi";
 import upfileApi from "./upfileApi";
-import paymentApi from "./paymentApi";
+import payOSApi from "./payOSApi";
+
 export {
   accountApi,
   authtApi,
@@ -18,5 +19,6 @@ export {
   roomApi,
   serviceApi,
   upfileApi,
-  paymentApi,
+  payOSApi
+
 };

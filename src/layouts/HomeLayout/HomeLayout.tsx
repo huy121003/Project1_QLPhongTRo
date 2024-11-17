@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import homeAdminRouters from "../../routers";
+
 import { resizeWidth } from "../../utils/resize";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { accountApi, authtApi } from "../../api";
@@ -10,6 +10,7 @@ import ChangePassword from "../../pages/AuthPages/ChangePassword";
 import { IAccount } from "../../interfaces";
 import EditAccountModal from "../../pages/Admin/AccountPages/EditAccountModal";
 import RegisterServiceModal from "../../pages/Admin/ServicePages/RegisterServiceModal";
+import { homeAdminRouters } from "../../routers";
 function HomeLayout() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();

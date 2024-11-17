@@ -7,157 +7,154 @@ import { LiaFileContractSolid } from "react-icons/lia";
 import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
 import { FaServicestack } from "react-icons/fa6";
 import { GrOverview } from "react-icons/gr";
-import {SidebarUser} from "../../components";
-import DasboardUserPage from "../../pages/User/DasboardUserPage/DasboardUserPage";
-
-import axios from "axios";
+import { SidebarUser } from "../../components";
 import { authtApi } from "../../api";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
-import { useAppDispatch } from "../../redux/hook";
-import { useNavigate } from "react-router-dom";
-import { message, Modal } from "antd";
-import ProfilePage from "../../pages/User/ProfilePage/ProfilePage";
+
+import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Dropdown, Menu, message } from "antd";
+
+import { homeUserRouters } from "../../routers";
+import { resizeWidth } from "../../utils/resize";
 import ChangePassword from "../../pages/AuthPages/ChangePassword";
-import ContractUserPage from "../../pages/User/ContractUserPage/ContractUserPage";
-import InvoiceUserPage from "../../pages/User/InvoiceUserPage/InvoiceUserPage";
-import PaymentHistoryUserPage from "../../pages/User/PaymentHistoryUserPage/PaymentHistoryUserPage";
-import ServiceUserPage from "../../pages/User/ServiceUserPage/ServiceUserPage";
-import DashboardUserPage from "../../pages/User/DasboardUserPage/DasboardUserPage";
-// import PaymentSuccessful from "../../pages/User/InvoiceUserPage/PaymentSuccessful";
+import logo from "../../access/Images/logo2.png";
 
 function UserLayout() {
-    const [openProfile, setOpenProfile] = useState(false);
-    const [openProfileModal, setOpenProfileModal] = useState(false); // Thêm state này
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const width = resizeWidth();
+  const [selected, setSelected] = useState<string>(
+    /* localStorage.getItem("selected") ||*/ "Dashboard"
+  );
+  const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
+  const [openEditAccount, setOpenEditAccount] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState<boolean>(
+    /*localStorage.getItem("isNavOpen") === "true" ||*/ true
+  );
+  const user = useAppSelector((state) => state.auth.user);
+  const toggleNav = () => {
+    setIsNavOpen((prev) => !prev);
+  };
+  const handleLogout = async () => {
+    const res = await authtApi.apiLogout();
+    if (res && res.data) {
+      dispatch(logoutAction());
+      navigate("/");
+      message.success("Success logout");
+    }
+  };
+  const handleChangePassword = () => {
+    setOpenChangePassword(true);
+  };
 
-    const [activeItem, setActiveItem] = useState<string>("Dashboard");
-    const [openChangePassword, setOpenChangePassword] =
-        useState<boolean>(false);
-    const handleLogout = async () => {
-        const res = await authtApi.apiLogout();
-        if (res && res.data) {
-            dispatch(logoutAction());
-            delete axios.defaults.headers.common["Authorization"];
-            navigate("/");
-            message.success("Success logout");
-        }
-    };
-    const handleChangePassword = () => {
-        setOpenChangePassword(true);
-    };
-    return (
-        <div className="flex h-screen bg-[#083b10] box-border">
-            <SidebarUser.SidebarUser>
-                <SidebarUser.SidebarItem
-                    icon={<MdOutlineDashboardCustomize size={30} />}
-                    text="Dashboard"
-                    active={activeItem === "Dashboard"} // Kiểm tra nếu đây là mục đang active
-                    onClick={() => setActiveItem("Dashboard")}
-                />
-                <SidebarUser.SidebarItem
-                    icon={<LiaFileContractSolid size={30} />}
-                    text="Contract"
-                    active={activeItem === "Contract"}
-                    onClick={() => setActiveItem("Contract")}
-                />
-                <SidebarUser.SidebarItem
-                    icon={<FaServicestack size={30} />}
-                    text="Service"
-                    active={activeItem === "Service"}
-                    onClick={() => setActiveItem("Service")}
-                />
-                <SidebarUser.SidebarItem
-                    icon={<LiaFileInvoiceDollarSolid size={30} />}
-                    text="Finance"
-                    active={activeItem === "Finance"}
-                    onClick={() => setActiveItem("Finance")}
-                >
-                    <SidebarUser.SidebarItem
-                        icon={<LiaFileInvoiceDollarSolid size={30} />}
-                        text="Pay"
-                        active={activeItem === "Pay"}
-                        onClick={() => setActiveItem("Pay")}
-                    />
-                    <SidebarUser.SidebarItem
-                        icon={<GrOverview size={30} />}
-                        text="Payment history"
-                        active={activeItem === "Payment history"}
-                        onClick={() => setActiveItem("Payment history")}
-                    />
-                </SidebarUser.SidebarItem>
-            </SidebarUser.SidebarUser>
-
-            <div className="flex-grow flex flex-col h-full">
-                <div className=" flex bg-[#083b10] h-16 items-center justify-end pr-7">
-                    <BsBell className="text-neutral-300" size={20} />
-                    <div
-                        className="pl-10 relative"
-                        onClick={() => setOpenProfile((prev) => !prev)}
-                    >
-                        <a href="#!" className="flex items-center gap-1">
-                            <FaRegUserCircle
-                                size={35}
-                                className="text-neutral-300"
-                            />
-                            <span className="pl-4 text-neutral-300">User</span>
-                            <RiArrowDropDownLine className="text-neutral-300" />
-                        </a>
-                    </div>
-                    {openProfile && (
-                        <div className="flex flex-col absolute top-16 right-6 bg-white text-[#2b6534] w-40 rounded-xl overflow-hidden shadow-xl">
-                            <div className="absolute -top-2 right-8 w-0 h-0 border-l-8 border-l-transparent border-r-8 border-r-transparent border-b-8 border-b-white"></div>
-                            <ul className="flex flex-col">
-                                <li
-                                    className="p-4 hover:bg-gray-200 transition-colors duration-200 "
-                                    onClick={() => setOpenProfileModal(true)}
-                                >
-                                    Profile
-                                </li>
-                                <li
-                                    className="p-4 hover:bg-gray-200 transition-colors duration-200"
-                                    onClick={handleChangePassword}
-                                >
-                                    Change Password
-                                </li>
-                                <li
-                                    className="p-4 hover:bg-gray-200 transition-colors duration-200"
-                                    onClick={handleLogout}
-                                >
-                                    Logout
-                                </li>
-                            </ul>
-                        </div>
-                    )}
-                </div>
-
-                <div className="flex-grow  rounded-tl-3xl rounded-bl-3xl overflow-hidden ">
-                    {activeItem === "Dashboard" && <DashboardUserPage />}
-                    {activeItem === "Contract" && <ContractUserPage />}
-                    {activeItem === "Service" && <ServiceUserPage />}
-                    {activeItem === "Finance" && <InvoiceUserPage />}
-                    {activeItem === "Payment history" && (
-                        <PaymentHistoryUserPage />
-                    )}
-                    {activeItem === "Pay" && <InvoiceUserPage />}
-                </div>
-            </div>
-            <ChangePassword
-                open={openChangePassword}
-                setOpen={setOpenChangePassword}
+  const menu = (
+    <Menu>
+      <Menu.Item key="3" onClick={() => setOpenEditAccount(true)}>
+        Update Profile
+        <i className="fa fa-user m-3" />
+      </Menu.Item>
+      <Menu.Item key="1" onClick={handleChangePassword}>
+        Change password
+        <i className="fa fa-key m-3" />
+      </Menu.Item>
+      <Menu.Item key="2" onClick={handleLogout}>
+        Logout
+        <i className="fa fa-sign-out  m-3" />
+      </Menu.Item>
+    </Menu>
+  );
+  return (
+    <div className="flex h-screen overflow-hidden bg-[#083b10] ">
+      <nav
+        className={`flex flex-col  items-center  h-full shadow-lg transition-all duration-300  text-[#7e881d]  ${
+          width <= 1024
+            ? isNavOpen
+              ? "w-[50px] "
+              : "w-0"
+            : isNavOpen
+            ? " px-1 w-[240px]"
+            : "w-16"
+        } `}
+      >
+        <div
+          className={`flex flex-row justify-center items-center gap-2 border-b border-gray-400 w-full h-[130px] pb-2`}
+        >
+          {width > 1024 && isNavOpen ? (
+            <img src={logo} alt="" className="object-cover w-44" />
+          ) : null}
+          <div className="flex " onClick={toggleNav}>
+            <i
+              className={`fa fa-bars text-2xl cursor-pointer font-bold text-[#7e881d] hover:text-[#ffd13b]  ${
+                !isNavOpen && "text-[#ffd13b] font-bold"
+              }`}
             />
+          </div>
+        </div>
+        {homeUserRouters
+          .filter((item) => item.label !== undefined)
+          .map((item) => (
+            <Link
+              to={item.path}
+              key={item.label}
+              className={`flex hover:text-[#ffd13b] flex-row items-center rounded-md my-3 px-4 py-2 w-full transition-colors duration-300  ${
+                selected === item.label ? "text-[#ffd13b] font-bold" : ""
+              }`}
+              onClick={() => setSelected(item.label ?? "Dashboard")}
+            >
+              <i className={`fa ${item.icon} text-2xl `} />
+              {width > 680 && isNavOpen ? (
+                <p className="ml-4 text-xl text-center font-semibold">
+                  {item.label}
+                </p>
+              ) : null}
+            </Link>
+          ))}
+      </nav>
 
-            {/* Modal cho Profile */}
-            <Modal
+      <div className="flex-1 transition-all duration-300 bg-[#083b10] ">
+        <div className="flex items-center  text-[#ffd13b] h-16 px-5 justify-between bg-[#083b10] ">
+          <div className="flex hover:text-slate-300" onClick={toggleNav}>
+            <h2 className="ml-2 text-2xl font-bold ">{selected}</h2>
+          </div>
+          <Dropdown overlay={menu} trigger={["hover"]}>
+            <div className="flex justify-center items-center hover:text-[#86f63b] pr-10 sm:pr-0">
+              <p className="text-lg"> {user?.name}</p>
+              <i className="fa-solid fa-angle-down ml-1"></i>
+            </div>
+          </Dropdown>
+        </div>
+        <div
+          className="flex-1 flex-row overflow-y-scroll rounded-tl-lg rounded-bl-lg "
+          style={{
+            maxHeight: "calc(100vh - 4rem)",
+            maxWidth: "100vw",
+          }}
+        >
+          <Outlet />
+        </div>
+      </div>
+      <ChangePassword
+        open={openChangePassword}
+        setOpen={setOpenChangePassword}
+      />
+
+      {/* Modal cho Profile */}
+      {/* <Modal
                 title=""
                 visible={openProfileModal}
                 onCancel={() => setOpenProfileModal(false)}
                 footer={null}
             >
-                <ProfilePage />
-            </Modal>
-        </div>
-    );
+                <ProfilePage /> */}
+
+      {/* <EditAccountModal
+     openEditAccount={openEditAccount}
+     setOpenEditAccount={setOpenEditAccount}
+     record={user}
+     /> */}
+    </div>
+  );
 }
 
 export default UserLayout;
