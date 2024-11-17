@@ -21,7 +21,7 @@ export default function InformationPersonal() {
         getAccount();
     }, [iduser]);
     return (
-        <div className="border-b pb-4 mb-4">
+        <div className="border-b pb-4 mb-4 overflow-x-scroll md:overflow-x-hidden">
             <h2 className="text-2xl font-semibold ">PERSONAL INFORMATION</h2>
 
             <div className="grid grid-cols-2 gap-4 mt-4 text-lg">

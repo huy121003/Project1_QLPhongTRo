@@ -72,3 +72,14 @@ export const patchInvoiceStatusApi = (
         status,
     });
 };
+
+// Thanh toán
+export const createLinkPayment = (
+    idInvoices: string[],
+    idPost: string
+): Promise<any> => {
+    return apiRequest(ApiMethod.POST, `/api/v1/pay/payment`, false, {
+        idInvoices,
+        idPost,
+    });
+};

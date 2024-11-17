@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .custom-scrollbar::-webkit-scrollbar {
-    width: 10px; /* Độ rộng của thanh cuộn */
+    width: 3px; /* Độ rộng của thanh cuộn */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {

@@ -1,30 +1,40 @@
 import { useEffect, useState } from "react";
 import { ServiceModel } from "../../../models/ServiceModel";
 import { fetchServiceApi } from "../../../api/serviceApi";
-import { message } from "antd";
+import { message, Pagination } from "antd";
 
 export default function AvailableService({ registeredServices }) {
     const [services, setServices] = useState<ServiceModel[]>([]);
 
+    //Phân trang
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
+    const [total, setTotal] = useState(0);
+
     useEffect(() => {
         const getRoom = async () => {
             const response = await fetchServiceApi(
-                "pageSize=1000&currentPage=1"
+                `pageSize=${pageSize}&currentPage=${current}`
             );
             if (response.data) {
                 setServices(response.data.result);
+                setTotal(response.data.meta.totalDocument);
             } else {
                 message.error(response.message);
             }
         };
         getRoom();
-    }, []);
+    }, [pageSize, current]);
 
+    const handlePaginationChange = (page: number, pageSize?: number) => {
+        setCurrent(page);
+        if (pageSize) setPageSize(pageSize);
+    };
     const isServiceRegistered = (serviceId) =>
         registeredServices.some((service) => service._id === serviceId);
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-6 mx-5 mb-5 overflow-y-auto h-[382px] custom-scrollbar">
+        <div className="bg-white rounded-lg shadow-md p-6 mx-0 mb-5 sm:mx-5 sm:overflow-x-hidden overflow-x-scroll ">
             <h2 className="text-xl font-semibold mb-4">Available Services</h2>
             <table className="w-full border text-left border-collapse">
                 <thead>
@@ -44,7 +54,9 @@ export default function AvailableService({ registeredServices }) {
                                     {service.serviceName}
                                 </td>
                                 <td className="py-2 px-4 border-r">
-                                    {service.price}
+                                    {service.price.toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
+                                    " đ"}
                                 </td>
                                 <td className="py-2 px-4 border-r">
                                     {service.description}
@@ -66,6 +78,15 @@ export default function AvailableService({ registeredServices }) {
                     })}
                 </tbody>
             </table>
+            <div className="flex justify-start pt-5 sm:justify-end ">
+                <Pagination
+                    current={current}
+                    pageSize={pageSize}
+                    total={total}
+                    onChange={handlePaginationChange}
+                    showSizeChanger
+                />
+            </div>
         </div>
     );
 }

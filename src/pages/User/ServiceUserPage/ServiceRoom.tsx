@@ -1,46 +1,68 @@
 import React, { useEffect, useState } from "react";
+
+import { fetchRoomApi } from "../../../api/roomApis";
 import { useAppSelector } from "../../../redux/hook";
+import { fetchContractApi } from "../../../api/contractApi";
 import ContractModel from "../../../models/ContractModel";
 
-import { fetchContractApi } from "../../../api/contractApi";
-import { fetchRoomApi } from "../../../api/roomApis";
-// import { ServiceModel } from "../../../models/ServiceModel";
-
 export default function ServiceRoom({ setServiceRooms, serviceRooms }) {
-    // Get user ID
     const iduser = useAppSelector((state) => state.auth.user._id);
-    const [contract, setContract] = useState<ContractModel[]>([]);
-    // const [serviceRooms, setServiceRoom] = useState<ServiceModel[]>([]);
-
+    const [contracts, setContracts] = useState<ContractModel[]>([]);
+    const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
     useEffect(() => {
-        const getContract = async () => {
+        const getContracts = async () => {
             const res = await fetchContractApi(`tenant._id=${iduser}`);
             if (res.data) {
-                const contractData = res.data.result;
-                setContract(contractData); // Set contract data
-            }
-        };
-        getContract();
-    }, [iduser]);
-
-    useEffect(() => {
-        // Only fetch room data when contract is available
-        const fetchRoomData = async () => {
-            if (contract && contract[0].room) {
-                const res2 = await fetchRoomApi(
-                    `_id=${contract[0].room._id}&populate=services`
+                const allContracts = res.data.result;
+                // Lọc chỉ lấy hợp đồng có status "active"
+                const activeContracts = allContracts.filter(
+                    (contract: ContractModel) => contract.status === "ACTIVE"
                 );
-                if (res2.data) {
-                    const servicedata = res2.data.result[0].services;
-                    setServiceRooms(servicedata);
+
+                setContracts(activeContracts);
+
+                // Nếu chưa có phòng được chọn, mặc định chọn phòng đầu tiên
+                if (activeContracts.length > 0 && !selectedRoomId) {
+                    setSelectedRoomId(activeContracts[0].room._id);
                 }
             }
         };
+        getContracts();
+    }, [iduser, selectedRoomId]);
+    useEffect(() => {
+        // Only fetch room data when contract is available
+        const fetchRoomData = async () => {
+            // if (contract && contract[0].room) {
+            const res2 = await fetchRoomApi(
+                `_id=${selectedRoomId}&populate=services`
+            );
+            if (res2.data) {
+                const servicedata = res2.data.result[0].services;
+                setServiceRooms(servicedata);
+            }
+            // }
+        };
         fetchRoomData();
-    }, [contract, setServiceRooms]); // Runs when contract changes
+    }, [selectedRoomId]); // Runs when contract changes
     return (
-        <div className="bg-white rounded-lg shadow-md p-6 m-5 ">
+        <div className="bg-white rounded-lg shadow-md p-6 m-0 mb-5 sm:m-5 ">
             <h2 className="text-2xl font-semibold mb-4">Current Services</h2>
+            {/* Danh sách các phòng */}
+            <div className="flex flex-row gap-4 pb-5  text-xl font-semibold">
+                {contracts.map((contract, index) => (
+                    <button
+                        key={contract._id}
+                        className={`px-4 py-2 rounded-lg shadow font-normal text-base ${
+                            selectedRoomId === contract.room._id
+                                ? "bg-green-300 text-white"
+                                : "bg-green-100 hover:bg-green-200"
+                        }`}
+                        onClick={() => setSelectedRoomId(contract.room._id)}
+                    >
+                        Phòng {contract.room.roomName}
+                    </button>
+                ))}
+            </div>
             <table className="w-full border text-left border-collapse">
                 <thead>
                     <tr className="border">
@@ -58,7 +80,10 @@ export default function ServiceRoom({ setServiceRooms, serviceRooms }) {
                                 {service.serviceName}
                             </td>
                             <td className="py-2 px-4 border-r">
-                                {service.price}
+                                {service.price.toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
+                                    " đ"}
+                                
                             </td>
                             <td className="py-2 px-4">{service.description}</td>
                         </tr>
