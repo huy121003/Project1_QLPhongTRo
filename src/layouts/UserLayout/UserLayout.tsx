@@ -8,17 +8,19 @@ import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
 import { FaServicestack } from "react-icons/fa6";
 import { GrOverview } from "react-icons/gr";
 import { SidebarUser } from "../../components";
-import { authtApi } from "../../api";
+import { accountApi, authtApi } from "../../api";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
 
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { Dropdown, Menu, message } from "antd";
+import { Dropdown, Menu, message, notification } from "antd";
 
 import { homeUserRouters } from "../../routers";
 import { resizeWidth } from "../../utils/resize";
 import ChangePassword from "../../pages/AuthPages/ChangePassword";
 import logo from "../../access/Images/logo2.png";
+import { IAccount } from "../../interfaces";
+import EditAccountModal from "../../pages/Admin/AccountPages/EditAccountModal";
 
 function UserLayout() {
   const dispatch = useAppDispatch();
@@ -27,6 +29,7 @@ function UserLayout() {
   const [selected, setSelected] = useState<string>(
     /* localStorage.getItem("selected") ||*/ "Dashboard"
   );
+  const [account, setAccount] = useState<IAccount>();
   const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
   const [openEditAccount, setOpenEditAccount] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState<boolean>(
@@ -47,10 +50,22 @@ function UserLayout() {
   const handleChangePassword = () => {
     setOpenChangePassword(true);
   };
+  const handleGetUser = async () => {
+    const res = await accountApi.fetchAccountByIdApi(user?._id);
+    if (res.data) {
+      setAccount(res.data);
+      setOpenEditAccount(true);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
+  };
 
   const menu = (
     <Menu>
-      <Menu.Item key="3" onClick={() => setOpenEditAccount(true)}>
+      <Menu.Item key="3" onClick={handleGetUser}>
         Update Profile
         <i className="fa fa-user m-3" />
       </Menu.Item>
@@ -118,8 +133,17 @@ function UserLayout() {
             <h2 className="ml-2 text-2xl font-bold ">{selected}</h2>
           </div>
           <Dropdown overlay={menu} trigger={["hover"]}>
-            <div className="flex justify-center items-center hover:text-[#86f63b] pr-10 sm:pr-0">
-              <p className="text-lg"> {user?.name}</p>
+            <div className="flex justify-center items-center hover:text-blue-500">
+              {user?.avatar ? (
+                <img
+                  src={user?.avatar}
+                  alt="avatar"
+                  className="w-10 h-10 rounded-full mr-2"
+                />
+              ) : (
+                <i className="fa fa-user-circle text-2xl mr-2" />
+              )}
+              <p className=""> {user?.name}</p>
               <i className="fa-solid fa-angle-down ml-1"></i>
             </div>
           </Dropdown>
@@ -138,21 +162,13 @@ function UserLayout() {
         open={openChangePassword}
         setOpen={setOpenChangePassword}
       />
-
-      {/* Modal cho Profile */}
-      {/* <Modal
-                title=""
-                visible={openProfileModal}
-                onCancel={() => setOpenProfileModal(false)}
-                footer={null}
-            >
-                <ProfilePage /> */}
-
-      {/* <EditAccountModal
-     openEditAccount={openEditAccount}
-     setOpenEditAccount={setOpenEditAccount}
-     record={user}
-     /> */}
+      {account && (
+        <EditAccountModal
+          openEditAccount={openEditAccount}
+          setOpenEditAccount={setOpenEditAccount}
+          record={account}
+        />
+      )}
     </div>
   );
 }
