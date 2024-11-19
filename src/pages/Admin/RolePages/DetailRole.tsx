@@ -2,16 +2,14 @@ import React, { useEffect, useState } from "react";
 import {
   Descriptions,
   Drawer,
-  message,
   Switch,
   Tag,
   Collapse,
   notification,
 } from "antd";
-import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment";
 
-import { getMethodColor, getRoleColor } from "../../../utils/getMethodColor";
+import { getMethodColor } from "../../../utils/getMethodColor";
 import { IPermisson } from "../../../interfaces";
 import { permissionApi } from "../../../api";
 import { useTheme } from "../../../contexts/ThemeContext";
@@ -38,17 +36,23 @@ const DetailRole: React.FC<Props> = ({
 
   const [permissions, setPermissions] = useState<IPermisson[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [enablePermission, setEnablePermission] = useState<string[]>([]);
+  
+  const [enablePermission, setEnablePermission] = useState<string[]>(() => {
+    return record?.permissions || [];
+  });
 
   useEffect(() => {
     const getPermissions = async () => {
       setIsLoading(true);
-      setEnablePermission(record?.permissions);
       const response = await permissionApi.fetchPermissionApi(
         "pageSize=1000&current=1"
       );
       if (response.data) {
         setPermissions(response.data.result);
+        
+        setEnablePermission(
+          response.data.result.map((permission: IPermisson) => permission._id)
+        );
       } else {
         notification.error({
           message: "Error",
@@ -62,9 +66,8 @@ const DetailRole: React.FC<Props> = ({
   }, [record]);
 
   const groupedPermissions = permissions.reduce(
-    // Group permissions by module
     (groups: any, permission: IPermisson) => {
-      const { module } = permission; //
+      const { module } = permission;
       if (!groups[module]) {
         groups[module] = [];
       }
@@ -73,7 +76,6 @@ const DetailRole: React.FC<Props> = ({
     },
     {}
   );
-
   const handleSwitchChange = (permissionId: string, checked: boolean) => {
     setEnablePermission((prevPermissions) =>
       checked
@@ -81,11 +83,30 @@ const DetailRole: React.FC<Props> = ({
         : prevPermissions.filter((id) => id !== permissionId)
     );
   };
+
+  //Handle module-level toggle 
+  const handleModuleToggle = (module: string, checked: boolean) => {
+    const modulePermissionIds = groupedPermissions[module].map(
+      (permission: IPermisson) => permission._id
+    );
+
+    setEnablePermission((prevPermissions) => {
+      const filteredPermissions = prevPermissions.filter(
+        (id) => !modulePermissionIds.includes(id)
+      );
+
+      return checked
+        ? [...filteredPermissions, ...modulePermissionIds]
+        : filteredPermissions;
+    });
+  };
+
   const renderItem = (label: string, value: React.ReactNode) => ({
     key: label,
     label: <span className={textColor}>{label}</span>,
     children: <span className={textColor}>{value}</span>,
   });
+
   const items = [
     renderItem("Role Name", record?.name),
     renderItem("Description", record?.description),
@@ -108,23 +129,17 @@ const DetailRole: React.FC<Props> = ({
   ];
 
   return (
-    <div
-      className={`flex-1 
-    ${textColor} ${bgColor}`}
-    >
+    <div className={`flex-1 ${textColor} ${bgColor}`}>
       <Drawer
         closable={false}
-        className={`
-        ${textColor} ${bgColor}`}
+        className={`${textColor} ${bgColor}`}
         loading={isLoading}
         open={openDetailRole}
         onClose={() => setOpenDetailRole(false)}
         width={"100vh"}
       >
         <div
-          className={` ${textColor} ${bgColor}
-             flex-1 items-center justify-center p-2
-          `}
+          className={`${textColor} ${bgColor} flex-1 items-center justify-center p-2`}
         >
           <h1 className="text-4xl my-2 mb-6 font-bold">Role Detail</h1>
           <Descriptions bordered items={items} column={1} />
@@ -137,7 +152,23 @@ const DetailRole: React.FC<Props> = ({
               {Object.keys(groupedPermissions).map((module) => (
                 <Collapse key={module} style={{ marginBottom: "16px" }}>
                   <Collapse.Panel
-                    header={<span className={`${textColor}`}>{module}</span>}
+                    //Add module-level toggle switch
+                    header={
+                      <div className="flex items-center justify-between">
+                        <span className={`${textColor}`}>{module}</span>
+                        <Switch
+                          size="small"
+                          // Check if ALL permissions in module are enabled
+                          checked={groupedPermissions[module].every(
+                            (permission: IPermisson) =>
+                              enablePermission.includes(permission._id)
+                          )}
+                          onChange={(checked) =>
+                            handleModuleToggle(module, checked)
+                          }
+                        />
+                      </div>
+                    }
                     key={module}
                     className={`${bgColor} ${textColor} round-xl`}
                   >
@@ -164,7 +195,6 @@ const DetailRole: React.FC<Props> = ({
                               </p>
                             </div>
                             <Switch
-                              disabled
                               checked={enablePermission?.includes(
                                 permission._id
                               )}
