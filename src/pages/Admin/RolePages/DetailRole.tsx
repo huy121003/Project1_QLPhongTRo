@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Descriptions, Drawer, message, Switch, Tag, Collapse, notification } from "antd";
+import {
+  Descriptions,
+  Drawer,
+  message,
+  Switch,
+  Tag,
+  Collapse,
+  notification,
+} from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment";
 
 import { getMethodColor, getRoleColor } from "../../../utils/getMethodColor";
 import { IPermisson } from "../../../interfaces";
 import { permissionApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
   openDetailRole: boolean;
@@ -18,6 +27,11 @@ const DetailRole: React.FC<Props> = ({
   setOpenDetailRole,
   record,
 }) => {
+  const { theme } = useTheme();
+
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const formatDate = (dateString: string) => {
     return moment(dateString).format("DD/MM/YYYY");
   };
@@ -40,7 +54,6 @@ const DetailRole: React.FC<Props> = ({
           message: "Error",
           description: response.message,
         });
-       
       }
 
       setIsLoading(false);
@@ -68,115 +81,110 @@ const DetailRole: React.FC<Props> = ({
         : prevPermissions.filter((id) => id !== permissionId)
     );
   };
-
+  const renderItem = (label: string, value: React.ReactNode) => ({
+    key: label,
+    label: <span className={textColor}>{label}</span>,
+    children: <span className={textColor}>{value}</span>,
+  });
   const items = [
-    {
-      key: "1",
-      label: "Role Name",
-      children: (
-        <p
-          className={`border ${
-            getRoleColor(record?.name) as string
-          } text-center rounded border-2 w-[120px] p-2`}
-        >
-          {record?.name}
-        </p>
-      ),
-    },
-    {
-      key: "2",
-      label: "Description",
-      children: record?.description,
-    },
-    {
-      key: "3",
-      label: "Created At",
-      children: new Date(record?.createdAt).toLocaleDateString(),
-    },
-    {
-      key: "4",
-      label: "Created By",
-      children: record?.createdBy ? (
-        record?.createdBy?.email
-      ) : (
-        <Tag icon={<SyncOutlined spin />} color="processing">
-          Updating
-        </Tag>
-      ),
-    },
-    {
-      key: "5",
-      label: "Updated At",
-      children: record?.updatedAt ? formatDate(record?.updatedAt) : "N/A",
-    },
-    {
-      key: "6",
-      label: "Updated By",
-      children: record?.updatedBy ? (
-        record?.updatedBy?.email
-      ) : (
-        <Tag icon={<SyncOutlined spin />} color="processing">
-          Updating
-        </Tag>
-      ),
-    },
+    renderItem("Role Name", record?.name),
+    renderItem("Description", record?.description),
+    renderItem(
+      "Created At",
+      <span className={textColor}>{formatDate(record?.createdAt)}</span>
+    ),
+    renderItem(
+      "Created By",
+      <span className={textColor}>{record?.createdBy?.email}</span>
+    ),
+    renderItem(
+      "Updated At",
+      <span className={textColor}>{formatDate(record?.updatedAt)}</span>
+    ),
+    renderItem(
+      "Updated By",
+      <span className={textColor}>{record?.updatedBy?.email}</span>
+    ),
   ];
 
   return (
-    <Drawer
-      loading={isLoading}
-      open={openDetailRole}
-      onClose={() => setOpenDetailRole(false)}
-      width={"100vh"}
+    <div
+      className={`flex-1 
+    ${textColor} ${bgColor}`}
     >
-      <Descriptions bordered title="Role Details" items={items} column={1} />
-      <div className="my-2" />
-      <Collapse>
-        <Collapse.Panel header="Permissions" key="1">
-          {Object.keys(groupedPermissions).map((module) => (
-            <Collapse key={module} style={{ marginBottom: "16px" }}>
-              <Collapse.Panel header={module} key={module}>
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "8px",
-                  }}
-                >
-                  {groupedPermissions[module].map((permission: IPermisson) => (
-                    <div
-                      key={permission._id}
-                      className="flex items-center p-2 border border-gray-200 rounded-md bg-gray-100"
-                    >
-                      <Tag
-                        color={getMethodColor(permission.method)}
-                        className="mr-[10px] w-[60px] text-center"
-                      >
-                        {permission.method}
-                      </Tag>
-                      <div className="">
-                        <span className="font-bold">
-                          Name: {permission.name}
-                        </span>
-                        <p className="flex-1">Api Path: {permission.apiPath}</p>
-                      </div>
-                      <Switch
-                        disabled
-                        checked={enablePermission?.includes(permission._id)}
-                        onChange={(checked: boolean) =>
-                          handleSwitchChange(permission._id, checked)
-                        }
-                        className="ml-auto"
-                      />
+      <Drawer
+        closable={false}
+        className={`
+        ${textColor} ${bgColor}`}
+        loading={isLoading}
+        open={openDetailRole}
+        onClose={() => setOpenDetailRole(false)}
+        width={"100vh"}
+      >
+        <div
+          className={` ${textColor} ${bgColor}
+             flex-1 items-center justify-center p-2
+          `}
+        >
+          <h1 className="text-4xl my-2 mb-6 font-bold">Role Detail</h1>
+          <Descriptions bordered items={items} column={1} />
+          <div className="my-2" />
+          <Collapse>
+            <Collapse.Panel
+              header={<span className={`${textColor}`}>Permissions</span>}
+              key="1"
+            >
+              {Object.keys(groupedPermissions).map((module) => (
+                <Collapse key={module} style={{ marginBottom: "16px" }}>
+                  <Collapse.Panel
+                    header={<span className={`${textColor}`}>{module}</span>}
+                    key={module}
+                    className={`${bgColor} ${textColor} round-xl`}
+                  >
+                    <div>
+                      {groupedPermissions[module].map(
+                        (permission: IPermisson) => (
+                          <div
+                            key={permission._id}
+                            className={`flex items-center p-1 border border-gray-200 rounded-md
+                              ${textColor} ${bgColor} `}
+                          >
+                            <Tag
+                              color={getMethodColor(permission.method)}
+                              className="mr-[10px] w-[60px] text-center"
+                            >
+                              {permission.method}
+                            </Tag>
+                            <div className="">
+                              <span className="font-bold">
+                                Name: {permission.name}
+                              </span>
+                              <p className="flex-1">
+                                Api Path: {permission.apiPath}
+                              </p>
+                            </div>
+                            <Switch
+                              disabled
+                              checked={enablePermission?.includes(
+                                permission._id
+                              )}
+                              onChange={(checked: boolean) =>
+                                handleSwitchChange(permission._id, checked)
+                              }
+                              className="ml-auto"
+                            />
+                          </div>
+                        )
+                      )}
                     </div>
-                  ))}
-                </div>
-              </Collapse.Panel>
-            </Collapse>
-          ))}
-        </Collapse.Panel>
-      </Collapse>
-    </Drawer>
+                  </Collapse.Panel>
+                </Collapse>
+              ))}
+            </Collapse.Panel>
+          </Collapse>
+        </div>
+      </Drawer>
+    </div>
   );
 };
 

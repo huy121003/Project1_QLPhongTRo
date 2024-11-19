@@ -6,6 +6,7 @@ import {
 } from "../../../utils/getMethodColor";
 import { Button, Pagination, Spin } from "antd";
 import { IRoom } from "../../../interfaces";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
   rooms: IRoom[];
@@ -32,6 +33,10 @@ const RoomCard: React.FC<Props> = ({
   setOpenDetailRoom,
   setRecord,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   return (
     <Spin spinning={isLoading}>
       {rooms.length > 0 ? (
@@ -40,15 +45,17 @@ const RoomCard: React.FC<Props> = ({
             {rooms.map((room) => (
               <div
                 key={room._id}
-                className="bg-white shadow-lg rounded-lg p-6 border-t-4 transform transition-all hover:scale-105 hover:shadow-xl"
+                className={` shadow-lg rounded-lg p-6 border-t-4 transform transition-all hover:scale-105 hover:shadow-xl
+                ${bgColor} ${textColor}
+                  `}
               >
                 <div className="border-b pb-3 mb-3">
-                  <p className="text-2xl font-bold text-gray-500">
+                  <p className="text-2xl font-bold ">
                     <i className="fa-solid fa-bed"></i> {room.roomName}
                   </p>
                 </div>
 
-                <div className="text-gray-700 space-y-2">
+                <div className=" space-y-2">
                   <p className="font-semibold">
                     <i className="fa-solid fa-cube mr-2"></i> {room.area} m²
                   </p>

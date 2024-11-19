@@ -10,6 +10,7 @@ import {
   Steps,
 } from "antd";
 import { authtApi } from "../../api";
+import { useTheme } from "../../contexts/ThemeContext";
 
 interface Props {
   open: boolean;
@@ -21,6 +22,10 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
   const [id, setId] = useState<string>("");
   const [current, setCurrent] = useState(0);
   const [loading, setLoading] = useState(false); // Loading state
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const getCode = async () => {
     setLoading(true); // Start loading
 
@@ -72,7 +77,7 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
   };
   const EnterEmail = () => (
     <div className="mt-12">
-      <p className="text-gray-500 mb-4">Please enter your email address.</p>
+      <p className=" mb-4">Please enter your email address.</p>
       <Form form={formEmail}>
         <Form.Item
           name="email"
@@ -89,7 +94,7 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
 
   const EnterPassword = () => (
     <div className="mt-12">
-      <p className="text-gray-500 mb-4">
+      <p className=" mb-4">
         A code has been sent to your email address. Please enter the code to
         reset your password.
       </p>
@@ -100,7 +105,7 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
         >
           <Input placeholder="Code" size="large" />
         </Form.Item>
-        <p className="text-gray-500 mb-4">Please enter your new password.</p>
+        <p className={`mb-4 ${textColor}`}>Please enter your new password.</p>
         <Form.Item
           name="password"
           rules={[{ required: true, message: "Please input your password!" }]}
@@ -123,9 +128,7 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
   const Done = () => (
     <div className="mt-12 flex flex-col items-center">
       <i className="fa-solid fa-circle-check text-[100px] text-blue-500 mb-4"></i>
-      <p className="text-gray-500">
-        Your password has been reset successfully.
-      </p>
+      <p className="">Your password has been reset successfully.</p>
       <Button
         size="large"
         type="primary"
@@ -133,6 +136,7 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
           setOpen(false);
           setCurrent(0);
         }}
+        className="mt-4"
       >
         Go back to login
       </Button>
@@ -141,17 +145,41 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
 
   const steps = [
     {
-      title: "Email",
+      title: (
+        <span
+          className={` 
+           ${textColor}
+        `}
+        >
+          Enter Email
+        </span>
+      ),
       content: <EnterEmail />,
       icon: <i className="fa-solid fa-envelope" />,
     },
     {
-      title: "Reset Password",
+      title: (
+        <span
+          className={` 
+           ${textColor}
+        `}
+        >
+          Enter Code
+        </span>
+      ),
       content: <EnterPassword />,
       icon: <i className="fa-solid fa-lock" />,
     },
     {
-      title: "Done",
+      title: (
+        <span
+          className={` 
+           ${textColor}
+        `}
+        >
+          Done
+        </span>
+      ),
       content: <Done />,
       icon: <i className="fa-solid fa-check" />,
     },
@@ -159,6 +187,7 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
 
   return (
     <Modal
+      closable={false}
       open={open}
       centered
       onCancel={() => {
@@ -166,23 +195,26 @@ const ResetPasswordPage: React.FC<Props> = ({ open, setOpen }) => {
         setCurrent(0);
       }}
       footer={null}
-      title={<h1 className="text-3xl font-bold text-center">Reset Pasword</h1>}
     >
-      <h2 className="text-4xl font-bold text-center text-white mb-8">
-        Reset Password
-      </h2>
-      <Divider />
-      <Steps current={current}>
-        {steps.map((item, index) => (
-          <Steps.Step
-            key={index}
-            title={item.title}
-            icon={item.icon}
-            className="flex"
-          />
-        ))}
-      </Steps>
-      <div className="mt-8">{steps[current].content}</div>
+      <div
+        className={`p-4
+      ${bgColor} ${textColor}
+    `}
+      >
+        <h2 className="text-4xl font-bold text-center mb-8">Reset Password</h2>
+        <Divider />
+        <Steps current={current}>
+          {steps.map((item, index) => (
+            <Steps.Step
+              key={index}
+              title={item.title}
+              icon={item.icon}
+              className="flex"
+            />
+          ))}
+        </Steps>
+        <div className="mt-8">{steps[current].content}</div>
+      </div>
     </Modal>
   );
 };

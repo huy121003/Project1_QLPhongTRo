@@ -9,6 +9,7 @@ import ContractCards from "./ContractCard";
 import { IContract } from "../../../interfaces";
 import { ContractStatus, RoomStatus } from "../../../enums";
 import { contractApi, roomApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 function ContractPage() {
   const [contracts, setContracts] = useState<IContract[]>([]);
@@ -21,7 +22,10 @@ function ContractPage() {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(4);
   const [total, setTotal] = useState(0);
-
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [sorted, setSorted] = useState<string>("");
   const [searchParams, setSearchParams] = useState({
     "room.roomName": "",
@@ -103,7 +107,11 @@ function ContractPage() {
           handleSortChange={handleSortChange}
           sorted={sorted}
         />
-        <div className="bg-white p-2 rounded-lg shadow-lg border border-gray-200 mt-2 justify-between flex items-center">
+        <div
+          className={` p-2 rounded-lg shadow-lg border border-gray-200 mt-2 justify-between flex items-center
+     ${bgColor} ${textColor}
+          `}
+        >
           <div />
 
           <div className="flex items-center">

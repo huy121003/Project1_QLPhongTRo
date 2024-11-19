@@ -15,6 +15,7 @@ import { message, notification, Select } from "antd";
 import ExportRevenueToExcel from "./ExportRevenueToExcel";
 import { IInvoice } from "../../../interfaces";
 import { invoiceApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -53,6 +54,7 @@ const MonthlyRevenueChart = () => {
   const [selectedYear, setSelectedYear] = useState<string>(
     new Date().getFullYear().toString()
   );
+  const { theme } = useTheme();
 
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -66,13 +68,11 @@ const MonthlyRevenueChart = () => {
           message: "Error",
           description: res.message,
         });
-   
       }
     };
     fetchInvoices();
   }, []);
 
-  // Lọc dữ liệu hóa đơn theo năm đã chọn
   const filteredInvoices = invoices.filter(
     (invoice) => invoice.month.split("-")[1] === selectedYear
   );
@@ -105,6 +105,15 @@ const MonthlyRevenueChart = () => {
     plugins: {
       legend: {
         display: true,
+        labels: {
+          color: theme === "dark" ? "#fff" : "#000", // Màu chữ của legend
+        },
+      },
+      tooltip: {
+        bodyColor: theme === "dark" ? "#fff" : "#000", // Màu chữ tooltip
+        backgroundColor: theme === "dark" ? "#333" : "#fff", // Nền tooltip
+        borderColor: theme === "dark" ? "#fff" : "#000", // Viền tooltip
+        borderWidth: 1,
       },
     },
     scales: {
@@ -113,12 +122,20 @@ const MonthlyRevenueChart = () => {
         title: {
           display: true,
           text: "Revenue (VND)",
+          color: theme === "dark" ? "#fff" : "#000", // Màu chữ trục Y
+        },
+        ticks: {
+          color: theme === "dark" ? "#fff" : "#000", // Màu chữ số trục Y
         },
       },
       x: {
         title: {
           display: true,
           text: "Month",
+          color: theme === "dark" ? "#fff" : "#000", // Màu chữ trục X
+        },
+        ticks: {
+          color: theme === "dark" ? "#fff" : "#000", // Màu chữ số trục X
         },
       },
     },
@@ -128,13 +145,16 @@ const MonthlyRevenueChart = () => {
     setSelectedYear(value);
   };
 
-  // Lấy danh sách các năm duy nhất từ dữ liệu hóa đơn
   const years = Array.from(
     new Set(invoices.map((invoice) => invoice.month.split("-")[1]))
   ).sort();
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md flex-1 mx-1 overflow-y-hidden">
+    <div
+      className={`p-6 rounded-lg shadow-md flex-1 mx-1 overflow-y-hidden ${
+        theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"
+      }`}
+    >
       <h2 className="text-xl font-bold text-center mb-4">
         Monthly Revenue Chart
       </h2>

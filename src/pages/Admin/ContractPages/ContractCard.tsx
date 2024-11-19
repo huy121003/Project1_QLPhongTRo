@@ -4,6 +4,7 @@ import { getContractStatusColor } from "../../../utils/getMethodColor";
 import { NotItem } from "../../../components";
 import { IContract } from "../../../interfaces";
 import { ContractStatus } from "../../../enums";
+import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {
   contracts: IContract[];
   isLoading: boolean;
@@ -27,6 +28,10 @@ const ContractCards: React.FC<Props> = ({
   setRecord,
   handleCancelContract,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   return (
     <Spin spinning={isLoading}>
       {contracts.length > 0 ? (
@@ -35,11 +40,13 @@ const ContractCards: React.FC<Props> = ({
             {contracts.map((contract) => (
               <div
                 key={contract._id}
-                className="bg-white shadow-md rounded-lg p-5 border-t-4 transform transition-transform hover:scale-105"
+                className={` shadow-md rounded-lg p-5 border-t-4 transform transition-transform hover:scale-105
+                  ${bgColor} ${textColor}
+                  `}
               >
                 {/* Contract Header */}
                 <div className="border-b pb-3 mb-3 flex justify-between">
-                  <p className="text-2xl font-bold text-gray-500">
+                  <p className="text-2xl font-bold ">
                     <i className="fa-solid fa-bed"></i> {contract.room.roomName}
                   </p>
                   <>
@@ -73,7 +80,7 @@ const ContractCards: React.FC<Props> = ({
                 </div>
 
                 {/* Contract Body */}
-                <div className="text-gray-700 space-y-2">
+                <div className=" space-y-2">
                   <p className="font-semibold">
                     <i className="fa-solid fa-user mr-2"></i>
                     {contract.tenant.name}

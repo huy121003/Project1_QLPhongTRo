@@ -8,8 +8,13 @@ import { Box, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { roomApi } from "../../../api";
 import { RoomStatus } from "../../../enums";
+import { useTheme } from "../../../contexts/ThemeContext";
 function AvailableRoom() {
   const [rooms, setRooms] = useState([]);
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
@@ -55,7 +60,6 @@ function AvailableRoom() {
           message: "Error",
           description: res.message,
         });
-      
       }
     };
 
@@ -73,7 +77,11 @@ function AvailableRoom() {
     }
   };
   return (
-    <div className="bg-white p-2 rounded-lg m-1 flex-1   ">
+    <div
+      className={` p-2 rounded-lg m-1 flex-1 
+     ${bgColor} ${textColor}
+      `}
+    >
       <Stack spacing={2}>
         <Box>
           <Typography variant="h6">List of available rooms</Typography>
@@ -92,6 +100,9 @@ function AvailableRoom() {
               // showSizeChanger: true,
               // pageSizeOptions: [5, 10, 20, 50, 100, 200],
             }}
+            rowClassName={`
+              ${bgColor} ${textColor}
+            `}
           />
         </Box>
       </Stack>

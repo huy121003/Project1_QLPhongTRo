@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react";
-
-import { IoMdArrowDropdown } from "react-icons/io";
-import { IoMdArrowDropup } from "react-icons/io";
-import { contractApi } from "../../../api";
-
-import { IContract } from "../../../interfaces";
 import { useAppSelector } from "../../../redux/hook";
 import { Alert, notification } from "antd";
 import ContractExtension from "./ContractExtesion";
+import { useEffect, useState } from "react";
+import { IContract } from "../../../interfaces";
+import { contractApi } from "../../../api";
 
 export default function ContractUserPage() {
   const iduser = useAppSelector((state) => state.auth.user._id);
@@ -24,10 +20,8 @@ export default function ContractUserPage() {
         const activeContracts = allContracts.filter(
           (contract: IContract) => contract.status === "ACTIVE"
         );
-
         console.log(activeContracts);
         setContracts(activeContracts);
-
         // Tính toán trạng thái gia hạn cho từng hợp đồng
         const renewableStates = activeContracts.map((contract: IContract) => {
           const today = new Date();
@@ -37,7 +31,6 @@ export default function ContractUserPage() {
           return 1 <= 30; // Hợp đồng sắp hết hạn (trong vòng 30 ngày)
         });
         setIsRenewable(renewableStates);
-
         // Nếu không có hợp đồng, đặt openContractIndex về -1
         if (activeContracts.length === 0) {
           setOpenContractIndex(-1);
@@ -50,7 +43,6 @@ export default function ContractUserPage() {
   const toggleContract = (index: number) => {
     setOpenContractIndex(index);
   };
-
   const handleExtension = (contractId: string) => {
     console.log(`Gia hạn hợp đồng ${contractId}`);
     // Thêm logic xử lý gia hạn hợp đồng tại đây
@@ -91,53 +83,85 @@ export default function ContractUserPage() {
           </span>
         ))}
       </div>
-      <div className="bg-white rounded-lg shadow-md p-6 m-5 overflow-y-auto h-[670px] ">
-        {contracts.map((contract, index) => (
-          <div
-            key={index}
-            className=" mb-3 bg-[#fffad3] rounded-lg shadow-md p-5 "
-          >
-            <div
-              className="   flex justify-between cursor-pointer"
-              onClick={() => toggleContract(index)}
-            >
-              <h2 className="text-2xl font-semibold">Contract {index + 1}</h2>
-              {openContractIndex === index ? (
-                <IoMdArrowDropup className="h-8" size={24} />
-              ) : (
-                <IoMdArrowDropdown className="h-8" size={24} />
-              )}
+      {/* Hiển thị thông tin hợp đồng */}
+      <div className="flex-grow bg-[#e0f5e4] ">
+        {contracts.length > 0 && openContractIndex !== -1 && (
+          <div className="">
+            <div className="bg-white rounded-lg shadow-md p-6 m-5">
+              <h2 className="text-2xl font-semibold mb-4">
+                Contract Information
+              </h2>
+              <p className="text-lg">
+                Start Date:{" "}
+                {new Date(
+                  contracts[openContractIndex].startDate
+                ).toLocaleDateString("en-GB")}
+              </p>
+              <p className="text-lg">
+                End Date:{" "}
+                {new Date(
+                  contracts[openContractIndex].endDate
+                ).toLocaleDateString("en-GB")}
+              </p>
+              <p className="text-lg">
+                Status: {contracts[openContractIndex].status}
+              </p>
             </div>
-            {openContractIndex === index && (
-              <div className="">
-                <div className="bg-[#e2face] w-full rounded-lg shadow-md p-6 mt-3">
-                  <h2 className="text-2xl font-semibold mb-4">
-                    Contract Information
-                  </h2>
-                  <p className="text-lg">
-                    Start Date:{" "}
-                    {new Date(contract.startDate).toLocaleDateString("en-GB")}
-                  </p>
-                  <p className="text-lg">
-                    End Date:{" "}
-                    {new Date(contract.endDate).toLocaleDateString("en-GB")}
-                  </p>
-                  <p className="text-lg">Status: {contract.status}</p>
-                </div>
-                <div className="bg-[#e2face] w-full rounded-lg shadow-md p-6 mt-3">
-                  {" "}
-                  <h2 className="text-2xl font-semibold mb-4">
-                    Landlord Information
-                  </h2>
-                  <p className="text-lg">Name: {contract.innkeeper.name}</p>
-                  {/* fix cứng */}
-                  <p className="text-lg">Address: Số 7, Quan trung</p>
-                  <p className="text-lg">Phone: 0343310165</p>
-                </div>
-              </div>
-            )}
+            <div className="bg-white  rounded-lg shadow-md p-6 m-5">
+              <h2 className="text-2xl font-semibold mb-4">
+                Landlord Information
+              </h2>
+              <p className="text-lg">
+                Name: {contracts[openContractIndex].innkeeper.name}
+              </p>
+              <p className="text-lg">Address: Số 7, Quan Trung</p>
+              <p className="text-lg">Phone: 0343310165</p>
+            </div>
+
+            <div className="bg-white  rounded-lg shadow-md p-6 m-5">
+              <h2 className="text-2xl font-semibold mb-4">
+                Tenant Information
+              </h2>
+              <p className="text-lg">
+                Name: {contracts[openContractIndex].tenant.name}
+              </p>
+              <p className="text-lg">
+                Address: {contracts[openContractIndex].tenant.address}
+              </p>
+              <p className="text-lg">
+                Phone: {contracts[openContractIndex].tenant.phone}
+              </p>
+              <p className="text-lg">
+                Email: {contracts[openContractIndex].tenant.email}
+              </p>
+            </div>
+
+            <div className="bg-white  rounded-lg shadow-md p-6 m-5">
+              <h2 className="text-2xl font-semibold mb-4">Room Details</h2>
+              <p className="text-lg">
+                Room Name: {contracts[openContractIndex].room.roomName}
+              </p>
+              <p className="text-lg">Room Type: Quad</p>
+              <p className="text-lg">Area: A</p>
+              <p className="text-lg">
+                Rent Price: {contracts[openContractIndex].room.price}
+              </p>
+              <p className="text-lg">
+                Amenities: Self-contained room, 45m2, with loft, 2 windows,
+                refrigerator, water heater, full kitchen
+              </p>
+            </div>
+            <div className="bg-white  rounded-lg shadow-md p-6 m-5">
+              <h2 className="text-2xl font-semibold mb-4">Payment Terms</h2>
+              <p className="text-lg">
+                Rent: {contracts[openContractIndex].depositAmount}
+              </p>
+              <p className="text-lg">Deposit: 2.500.000 VND</p>
+              <p className="text-lg">Payment Method: Chuyển khoản</p>
+              <p className="text-lg">Payment Due Date: 13</p>
+            </div>
           </div>
-        ))}
+        )}
       </div>
       <div className="bg-[#e0f5e4] px-4 pb-4">
         <button

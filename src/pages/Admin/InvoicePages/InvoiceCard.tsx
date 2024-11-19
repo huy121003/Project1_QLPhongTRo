@@ -5,7 +5,7 @@ import { Button, Pagination, Popconfirm, Spin } from "antd";
 import { getInvoiceStatusColor } from "../../../utils/getMethodColor";
 import { IInvoice } from "../../../interfaces";
 import { InvoiceStatus } from "../../../enums";
-
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
   invoices: IInvoice[];
@@ -32,19 +32,25 @@ const InvoiceCard: React.FC<Props> = ({
   onChange,
   onDeleteInvoice,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   return (
     <Spin spinning={isLoading}>
       {invoices.length > 0 ? (
         <div className="m-4 flex-1">
-           <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             {invoices.map((invoice) => (
               <div
                 key={invoice._id}
-                className={`bg-white shadow-md rounded-lg p-5 border-t-4  transform transition-transform hover:scale-105`}
+                className={` shadow-md rounded-lg p-5 border-t-4  transform transition-transform hover:scale-105
+                  ${bgColor} ${textColor}
+                  `}
               >
                 {/* Contract Header */}
                 <div className="border-b pb-3 mb-3 justify-between flex">
-                  <p className="text-2xl text-gray-500 font-bold">
+                  <p className="text-2xl  font-bold">
                     <i className="fa-solid fa-bed mr-2"></i>
                     {invoice.room.roomName}
                   </p>
@@ -71,7 +77,7 @@ const InvoiceCard: React.FC<Props> = ({
                 </div>
 
                 {/* Contract Body */}
-                <div className="text-gray-700 space-y-2">
+                <div className="space-y-2">
                   <p className="font-semibold">
                     <i className="fa-solid fa-user mr-2"></i>
                     {invoice.tenant.name}

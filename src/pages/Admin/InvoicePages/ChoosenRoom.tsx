@@ -3,6 +3,7 @@ import { message, notification } from "antd";
 import { IRoom } from "../../../interfaces";
 import { roomApi } from "../../../api";
 import { resizeWidth } from "../../../utils/resize";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
   choosenRoom: string;
@@ -19,34 +20,36 @@ const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
     setPageSize(witdh < 900 ? 5 : 10);
   }, [witdh]);
   const getRoom = async () => {
-   
-      const res = await roomApi.fetchRoomApi(
-        `currentPage=${current}&pageSize=${pageSize}`
-      );
-      if (res.data) {
-        setRooms(res.data.result);
-        setTotal(res.data.meta.totalPage);
-      } else {
-        notification.error({
-          message: "Error",
-          description: res.message,
-        });
-      
-      }
-   
+    const res = await roomApi.fetchRoomApi(
+      `currentPage=${current}&pageSize=${pageSize}`
+    );
+    if (res.data) {
+      setRooms(res.data.result);
+      setTotal(res.data.meta.totalPage);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
 
   useEffect(() => {
     getRoom();
   }, [current, pageSize]);
-
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   return (
-    <div className="bg-white p-4  rounded-lg shadow-lg border border-gray-200 m-2 flex justify-between items-center">
+    <div
+      className={` p-4  rounded-lg shadow-lg border border-gray-200 m-2 flex justify-between items-center
+ ${bgColor} ${textColor}
+    `}
+    >
       <div
         className={`flex py-4 px-4 border-2 rounded-2xl cursor-pointer ${
-          choosenRoom === ""
-            ? "border-blue-600 text-blue-600"
-            : "border-gray-400 text-gray-400"
+          choosenRoom === "" ? "border-blue-600 text-blue-600" : ""
         } mr-2`}
         onClick={() => setChooenRoom("")}
       >

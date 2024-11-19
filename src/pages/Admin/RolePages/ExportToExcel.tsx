@@ -53,7 +53,7 @@ const ExportToExcel: React.FC<Props> = ({ roles }) => {
     XLSX.writeFile(workbook, `RoleReport.xlsx`);
   };
   return (
-    <div className="bg-white   rounded-lg  justify-end flex-1 items-center cursor flex">
+    <div className="   rounded-lg  justify-end flex-1 items-center cursor flex">
       <Button
         onClick={exportToExcel}
         className="m-2 py-6 px-2 bg-green-600 text-white "

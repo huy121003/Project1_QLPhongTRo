@@ -49,6 +49,15 @@ const AccountFilters: React.FC<Props> = ({
               })),
             ],
           },
+          {
+            label: "Active",
+            field: "isActive",
+            type: "select",
+            options: [
+              { value: "", label: "All Status" },
+              { value: "true", label: "Active" },
+            ],
+          },
         ]}
       />
       <SortOption

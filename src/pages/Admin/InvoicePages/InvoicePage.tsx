@@ -10,6 +10,7 @@ import { InvoiceStatus } from "../../../enums";
 import { invoiceApi } from "../../../api";
 import { YearMonthSelector } from "../../../components";
 import PaymentConfirm from "./PaymentConfirm";
+import { useTheme } from "../../../contexts/ThemeContext";
 const InvoicePage = () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
@@ -91,20 +92,22 @@ const InvoicePage = () => {
       });
     }
   };
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   return (
     <>
       <div className="justify-end  w-full">
-        <YearMonthSelector
-          selectedMonth={selectedMonth}
-          year={year}
-          setYear={setYear}
-          setSelectedMonth={setSelectedMonth}
-        />
         <ChoosenRoom choosenRoom={choosenRoom} setChooenRoom={setChooenRoom} />
 
-        <div className="bg-white  rounded-lg  justify-between items-center mx-2 flex">
+        <div
+          className={` rounded-lg border border-gray-200  justify-between items-center mx-2 flex
+  ${bgColor} ${textColor} 
+          `}
+        >
           <div></div>
-          <div className="bg-white  rounded-lg shadow-lg border border-gray-200 justify-end flex-1 items-center cursor flex">
+          <div className="  rounded-lg shadow-lg  justify-end flex-1 items-center cursor flex">
             <Button
               size="large"
               onClick={() => setOpenPaymentConfirm(true)}
@@ -118,6 +121,14 @@ const InvoicePage = () => {
           </div>
         </div>
         <StatusInvoice status={status} setStatus={setStatus} />
+        <div className="justify-end  w-full">
+          <YearMonthSelector
+            selectedMonth={selectedMonth}
+            year={year}
+            setYear={setYear}
+            setSelectedMonth={setSelectedMonth}
+          />
+        </div>
         <InvoiceCard
           invoices={invoices}
           isLoading={isLoading}

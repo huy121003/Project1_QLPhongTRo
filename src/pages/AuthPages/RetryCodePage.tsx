@@ -10,6 +10,7 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { authtApi } from "../../api";
+import { useTheme } from "../../contexts/ThemeContext";
 interface Props {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -17,6 +18,10 @@ interface Props {
 }
 
 const RetryCodePage: React.FC<Props> = ({ open, setOpen, email }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [formEmail] = Form.useForm();
   const [formCode] = Form.useForm();
   const [id, setId] = useState<string>("");
@@ -68,7 +73,7 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen, email }) => {
 
   const EnterEmail = () => (
     <div className="mt-12">
-      <p className="text-gray-500 mb-4">
+      <p className=" mb-4">
         Please enter your email address to activate your account.
       </p>
       <Form form={formEmail}>
@@ -96,7 +101,7 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen, email }) => {
 
   const EnterCode = () => (
     <div className="mt-12">
-      <p className="text-gray-500 mb-4">
+      <p className=" mb-4">
         A code has been sent to your email address. Please enter the code to
         activate your account.
       </p>
@@ -123,15 +128,14 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen, email }) => {
   const Done = () => (
     <div className="mt-12 flex flex-col items-center">
       <i className="fa-solid fa-circle-check text-[100px] text-blue-500 mb-4"></i>
-      <p className="text-gray-500 mb-10">
-        Your account has been activated successfully.
-      </p>
+      <p className=" mb-10">Your account has been activated successfully.</p>
       <Button
         type="primary"
         onClick={() => {
           setOpen(false);
           setCurrent(0);
         }}
+        className="mt-4"
       >
         Go back to login
       </Button>
@@ -140,17 +144,41 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen, email }) => {
 
   const steps = [
     {
-      title: "Email",
+      title: (
+        <span
+          className={` 
+          ${textColor}
+        `}
+        >
+          Email
+        </span>
+      ),
       content: <EnterEmail />,
       icon: <i className="fa-solid fa-envelope" />,
     },
     {
-      title: "Enter Code",
+      title: (
+        <span
+          className={` 
+          ${textColor}
+        `}
+        >
+          Code
+        </span>
+      ),
       content: <EnterCode />,
       icon: <i className="fa-solid fa-lock" />,
     },
     {
-      title: "Done",
+      title: (
+        <span
+          className={` 
+          ${textColor}
+        `}
+        >
+          Done
+        </span>
+      ),
       content: <Done />,
       icon: <i className="fa-solid fa-check" />,
     },
@@ -159,28 +187,35 @@ const RetryCodePage: React.FC<Props> = ({ open, setOpen, email }) => {
   return (
     <Modal
       open={open}
+      closable={false}
       centered
       onCancel={() => {
         setOpen(false);
         setCurrent(0);
       }}
       footer={null}
-      title={
-        <h1 className="text-3xl font-bold text-center">Activate Account</h1>
-      }
     >
-      <Divider />
-      <Steps current={current}>
-        {steps.map((item, index) => (
-          <Steps.Step
-            key={index}
-            title={item.title}
-            icon={item.icon}
-            className="flex"
-          />
-        ))}
-      </Steps>
-      <div className="mt-8">{steps[current].content}</div>
+      <div
+        className={`p-4
+      ${bgColor} ${textColor}
+    `}
+      >
+        <h2 className="text-4xl font-bold text-center  mb-8">
+          Activate Account
+        </h2>
+        <Divider />
+        <Steps current={current}>
+          {steps.map((item, index) => (
+            <Steps.Step
+              key={index}
+              title={item.title}
+              icon={item.icon}
+              className="flex"
+            />
+          ))}
+        </Steps>
+        <div className="mt-8">{steps[current].content}</div>
+      </div>
     </Modal>
   );
 };

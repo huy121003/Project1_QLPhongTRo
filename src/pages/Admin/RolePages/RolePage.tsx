@@ -9,6 +9,7 @@ import RoleTable from "./RoleTable";
 import ExportToExcel from "./ExportToExcel";
 import { IRole } from "../../../interfaces";
 import { roleApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
 function RolePage() {
   const [roles, setRoles] = useState<IRole[]>([]);
   const [current, setCurrent] = useState(1);
@@ -23,6 +24,10 @@ function RolePage() {
   const [searchParams, setSearchParams] = useState({
     name: "",
   });
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const getRoles = async () => {
     const queryParams: Record<string, any> = {
       current: current,
@@ -44,7 +49,6 @@ function RolePage() {
         message: "Error",
         description: response.message,
       });
-      
     }
   };
   useEffect(() => {
@@ -76,8 +80,6 @@ function RolePage() {
         message: "Error",
         description: response.message,
       });
-
-     
     }
   };
   return (
@@ -88,7 +90,11 @@ function RolePage() {
         handleSortChange={handleSortChange}
         sorted={sorted}
       />
-      <div className="bg-white p-2  rounded-lg shadow-lg border border-gray-200 mx-2 justify-between flex items-center">
+      <div
+        className={` p-2  rounded-lg shadow-lg border border-gray-200 mx-2 justify-between flex items-center
+    ${bgColor} ${textColor}
+        `}
+      >
         <div></div>
 
         <div className="flex items-center">

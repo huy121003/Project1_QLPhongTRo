@@ -9,7 +9,12 @@ import ServiceTable from "./ServiceTable";
 import ExportToExcel from "./ExportToExcel";
 import { IService } from "../../../interfaces";
 import { serviceApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
 function ServicePage() {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [services, setServices] = useState<IService[]>([]);
 
   const [openAddService, setOpenAddService] = useState(false);
@@ -111,7 +116,11 @@ function ServicePage() {
           handleSortChange={handleSortChange}
           sorted={sorted}
         />
-        <div className="bg-white mx-2  rounded-lg shadow-lg border border-gray-200 mt-2  justify-between flex items-center">
+        <div
+          className={` mx-2  rounded-lg shadow-lg border border-gray-200 mt-2  justify-between flex items-center
+          ${bgColor} ${textColor}
+          `}
+        >
           <div></div>
           <div className="flex items-center">
             <ExportToExcel services={services} />

@@ -7,7 +7,12 @@ import { ContractStatus, ServiceType } from "../../../enums";
 import { contractApi, invoiceApi, serviceApi } from "../../../api";
 import { YearMonthSelector } from "../../../components";
 import { notification } from "antd";
+import { useTheme } from "../../../contexts/ThemeContext";
 const ElectricPage = () => {
+  const {theme} = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
@@ -28,7 +33,7 @@ const ElectricPage = () => {
     } else {
       notification.error({
         message: "Error",
-        description:res.message,
+        description: res.message,
       });
     }
   };
@@ -101,18 +106,19 @@ const ElectricPage = () => {
   };
   return (
     <div className="justify-end  w-full">
-      <YearMonthSelector
-        selectedMonth={selectedMonth}
-        year={year}
-        setYear={setYear}
-        setSelectedMonth={setSelectedMonth}
-      />
+    
       <ExportToExcel
         contract={contract}
         numberIndex={numberIndex}
         electric={electric}
         selectedMonth={selectedMonth}
         year={year}
+      />
+        <YearMonthSelector
+        selectedMonth={selectedMonth}
+        year={year}
+        setYear={setYear}
+        setSelectedMonth={setSelectedMonth}
       />
       <ElectricTable
         contract={contract}

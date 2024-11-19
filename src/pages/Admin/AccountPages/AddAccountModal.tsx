@@ -19,6 +19,7 @@ import {
   checkPassword,
   checkPhoneNumberVN,
 } from "../../../utils/regex";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
   openAddAccount: boolean;
@@ -31,6 +32,10 @@ const AddAccountModal: React.FC<Props> = ({
   openAddAccount,
   setOpenAddAccount,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [role, setRole] = useState<IRole[]>([]);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [frontIdImage, setFrontIdImage] = useState<File | null>(null);
@@ -76,14 +81,14 @@ const AddAccountModal: React.FC<Props> = ({
     let backIdFileName = imageBackId;
     let temporaryResidenceFileName = imageTemporaryResidence;
     // Upload images if they exist
-    if (!checkEmail(values.email)) {
-      notification.error({
-        message: "Error",
-        description: "Email is not correct",
-      });
+    // if (!checkEmail(values.email)) {
+    //   notification.error({
+    //     message: "Error",
+    //     description: "Email is not correct",
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
 
     if (!checkPassword(values.password)) {
       notification.error({
@@ -202,171 +207,192 @@ const AddAccountModal: React.FC<Props> = ({
   };
   return (
     <Modal
+      closable={false}
       centered
       open={openAddAccount}
-      title={<h1 className="text-3xl font-bold text-center">Add Account</h1>}
       onCancel={refesh}
-      footer={[
-        <Button size="large" key="back" onClick={refesh} className="mr-2">
-          Cancel
-        </Button>,
-        <Button key="submit" type="primary" onClick={handleOk} size="large">
-          <p className="font-xl text-white flex">Add</p>
-        </Button>,
-      ]}
+      footer={null}
       width={700}
     >
-      <Form form={form} layout="vertical">
-        <RenderUploadField
-          type="avatar"
-          selectedImage={avatar}
-          setSelectedImage={setAvatar}
-          imageUrl={imageAvatar}
-        />
+      <div className={`p-4 ${bgColor} ${textColor}`}>
+        <h1 className={`text-3xl font-bold text-center${bgColor} ${textColor}`}>
+          Add Account
+        </h1>
+        <Form form={form} layout="vertical">
+          <RenderUploadField
+            type="avatar"
+            selectedImage={avatar}
+            setSelectedImage={setAvatar}
+            imageUrl={imageAvatar}
+          />
 
-        <Form.Item label="Name" wrapperCol={{ span: 24 }}>
-          <div className="lg:flex justify-between">
-            <Form.Item
-              name="FirstName"
-              rules={[{ required: true, message: "First name is required" }]}
-              className="m-1 flex-1"
-            >
-              <Input placeholder="First Name" size="large" />
-            </Form.Item>
-            <Form.Item name="MiddleName" className="m-1 flex-1">
-              <Input placeholder="Middle Name" size="large" />
-            </Form.Item>
-            <Form.Item
-              name="LastName"
-              rules={[{ required: true, message: "Last name is required" }]}
-              className="m-1 flex-1"
-            >
-              <Input placeholder="Last Name" size="large" />
-            </Form.Item>
-          </div>
-        </Form.Item>
-        <Form.Item wrapperCol={{ span: 24 }}>
-          <div className="lg:flex justify-between">
-            <Form.Item
-              className="m-1 flex-1"
-              label="Email"
-              name="Email"
-              rules={[
-                { required: true, message: "Email is required" },
-                {
-                  type: "email",
-                  message: "Email must be a valid email address",
-                },
-              ]}
-            >
-              <Input placeholder="Enter email" size="large" />
-            </Form.Item>
-            <Form.Item
-              className="m-1 flex-1"
-              label="Phone"
-              name="Phone"
-              rules={[{ required: true, message: "Phone is required" }]}
-            >
-              <Input type="number" placeholder="Enter phone" size="large" />
-            </Form.Item>
-          </div>
-        </Form.Item>
-
-        <Form.Item wrapperCol={{ span: 24 }}>
-          <div className="lg:flex justify-between">
-            <Form.Item
-              label="Password"
-              name="Password"
-              rules={[{ required: true, message: "Password is required" }]}
-              className="m-1 flex-1"
-            >
-              <Input.Password placeholder="Enter password" size="large" />
-            </Form.Item>
-            <Form.Item
-              label="IdCard"
-              name="IdCard"
-              rules={[{ required: true, message: "IdCard is required" }]}
-              className="m-1 flex-1"
-            >
-              <Input type="number" placeholder="Enter IdCard" size="large" />
-            </Form.Item>
-          </div>
-        </Form.Item>
-
-        <Form.Item wrapperCol={{ span: 24 }}>
-          <div className="lg:flex justify-between">
-            <Form.Item
-              label="Birthday"
-              name="BirthDay"
-              rules={[{ required: true, message: "Birthday is required" }]}
-              className="m-1 flex-1"
-            >
-              <DatePicker placeholder="Enter Birthday" size="large" />
-            </Form.Item>
-            <Form.Item
-              label="Gender"
-              name="Gender"
-              rules={[{ required: true, message: "Gender is required" }]}
-              className="m-1 flex-1"
-            >
-              <Select placeholder="Select gender" size="large">
-                {Object.values(Gender).map((gender) => (
-                  <Option key={gender} value={gender}>
-                    {gender}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              label="Role"
-              name="Role"
-              rules={[{ required: true, message: "Role is required" }]}
-              className="m-1 flex-1"
-            >
-              <Select
-                placeholder="Select role"
-                size="large"
-                dropdownRender={(menu) => (
-                  <div className="max-h-[150px] overflow-y-auto">{menu}</div>
-                )}
+          <Form.Item
+            label={<span className={`${bgColor} ${textColor}`}>Name</span>}
+            wrapperCol={{ span: 24 }}
+          >
+            <div className="lg:flex justify-between">
+              <Form.Item
+                name="FirstName"
+                rules={[{ required: true, message: "First name is required" }]}
+                className="m-1 flex-1"
               >
-                {role.map((r) => (
-                  <Option key={r._id} value={r._id}>
-                    {r.name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </div>
-        </Form.Item>
+                <Input placeholder="First Name" size="large" />
+              </Form.Item>
+              <Form.Item name="MiddleName" className="m-1 flex-1">
+                <Input placeholder="Middle Name" size="large" />
+              </Form.Item>
+              <Form.Item
+                name="LastName"
+                rules={[{ required: true, message: "Last name is required" }]}
+                className="m-1 flex-1"
+              >
+                <Input placeholder="Last Name" size="large" />
+              </Form.Item>
+            </div>
+          </Form.Item>
+          <Form.Item wrapperCol={{ span: 24 }}>
+            <div className="lg:flex justify-between">
+              <Form.Item
+                className="m-1 flex-1"
+                label={
+                  <span className={`  ${bgColor} ${textColor}`}>Email</span>
+                }
+                name="Email"
+                rules={[
+                  { required: true, message: "Email is required" },
+                  {
+                    type: "email",
+                    message: "Email must be a valid email address",
+                  },
+                ]}
+              >
+                <Input placeholder="Enter email" size="large" />
+              </Form.Item>
+              <Form.Item
+                className="m-1 flex-1"
+                label={
+                  <span className={` ${bgColor} ${textColor}`}>Phone</span>
+                }
+                name="Phone"
+                rules={[{ required: true, message: "Phone is required" }]}
+              >
+                <Input type="number" placeholder="Enter phone" size="large" />
+              </Form.Item>
+            </div>
+          </Form.Item>
 
-        <Form.Item
-          label="Address"
-          name="Address"
-          rules={[{ required: true, message: "Address is required" }]}
-          className="flex-1 m-1"
-        >
-          <Input placeholder="Enter address" size="large" />
-        </Form.Item>
-        <div className="lg:flex justify-between">
-          <RenderUploadField
-            type="frontIdCard"
-            selectedImage={frontIdImage}
-            setSelectedImage={setFrontIdImage}
-          />
-          <RenderUploadField
-            type="backIdCard"
-            selectedImage={backIdImage}
-            setSelectedImage={setBackIdImage}
-          />
-          <RenderUploadField
-            type="temporaryResidence"
-            selectedImage={temporaryResidenceImage}
-            setSelectedImage={setTemporaryResidenceImage}
-          />
+          <Form.Item wrapperCol={{ span: 24 }}>
+            <div className="lg:flex justify-between">
+              <Form.Item
+                label={
+                  <span className={` ${bgColor} ${textColor}`}>Password</span>
+                }
+                name="Password"
+                rules={[{ required: true, message: "Password is required" }]}
+                className="m-1 flex-1"
+              >
+                <Input.Password placeholder="Enter password" size="large" />
+              </Form.Item>
+              <Form.Item
+                label={
+                  <span className={` ${bgColor} ${textColor}`}>IdCard</span>
+                }
+                name="IdCard"
+                rules={[{ required: true, message: "IdCard is required" }]}
+                className="m-1 flex-1"
+              >
+                <Input type="number" placeholder="Enter IdCard" size="large" />
+              </Form.Item>
+            </div>
+          </Form.Item>
+
+          <Form.Item wrapperCol={{ span: 24 }}>
+            <div className="lg:flex justify-between">
+              <Form.Item
+                label={
+                  <span className={` ${bgColor} ${textColor}`}>Birthday</span>
+                }
+                name="BirthDay"
+                rules={[{ required: true, message: "Birthday is required" }]}
+                className="m-1 flex-1"
+              >
+                <DatePicker placeholder="Enter Birthday" size="large" />
+              </Form.Item>
+              <Form.Item
+                label={
+                  <span className={`${bgColor} ${textColor}`}>Gender</span>
+                }
+                name="Gender"
+                rules={[{ required: true, message: "Gender is required" }]}
+                className="m-1 flex-1"
+              >
+                <Select placeholder="Select gender" size="large">
+                  {Object.values(Gender).map((gender) => (
+                    <Option key={gender} value={gender}>
+                      {gender}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label={<span className={` ${bgColor} ${textColor}`}>Role</span>}
+                name="Role"
+                rules={[{ required: true, message: "Role is required" }]}
+                className="m-1 flex-1"
+              >
+                <Select
+                  placeholder="Select role"
+                  size="large"
+                  dropdownRender={(menu) => (
+                    <div className="max-h-[150px] overflow-y-auto">{menu}</div>
+                  )}
+                >
+                  {role.map((r) => (
+                    <Option key={r._id} value={r._id}>
+                      {r.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </div>
+          </Form.Item>
+
+          <Form.Item
+            label={<span className={` ${bgColor} ${textColor}`}>Address</span>}
+            name="Address"
+            rules={[{ required: true, message: "Address is required" }]}
+            className="flex-1 m-1"
+          >
+            <Input placeholder="Enter address" size="large" />
+          </Form.Item>
+          <div className="lg:flex justify-between">
+            <RenderUploadField
+              type="frontIdCard"
+              selectedImage={frontIdImage}
+              setSelectedImage={setFrontIdImage}
+            />
+            <RenderUploadField
+              type="backIdCard"
+              selectedImage={backIdImage}
+              setSelectedImage={setBackIdImage}
+            />
+            <RenderUploadField
+              type="temporaryResidence"
+              selectedImage={temporaryResidenceImage}
+              setSelectedImage={setTemporaryResidenceImage}
+            />
+          </div>
+        </Form>
+        <div className="mt-4 flex-1 justify-end text-end">
+          <Button size="large" key="back" onClick={refesh} className="mr-2">
+            Cancel
+          </Button>
+          <Button key="submit" type="primary" onClick={handleOk} size="large">
+            <p className="font-xl text-white flex">Add</p>
+          </Button>
         </div>
-      </Form>
+      </div>
     </Modal>
   );
 };
