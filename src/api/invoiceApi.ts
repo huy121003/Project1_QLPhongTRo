@@ -7,6 +7,7 @@ const fetchInvoiceApi = (query: string): Promise<any> => {
 const fetchInvoiceByIdApi = (id: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/invoices/${id}`, false);
 };
+
 export const fetchInvoiceByUserId = (): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/invoices/by-user`, false);
 };

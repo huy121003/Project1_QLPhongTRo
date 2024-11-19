@@ -25,7 +25,7 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
         {Array.from({ length: 12 }, (_, i) => (
           <div
             key={i}
-            className={`flex flex-col items-center px-10 py-2 rounded-lg cursor-pointer ${
+            className={`flex flex-col items-center flex-1 py-2 rounded-lg cursor-pointer ${
               selectedMonth === i + 1
                 ? "bg-green-100 text-blue-500 border-2 border-blue-500"
                 : "bg-white text-gray-700"

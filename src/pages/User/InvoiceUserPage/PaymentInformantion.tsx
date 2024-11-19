@@ -1,335 +1,293 @@
 import React, { useEffect, useState } from "react";
-import { message, Pagination } from "antd";
+import { Button, message, Pagination } from "antd";
 import ModalDetailInvoice from "./ModalDetailInvoice";
 import { IContract, IInvoice, IRoom } from "../../../interfaces";
 import { useAppSelector } from "../../../redux/hook";
 import { contractApi, invoiceApi } from "../../../api";
 
 interface PaymentInformationProps {
-  onInvoiceSelectChange: (selected: boolean, selectedIds: string[]) => void; // Cập nhật callback để trả lại ids
+    onInvoiceSelectChange: (selected: boolean, selectedIds: string[]) => void; // Cập nhật callback để trả lại ids
 }
 
 export default function PaymentInformantion({
-  onInvoiceSelectChange,
+    onInvoiceSelectChange,
 }: PaymentInformationProps) {
-  const [invoices, setInvoices] = useState<IInvoice[]>([]);
+    const [invoices, setInvoices] = useState<IInvoice[]>([]);
+    const [total, setTotal] = useState(0);
+    //DS ID hóa đơn mà người dùng đã chọn
+    const [idInvoice, setIdInvoice] = useState<Array<string>>([]);
 
-  const [total, setTotal] = useState(0);
+    //Lưu trữ hóa đơn cụ thể mà click vào để xem chi tiết.
+    const [selectedInvoice, setSelectedInvoice] = useState<IInvoice | null>(
+        null
+    );
+    //Lưu trữ danh sách các hóa đơn đã được lọc theo danh mục
+    const [filteredInvoices, setFilteredInvoices] = useState<IInvoice[]>([]);
 
-  //DS ID hóa đơn mà người dùng đã chọn
-  const [idInvoice, setIdInvoice] = useState<Array<string>>([]);
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
-  //Lưu trữ hóa đơn cụ thể mà click vào để xem chi tiết.
-  const [selectedInvoice, setSelectedInvoice] = useState<IInvoice | null>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectAll, setSelectAll] = useState(false); // State để quản lý checkbox chính
 
-  //Lưu trữ danh sách các hóa đơn đã được lọc theo danh mục
-  const [filteredInvoices, setFilteredInvoices] = useState<IInvoice[]>([]);
-  //Lưu trạng thái danh mục hóa đơn đang chọn để lọc.
-  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+    const iduser = useAppSelector((state) => state.auth.user._id);
+    // Quản lý hợp đồng và phòng
+    const [contracts, setContracts] = useState<IContract[]>([]);
+    const [rooms, setRooms] = useState<IRoom[]>([]);
+    const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
-  const [selectAll, setSelectAll] = useState(false); // State để quản lý checkbox chính
+    //Phân trang
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
+    const [totall, setTotall] = useState(0);
 
-  const iduser = useAppSelector((state) => state.auth.user._id);
-  // Quản lý hợp đồng và phòng
-  const [contracts, setContracts] = useState<IContract[]>([]);
-  const [rooms, setRooms] = useState<IRoom[]>([]);
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-  //call api
+    //Lấy hợp đồng ứng vs user
+    useEffect(() => {
+        const getContracts = async () => {
+            const res = await contractApi.fetchContractApi(
+                `tenant._id=${iduser}&status=ACTIVE`
+            );
+            if (res.data) {
+                const allContracts = res.data.result;
+                const roomsFromContracts = allContracts.map(
+                    (contract: IContract) => contract.room
+                );
+                setRooms(roomsFromContracts);
+                // Đặt phòng đầu tiên làm mặc định
+                if (roomsFromContracts.length > 0) {
+                    setSelectedRoomId(roomsFromContracts[0]._id);
+                }
+            } else {
+                message.error(res.message);
+            }
+        };
+        getContracts();
+    }, [iduser]);
 
-  //Lấy hợp đồng ứng vs user
-  useEffect(() => {
-    const getContracts = async () => {
-      const res = await contractApi.fetchContractApi(`tenant._id=${iduser}`);
-      if (res.data) {
-        const allContracts = res.data.result;
-        // Lọc chỉ lấy hợp đồng có status "active"
-        const activeContracts = allContracts.filter(
-          (contract: IContract) => contract.status === "ACTIVE"
-        );
-        const roomsFromContracts = activeContracts.map(
-          (contract: IContract) => contract.room
-        );
-        setRooms(roomsFromContracts);
-        // Đặt phòng đầu tiên làm mặc định
-        if (roomsFromContracts.length > 0) {
-          setSelectedRoomId(roomsFromContracts[0]._id);
+    console.log(rooms);
+    //lấy hóa đơn
+    useEffect(() => {
+        const getInvoices = async () => {
+            const response = await invoiceApi.fetchInvoiceApi(
+                `tenant._id=${iduser}&status=UNPAID&pageSize=${pageSize}&currentPage=${current}`
+            );
+            console.log(response);
+            if (response.data) {
+                setInvoices(response.data.result);
+                setTotall(response.data.meta.totalDocument);
+                //Lưu trữ danh sách các hóa đơn đã được lọc theo danh mục
+                setFilteredInvoices(response.data.result);
+            } else {
+                message.error(response.message || "Data format is incorrect");
+            }
+        };
+        getInvoices();
+    }, [iduser, pageSize, current]);
+
+    const handlePaginationChange = (page: number, pageSize?: number) => {
+        setCurrent(page);
+        if (pageSize) setPageSize(pageSize);
+    };
+
+    useEffect(() => {
+        // Lọc hóa đơn dựa trên danh mục đã chọn
+        const filterByCategory = () => {
+            let filtered = invoices;
+
+            // Lọc theo phòng
+            if (selectedRoomId) {
+                filtered = filtered.filter(
+                    (invoice) => invoice.room._id === selectedRoomId
+                );
+            }
+            setFilteredInvoices(filtered);
+        };
+        filterByCategory();
+    }, [invoices, selectedRoomId]);
+
+    const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const isChecked = e.target.checked;
+        setSelectAll(isChecked);
+
+        // Nếu checkbox chính được chọn, thêm tất cả ID vào danh sách
+        if (isChecked) {
+            setIdInvoice(invoices.map((invoice) => invoice._id));
+            setTotal(
+                invoices.reduce((sum, invoice) => sum + invoice.amount, 0)
+            );
+            onInvoiceSelectChange(
+                true,
+                invoices.map((invoice) => invoice._id)
+            );
+        } else {
+            // Nếu checkbox chính được bỏ chọn, xóa tất cả ID
+            setIdInvoice([]);
+            setTotal(0);
+            onInvoiceSelectChange(false, []);
         }
-      } else {
-        message.error(res.message);
-      }
     };
-    getContracts();
-  }, [iduser]);
 
-  //lấy hóa đơn
-  useEffect(() => {
-    const getInvoices = async () => {
-      const response = await invoiceApi.fetchInvoiceByUserId();
-      console.log(response);
-      if (response.data && Array.isArray(response.data)) {
-        // Chỉ lấy các hóa đơn có trạng thái "unpaid"
-        const unpaidInvoices = response.data.filter(
-          (invoice: IInvoice) => invoice.status === "UNPAID"
-        );
-        setInvoices(unpaidInvoices);
-        setFilteredInvoices(unpaidInvoices); // Hiển thị tất cả hóa đơn mặc định
-      } else {
-        message.error(response.message || "Data format is incorrect");
-      }
-    };
-    getInvoices();
-  }, []);
+    const handleCheckbox = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        price: number,
+        id: string
+    ) => {
+        const isChecked = e.target.checked;
+        if (isChecked) {
+            setTotal(total + price);
+            // Cập nhật idInvoice với setState
+            setIdInvoice((prevIdInvoice) => [...prevIdInvoice, id]);
+            onInvoiceSelectChange(true, [...idInvoice, id]);
+        } else {
+            setTotal(total - price);
+            // Cập nhật idInvoice với setState
+            setIdInvoice((prevIdInvoice) =>
+                prevIdInvoice.filter((item) => item !== id)
+            );
 
-  useEffect(() => {
-    // Lọc hóa đơn dựa trên danh mục đã chọn
-    const filterByCategory = () => {
-      let filtered = invoices;
-
-      // Lọc theo phòng
-      if (selectedRoomId) {
-        filtered = filtered.filter(
-          (invoice) => invoice.room._id === selectedRoomId
-        );
-      }
-      // Lọc theo danh mục
-      if (selectedCategory !== "ALL") {
-        if (selectedCategory === "RENT") {
-          filtered = filtered.filter(
-            (invoice) =>
-              invoice.service.name.toLowerCase() === "Trọ".toLowerCase()
-          );
-        } else if (selectedCategory === "ELECTRICITY") {
-          filtered = filtered.filter(
-            (invoice) =>
-              invoice.service.name.toLowerCase() === "Điện".toLowerCase()
-          );
-        } else if (selectedCategory === "WATER") {
-          filtered = filtered.filter(
-            (invoice) =>
-              invoice.service.name.toLowerCase() === "Nước".toLowerCase()
-          );
-        } else if (selectedCategory === "OTHER") {
-          filtered = filtered.filter((invoice) =>
-            ["Mạng", "Vệ sinh", "Gửi xe"]
-              .map((item) => item.toLowerCase())
-              .includes(invoice.service.name.toLowerCase())
-          );
+            onInvoiceSelectChange(
+                idInvoice.length > 1,
+                idInvoice.filter((item) => item !== id)
+            );
         }
-      }
-
-      setFilteredInvoices(filtered);
+        // Nếu tất cả checkbox được check, tự động chọn checkbox chính
+        if (!isChecked) {
+            setSelectAll(false);
+        } else if (
+            invoices.every(
+                (invoice) =>
+                    idInvoice.includes(invoice._id) || invoice._id === id
+            )
+        ) {
+            setSelectAll(true);
+        }
     };
-    filterByCategory();
-  }, [selectedCategory, invoices, selectedRoomId]);
 
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const isChecked = e.target.checked;
-    setSelectAll(isChecked);
+    const openModal = (invoice: IInvoice) => {
+        setSelectedInvoice(invoice);
+        setIsModalVisible(true);
+    };
 
-    // Nếu checkbox chính được chọn, thêm tất cả ID vào danh sách
-    if (isChecked) {
-      setIdInvoice(filteredInvoices.map((invoice) => invoice._id));
-      setTotal(
-        filteredInvoices.reduce((sum, invoice) => sum + invoice.amount, 0)
-      );
-      onInvoiceSelectChange(
-        true,
-        filteredInvoices.map((invoice) => invoice._id)
-      );
-    } else {
-      // Nếu checkbox chính được bỏ chọn, xóa tất cả ID
-      setIdInvoice([]);
-      setTotal(0);
-      onInvoiceSelectChange(false, []);
-    }
-  };
+    const closeModal = () => {
+        setIsModalVisible(false);
+        setSelectedInvoice(null);
+    };
 
-  const handleCheckbox = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    price: number,
-    id: string
-  ) => {
-    const isChecked = e.target.checked;
-    if (isChecked) {
-      setTotal(total + price);
-      // Cập nhật idInvoice với setState
-      setIdInvoice((prevIdInvoice) => [...prevIdInvoice, id]);
-      onInvoiceSelectChange(true, [...idInvoice, id]);
-    } else {
-      setTotal(total - price);
-      // Cập nhật idInvoice với setState
-      setIdInvoice((prevIdInvoice) =>
-        prevIdInvoice.filter((item) => item !== id)
-      );
+    console.log(idInvoice);
+    return (
+        <div className="bg-white mb-0 md:mb-5 mx-0 md:mx-5 rounded-2xl p-6 shadow-lg text-[#2b6534] flex-grow overflow-x-auto md:overflow-x-hidden">
+            <h3 className="text-xl font-semibold text-[#2b6534] mb-2">
+                Payment Information
+            </h3>
+            {/* Danh sách các phòng */}
+            {rooms.length > 0 && (
+                <div className="flex flex-row gap-4 mb-4">
+                    {rooms.map((room, index) => (
+                        <button
+                            key={room._id}
+                            className={`px-4 py-2 rounded-lg shadow ${
+                                selectedRoomId === room._id
+                                    ? "bg-green-300 text-[#2b6534] cursor-pointer font-semibold"
+                                    : "bg-green-100 hover:bg-green-200"
+                            }`}
+                            onClick={() => setSelectedRoomId(room._id)}
+                        >
+                            Phòng {room.roomName}
+                        </button>
+                    ))}
+                </div>
+            )}
+            <table className="w-full border text-left ">
+                <thead>
+                    <tr className="border">
+                        <th className="py-2 px-4 border-r">No.</th>
+                        <th className="py-2 px-4 border-r">ID</th>
 
-      onInvoiceSelectChange(
-        idInvoice.length > 1,
-        idInvoice.filter((item) => item !== id)
-      );
-    }
-    // Nếu tất cả checkbox được check, tự động chọn checkbox chính
-    if (!isChecked) {
-      setSelectAll(false);
-    } else if (
-      filteredInvoices.every(
-        (invoice) => idInvoice.includes(invoice._id) || invoice._id === id
-      )
-    ) {
-      setSelectAll(true);
-    }
-  };
+                        <th className="py-2 px-4 border-r">Name</th>
 
-  const openModal = (invoice: IInvoice) => {
-    setSelectedInvoice(invoice);
-    setIsModalVisible(true);
-  };
+                        <th className="py-2 px-4 border-r">Description</th>
+                        <th className="py-2 px-4 border-r">Amount</th>
 
-  const closeModal = () => {
-    setIsModalVisible(false);
-    setSelectedInvoice(null);
-  };
+                        <th className="py-2 px-4 border-r">Status</th>
+                        <th className="py-2 px-4 border-r">
+                            <input
+                                type="checkbox"
+                                className="form-checkbox h-5 w-5"
+                                checked={selectAll} // Liên kết với trạng thái `selectAll`
+                                onChange={handleSelectAll}
+                            />
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {/* Ví dụ một hàng trong bảng */}
+                    {filteredInvoices?.map((invoice, index) => (
+                        <tr key={invoice._id}>
+                            <td className="py-2 px-4 border">{index + 1}</td>
+                            <td
+                                className="py-2 px-4 border cursor-pointer"
+                                onClick={() => openModal(invoice)}
+                            >
+                                {invoice._id}
+                            </td>
 
-  console.log(idInvoice);
-  return (
-    <div className="bg-white mb-0 md:mb-5 mx-0 md:mx-5 rounded-2xl p-6 shadow-lg text-[#2b6534] flex-grow overflow-x-auto md:overflow-x-hidden">
-      <h3 className="text-xl font-semibold text-[#2b6534] mb-2">
-        Payment Information
-      </h3>
-      {/* Danh sách các phòng */}
-      {rooms.length > 0 && (
-        <div className="flex flex-row gap-4 mb-4">
-          {rooms.map((room, index) => (
-            <button
-              key={room._id}
-              className={`px-4 py-2 rounded-lg shadow ${
-                selectedRoomId === room._id
-                  ? "bg-green-300 text-white"
-                  : "bg-green-100 hover:bg-green-200"
-              }`}
-              onClick={() => setSelectedRoomId(room._id)}
-            >
-              Phòng {room.roomName}
-            </button>
-          ))}
-        </div>
-      )}
-      {/* Danh mục lọc */}
-      <div className="flex flex-row gap-5 text-base font-semibold pb-4">
-        <span
-          className={`cursor-pointer ${
-            selectedCategory === "ALL" ? "text-[#76e648] underline" : ""
-          }`}
-          onClick={() => setSelectedCategory("ALL")}
-        >
-          All
-        </span>
-        <span
-          className={`cursor-pointer ${
-            selectedCategory === "RENT" ? "text-[#76e648] underline" : ""
-          }`}
-          onClick={() => setSelectedCategory("RENT")}
-        >
-          Tiền nhà
-        </span>
-        <span
-          className={`cursor-pointer ${
-            selectedCategory === "ELECTRICITY" ? "text-[#76e648] underline" : ""
-          }`}
-          onClick={() => setSelectedCategory("ELECTRICITY")}
-        >
-          Tiền điện
-        </span>
-        <span
-          className={`cursor-pointer ${
-            selectedCategory === "WATER" ? "text-[#76e648] underline" : ""
-          }`}
-          onClick={() => setSelectedCategory("WATER")}
-        >
-          Tiền nước
-        </span>
-        <span
-          className={`cursor-pointer ${
-            selectedCategory === "OTHER" ? "text-[#76e648] underline" : ""
-          }`}
-          onClick={() => setSelectedCategory("OTHER")}
-        >
-          Tiền dịch vụ khác
-        </span>
-      </div>
-      <table className="w-full border text-left ">
-        <thead>
-          <tr className="border">
-            <th className="py-2 px-4 border-r">No.</th>
-            <th className="py-2 px-4 border-r">ID</th>
+                            <td className="py-2 px-4 border">
+                                {invoice.service.name}
+                            </td>
 
-            <th className="py-2 px-4 border-r">Name</th>
+                            <td className="py-2 px-4 border">
+                                {invoice.description}
+                            </td>
 
-            <th className="py-2 px-4 border-r">Description</th>
-            <th className="py-2 px-4 border-r">Amount</th>
+                            <td className="py-2 px-4 border">
+                                {invoice.amount
+                                    .toString()
+                                    .replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
+                                    " đ"}
+                            </td>
 
-            <th className="py-2 px-4 border-r">Status</th>
-            <th className="py-2 px-4 border-r">
-              <input
-                type="checkbox"
-                className="form-checkbox h-5 w-5"
-                checked={selectAll} // Liên kết với trạng thái `selectAll`
-                onChange={handleSelectAll}
-              />
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Ví dụ một hàng trong bảng */}
+                            <td className="py-2 px-4 border">
+                                {invoice.status}
+                            </td>
+                            <td className="py-2 px-4">
+                                <input
+                                    type="checkbox"
+                                    checked={idInvoice.includes(invoice._id)} // Đánh dấu nếu ID đã được chọn
+                                    onChange={(e) =>
+                                        handleCheckbox(
+                                            e,
+                                            invoice.amount,
+                                            invoice._id
+                                        )
+                                    }
+                                    className="form-checkbox h-5 w-5"
+                                />
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            {/* Tổng tiền */}
+            <div className="text-red-600 text-right mt-4 font-semibold">
+                Total Selected Amount:
+                <span className="p-3 font-semibold border-t">
+                    {total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") +
+                        " đ"}
+                </span>
+            </div>
+            <ModalDetailInvoice
+                visible={isModalVisible}
+                onClose={closeModal}
+                invoice={selectedInvoice}
+            />
 
-          {filteredInvoices?.map((invoice, index) => (
-            <tr key={invoice._id}>
-              <td className="py-2 px-4 border">{index + 1}</td>
-              <td
-                className="py-2 px-4 border cursor-pointer"
-                onClick={() => openModal(invoice)}
-              >
-                {invoice._id}
-              </td>
-
-              <td className="py-2 px-4 border">{invoice.service.name}</td>
-
-              <td className="py-2 px-4 border">{invoice.description}</td>
-
-              <td className="py-2 px-4 border">
-                {invoice.amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ"}
-              </td>
-
-              <td className="py-2 px-4 border">{invoice.status}</td>
-              <td className="py-2 px-4">
-                <input
-                  type="checkbox"
-                  checked={idInvoice.includes(invoice._id)} // Đánh dấu nếu ID đã được chọn
-                  onChange={(e) =>
-                    handleCheckbox(e, invoice.amount, invoice._id)
-                  }
-                  className="form-checkbox h-5 w-5"
+            <div className="flex justify-start sm:justify-end pt-5 ">
+                <Pagination
+                    current={current}
+                    pageSize={pageSize}
+                    total={totall}
+                    onChange={handlePaginationChange}
+                    showSizeChanger
                 />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {/* Tổng tiền */}
-      <div className="text-red-600 text-right mt-4 font-semibold">
-        Total Selected Amount:
-        <span className="p-3 font-semibold border-t">
-          {total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ"}
-        </span>
-      </div>
-
-      <ModalDetailInvoice
-        visible={isModalVisible}
-        onClose={closeModal}
-        invoice={selectedInvoice}
-      />
-    </div>
-  );
+            </div>
+        </div>
+    );
 }

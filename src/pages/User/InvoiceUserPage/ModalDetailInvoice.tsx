@@ -1,10 +1,6 @@
-
 import { IInvoice } from "../../../interfaces";
 
-
 import { Modal, Form, Input, Row, Col } from "antd";
-
-
 
 interface InvoiceDetailModalProps {
     visible: boolean;
@@ -49,58 +45,289 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                     <Row gutter={[16, 16]}>
                         {/* Cột bên trái */}
                         <Col span={12}>
-                            <Form.Item label="ID Invoice" name="invoiceId">
-                                <Input disabled />
+                            <Form.Item
+                                label={
+                                    <span
+                                        style={{
+                                            fontSize: "18px",
+                                            color: "#2b6534",
+                                        }}
+                                    >
+                                        ID Invoice
+                                    </span>
+                                }
+                                name="invoiceId"
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                            >
+                                <Input
+                                    disabled
+                                    style={{
+                                        fontSize: "16px",
+                                        color: "#2b6534",
+                                    }}
+                                />
                             </Form.Item>
-                            <Form.Item label="Room Name" name="roomName">
-                                <Input disabled />
+                            <Form.Item
+                                label={
+                                    <span
+                                        style={{
+                                            fontSize: "18px",
+                                            color: "#2b6534",
+                                        }}
+                                    >
+                                        Room Name
+                                    </span>
+                                }
+                                name="roomName"
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                            >
+                                <Input
+                                    disabled
+                                    style={{
+                                        fontSize: "16px",
+                                        color: "#2b6534",
+                                    }}
+                                />
                             </Form.Item>
-                            <Form.Item label="Renter" name="tenantName">
-                                <Input disabled />
+                            <Form.Item
+                                label={
+                                    <span
+                                        style={{
+                                            fontSize: "18px",
+                                            color: "#2b6534",
+                                        }}
+                                    >
+                                        Renter
+                                    </span>
+                                }
+                                name="tenantName"
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                            >
+                                <Input
+                                    disabled
+                                    style={{
+                                        fontSize: "16px",
+                                        color: "#2b6534",
+                                    }}
+                                />
                             </Form.Item>
-                            <Form.Item label="ID Card" name="idCard">
-                                <Input disabled />
+                            <Form.Item
+                                label={
+                                    <span
+                                        style={{
+                                            fontSize: "18px",
+                                            color: "#2b6534",
+                                        }}
+                                    >
+                                        ID Card
+                                    </span>
+                                }
+                                name="idCard"
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                            >
+                                <Input
+                                    disabled
+                                    style={{
+                                        fontSize: "16px",
+                                        color: "#2b6534",
+                                    }}
+                                />
                             </Form.Item>
-                            <Form.Item label="Phone" name="phone">
-                                <Input disabled />
+                            <Form.Item
+                                label={
+                                    <span
+                                        style={{
+                                            fontSize: "18px",
+                                            color: "#2b6534",
+                                        }}
+                                    >
+                                        Phone
+                                    </span>
+                                }
+                                name="phone"
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                            >
+                                <Input
+                                    disabled
+                                    style={{
+                                        fontSize: "16px",
+                                        color: "#2b6534",
+                                    }}
+                                />
                             </Form.Item>
-                            <Form.Item label="Invoice Name" name="serviceName">
-                                <Input disabled />
+                            <Form.Item
+                                label={
+                                    <span
+                                        style={{
+                                            fontSize: "18px",
+                                            color: "#2b6534",
+                                        }}
+                                    >
+                                        Invoice Name
+                                    </span>
+                                }
+                                name="serviceName"
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                            >
+                                <Input
+                                    disabled
+                                    style={{
+                                        fontSize: "16px",
+                                        color: "#2b6534",
+                                    }}
+                                />
                             </Form.Item>
                         </Col>
                         {/* Cột bên phải */}
                         <Col span={12}>
-                            <Form.Item label="Month" name="month">
-                                <Input disabled />
+                            <Form.Item
+                                label={
+                                    <span
+                                        style={{
+                                            fontSize: "18px",
+                                            color: "#2b6534",
+                                        }}
+                                    >
+                                        Month
+                                    </span>
+                                }
+                                name="month"
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                            >
+                                <Input
+                                    disabled
+                                    style={{
+                                        fontSize: "16px",
+                                        color: "#2b6534",
+                                    }}
+                                />
                             </Form.Item>
                             {isUtilityInvoice && (
                                 <>
                                     <Form.Item
-                                        label="Description"
+                                        label={
+                                            <span
+                                                style={{
+                                                    fontSize: "18px",
+                                                    color: "#2b6534",
+                                                }}
+                                            >
+                                                Description
+                                            </span>
+                                        }
                                         name="description"
+                                        labelCol={{ span: 24 }}
+                                        wrapperCol={{ span: 24 }}
                                     >
-                                        <Input disabled />
+                                        <Input
+                                            disabled
+                                            style={{
+                                                fontSize: "16px",
+                                                color: "#2b6534",
+                                            }}
+                                        />
                                     </Form.Item>
                                     <Form.Item
-                                        label={`Chỉ số ${invoice.service.name.toLowerCase()} đầu tháng`}
+                                        label={
+                                            <span
+                                                style={{
+                                                    fontSize: "18px",
+                                                    color: "#2b6534",
+                                                }}
+                                            >
+                                                {`Chỉ số ${invoice.service.name.toLowerCase()} đầu tháng`}
+                                            </span>
+                                        }
                                         name="firstIndex"
+                                        labelCol={{ span: 24 }}
+                                        wrapperCol={{ span: 24 }}
                                     >
-                                        <Input disabled />
+                                        <Input
+                                            disabled
+                                            style={{
+                                                fontSize: "16px",
+                                                color: "#2b6534",
+                                            }}
+                                        />
                                     </Form.Item>
                                     <Form.Item
-                                        label={`Chỉ số ${invoice.service.name.toLowerCase()} cuối tháng`}
+                                        label={
+                                            <span
+                                                style={{
+                                                    fontSize: "18px",
+                                                    color: "#2b6534",
+                                                }}
+                                            >
+                                                {`Chỉ số ${invoice.service.name.toLowerCase()} cuối tháng`}
+                                            </span>
+                                        }
                                         name="finalIndex"
+                                        labelCol={{ span: 24 }}
+                                        wrapperCol={{ span: 24 }}
                                     >
-                                        <Input disabled />
+                                        <Input
+                                            disabled
+                                            style={{
+                                                fontSize: "16px",
+                                                color: "#2b6534",
+                                            }}
+                                        />
                                     </Form.Item>
                                 </>
                             )}
 
-                            <Form.Item label="Amount" name="amount">
-                                <Input disabled />
+                            <Form.Item
+                                label={
+                                    <span
+                                        style={{
+                                            fontSize: "18px",
+                                            color: "#2b6534",
+                                        }}
+                                    >
+                                        Amount
+                                    </span>
+                                }
+                                name="amount"
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                            >
+                                <Input
+                                    disabled
+                                    style={{
+                                        fontSize: "16px",
+                                        color: "#2b6534",
+                                    }}
+                                />
                             </Form.Item>
-                            <Form.Item label="Status" name="status">
-                                <Input disabled />
+                            <Form.Item
+                                label={
+                                    <span
+                                        style={{
+                                            fontSize: "18px",
+                                            color: "#2b6534",
+                                        }}
+                                    >
+                                        Status
+                                    </span>
+                                }
+                                name="status"
+                                labelCol={{ span: 24 }}
+                                wrapperCol={{ span: 24 }}
+                            >
+                                <Input
+                                    disabled
+                                    style={{
+                                        fontSize: "16px",
+                                        color: "#2b6534",
+                                    }}
+                                />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -110,6 +337,4 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
     );
 };
 
-
 export default ModalDetailInvoice;
-

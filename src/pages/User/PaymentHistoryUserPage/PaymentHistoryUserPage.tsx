@@ -15,8 +15,7 @@ export default function PaymentHistoryUserPage() {
 
   //Lưu trữ danh sách các hóa đơn đã được lọc theo danh mục
   const [filteredInvoices, setFilteredInvoices] = useState<IInvoice[]>([]);
-  //Lưu trạng thái danh mục hóa đơn đang chọn để lọc.
-  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+  
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -77,37 +76,13 @@ export default function PaymentHistoryUserPage() {
           (invoice) => invoice.room._id === selectedRoomId
         );
       }
-      // Lọc theo danh mục
-      if (selectedCategory !== "ALL") {
-        if (selectedCategory === "RENT") {
-          filtered = filtered.filter(
-            (invoice) =>
-              invoice.service.name.toLowerCase() === "Trọ".toLowerCase()
-          );
-        } else if (selectedCategory === "ELECTRICITY") {
-          filtered = filtered.filter(
-            (invoice) =>
-              invoice.service.name.toLowerCase() === "Điện".toLowerCase()
-          );
-        } else if (selectedCategory === "WATER") {
-          filtered = filtered.filter(
-            (invoice) =>
-              invoice.service.name.toLowerCase() === "Nước".toLowerCase()
-          );
-        } else if (selectedCategory === "OTHER") {
-          filtered = filtered.filter((invoice) =>
-            ["Mạng", "Vệ sinh", "Gửi xe"]
-              .map((item) => item.toLowerCase())
-              .includes(invoice.service.name.toLowerCase())
-          );
-        }
-      }
+    
 
       setFilteredInvoices(filtered);
     };
 
     filterByCategory();
-  }, [selectedCategory, invoices, selectedRoomId]);
+  }, [invoices, selectedRoomId]);
 
   const totalAmount = filteredInvoices.reduce(
     (total, invoice) => total + invoice.amount,
@@ -125,24 +100,7 @@ export default function PaymentHistoryUserPage() {
   };
   return (
     <div className="bg-[#e0f5e4] text-[#2b6534] h-screen flex flex-col overflow-y-auto custom-scrollbar overflow-x-scroll sm:overflow-x-hidden">
-      {/* <div
-
-                aria-label="breadcrumb"
-                className="text-xl text-[#2b6534] bg-neutral-100 px-7 py-4 shadow-lg"
-            >
-                <ol className="flex space-x-2">
-                    <li>
-                        <a href="/finance" className="hover:underline">
-                            Finance
-                        </a>
-                    </li>
-                    <li>
-                        <span className="text-[#2b6534]">›</span>
-                    </li>
-                    <li className="font-semibold">Payment history</li>
-                </ol>
-
-            </div> */}
+      
       <div className="p-6 m-0 sm:m-6 bg-white rounded-lg shadow-md h-full">
         <h2 className="text-2xl font-semibold mb-4">Payment History</h2>
 
@@ -154,7 +112,7 @@ export default function PaymentHistoryUserPage() {
                 key={room._id}
                 className={`px-4 py-2 rounded-lg shadow ${
                   selectedRoomId === room._id
-                    ? "bg-green-300 text-white"
+                    ? "bg-green-300 text-[#2b6534] cursor-pointer font-semibold"
                     : "bg-green-100 hover:bg-green-200"
                 }`}
                 onClick={() => setSelectedRoomId(room._id)}
@@ -164,51 +122,7 @@ export default function PaymentHistoryUserPage() {
             ))}
           </div>
         )}
-        {/* Danh mục lọc */}
-        <div className="flex flex-row gap-5 text-base font-semibold pb-4">
-          <span
-            className={`cursor-pointer ${
-              selectedCategory === "ALL" ? "text-[#76e648] underline" : ""
-            }`}
-            onClick={() => setSelectedCategory("ALL")}
-          >
-            All
-          </span>
-          <span
-            className={`cursor-pointer ${
-              selectedCategory === "RENT" ? "text-[#76e648] underline" : ""
-            }`}
-            onClick={() => setSelectedCategory("RENT")}
-          >
-            Tiền nhà
-          </span>
-          <span
-            className={`cursor-pointer ${
-              selectedCategory === "ELECTRICITY"
-                ? "text-[#76e648] underline"
-                : ""
-            }`}
-            onClick={() => setSelectedCategory("ELECTRICITY")}
-          >
-            Tiền điện
-          </span>
-          <span
-            className={`cursor-pointer ${
-              selectedCategory === "WATER" ? "text-[#76e648] underline" : ""
-            }`}
-            onClick={() => setSelectedCategory("WATER")}
-          >
-            Tiền nước
-          </span>
-          <span
-            className={`cursor-pointer ${
-              selectedCategory === "OTHER" ? "text-[#76e648] underline" : ""
-            }`}
-            onClick={() => setSelectedCategory("OTHER")}
-          >
-            Tiền dịch vụ khác
-          </span>
-        </div>
+      
 
         <table className="w-full text-left table-auto border-collapse">
           <thead>
