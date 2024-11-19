@@ -81,17 +81,6 @@ const DetailRole: React.FC<Props> = ({
         : prevPermissions.filter((id) => id !== permissionId)
     );
   };
-
-  // Function to handle module switch change
-  const handleModuleSwitchChange = (module: string, checked: boolean) => {
-    const modulePermissions = groupedPermissions[module].map((p: IPermisson) => p._id);
-    setEnablePermission((prevPermissions) =>
-      checked
-        ? [...new Set([...prevPermissions, ...modulePermissions])]
-        : prevPermissions.filter((id) => !modulePermissions.includes(id))
-    );
-  };
-
   const renderItem = (label: string, value: React.ReactNode) => ({
     key: label,
     label: <span className={textColor}>{label}</span>,
@@ -148,19 +137,7 @@ const DetailRole: React.FC<Props> = ({
               {Object.keys(groupedPermissions).map((module) => (
                 <Collapse key={module} style={{ marginBottom: "16px" }}>
                   <Collapse.Panel
-                    header={
-                      // Add toggle switch for each module
-                      <div className="flex items-center">
-                        <span className={`${textColor}`}>{module}</span>
-                        <Switch
-                          className="ml-auto"
-                          checked={groupedPermissions[module].every((permission: IPermisson) =>
-                            enablePermission.includes(permission._id)
-                          )}
-                          onChange={(checked: boolean) => handleModuleSwitchChange(module, checked)}
-                        />
-                      </div>
-                    }
+                    header={<span className={`${textColor}`}>{module}</span>}
                     key={module}
                     className={`${bgColor} ${textColor} round-xl`}
                   >
