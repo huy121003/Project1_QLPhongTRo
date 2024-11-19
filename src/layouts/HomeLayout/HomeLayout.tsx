@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { resizeWidth } from "../../utils/resize";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { accountApi, authtApi, serviceApi } from "../../api";
+import { accountApi, authtApi, registerServiceAPI } from "../../api";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
 import { Badge, Dropdown, Menu, message, notification } from "antd";
 import ChangePassword from "../../pages/AuthPages/ChangePassword";
@@ -38,7 +38,7 @@ function HomeLayout() {
 
   useEffect(() => {
     setInterval(async () => {
-      const res = await serviceApi.fetchRegisterServiceApi(
+      const res = await registerServiceAPI.fetchRegisterServiceApi(
         `status=${RegisterServiceStatus.PENDING}`
       );
       if (res.data) {

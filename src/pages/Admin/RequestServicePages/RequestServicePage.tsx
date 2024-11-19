@@ -1,17 +1,11 @@
 import React, { useEffect } from "react";
-import { useTheme } from "../../../contexts/ThemeContext";
 import { RegisterServiceStatus } from "../../../enums";
 import RegisterServiceFilter from "./RequestServiceFilter";
-import { serviceApi } from "../../../api";
+import { registerServiceAPI } from "../../../api";
 import { message, notification } from "antd";
 import RegisterServiceCard from "./RequestServiceCard";
 import { IRegisterService } from "../../../interfaces";
-
 function RequestServicePage() {
-  const { theme } = useTheme();
-  const isLightTheme = theme === "light";
-
-
   const [registerService, setRegisterService] = React.useState<
     IRegisterService[]
   >([]);
@@ -37,7 +31,7 @@ function RequestServicePage() {
     });
     const query = new URLSearchParams(queryParams).toString();
     setLoading(true);
-    const res = await serviceApi.fetchRegisterServiceApi(query);
+    const res = await registerServiceAPI.fetchRegisterServiceApi(query);
     if (res.data) {
       setRegisterService(res.data.result);
       setTotal(res.data.meta.totalDocument);
@@ -51,13 +45,13 @@ function RequestServicePage() {
   };
   useEffect(() => {
     getRegisterService();
-  }, [ currentPage, pageSize, searchParams, sorted]);
+  }, [currentPage, pageSize, searchParams, sorted]);
   const handlePaginationChange = (page: number, pageSize?: number) => {
     setCurrentPage(page);
     if (pageSize) setPageSize(pageSize);
   };
   const handleApprove = async (id: string, type: boolean) => {
-    const res = await serviceApi.patchRegisterServiceApi(
+    const res = await registerServiceAPI.patchRegisterServiceApi(
       id,
       RegisterServiceStatus.APPROVED
     );

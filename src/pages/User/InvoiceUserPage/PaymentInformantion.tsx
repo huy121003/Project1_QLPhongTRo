@@ -40,7 +40,7 @@ export default function PaymentInformantion({
       return invoice ? sum + invoice.amount : sum;
     }, 0);
   }, [idInvoice, invoices]);
-
+  console.log(total);
   // Xử lý khi checkbox được chọn/bỏ chọn
   const handleCheckbox = (
     e: React.ChangeEvent<HTMLInputElement>,

@@ -1,5 +1,7 @@
 import { apiRequest } from "./ApiConfig";
+
 import { RegisterServiceStatus, ServiceType } from "../enums";
+
 import { ApiMethod } from "../enums";
 const fetchServiceApi = async (query: any): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/services?${query}`, false);
@@ -43,52 +45,11 @@ const patchServiceApi = (
   });
 };
 
-const fetchRegisterServiceApi = async (query: any): Promise<any> => {
-  return apiRequest(
-    ApiMethod.GET,
-    `/api/v1/register-service?${query}&populate=service,user,room`,
-    false
-  );
-};
-const fetchRegisterServiceByIdApi = async (id: string): Promise<any> => {
-  return apiRequest(ApiMethod.GET, `/api/v1/register-service/${id}`, false);
-};
-const postRegisterServiceApi = (
-  service: string,
-  user: string,
-  room: string,
-  type: boolean,
-  executeNow: boolean
-): Promise<any> => {
-  return apiRequest(ApiMethod.POST, `/api/v1/register-service`, false, {
-    service,
-    user,
-    room,
-    type,
-    executeNow,
-  });
-};
-const patchRegisterServiceApi = (
-  id: string,
-  status: RegisterServiceStatus
-): Promise<any> => {
-  return apiRequest(ApiMethod.PATCH, `/api/v1/register-service/${id}`, false, {
-    status,
-  });
-};
-const deleteRegisterServiceApi = async (id: string): Promise<any> => {
-  return apiRequest(ApiMethod.DELETE, `/api/v1/register-service/${id}`, false);
-};
-
 export default {
   fetchServiceApi,
   fetchServiceByIdApi,
   deleteServiceApi,
   postServiceApi,
   patchServiceApi,
-  fetchRegisterServiceApi,
-  fetchRegisterServiceByIdApi,
-  postRegisterServiceApi,
-  patchRegisterServiceApi,
-  deleteRegisterServiceApi,
+
 };

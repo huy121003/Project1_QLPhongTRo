@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
 
-import {IContract} from "../../../interfaces";
+import { IContract } from "../../../interfaces";
 import moment from "moment";
 
 interface Props {
@@ -84,12 +84,6 @@ const ContractExtension: React.FC<Props> = ({
                     <Form.Item
                         label="Start Date"
                         name="startDate"
-                        // rules={[
-                        //     {
-                        //         required: true,
-                        //         message: "Please select start date",
-                        //     },
-                        // ]}
                         className="flex-1"
                     >
                         <DatePicker disabled />
@@ -134,34 +128,13 @@ const ContractExtension: React.FC<Props> = ({
                         </Input.Group>
                     </Form.Item>
                 </div>
-                <Form.Item
-                    label="Rent Cycel Count"
-                    name="rentCycleCount"
-                    // rules={[
-                    //     {
-                    //         required: true,
-                    //         message: "Please input rent cycle count",
-                    //     },
-                    // ]}
-                >
+                <Form.Item label="Rent Cycel Count" name="rentCycleCount">
                     <Input type="number" disabled />
                 </Form.Item>
-                <Form.Item
-                    label="Address"
-                    name="address"
-                    // rules={[
-                    //     { required: true, message: "Please input address" },
-                    // ]}
-                >
+                <Form.Item label="Address" name="address">
                     <Input disabled />
                 </Form.Item>
-                <Form.Item
-                    label="Deposit"
-                    name="deposit"
-                    // rules={[
-                    //     { required: true, message: "Please input deposit" },
-                    // ]}
-                >
+                <Form.Item label="Deposit" name="deposit">
                     <Input type="number" disabled />
                 </Form.Item>
             </Form>
