@@ -1,16 +1,14 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import logo from "../Images/logo2.png";
+import logo from "../access/Images/logo2.png";
+
 import { RiMenuFold3Line, RiMenuFold4Line } from "react-icons/ri";
 import { RiArrowDropDownLine } from "react-icons/ri";
-
 // Định kiểu cho SidebarContext
 type SidebarContextType = { expanded: boolean };
 const SidebarContext = createContext<SidebarContextType>({ expanded: true });
-
 interface SidebarUserProps {
   children: ReactNode;
 }
-
 const SidebarUser: React.FC<SidebarUserProps> = ({ children }) => {
   const [expanded, setExpanded] = useState(true);
   return (
@@ -43,7 +41,6 @@ const SidebarUser: React.FC<SidebarUserProps> = ({ children }) => {
     </aside>
   );
 };
-
 interface SidebarItemProps {
   icon?: ReactNode;
   text: string;
@@ -51,7 +48,6 @@ interface SidebarItemProps {
   onClick?: () => void;
   children?: ReactNode;
 }
-
 const SidebarItem: React.FC<SidebarItemProps> = ({
   icon,
   text,
@@ -61,7 +57,6 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
 }) => {
   const { expanded } = useContext(SidebarContext);
   const [isOpen, setIsOpen] = useState(false);
-
   const hasSubItems = !!children;
   return (
     <li className="relative">

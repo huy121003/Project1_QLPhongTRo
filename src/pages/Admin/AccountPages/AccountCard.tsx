@@ -1,8 +1,9 @@
 import React from "react";
 import { IAccount } from "../../../interfaces";
 import { DeleteModal, NotItem } from "../../../components";
-import { Button, Pagination, Spin } from "antd";
+import { Button, Pagination, Spin, Tag } from "antd";
 import { getGenderColor, getRoleColor } from "../../../utils/getMethodColor";
+import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {
   accounts: IAccount[];
   isLoading: boolean;
@@ -27,16 +28,34 @@ const AccountCard: React.FC<Props> = ({
   setOpenEditAccount,
   setRecord,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
+
   return (
     <Spin spinning={isLoading}>
       {accounts.length > 0 ? (
         <div className="m-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             {accounts.map((account) => (
               <div
                 key={account._id}
-                className="bg-white shadow-lg rounded-xl p-6 border-t-4 hover:shadow-xl transform transition-all hover:scale-105 flex flex-col items-center"
+                className={` shadow-lg rounded-xl p-6 border-t-4 hover:shadow-xl transform transition-all hover:scale-105 flex flex-col items-center
+                  ${bgColor} ${textColor}
+                  `}
               >
+                <div
+                  className={`absolute right-0 top-0 border-2 m-2 px-4 py-1 rounded-xl font-bold
+                ${
+                  account?.isActive
+                    ? "border-green-300 text-green-300"
+                    : "border-red-300 text-red-300"
+                }
+                `}
+                >
+                  {account?.isActive ? "ACTIVE" : "INACTIVE"}
+                </div>
                 <div className="flex-1 flex flex-col items-center justify-center">
                   {account.avatar ? (
                     <img
@@ -53,15 +72,15 @@ const AccountCard: React.FC<Props> = ({
                 </div>
                 <div className="text-sm w-full space-y-1">
                   <p className="font-medium">
-                    <i className="fa-solid fa-envelope mr-2 text-gray-600"></i>
+                    <i className="fa-solid fa-envelope mr-2 "></i>
                     {account.email}
                   </p>
                   <p className="font-medium">
-                    <i className="fa-solid fa-phone mr-2 text-gray-600"></i>
+                    <i className="fa-solid fa-phone mr-2 "></i>
                     {account.phone}
                   </p>
                   <p className="font-medium">
-                    <i className="fa-solid fa-id-card mr-2 text-gray-600"></i>
+                    <i className="fa-solid fa-id-card mr-2 "></i>
                     {account.idCard}
                   </p>
                   <p
@@ -71,7 +90,7 @@ const AccountCard: React.FC<Props> = ({
                     {account.gender}
                   </p>
                   <p className="font-medium">
-                    <i className="fa-solid fa-calendar-days mr-2 text-gray-600"></i>
+                    <i className="fa-solid fa-calendar-days mr-2 "></i>
                     {new Date(account.birthday).toLocaleDateString()}
                   </p>
                   <p
@@ -131,6 +150,7 @@ const AccountCard: React.FC<Props> = ({
               total={total}
               onChange={onChange}
               showSizeChanger
+              pageSizeOptions={["4", "8", "16", "32", "64", "128", "999999"]}
             />
           </div>
         </div>

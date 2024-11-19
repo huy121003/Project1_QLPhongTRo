@@ -1,7 +1,6 @@
 import { apiConfig, apiRequest } from "./ApiConfig";
 import { RoomStatus, RoomType } from "../enums";
 import { ApiMethod } from "../enums";
-
 const fetchRoomApi = (query: any): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/rooms?${query}`, false);
 };
@@ -30,7 +29,6 @@ const postRoomApi = (
     services,
   });
 };
-
 const patchRoomApi = (
   id: string,
   area: number,
@@ -49,6 +47,7 @@ const patchRoomApi = (
     services,
   });
 };
+
 const updateRoomStatusApi = (id: string, status: RoomStatus): Promise<any> => {
   return apiConfig.patch(`/api/v1/rooms/${id}`, {
     status,

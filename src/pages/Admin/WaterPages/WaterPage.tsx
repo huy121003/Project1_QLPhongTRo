@@ -5,10 +5,15 @@ import { IContract, IService } from "../../../interfaces";
 import { ContractStatus, ServiceType } from "../../../enums";
 import { contractApi, invoiceApi, serviceApi } from "../../../api";
 import { YearMonthSelector } from "../../../components";
+import { notification } from "antd";
+import { useTheme } from "../../../contexts/ThemeContext";
 const WaterPage = () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
-
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [year, setYear] = useState(currentYear);
   const [contract, setContract] = useState<IContract[]>([]);
@@ -23,7 +28,10 @@ const WaterPage = () => {
     if (res.data) {
       setWater(res.data.result[0]);
     } else {
-      // message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
   useEffect(() => {
@@ -100,18 +108,18 @@ const WaterPage = () => {
 
   return (
     <div className="justify-end  w-full">
-      <YearMonthSelector
-        selectedMonth={selectedMonth}
-        year={year}
-        setYear={setYear}
-        setSelectedMonth={setSelectedMonth}
-      />
       <ExportToExcel
         contract={contract}
         numberIndex={numberIndex}
         water={water}
         selectedMonth={selectedMonth}
         year={year}
+      />
+      <YearMonthSelector
+        selectedMonth={selectedMonth}
+        year={year}
+        setYear={setYear}
+        setSelectedMonth={setSelectedMonth}
       />
       <WaterTable
         contract={contract}

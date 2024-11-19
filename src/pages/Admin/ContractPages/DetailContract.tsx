@@ -5,6 +5,7 @@ import moment from "moment";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
 import { downloadContractPDF } from "../../../utils/generateContractPDF";
 import { IContract } from "../../../interfaces";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
   openDetailContract: boolean;
@@ -19,107 +20,92 @@ const DetailContract: React.FC<Props> = ({
   setOpenDetailContract,
   record,
 }) => {
-  const formatDate = (date: Date) => {
-    return moment(date).format("DD/MM/YYYY");
-  };
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
+
+  const formatDate = (date: Date) => moment(date).format("DD/MM/YYYY");
 
   const handlePrintPDF = () => {
-    if (record) {
-      downloadContractPDF(record);
-    }
+    if (record) downloadContractPDF(record);
   };
 
+  const renderItem = (label: string, value: React.ReactNode) => ({
+    key: label,
+    label: <span className={textColor}>{label}</span>,
+    children: <span className={textColor}>{value}</span>,
+  });
+
   const items = [
-    { key: "Tenant", label: "Tenant", children: record?.tenant.name },
-    { key: "Phone", label: "Phone", children: record?.tenant.phone },
-    { key: "IdCard", label: "IdCard", children: record?.tenant.idCard },
-    { key: "Email", label: "Email", children: record?.tenant.email },
-    {
-      key: "Address",
-      label: "Address Tenant",
-      children: record?.tenant.address,
-    },
-    { key: "Room", label: "Room", children: record?.room.roomName },
-    {
-      key: "Price",
-      label: "Price",
-      children: `${record?.room.price.toLocaleString()} đ`,
-    },
-    { key: "Innkeeper", label: "Innkeeper", children: record?.innkeeper.name },
-    {
-      key: "Start Date",
-      label: "Start Date",
-      children: formatDate(record?.startDate),
-    },
-    {
-      key: "End Date",
-      label: "End Date",
-      children: formatDate(record?.endDate),
-    },
-    {
-      key: "Rent Cycle Count",
-      label: "Rent Cycle Count",
-      children: record?.rentCycleCount,
-    },
-    {
-      key: "Deposit Amount",
-      label: "Deposit Amount",
-      children: `${record?.depositAmount.toLocaleString()} đ`,
-    },
-    {
-      key: "Status",
-      label: "Status",
-      children: (
-        <Text className={getContractStatusColor(record?.status)} strong>
-          {record?.status}
-        </Text>
-      ),
-    },
-    {
-      key: "Actual End Date",
-      label: "Actual End Date",
-      children: record?.actualEndDate
-        ? formatDate(record?.actualEndDate)
-        : "N/A",
-    },
-    {
-      key: "Created At",
-      label: "Created At",
-      children: formatDate(record?.createdAt),
-    },
-    {
-      key: "Created By",
-      label: "Created By",
-      children: record?.createdBy?.email,
-    },
+    renderItem("Tenant", record?.tenant.name),
+    renderItem("Phone", record?.tenant.phone),
+    renderItem("IdCard", record?.tenant.idCard),
+    renderItem("Email", record?.tenant.email),
+    renderItem("Address", record?.tenant.address),
+    renderItem("Room", record?.room.roomName),
+    renderItem("Price", `${record?.room.price.toLocaleString()} đ`),
+    renderItem("Innkeeper", record?.innkeeper.name),
+    renderItem("Start Date", formatDate(record?.startDate)),
+    renderItem("End Date", formatDate(record?.endDate)),
+    renderItem("Rent Cycle Count", record?.rentCycleCount),
+    renderItem("Deposit Amount", `${record?.depositAmount.toLocaleString()} đ`),
+    renderItem(
+      "Status",
+      <Text className={getContractStatusColor(record?.status)} strong>
+        {record?.status}
+      </Text>
+    ),
+    renderItem(
+      "Actual End Date",
+      record?.actualEndDate ? formatDate(record?.actualEndDate) : "N/A"
+    ),
+    renderItem(
+      "Created At",
+      <span className={textColor}>{formatDate(record?.createdAt)}</span>
+    ),
+    renderItem(
+      "Created By",
+      <span className={textColor}>{record?.createdBy?.email}</span>
+    ),
+    renderItem(
+      "Updated At",
+      <span className={textColor}>{formatDate(record?.updatedAt)}</span>
+    ),
+    renderItem(
+      "Updated By",
+      <span className={textColor}>{record?.updatedBy?.email}</span>
+    ),
   ];
 
   return (
-    <Drawer
-      onClose={() => setOpenDetailContract(false)}
-      open={openDetailContract}
-      width="100vh"
-      extra={
-        <Button
-          type="primary"
-          size="large"
-          className="bg-orange-600 hover:bg-orange-700 transition duration-200"
-          icon={<PrinterOutlined />}
-          onClick={handlePrintPDF}
+    <div className={`flex-1 ${textColor} ${bgColor}`}>
+      <Drawer
+        onClose={() => setOpenDetailContract(false)}
+        open={openDetailContract}
+        width="100vh"
+        closable={false}
+        className={`${textColor} ${bgColor}`}
+      >
+        <div
+          className={`flex items-center justify-between p-2 ${textColor} ${bgColor}`}
         >
-          Print Contract
-        </Button>
-      }
-    >
-      <Typography.Title level={4}>Contract Detail</Typography.Title>
-      <Descriptions bordered column={1}>
-        {items.map((item) => (
-          <Descriptions.Item key={item.key} label={item.label}>
-            {item.children}
-          </Descriptions.Item>
-        ))}
-      </Descriptions>
-    </Drawer>
+          <h1 className="text-4xl font-bold">Contract Detail</h1>
+          <Button
+            type="primary"
+            size="large"
+            className="bg-orange-600 hover:bg-orange-700 transition duration-200"
+            icon={<PrinterOutlined />}
+            onClick={handlePrintPDF}
+          >
+            Print Contract
+          </Button>
+        </div>
+        <div className={`p-2 ${textColor} ${bgColor}`}>
+          <Descriptions bordered column={1} items={items} />
+        </div>
+      </Drawer>
+    </div>
   );
 };
 

@@ -28,5 +28,4 @@ const DeleteModal: React.FC<Props> = ({ onConfirm, record }) => {
     </Popconfirm>
   );
 };
-
 export default DeleteModal;

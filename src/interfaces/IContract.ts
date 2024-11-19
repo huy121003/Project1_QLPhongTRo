@@ -1,5 +1,4 @@
 import { ContractStatus } from "../enums";
-
 interface IContract {
   _id: string;
   room: {

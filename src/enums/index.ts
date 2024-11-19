@@ -6,6 +6,7 @@ import InvoiceStatus from "./InvoiceStatus";
 import RoomType from "./RoomType";
 import RoomStatus from "./RoomStatus";
 import ServiceType from "./ServiceType";
+import RegisterServiceStatus from "./RegisterServiceStatus";
 export {
   ApiMethod,
   Gender,
@@ -15,4 +16,5 @@ export {
   RoomType,
   RoomStatus,
   ServiceType,
+  RegisterServiceStatus,
 };

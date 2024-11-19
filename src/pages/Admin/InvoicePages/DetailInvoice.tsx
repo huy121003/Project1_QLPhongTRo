@@ -3,6 +3,7 @@ import { Descriptions, Drawer } from "antd";
 import moment from "moment";
 import { getInvoiceStatusColor } from "../../../utils/getMethodColor";
 import { IInvoice } from "../../../interfaces";
+import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
@@ -12,87 +13,77 @@ const DetailInvoice: React.FC<Props> = ({ open, setOpen, record }) => {
   const formatDate = (date: Date) => {
     return moment(date).format("DD/MM/YYYY");
   };
+  const { theme } = useTheme();
 
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
+  const renderItem = (label: string, value: React.ReactNode) => ({
+    key: label,
+    label: <span className={textColor}>{label}</span>,
+    children: <span className={textColor}>{value}</span>,
+  });
   const items = [
-    {
-      key: "1",
-      label: "Tenant",
-      children: record?.tenant?.name,
-    },
-    {
-      key: "2",
-      label: "Phone",
-      children: record?.tenant?.phone,
-    },
-    {
-      key: "3",
-      label: "IdCard",
-      children: record?.tenant.idCard,
-    },
-    {
-      key: "4",
-      label: "Room",
-      children: record?.room.roomName,
-    },
-    {
-      key: "5",
-      label: "First Index",
-      children: record?.firstIndex,
-    },
-    {
-      key: "6",
-      label: "Last Index",
-      children: record?.finalIndex,
-    },
-    {
-      key: "7",
-      label: "Total Number",
-      children: record?.totalNumber,
-    },
-
-    {
-      key: "8",
-      label: "Price",
-      children: record?.service.priceUnit.toLocaleString() + " đ",
-    },
-    {
-      key: "9",
-      label: "Amount",
-      children: record?.amount.toLocaleString() + " đ",
-    },
-    {
-      key: "10",
-      label: "Month",
-      children: record?.month,
-    },
-    {
-      key: "11",
-      label: "Status",
-      children: (
-        <p className={`${getInvoiceStatusColor(record?.status)} font-bold`}>
-          {record?.status}
-        </p>
-      ),
-    },
-    {
-      key: "12",
-      label: "Create At",
-      children: formatDate(record?.createdAt),
-    },
-    {
-      key: "13",
-      label: "Update At",
-      children: formatDate(record?.updatedAt),
-    },
-    {
-      key: "14",
-      label: "Description",
-      children: record?.description,
-    },
+    renderItem("Tenant", record?.tenant?.name),
+    renderItem("Phone", record?.tenant?.phone),
+    renderItem("IdCard", record?.tenant?.idCard),
+    renderItem("Room", record?.room.roomName),
+    renderItem("First Index", record?.firstIndex),
+    renderItem("Last Index", record?.finalIndex),
+    renderItem("Total Number", record?.totalNumber),
+    renderItem("Price", record?.service.priceUnit.toLocaleString() + " đ"),
+    renderItem("Amount", record?.amount.toLocaleString() + " đ"),
+    renderItem("Month", record?.month),
+    renderItem(
+      "Status",
+      <p
+        className={`border ${getInvoiceStatusColor(
+          record?.status
+        )} text-center rounded border-2 w-[120px] p-2`}
+      >
+        {record?.status}
+      </p>
+    ),
+    renderItem("Description", record?.description),
+    renderItem(
+      "Created At",
+      <span className={textColor}>{formatDate(record?.createdAt)}</span>
+    ),
+    renderItem(
+      "Created By",
+      <span className={textColor}>{record?.createdBy?.email}</span>
+    ),
+    renderItem(
+      "Updated At",
+      <span className={textColor}>{formatDate(record?.updatedAt)}</span>
+    ),
+    renderItem(
+      "Updated By",
+      <span className={textColor}>{record?.updatedBy?.email}</span>
+    ),
   ];
   return (
-    <Drawer onClose={() => setOpen(false)} open={open} width={"100vh"}>
-      <Descriptions title="Invoice Detail" bordered column={1} items={items} />
+    <Drawer
+      onClose={() => setOpen(false)}
+      open={open}
+      width={"100vh"}
+      closable={false}
+      className={`
+      ${textColor} ${bgColor}`}
+    >
+      <div
+        className={` ${textColor} ${bgColor}
+             flex-1 items-center justify-center p-2
+          `}
+      >
+        <h1 className="text-4xl my-2 mb-6 font-bold">Invoice Detail</h1>
+        <Descriptions
+          //title="Invoice Detail"
+          bordered
+          column={1}
+          items={items}
+        />
+      </div>
     </Drawer>
   );
 };

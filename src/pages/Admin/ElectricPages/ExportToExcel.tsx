@@ -2,6 +2,7 @@
 import * as XLSX from "xlsx";
 import { Button } from "antd";
 import { IContract, IService } from "../../../interfaces";
+import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {
   contract: IContract[];
   numberIndex: {
@@ -96,12 +97,19 @@ const ExportToExcel: React.FC<Props> = ({
     // Export the file
     XLSX.writeFile(workbook, `ElectricUsage_${selectedMonth}-${year}.xlsx`);
   };
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   return (
-    <div className="bg-white  m-2  rounded-lg shadow-lg border border-gray-200  justify-end flex-1 items-center cursor flex">
+    <div
+      className={` m-2  rounded-lg shadow-lg border border-gray-200  justify-end flex-1 items-center cursor flex
+    ${bgColor} ${textColor}
+    `}
+    >
       <Button
         onClick={exportToExcel}
-        type="primary"
-        className="m-4 py-6 px-2 bg-green-600"
+        className="m-4 py-6 px-2 bg-green-600 text-white "
       >
         <i className="fa-solid fa-file-export"></i> Export to Excel
       </Button>

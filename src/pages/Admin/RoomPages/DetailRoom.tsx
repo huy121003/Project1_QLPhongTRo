@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Collapse, Descriptions, Drawer, message, Switch, Tag } from "antd";
+import {
+  Collapse,
+  Descriptions,
+  Drawer,
+  message,
+  notification,
+  Switch,
+  Tag,
+} from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import moment from "moment"; // Import moment for date formatting
 import {
@@ -8,6 +16,7 @@ import {
 } from "../../../utils/getMethodColor";
 import { IService } from "../../../interfaces";
 import { serviceApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {
   openDetailRoom: boolean;
   setOpenDetailRoom: (value: boolean) => void;
@@ -21,6 +30,11 @@ const DetailRoom: React.FC<Props> = ({
   const formatDate = (dateString: string) => {
     return moment(dateString).format("DD/MM/YYYY"); // Format date using moment
   };
+  const { theme } = useTheme();
+
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [services, setServices] = useState<IService[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [enableService, setEnableService] = useState<string[]>([]);
@@ -30,92 +44,61 @@ const DetailRoom: React.FC<Props> = ({
 
       setEnableService(record?.services);
 
-      const response = await serviceApi.fetchServiceApi("pageSize=1000&currentPage=1");
+      const response = await serviceApi.fetchServiceApi(
+        "pageSize=1000&currentPage=1"
+      );
       if (response.data) {
         setServices(response.data.result);
       } else {
-        message.error(response.message);
+        notification.error({
+          message: "Error",
+          description: response.message,
+        });
       }
       setIsLoading(false);
     };
     getService();
   }, [record]);
-
+  const renderItem = (label: string, value: React.ReactNode) => ({
+    key: label,
+    label: <span className={textColor}>{label}</span>,
+    children: <span className={textColor}>{value}</span>,
+  });
   const item = [
-    {
-      key: "1",
-      label: "Room Name",
-      children: record?.roomName,
-    },
-    {
-      key: "2",
-      label: "Type",
-      children: (
-        <p className={`${getRoomTypeColor(record?.type) as string} font-bold`}>
-          {record?.type}
-        </p>
-      ),
-    },
-    {
-      key: "3",
-      label: "Area",
-      children: <>{record?.area} m2</>,
-    },
-    {
-      key: "4",
-      label: "Price",
-      children: <>{record?.price.toLocaleString("vi-VN")} đ</>,
-    },
-    {
-      key: "5",
-      label: "Description",
-      children: record?.description,
-    },
-    {
-      key: "6",
-      label: "Status",
-      children: (
-        <p
-          className={`${
-            getRoomStatusColor(record?.status) as string
-          } font-bold`}
-        >
-          {record?.status}
-        </p>
-      ),
-    },
-    {
-      key: "7",
-      label: "Created At",
-      children: record?.createdAt ? formatDate(record?.createdAt) : "N/A", // Format createdAt date
-    },
-    {
-      key: "8",
-      label: "Created By",
-      children: record?.createdBy ? (
-        record?.createdBy?.email
-      ) : (
-        <Tag icon={<SyncOutlined spin />} color="processing">
-          Updating
-        </Tag>
-      ),
-    },
-    {
-      key: "9",
-      label: "Updated At",
-      children: record?.updatedAt ? formatDate(record?.updatedAt) : "N/A", // Format updatedAt date
-    },
-    {
-      key: "10",
-      label: "Updated By",
-      children: record?.updatedBy ? (
-        record?.updatedBy?.email
-      ) : (
-        <Tag icon={<SyncOutlined spin />} color="processing">
-          Updating
-        </Tag>
-      ),
-    },
+    renderItem("Room Name", record?.roomName),
+    renderItem(
+      "Type",
+      <p className={`${getRoomTypeColor(record?.type) as string} font-bold`}>
+        {record?.type}
+      </p>
+    ),
+    renderItem("Area", `${record?.area} m2`),
+    renderItem("Price", `${record?.price.toLocaleString("vi-VN")} đ`),
+    renderItem("Description", record?.description),
+    renderItem(
+      "Status",
+      <p
+        className={`${getRoomStatusColor(record?.status) as string} font-bold`}
+      >
+        {record?.status}
+      </p>
+    ),
+    renderItem(
+      "Created At",
+      <span className={textColor}>{formatDate(record?.createdAt)}</span>
+    ),
+    renderItem(
+      "Created By",
+      <span className={textColor}>{record?.createdBy?.email}</span>
+    ),
+    renderItem(
+      "Updated At",
+      <span className={textColor}>{formatDate(record?.updatedAt)}</span>
+    ),
+    renderItem(
+      "Updated By",
+      <span className={textColor}>{record?.updatedBy?.email}</span>
+    ),
   ];
   const handleSwitchChange = (checked: boolean, id: string) => {
     setEnableService((prev) =>
@@ -123,33 +106,53 @@ const DetailRoom: React.FC<Props> = ({
     );
   };
   return (
-    <Drawer
-      loading={isLoading}
-      onClose={() => setOpenDetailRoom(false)}
-      open={openDetailRoom}
-      width={"100vh"}
+    <div
+      className={`flex-1 
+  ${textColor} ${bgColor}`}
     >
-      <Descriptions title="Room Detail" bordered items={item} column={1} />
-      <div className="my-2" />
-      <Collapse>
-        <Collapse.Panel header="Services" key="1">
-          {services.map((service) => (
-            <div
-              key={service._id}
-              className="flex items-center p-2 border border-gray-200 rounded-md bg-gray-100 my-1"
+      <Drawer
+        closable={false}
+        loading={isLoading}
+        onClose={() => setOpenDetailRoom(false)}
+        open={openDetailRoom}
+        width={"100vh"}
+      >
+        <div
+          className={` ${textColor} ${bgColor}
+             flex-1 items-center justify-center p-2
+          `}
+        >
+          <h1 className="text-4xl my-2 mb-6 font-bold">Room Detail</h1>
+          <Descriptions bordered items={item} column={1} />
+          <div className="my-2" />
+          <Collapse>
+            <Collapse.Panel
+              header={<span className={`${textColor}`}>Services</span>}
+              key="1"
             >
-              <p>{service.serviceName}</p>
-              <Switch
-                disabled
-                checked={enableService?.includes(service._id)}
-                onChange={(checked) => handleSwitchChange(checked, service._id)}
-                className="ml-auto"
-              />
-            </div>
-          ))}
-        </Collapse.Panel>
-      </Collapse>
-    </Drawer>
+              {services.map((service) => (
+                <div
+                  key={service._id}
+                  className={`flex items-center p-2 border border-gray-200 rounded-md 
+               ${textColor} ${bgColor}
+                 `}
+                >
+                  <p>{service.serviceName}</p>
+                  <Switch
+                    disabled
+                    checked={enableService?.includes(service._id)}
+                    onChange={(checked) =>
+                      handleSwitchChange(checked, service._id)
+                    }
+                    className="ml-auto"
+                  />
+                </div>
+              ))}
+            </Collapse.Panel>
+          </Collapse>
+        </div>
+      </Drawer>
+    </div>
   );
 };
 export default DetailRoom;

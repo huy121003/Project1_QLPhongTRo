@@ -97,11 +97,10 @@ const ExportToExcel: React.FC<Props> = ({
     XLSX.writeFile(workbook, `WaterUsage_${selectedMonth}-${year}.xlsx`);
   };
   return (
-    <div className="bg-white  m-2  rounded-lg shadow-lg border border-gray-200  justify-end flex-1 items-center cursor flex">
+    <div className="  m-2  rounded-lg shadow-lg border border-gray-200  justify-end flex-1 items-center cursor flex">
       <Button
         onClick={exportToExcel}
-        type="primary"
-        className="m-4 py-6 px-2 bg-green-600"
+        className="m-4 py-6 px-2 bg-green-600 text-white "
       >
         <i className="fa-solid fa-file-export"></i> Export to Excel
       </Button>

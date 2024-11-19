@@ -1,18 +1,37 @@
 import { Link } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-import { Form, Input, Button, Select, message, DatePicker } from "antd";
-
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  message,
+  DatePicker,
+  notification,
+} from "antd";
 
 import { useState } from "react";
 import ActiveAccountPage from "./ActiveAccountPage";
 import { authtApi } from "../../api";
 import { Gender } from "../../enums";
+import {
+  checkEmail,
+  checkIdCard,
+  checkPassword,
+  checkPhoneNumberVN,
+} from "../../utils/regex";
+import { useTheme } from "../../contexts/ThemeContext";
 
 const { Option } = Select;
 
 function RegisterPage() {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [id, setId] = useState<string>("");
   const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
+
   const handleRegister = async (values: any) => {
     const birthdayDate = values.birthday.toDate();
     const birthdayIsoString = new Date(birthdayDate).toISOString();
@@ -20,6 +39,39 @@ function RegisterPage() {
     const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
       values.LastName
     }`.trim();
+
+    // if (!checkEmail(values.email)) {
+    //   notification.error({
+    //     message: "Error",
+    //     description: "Email is not correct",
+    //   });
+    //   return;
+    // }
+
+    // if (!checkPassword(values.password)) {
+    //   notification.error({
+    //     message: "Error",
+    //     description:
+    //       "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character",
+    //   });
+    //   return;
+    // }
+
+    // if (!checkIdCard(values.idCard)) {
+    //   notification.error({
+    //     message: "Error",
+    //     description: "IdCard is not correct",
+    //   });
+    //   return;
+    // }
+
+    // if (checkPhoneNumberVN(values.phone)) {
+    //   notification.error({
+    //     message: "Error",
+    //     description: "Phone number is not correct",
+    //   });
+    //   return;
+    // }
 
     const res = await authtApi.apiRegister(
       values.email,
@@ -37,17 +89,24 @@ function RegisterPage() {
       message.success("Register successfully");
       setOpenActiveAccount(true);
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
+
   return (
     <AuthLayout>
-      <div className=" p-10 rounded-lg shadow-lg lg:w-[800px] mx-3 bg-blue-100">
-        <h2 className="text-4xl font-bold text-center text-black mb-8">
-          Register
-        </h2>
+      <div
+        className={`p-10 rounded-3xl shadow-lg lg:w-[800px] mx-3 ${bgColor} ${textColor}`}
+      >
+        <h2 className={`text-4xl font-bold text-center  mb-8`}>Register</h2>
         <Form layout="vertical" onFinish={handleRegister}>
-          <Form.Item label={<span>Name</span>} wrapperCol={{ span: 24 }}>
+          <Form.Item
+            label={<span className={` ${bgColor} ${textColor}`}>Name</span>}
+            wrapperCol={{ span: 24 }}
+          >
             <div className="flex justify-between">
               <Form.Item
                 name="FirstName"
@@ -75,7 +134,14 @@ function RegisterPage() {
           <Form.Item wrapperCol={{ span: 24 }}>
             <div className="flex justify-between">
               <Form.Item
-                label="Email"
+                label={
+                  <span
+                    className={` 
+                      ${bgColor} ${textColor}`}
+                  >
+                    Email
+                  </span>
+                }
                 name="email"
                 rules={[
                   { required: true, message: "Please enter your email!" },
@@ -86,7 +152,15 @@ function RegisterPage() {
                 <Input placeholder="Enter email" size="large" />
               </Form.Item>
               <Form.Item
-                label="Password"
+                label={
+                  <span
+                    className={`
+                      ${bgColor} ${textColor}
+                      `}
+                  >
+                    Password
+                  </span>
+                }
                 name="password"
                 rules={[
                   { required: true, message: "Please enter your password!" },
@@ -100,7 +174,15 @@ function RegisterPage() {
           <Form.Item wrapperCol={{ span: 24 }}>
             <div className="flex justify-between">
               <Form.Item
-                label={<span>IdCard </span>}
+                label={
+                  <span
+                    className={`
+                      ${bgColor} ${textColor}
+                      `}
+                  >
+                    IdCard
+                  </span>
+                }
                 name="idCard"
                 rules={[{ required: true, message: "IdCard is required" }]}
                 className="mr-2 flex-1"
@@ -108,7 +190,15 @@ function RegisterPage() {
                 <Input placeholder="Enter account IdCard" size="large" />
               </Form.Item>
               <Form.Item
-                label="Phone"
+                label={
+                  <span
+                    className={`
+                  ${bgColor} ${textColor}
+                  `}
+                  >
+                    Phone
+                  </span>
+                }
                 name="phone"
                 rules={[
                   { required: true, message: "Please enter your phone!" },
@@ -122,17 +212,32 @@ function RegisterPage() {
           <Form.Item wrapperCol={{ span: 24 }}>
             <div className="flex justify-between">
               <Form.Item
-                label="Birthday"
+                label={
+                  <span
+                    className={`
+                      ${bgColor} ${textColor}
+                      `}
+                  >
+                    Birthday
+                  </span>
+                }
                 name="birthday"
                 rules={[
-                  { required: true, message: "Please enter your Bỉrthday!" },
+                  { required: true, message: "Please enter your Birthday!" },
                 ]}
                 className="mr-2 "
               >
                 <DatePicker placeholder="Enter BirthDay" size="large" />
               </Form.Item>
               <Form.Item
-                label="Gender"
+                label={
+                  <span
+                    className={`
+                      ${bgColor} ${textColor}`}
+                  >
+                    Gender
+                  </span>
+                }
                 name="gender"
                 rules={[
                   { required: true, message: "Please select your gender!" },
@@ -154,7 +259,14 @@ function RegisterPage() {
             </div>
           </Form.Item>
           <Form.Item
-            label="Address"
+            label={
+              <span
+                className={` 
+                  ${bgColor} ${textColor}`}
+              >
+                Address
+              </span>
+            }
             name="address"
             rules={[{ required: true, message: "Please enter your address!" }]}
           >
@@ -180,7 +292,11 @@ function RegisterPage() {
         <div className="mt-6 text-center">
           <p className="text-gray-400">
             Already have an account?
-            <Link to="/login" className="text-black font-semibold">
+            <Link
+              to="/login"
+              className={` ${theme === "light" ? "text-black" : "text-white"}
+            font-semibold`}
+            >
               Login
             </Link>
           </p>

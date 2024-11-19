@@ -6,12 +6,18 @@ import { resizeWidth } from "../../../utils/resize";
 import { IRoom } from "../../../interfaces";
 import { roomApi } from "../../../api";
 import { RoomStatus } from "../../../enums";
+import { notification } from "antd";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 function RoomStatusBar() {
   const width = resizeWidth();
   const [occupiedRooms, setOccupiedRooms] = useState<IRoom[]>([]);
   const [availableRooms, setAvailableRooms] = useState<IRoom[]>([]);
   const [loading, setLoading] = useState(false);
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   useEffect(() => {
     const getStateRooms = async () => {
       setLoading(true);
@@ -29,14 +35,21 @@ function RoomStatusBar() {
           )
         );
       } else {
-        // message.error(res.message);
+        notification.error({
+          message: "Error",
+          description: res.message,
+        });
       }
       setLoading(false);
     };
     getStateRooms();
   }, []);
   return (
-    <div className={`bg-white p-2 rounded-lg m-1 flex-1 flex-col flex `}>
+    <div
+      className={` p-2 rounded-lg m-1 flex-1 flex-col flex 
+      ${bgColor} ${textColor} shadow
+    `}
+    >
       <Stack spacing={2}>
         <Box>
           <Typography variant="h6">Room status</Typography>
@@ -52,6 +65,7 @@ function RoomStatusBar() {
                     value: occupiedRooms.length,
                     label: RoomStatus.Occupied,
                     color: "#f7b924",
+                    
                   },
                   {
                     id: 1,
