@@ -112,22 +112,22 @@ export const downloadContractPDF = (contract: IContract) => {
   doc.setFont("Times New Roman", "normal");
 
   doc.setFontSize(14);
-  doc.text("Điều 2: Thời hạn hợp đồng:", 20, 260);
+  doc.text("Điều 2: Thời hạn hợp đồng:", 20, 240);
   doc.setFontSize(12);
   addWrappedText(
     doc,
     `- Bên A đồng ý cho Bên B thuê với thời gian bắt đầu từ ngày `,
     30,
-    270,
+    250,
     170,
     6
   );
   doc.setFont("Times New Roman", "italic");
-  doc.text(`${moment(contract.startDate).format("DD/MM/YYYY")}`, 135, 270);
+  doc.text(`${moment(contract.startDate).format("DD/MM/YYYY")}`, 135, 250);
   doc.setFont("Times New Roman", "normal");
-  addWrappedText(doc, ` đến ngày `, 30, 276, 170, 6);
+  addWrappedText(doc, ` đến ngày `, 30, 255, 170, 6);
   doc.setFont("Times New Roman", "italic");
-  doc.text(`${moment(contract.endDate).format("DD/MM/YYYY")}`, 50, 276);
+  doc.text(`${moment(contract.endDate).format("DD/MM/YYYY")}`, 50, 255);
   doc.setFont("Times New Roman", "normal");
   doc.addPage();
   addWrappedText(
