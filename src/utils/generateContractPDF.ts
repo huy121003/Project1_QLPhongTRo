@@ -2,6 +2,7 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import moment from "moment";
 import { timesnewromanBase64 } from "./Base64";
+import { timesnewromanitalicBase64 } from "./ItalicBase64";
 import { IContract } from "../interfaces";
 
 const addWrappedText = (
@@ -22,8 +23,12 @@ export const downloadContractPDF = (contract: IContract) => {
   const doc = new jsPDF("p", "mm", "a4", true);
 
   doc.addFileToVFS("Times-New-Roman.ttf", timesnewromanBase64);
+  doc.addFileToVFS("Times-New-Roman-Italic.ttf", timesnewromanitalicBase64);
+  doc.addFont("Times-New-Roman-Italic.ttf", "Times New Roman", "italic");
+  doc.setFont("Times New Roman", "italic");
   doc.addFont("Times-New-Roman.ttf", "Times New Roman", "normal");
   doc.setFont("Times New Roman", "normal");
+
 
   // Tiêu đề
   doc.setFontSize(12);
