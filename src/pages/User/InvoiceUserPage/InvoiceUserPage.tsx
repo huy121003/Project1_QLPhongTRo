@@ -81,7 +81,7 @@ export default function InvoiceUserPage() {
       const cancel = url.searchParams.get("cancel");
       const status = url.searchParams.get("status");
       const orderCode = url.searchParams.get("orderCode");
-      
+
       if (cancel === "true") {
         notification.success({
           message: "Payment Cancel",
@@ -91,11 +91,6 @@ export default function InvoiceUserPage() {
       }
 
       if (status === InvoiceStatus.PAID && orderCode) {
-        notification.success({
-          message: "Payment Success",
-          description: "Your payment has been successfully processed.",
-        });
-
         const update = async () => {
           try {
             const res = await invoiceApi.postInvoiceStatusPaymentApi(
@@ -105,7 +100,7 @@ export default function InvoiceUserPage() {
             if (res.status === 201) {
               message.success("Payment success");
               setIdInvoice([]); // Reset invoice IDs
-             
+
               navigate("/user/invoiceUser"); // Reload the page or navigate to the same page
             }
           } catch (error) {

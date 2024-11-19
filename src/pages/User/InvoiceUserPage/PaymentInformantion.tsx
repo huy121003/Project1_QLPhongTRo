@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { message } from "antd";
+import { message, Pagination } from "antd";
 import ModalDetailInvoice from "./ModalDetailInvoice";
 import { IInvoice } from "../../../interfaces";
 import { invoiceApi } from "../../../api";
+import { useAppSelector } from "../../../redux/hook";
 
 interface PaymentInformationProps {
   setIdInvoices: (ids: string[]) => void;
@@ -16,16 +17,23 @@ export default function PaymentInformantion({
   const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [selectedInvoice, setSelectedInvoice] = useState<IInvoice | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const idUser = useAppSelector((state) => state.auth.user._id);
+  const [totalPage, setTotalPage] = useState(0);
+  const [current, setCurrent] = useState(1);
+  const [pageSize, setPageSize] = useState(4);
+  const handlePaginationChange = (page: number, pageSize?: number) => {
+    setCurrent(page);
+    if (pageSize) setPageSize(pageSize);
+  };
   // Fetch hóa đơn khi component mount
   useEffect(() => {
     const getInvoices = async () => {
-      const response = await invoiceApi.fetchInvoiceByUserId();
-      if (response.data && Array.isArray(response.data)) {
-        const unpaidInvoices = response.data.filter(
-          (invoice: IInvoice) => invoice.status === "UNPAID"
-        );
-        setInvoices(unpaidInvoices);
+      const response = await invoiceApi.fetchInvoiceApi(
+        `tenant._id=${idUser}&status=UNPAID`
+      );
+      if (response.data) {
+        setInvoices(response.data.result);
+        setTotalPage(response.data.meta.totalDocument);
       } else {
         message.error(response.message || "Data format is incorrect");
       }
@@ -73,6 +81,7 @@ export default function PaymentInformantion({
           <tr className="border">
             <th className="py-2 px-4 border-r">No.</th>
             <th className="py-2 px-4 border-r">ID</th>
+            <th className="py-2 px-4 border-r">Room</th>
             <th className="py-2 px-4 border-r">Description</th>
             <th className="py-2 px-4 border-r">Amount</th>
             <th className="py-2 px-4 border-r">Note</th>
@@ -90,6 +99,7 @@ export default function PaymentInformantion({
               >
                 {invoice._id}
               </td>
+              <td className="py-2 px-4 border">{invoice.room.roomName}</td>
               <td className="py-2 px-4 border">{invoice.service.name}</td>
               <td className="py-2 px-4 border">
                 {invoice.amount
@@ -110,6 +120,16 @@ export default function PaymentInformantion({
           ))}
         </tbody>
       </table>
+      <div className="mt-8 flex justify-end">
+        <Pagination
+          current={current}
+          pageSize={pageSize}
+          total={totalPage}
+          onChange={handlePaginationChange}
+          showSizeChanger
+          pageSizeOptions={["4", "8", "16", "32", "64", "128", "999999"]}
+        />
+      </div>
       <div className="text-red-600 text-right mt-4 font-semibold">
         Total Selected Amount:
         <span className="p-3 font-semibold border-t">
