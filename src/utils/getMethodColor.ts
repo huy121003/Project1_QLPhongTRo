@@ -1,4 +1,12 @@
-import { ApiMethod, ContractStatus, Gender, InvoiceStatus, RoomStatus, RoomType, ServiceType } from "../enums";
+import {
+  ApiMethod,
+  ContractStatus,
+  Gender,
+  InvoiceStatus,
+  RoomStatus,
+  RoomType,
+  ServiceType,
+} from "../enums";
 
 export const getMethodColor = (method: ApiMethod) => {
   switch (method) {
@@ -85,4 +93,8 @@ export const getGenderColor = (gender: string) => {
     default:
       return "text-purple-600 ";
   }
+};
+
+export const getRequestServiceTypeColor = (type: boolean) => {
+  return type ? "text-red-600 " : "text-green-600 ";
 };

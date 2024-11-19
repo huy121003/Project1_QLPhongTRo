@@ -1,5 +1,7 @@
-import  { apiRequest } from "./ApiConfig";
-import { ServiceType } from "../enums";
+import { apiRequest } from "./ApiConfig";
+
+import { RegisterServiceStatus, ServiceType } from "../enums";
+
 import { ApiMethod } from "../enums";
 const fetchServiceApi = async (query: any): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/services?${query}`, false);
@@ -25,6 +27,7 @@ const postServiceApi = (
     type,
   });
 };
+
 const patchServiceApi = (
   id: string,
   serviceName: string,
@@ -41,10 +44,12 @@ const patchServiceApi = (
     type,
   });
 };
+
 export default {
   fetchServiceApi,
   fetchServiceByIdApi,
   deleteServiceApi,
   postServiceApi,
   patchServiceApi,
+
 };

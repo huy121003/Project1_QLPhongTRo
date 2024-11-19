@@ -6,7 +6,7 @@ interface AddButtonProps {
 }
 const AddButton: React.FC<AddButtonProps> = ({ onClick, label }) => {
   return (
-    <Button type="primary" className="   py-6 px-2 " onClick={onClick}>
+    <Button className=" bg-blue-500  py-6 px-2 text-white " onClick={onClick}>
       <i className="fa-solid fa-plus"></i>
       {label}
     </Button>

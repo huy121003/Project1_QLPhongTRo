@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 
-import { ColumnSelector, DeleteModal, TableComponent } from "../../../components";
+import {
+  ColumnSelector,
+  DeleteModal,
+  TableComponent,
+} from "../../../components";
 import { Button } from "antd";
 import { getRoleColor } from "../../../utils/getMethodColor";
 import { IRole } from "../../../interfaces";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
   roles: IRole[];
@@ -29,6 +34,10 @@ const RoleTable: React.FC<Props> = ({
   setOpenDetailRole,
   setRecord,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const columns = [
     {
       title: "ID",
@@ -51,13 +60,7 @@ const RoleTable: React.FC<Props> = ({
       dataIndex: "name",
       key: "name",
       render: (name: string) => (
-        <p
-          className={`border ${
-            getRoleColor(name) as string
-          } text-center rounded border-2 w-[120px] p-2`}
-        >
-          {name}
-        </p>
+        <p className={` ${getRoleColor(name) as string}  font-bold`}>{name}</p>
       ),
     },
     { title: "Description", dataIndex: "description", key: "description" },
@@ -96,7 +99,10 @@ const RoleTable: React.FC<Props> = ({
     columns.map((column) => column.dataIndex)
   );
   return (
-    <div className="bg-white p-2 rounded-lg m-2">
+    <div
+      className={` p-2 rounded-lg m-2
+  `}
+    >
       <div>
         <ColumnSelector
           columns={columns}

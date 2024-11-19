@@ -1,44 +1,56 @@
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layouts/AuthLayout/AuthLayout";
-import { Form, Input, Button, message, Divider } from "antd";
+import { Form, Input, Button, message, Divider, notification } from "antd";
 import { useAppDispatch } from "../../redux/hook";
 import { loginaction } from "../../redux/slice/auth/authSlice";
 import { useState } from "react";
 import ResetPasswordPage from "./ResetPasswordPage";
 import RetryCodePage from "./RetryCodePage";
 import { authtApi } from "../../api";
+import { useTheme } from "../../contexts/ThemeContext";
+
 function LoginPage(): JSX.Element {
+  const { theme, toggleTheme } = useTheme();
   const dispatch = useAppDispatch();
   const [issubmit, setIsSubmit] = useState<boolean>(false);
   const navigate = useNavigate();
   const [openResetPassword, setOpenResetPassword] = useState<boolean>(false);
   const [openRetryCode, setOpenRetryCode] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
+
   const handleLogin = async (value: any) => {
     const { email, password } = value;
     setEmail(email);
     setIsSubmit(true);
     const res = await authtApi.apiLogin(email, password);
     setIsSubmit(false);
+
     if (res?.data) {
       localStorage.setItem("access_token", res.data.access_token);
       dispatch(loginaction(res.data.user));
       message.success("Login successfully!");
-
       navigate("/admin");
     } else {
       if (res?.message === "Account has not been activated!") {
-        message.error(res.message);
+        notification.error({
+          message: "Error",
+          description: res.message,
+        });
         setOpenRetryCode(true);
-      } else message.error(res.message);
+      } else {
+        notification.error({ message: "Error", description: res.message });
+      }
     }
   };
+
   return (
     <AuthLayout>
-      <div className=" p-12 rounded-lg shadow-lg lg:w-[500px] mx- bg-blue-100">
-        <h2 className="text-4xl font-bold text-center text-black mb-8">
-          Login
-        </h2>
+      <div
+        className={`p-12 rounded-3xl shadow-xl lg:w-[500px] ${
+          theme === "light" ? "bg-white text-black" : "bg-gray-800 text-white"
+        }`}
+      >
+        <h2 className="text-4xl font-bold text-center mb-8">Login</h2>
         <Divider />
         <Form layout="vertical" onFinish={handleLogin}>
           <Form.Item
@@ -78,7 +90,7 @@ function LoginPage(): JSX.Element {
             </Button>
           </Form.Item>
         </Form>
-        <div className="flex-1 justify-end">
+        <div className="flex justify-end">
           <Button
             size="large"
             type="link"
@@ -89,7 +101,11 @@ function LoginPage(): JSX.Element {
         </div>
         <div className="mt-6 text-center">
           <span className="text-gray-400">Don't have an account?</span>
-          <Link to="/register" className="text-black font-semibold">
+          <Link
+            to="/register"
+            className={` ${theme === "light" ? "text-black" : "text-white"}
+            font-semibold`}
+          >
             Register
           </Link>
         </div>

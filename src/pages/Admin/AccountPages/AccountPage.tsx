@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components"; // Change to CustomModal
 import { accountApi, roleApi } from "../../../api/";
@@ -9,10 +9,11 @@ import DetailAccount from "./DetailAccount";
 import AccountFilters from "./AccountFilter";
 import ExportToExcel from "./ExportToExcel";
 import AccountCard from "./AccountCard";
+import { useTheme } from "../../../contexts/ThemeContext";
 function AccountPage() {
   const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(4);
   const [total, setTotal] = useState(0);
   const [roles, setRoles] = useState<any[]>([]);
   const [openAddAccount, setOpenAddAccount] = useState(false);
@@ -21,6 +22,10 @@ function AccountPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null); // New state for the record to delete
   const [sorted, setSorted] = useState<string>("");
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [searchParams, setSearchParams] = useState({
     name: "",
     email: "",
@@ -46,7 +51,7 @@ function AccountPage() {
 
     Object.entries(searchParams).forEach(([key, value]) => {
       if (value) {
-        if (key === "role") {
+        if (key === "role" || key === "isActive") {
           queryParams[key] = value;
         } else queryParams[key] = `/${value}/i`;
       }
@@ -66,7 +71,12 @@ function AccountPage() {
 
       setAccounts(formattedAccounts);
       setTotal(res.data.meta.total);
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
   useEffect(() => {
     getAccount();
@@ -101,7 +111,12 @@ function AccountPage() {
       message.success("Account deleted");
       getAccount();
       setCurrent(1);
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
 
   return (
@@ -114,7 +129,11 @@ function AccountPage() {
           sorted={sorted}
           roles={roles}
         />
-        <div className="bg-white p-2 mx-2 rounded-lg mb-2 shadow-lg border border-gray-200 justify-between items-center flex">
+        <div
+          className={` p-2 mx-2 rounded-lg mb-2 shadow-lg border border-gray-200 justify-between items-center flex
+        ${bgColor} ${textColor}
+          `}
+        >
           <div></div>
           <div className="flex justify-center items-center">
             <ExportToExcel accounts={accounts} />

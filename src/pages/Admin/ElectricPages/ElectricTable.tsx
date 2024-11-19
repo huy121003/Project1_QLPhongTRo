@@ -1,7 +1,9 @@
 import React from "react";
-import { Table, Input, message, Button } from "antd";
+import { Table, Input, message, Button, notification } from "antd";
 import { IContract, IService } from "../../../interfaces";
 import { invoiceApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
+
 interface Props {
   contract: IContract[];
   electric: IService;
@@ -31,6 +33,10 @@ const ElectricTable: React.FC<Props> = ({
   selectedMonth,
   year,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const handleOK = async (key: string) => {
     const indexData = numberIndex[key];
     if (
@@ -38,51 +44,57 @@ const ElectricTable: React.FC<Props> = ({
       !indexData.finalIndex ||
       indexData.firstIndex > indexData.finalIndex
     ) {
-      message.error("Invalid index");
+      notification.error({
+        message: "Invalid index",
+        description: "Please check your input",
+      });
       return;
     }
-    try {
-      if (indexData.invoiceId) {
-        const res = await invoiceApi.patchInvoiceApi(
-          indexData.invoiceId,
-          indexData.firstIndex,
-          indexData.finalIndex
-        );
-        res.statusCode === 200
-          ? message.success("Electric  updated successfully")
-          : message.error(res.message);
-      } else {
-        const contractInfo = contract.find((c) => c._id === key);
-        if (!contractInfo) return;
 
-        const res = await invoiceApi.postInvoiceApi(
-          {
-            _id: contractInfo.room._id,
-            roomName: contractInfo.room.roomName,
-          },
-          {
-            _id: contractInfo.tenant._id,
-            name: contractInfo.tenant.name,
-            idCard: contractInfo.tenant.idCard,
-            phone: contractInfo.tenant.phone,
-          },
-          {
-            _id: electric._id,
-            name: electric.serviceName,
-            unit: electric.unit,
-            priceUnit: parseFloat(electric.price),
-          },
-          `${selectedMonth}-${year}`,
-          `Electric bill for ${selectedMonth}-${year}`,
-          indexData.firstIndex,
-          indexData.finalIndex
-        );
-        res.statusCode === 201
-          ? message.success(res.message)
-          : message.error(res.message);
-      }
-    } catch (error) {
-      message.error("An error occurred while saving the invoice.");
+    if (indexData.invoiceId) {
+      const res = await invoiceApi.patchInvoiceApi(
+        indexData.invoiceId,
+        indexData.firstIndex,
+        indexData.finalIndex
+      );
+      res.statusCode === 200
+        ? message.success("Electric  updated successfully")
+        : notification.error({
+            message: "Error",
+            description: res.message,
+          });
+    } else {
+      const contractInfo = contract.find((c) => c._id === key);
+      if (!contractInfo) return;
+
+      const res = await invoiceApi.postInvoiceApi(
+        {
+          _id: contractInfo.room._id,
+          roomName: contractInfo.room.roomName,
+        },
+        {
+          _id: contractInfo.tenant._id,
+          name: contractInfo.tenant.name,
+          idCard: contractInfo.tenant.idCard,
+          phone: contractInfo.tenant.phone,
+        },
+        {
+          _id: electric._id,
+          name: electric.serviceName,
+          unit: electric.unit,
+          priceUnit: parseFloat(electric.price),
+        },
+        `${selectedMonth}-${year}`,
+        `Electric bill for ${selectedMonth}-${year}`,
+        indexData.firstIndex,
+        indexData.finalIndex
+      );
+      res.statusCode === 201
+        ? message.success(res.message)
+        : notification.error({
+            message: "Error",
+            description: res.message,
+          });
     }
   };
 
@@ -114,6 +126,19 @@ const ElectricTable: React.FC<Props> = ({
               parseInt(e.target.value)
             )
           }
+          style={
+            theme === "light"
+              ? {
+                  backgroundColor: "#fff",
+                  color: "#000",
+                  border: "1px solid #444",
+                }
+              : {
+                  backgroundColor: "#333",
+                  color: "#fff",
+                  border: "1px solid #444",
+                }
+          }
         />
       ),
     },
@@ -132,6 +157,19 @@ const ElectricTable: React.FC<Props> = ({
               parseInt(e.target.value)
             )
           }
+          style={
+            theme === "light"
+              ? {
+                  backgroundColor: "#fff",
+                  color: "#000",
+                  border: "1px solid #444",
+                }
+              : {
+                  backgroundColor: "#333",
+                  color: "#fff",
+                  border: "1px solid #444",
+                }
+          }
         />
       ),
     },
@@ -147,11 +185,24 @@ const ElectricTable: React.FC<Props> = ({
             (numberIndex[record._id]?.finalIndex || 0) -
             (numberIndex[record._id]?.firstIndex || 0)
           }
+          style={
+            theme === "light"
+              ? {
+                  backgroundColor: "#fff",
+                  color: "#000",
+                  border: "1px solid #444",
+                }
+              : {
+                  backgroundColor: "#333",
+                  color: "#fff",
+                  border: "1px solid #444",
+                }
+          }
         />
       ),
     },
     {
-      title: "price",
+      title: "Price",
       dataIndex: "price",
       key: "price",
       render: () => <p>{parseFloat(electric.price).toLocaleString()}đ</p>,
@@ -181,23 +232,34 @@ const ElectricTable: React.FC<Props> = ({
       dataIndex: "action",
       key: "action",
       render: (_: any, record: IContract) => (
-        <Button
+        <div
+          className=" text-blue-500  rounded-lg w-[40px] h-[40px] flex justify-center items-center cursor-pointer border-2  border-blue-500 hover:border-blue-300 hover:text-blue-300 "
           onClick={() => handleOK(record._id)}
-          icon={
-            <i className="fa-solid fa-floppy-disk text-2xl text-green-500 p-2"></i>
-          }
-        ></Button>
+        >
+          <i className="fa-solid fa-floppy-disk text-2xl"></i>
+        </div>
       ),
     },
   ];
 
   return (
-    <div className="bg-white p-2 rounded-lg m-2">
+    <div
+      className={` p-2 rounded-lg m-2
+        ${bgColor} ${textColor}
+     `}
+    >
       <Table
+        className={`
+     ${bgColor} ${textColor}  hover:text-black
+      `}
         loading={loading}
         columns={columns}
         dataSource={contract}
         rowKey={(record) => record._id}
+        rowClassName={`
+        ${bgColor} ${textColor}  hover:text-black
+        `} // Added class for row hover styling
+        bordered
       />
     </div>
   );

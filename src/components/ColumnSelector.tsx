@@ -1,5 +1,6 @@
 import React from "react";
 import { Dropdown, Button, Checkbox, MenuProps } from "antd";
+import { useTheme } from "../contexts/ThemeContext";
 // Prop types for ColumnSelector
 interface ColumnSelectorProps {
   columns: Array<{
@@ -16,6 +17,7 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
   visibleColumns,
   onChangeVisibleColumns,
 }) => {
+  const { theme } = useTheme();
   // Prepare menu items for the dropdown
   const columnItems: MenuProps["items"] = columns.map((column) => ({
     key: column.key,
@@ -37,7 +39,15 @@ const ColumnSelector: React.FC<ColumnSelectorProps> = ({
   }));
   // Define the menu using the items array
   return (
-    <Dropdown menu={{ items: columnItems }}>
+    <Dropdown
+      menu={{ items: columnItems }}
+      className={`
+      ${
+        theme === "light"
+          ? "text-black shadow-lg"
+          : "bg-gray-800 text-white shadow hover:bg-gray-500"
+      }`}
+    >
       <Button className="ml-2 my-1 justify-center items-center h-[40px]">
         <i className="fa-solid fa-filter text-2xl text-blue-500"></i>
       </Button>

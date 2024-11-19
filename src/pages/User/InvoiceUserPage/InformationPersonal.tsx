@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 
+
 import { message } from "antd";
 import { useAppSelector } from "../../../redux/hook";
 import { IAccount } from "../../../interfaces";
 import { accountApi } from "../../../api";
+import dayjs from "dayjs";
 
 export default function InformationPersonal() {
     const [accounts, setAccount] = useState<IAccount>();
@@ -22,7 +24,7 @@ export default function InformationPersonal() {
         getAccount();
     }, [iduser]);
     return (
-        <div className="border-b pb-4 mb-4">
+        <div className="border-b pb-4 mb-4 overflow-x-scroll md:overflow-x-hidden">
             <h2 className="text-2xl font-semibold ">PERSONAL INFORMATION</h2>
 
             <div className="grid grid-cols-2 gap-4 mt-4 text-lg">
@@ -44,10 +46,8 @@ export default function InformationPersonal() {
                     <p className=" py-2">
                         Date of Birth:
                         <span className="">
-                          
-                            {new Date(accounts?.birthday ?? "").toLocaleDateString(
-                                "en-GB"
-                            )}
+                        {  dayjs(accounts?.birthday).format("DD/MM/YYYY")}
+     
                         </span>
                     </p>
                     <p className=" py-2">
@@ -57,4 +57,5 @@ export default function InformationPersonal() {
             </div>
         </div>
     );
+
 }

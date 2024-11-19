@@ -1,4 +1,5 @@
 import React from "react";
+import { useTheme } from "../contexts/ThemeContext";
 interface Props {
   type: "avatar" | "frontIdCard" | "backIdCard" | "temporaryResidence";
   selectedImage: File | null;
@@ -17,6 +18,7 @@ const RenderUploadField: React.FC<Props> = ({
       console.log(event.target.files[0]);
     }
   };
+  const { theme } = useTheme();
   const uniqueId = `${type}-${Math.random().toString(36).substr(2, 9)}`;
   return (
     <div className="flex justify-between my-4">
@@ -26,7 +28,11 @@ const RenderUploadField: React.FC<Props> = ({
         }
         `}
       >
-        <p>
+        <p
+          className={`
+        ${theme === "dark" ? "text-white" : "text-black"}
+          `}
+        >
           {type === "avatar"
             ? null
             : type === "frontIdCard"

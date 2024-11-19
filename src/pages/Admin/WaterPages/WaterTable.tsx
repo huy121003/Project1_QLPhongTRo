@@ -2,6 +2,7 @@ import React from "react";
 import { Table, Input, message, notification } from "antd";
 import { IContract, IService } from "../../../interfaces";
 import { invoiceApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
   contract: IContract[];
@@ -31,6 +32,10 @@ const WaterTable: React.FC<Props> = ({
   selectedMonth,
   year,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const handleOK = async (key: string) => {
     const indexData = numberIndex[key];
     if (
@@ -44,48 +49,51 @@ const WaterTable: React.FC<Props> = ({
 
       return;
     }
-    try {
-      if (indexData.invoiceId) {
-        const res = await invoiceApi.patchInvoiceApi(
-          indexData.invoiceId,
-          indexData.firstIndex,
-          indexData.finalIndex
-        );
-        res.statusCode === 200
-          ? message.success("Updated successfully")
-          : message.error(res.message);
-      } else {
-        const contractInfo = contract.find((c) => c._id === key);
-        if (!contractInfo) return;
 
-        const res = await invoiceApi.postInvoiceApi(
-          {
-            _id: contractInfo.room._id,
-            roomName: contractInfo.room.roomName,
-          },
-          {
-            _id: contractInfo.tenant._id,
-            name: contractInfo.tenant.name,
-            idCard: contractInfo.tenant.idCard,
-            phone: contractInfo.tenant.phone,
-          },
-          {
-            _id: water._id,
-            name: water.serviceName,
-            unit: water.unit,
-            priceUnit: parseFloat(water.price),
-          },
-          `${selectedMonth}-${year}`,
-          `Water bill for ${selectedMonth}-${year}`,
-          indexData.firstIndex,
-          indexData.finalIndex
-        );
-        res.statusCode === 201
-          ? message.success("Created successfully")
-          : message.error(res.message);
-      }
-    } catch (error) {
-      message.error("Something went wrong");
+    if (indexData.invoiceId) {
+      const res = await invoiceApi.patchInvoiceApi(
+        indexData.invoiceId,
+        indexData.firstIndex,
+        indexData.finalIndex
+      );
+      res.statusCode === 200
+        ? message.success("Updated successfully")
+        : notification.error({
+            message: "Error",
+            description: res.message,
+          });
+    } else {
+      const contractInfo = contract.find((c) => c._id === key);
+      if (!contractInfo) return;
+
+      const res = await invoiceApi.postInvoiceApi(
+        {
+          _id: contractInfo.room._id,
+          roomName: contractInfo.room.roomName,
+        },
+        {
+          _id: contractInfo.tenant._id,
+          name: contractInfo.tenant.name,
+          idCard: contractInfo.tenant.idCard,
+          phone: contractInfo.tenant.phone,
+        },
+        {
+          _id: water._id,
+          name: water.serviceName,
+          unit: water.unit,
+          priceUnit: parseFloat(water.price),
+        },
+        `${selectedMonth}-${year}`,
+        `Water bill for ${selectedMonth}-${year}`,
+        indexData.firstIndex,
+        indexData.finalIndex
+      );
+      res.statusCode === 201
+        ? message.success("Created successfully")
+        : notification.error({
+            message: "Error",
+            description: res.message,
+          });
     }
   };
   const columns = [
@@ -116,6 +124,19 @@ const WaterTable: React.FC<Props> = ({
               parseInt(e.target.value)
             )
           }
+          style={
+            theme === "light"
+              ? {
+                  backgroundColor: "#fff",
+                  color: "#000",
+                  border: "1px solid #444",
+                }
+              : {
+                  backgroundColor: "#333",
+                  color: "#fff",
+                  border: "1px solid #444",
+                }
+          }
         />
       ),
     },
@@ -134,6 +155,19 @@ const WaterTable: React.FC<Props> = ({
               parseInt(e.target.value)
             )
           }
+          style={
+            theme === "light"
+              ? {
+                  backgroundColor: "#fff",
+                  color: "#000",
+                  border: "1px solid #444",
+                }
+              : {
+                  backgroundColor: "#333",
+                  color: "#fff",
+                  border: "1px solid #444",
+                }
+          }
         />
       ),
     },
@@ -148,6 +182,19 @@ const WaterTable: React.FC<Props> = ({
           value={
             (numberIndex[record._id]?.finalIndex || 0) -
             (numberIndex[record._id]?.firstIndex || 0)
+          }
+          style={
+            theme === "light"
+              ? {
+                  backgroundColor: "#fff",
+                  color: "#000",
+                  border: "1px solid #444",
+                }
+              : {
+                  backgroundColor: "#333",
+                  color: "#fff",
+                  border: "1px solid #444",
+                }
           }
         />
       ),
@@ -194,11 +241,24 @@ const WaterTable: React.FC<Props> = ({
     },
   ];
   return (
-    <div className="px-2">
+    <div
+      className={` p-2 rounded-lg m-2
+        ${bgColor} ${textColor} 
+     `}
+    >
       <Table
+        className={`
+      ${bgColor} ${textColor}  hover:text-black
+      `}
+        loading={loading}
         columns={columns}
         dataSource={contract}
         rowKey={(record) => record._id}
+        rowClassName={`
+      ${bgColor} ${textColor}  hover:text-black
+        `} // Added class for row hover styling
+        bordered
+        // style={{ color: "#000" }} // Ensure text is white
       />
     </div>
   );

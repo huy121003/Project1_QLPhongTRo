@@ -6,6 +6,7 @@ import {
 } from "../../../utils/getMethodColor";
 import { Button, Pagination, Spin } from "antd";
 import { IRoom } from "../../../interfaces";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
   rooms: IRoom[];
@@ -32,23 +33,29 @@ const RoomCard: React.FC<Props> = ({
   setOpenDetailRoom,
   setRecord,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   return (
     <Spin spinning={isLoading}>
       {rooms.length > 0 ? (
         <div className="m-4 flex-1">
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             {rooms.map((room) => (
               <div
                 key={room._id}
-                className="bg-white shadow-lg rounded-lg p-6 border-t-4 transform transition-all hover:scale-105 hover:shadow-xl"
+                className={` shadow-lg rounded-lg p-6 border-t-4 transform transition-all hover:scale-105 hover:shadow-xl
+                ${bgColor} ${textColor}
+                  `}
               >
                 <div className="border-b pb-3 mb-3">
-                  <p className="text-2xl font-bold text-gray-500">
+                  <p className="text-2xl font-bold ">
                     <i className="fa-solid fa-bed"></i> {room.roomName}
                   </p>
                 </div>
 
-                <div className="text-gray-700 space-y-2">
+                <div className=" space-y-2">
                   <p className="font-semibold">
                     <i className="fa-solid fa-cube mr-2"></i> {room.area} m²
                   </p>
@@ -75,18 +82,20 @@ const RoomCard: React.FC<Props> = ({
                   <div />
                   <div className="flex gap-3">
                     <Button
-                      type="primary"
-                      className="bg-blue-500 text-white hover:bg-blue-600 transition duration-300"
+                      className=" transition duration-300"
                       onClick={() => {
                         setOpenDetailRoom(true);
                         setRecord(room);
                       }}
-                      icon={<i className="fa-solid fa-eye text-xl" />}
+                      icon={
+                        <i className="fa-solid fa-eye text-xl text-blue-500" />
+                      }
                     />
                     <Button
-                      type="primary"
-                      className="bg-green-500 text-white hover:bg-green-600 transition duration-300"
-                      icon={<i className="fa-solid fa-pen-to-square text-xl" />}
+                      className="transition duration-300"
+                      icon={
+                        <i className="fa-solid fa-pen-to-square text-xl text-green-500" />
+                      }
                       onClick={() => {
                         setOpenEditRoom(true);
                         setRecord(room);
@@ -105,7 +114,7 @@ const RoomCard: React.FC<Props> = ({
               total={total}
               onChange={onChange}
               showSizeChanger
-              className="text-sm"
+              pageSizeOptions={["4", "8", "16", "32", "64", "128", "999999"]}
             />
           </div>
         </div>

@@ -47,6 +47,7 @@ const patchRoomApi = (
     services,
   });
 };
+
 const updateRoomStatusApi = (id: string, status: RoomStatus): Promise<any> => {
   return apiConfig.patch(`/api/v1/rooms/${id}`, {
     status,

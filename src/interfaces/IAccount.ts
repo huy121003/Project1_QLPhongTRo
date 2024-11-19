@@ -11,6 +11,7 @@ interface IAccount {
     _id: string;
     name: string;
   };
+  isActive: boolean;
   imagesIdCard: string [];
   avatar: string;
   gender: Gender;

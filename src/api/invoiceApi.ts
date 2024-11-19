@@ -7,6 +7,7 @@ const fetchInvoiceApi = (query: string): Promise<any> => {
 const fetchInvoiceByIdApi = (id: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/invoices/${id}`, false);
 };
+
 export const fetchInvoiceByUserId = (): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/invoices/by-user`, false);
 };
@@ -56,6 +57,7 @@ const patchInvoiceApi = (
     finalIndex,
   });
 };
+
 const patchInvoiceStatusApi = (
   id: string,
   status: InvoiceStatus
@@ -64,6 +66,17 @@ const patchInvoiceStatusApi = (
     status,
   });
 };
+const postInvoiceStatusPaymentApi = (
+  id: string,
+  idInvoices: string[]
+): Promise<any> => {
+  return apiRequest(ApiMethod.POST, `/api/v1/pay/paymentCheck`, false, {
+    id,
+    idInvoices,
+  });
+};
+
+
 export default {
   fetchInvoiceApi,
   fetchInvoiceByIdApi,
@@ -72,4 +85,5 @@ export default {
   patchInvoiceApi,
   patchInvoiceStatusApi,
   fetchInvoiceByUserId,
+  postInvoiceStatusPaymentApi,
 };

@@ -1,30 +1,38 @@
 import { useEffect, useState } from "react";
-
-import { message } from "antd";
-import { IRoom } from "../../../interfaces";
 import { roomApi } from "../../../api";
-
+import { message, Pagination } from "antd";
+import { IRoom } from "../../../interfaces";
 
 export default function AvailableRoom() {
     const [rooms, setRooms] = useState<IRoom[]>([]);
 
+    //Phân trang
+    const [current, setCurrent] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
+    const [total, setTotal] = useState(0);
+
     useEffect(() => {
         const getRoom = async () => {
             const response = await roomApi.fetchRoomApi(
-                "pageSize=1000&currentPage=1&status=AVAILABLE"
+                `pageSize=${pageSize}&currentPage=${current}&status=AVAILABLE`
             );
-            console.log(response);
+
             if (response.data) {
                 setRooms(response.data.result);
+                setTotal(response.data.meta.totalDocument);
             } else {
                 message.error(response.message);
             }
         };
         getRoom();
-    }, []);
+    }, [pageSize, current]);
 
+    const handlePaginationChange = (page: number, pageSize?: number) => {
+        setCurrent(page);
+        if (pageSize) setPageSize(pageSize);
+    };
     return (
-        <div className="bg-white rounded-lg shadow-md p-6 mx-5 mb-5 overflow-y-auto h-[370px]">
+        <div className="bg-white rounded-lg shadow-md p-6 mx-0 mb-5 sm:mx-5 overflow-x-scroll sm:overflow-x-hidden">
             <h3 className="text-xl font-semibold mb-4">Available Rooms</h3>
             <table className="w-full border text-left border-collapse">
                 <thead>
@@ -48,6 +56,16 @@ export default function AvailableRoom() {
                     ))}
                 </tbody>
             </table>
+
+            <div className="flex justify-start sm:justify-end pt-5 ">
+                <Pagination
+                    current={current}
+                    pageSize={pageSize}
+                    total={total}
+                    onChange={handlePaginationChange}
+                    showSizeChanger
+                />
+            </div>
         </div>
     );
 }

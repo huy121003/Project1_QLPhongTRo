@@ -9,6 +9,7 @@ import { Button } from "antd";
 
 import { getServiceTypeColor } from "../../../utils/getMethodColor";
 import { IService } from "../../../interfaces";
+import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {
   services: IService[];
   isLoading: boolean;
@@ -33,6 +34,10 @@ const ServiceTable: React.FC<Props> = ({
   setOpenDetailService,
   setRecord,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const columns = [
     {
       title: "Id",
@@ -95,7 +100,7 @@ const ServiceTable: React.FC<Props> = ({
     columns.map((column) => column.dataIndex)
   );
   return (
-    <div className="bg-white p-2 rounded-lg m-2">
+    <div className={` p-2 rounded-lg m-2 `}>
       <div>
         <ColumnSelector
           columns={columns}

@@ -1,4 +1,4 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components";
 import AddRoomModal from "./AddRoomModal";
@@ -9,10 +9,11 @@ import ExportToExcel from "./ExportToExcel";
 import RoomCard from "./RoomCard";
 import { IRoom } from "../../../interfaces";
 import { roomApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
 function RoomPage() {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(4);
   const [total, setTotal] = useState(0);
   const [openAddRoom, setOpenAddRoom] = useState(false);
   const [openEditRoom, setOpenEditRoom] = useState(false);
@@ -20,6 +21,10 @@ function RoomPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null); // For delete confirmation
   const [sorted, setSorted] = useState<string>("");
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [searchParams, setSearchParams] = useState({
     roomName: "",
     type: "",
@@ -43,7 +48,10 @@ function RoomPage() {
       setRooms(res.data.result);
       setTotal(res.data.meta.totalDocument);
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
   // Fetch rooms function
@@ -69,7 +77,10 @@ function RoomPage() {
       getRoom();
       setCurrent(1);
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
   return (
@@ -81,7 +92,11 @@ function RoomPage() {
           handleSortChange={handleSortChange}
           sorted={sorted}
         />
-        <div className="bg-white p-2 r rounded-lg shadow-lg border border-gray-200 mx-2 justify-between flex items-center">
+        <div
+          className={`p-2 r rounded-lg shadow-lg border border-gray-200 mx-2 justify-between flex items-center
+          ${bgColor} ${textColor}
+          `}
+        >
           <div></div>
           <div className="flex items-center">
             <ExportToExcel rooms={rooms} />

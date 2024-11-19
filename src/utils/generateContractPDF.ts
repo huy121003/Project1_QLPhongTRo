@@ -70,10 +70,17 @@ export const downloadContractPDF = (contract: IContract) => {
   doc.setFont("Times New Roman", "italic");
   doc.text(`${contract.tenant.idCard}`, 60, 150);
   doc.setFont("Times New Roman", "normal");
-  doc.text("Điện thoại: ", 30, 170);
+  doc.text("Điện thoại: ", 30, 160);
   doc.setFont("Times New Roman", "italic");
-  doc.text(`${contract.tenant.phone}`, 60, 170);
+  doc.text(`${contract.tenant.phone}`, 60, 160);
   doc.setFont("Times New Roman", "normal");
+  doc.text("Email: ", 30, 170);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.tenant.email}`, 50, 170);
+  doc.setFont("Times New Roman", "normal");
+  doc.text("Địa chỉ: ", 30, 180);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.tenant.address}`, 50, 180);
 
   // Điều khoản hợp đồng
   doc.setFontSize(12);
@@ -202,8 +209,14 @@ export const downloadContractPDF = (contract: IContract) => {
     170,
     6
   );
-  addWrappedText(doc,"- Cùng phối hợp đảm bảo an ninh trật tự, công tác an toàn phòng chống cháy nổ, thiên tai, dịch bệnh theo quy định của pháp luật và địa phương.",
-    30,175,170,6);
+  addWrappedText(
+    doc,
+    "- Cùng phối hợp đảm bảo an ninh trật tự, công tác an toàn phòng chống cháy nổ, thiên tai, dịch bệnh theo quy định của pháp luật và địa phương.",
+    30,
+    175,
+    170,
+    6
+  );
 
   doc.setFontSize(14);
   doc.text("Điều 5: Trách nhiệm của bên B", 20, 190);
@@ -260,8 +273,14 @@ export const downloadContractPDF = (contract: IContract) => {
     170,
     6
   );
-  addWrappedText(doc,"- Nếu Bên B không thực hiện được trách nhiệm thanh toán tiền thuê nhà, bên A có quyền đòi lại căn nhà cho thuê, và phạt bên B số tiền tương ứng.",
-    30,55,170,6);
+  addWrappedText(
+    doc,
+    "- Nếu Bên B không thực hiện được trách nhiệm thanh toán tiền thuê nhà, bên A có quyền đòi lại căn nhà cho thuê, và phạt bên B số tiền tương ứng.",
+    30,
+    55,
+    170,
+    6
+  );
 
   doc.setFontSize(14);
   doc.text("Điều 7: Điều khoản chung", 20, 70);
