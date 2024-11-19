@@ -112,7 +112,7 @@ function HomeLayout() {
       <div key={route.label} className="flex flex-col w-full">
         <div
           className={`flex items-center  py-2 mt-2 px-4 cursor-pointer  w-full
-           ${bgColor} ${textColor} 
+        
             `}
           onClick={() =>
             setExpandedMenus((prev) => ({
@@ -142,7 +142,7 @@ function HomeLayout() {
                 to={`/admin/${route.path}/${child.path}`}
                 className={`flex  flex-row items-center  rounded-md my-1 py-1 transition-colors duration-300 
                  
-                 ${bgColor} ${textColor} 
+              ${textColor} 
                 `}
                 onClick={() => setSelected(child.label ?? route.label)}
               >
@@ -166,7 +166,7 @@ function HomeLayout() {
         to={route.path}
         key={route.label}
         className={`flex flex-row items-center  rounded-md my-1 px-4 py-1 w-full transition-colors duration-300 
-       ${bgColor} ${textColor} 
+        ${textColor} 
         `}
         onClick={() => setSelected(route.label ?? "Dashboard")}
       >
