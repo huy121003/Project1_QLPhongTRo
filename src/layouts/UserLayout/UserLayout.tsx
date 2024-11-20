@@ -35,7 +35,7 @@ function UserLayout() {
     const res = await authtApi.apiLogout();
     if (res && res.data) {
       dispatch(logoutAction());
-      navigate("/");
+      navigate("/login");
       message.success("Success logout");
     }
   };

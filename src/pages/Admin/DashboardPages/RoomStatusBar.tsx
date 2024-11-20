@@ -16,8 +16,9 @@ function RoomStatusBar() {
   const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
-  const textColor = isLightTheme ? "text-black" : "text-white";
+  const textColor = isLightTheme ? "#000000" : "#FFFFFF";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
+
   useEffect(() => {
     const getStateRooms = async () => {
       setLoading(true);
@@ -44,15 +45,17 @@ function RoomStatusBar() {
     };
     getStateRooms();
   }, []);
+
   return (
     <div
-      className={` p-2 rounded-lg m-1 flex-1 flex-col flex 
-      ${bgColor} ${textColor} shadow
-    `}
+      className={`p-2 rounded-lg m-1 flex-1 flex-col flex 
+      ${bgColor} shadow`}
     >
       <Stack spacing={2}>
         <Box>
-          <Typography variant="h6">Room status</Typography>
+          <Typography variant="h6" style={{ color: textColor }}>
+            Room status
+          </Typography>
         </Box>
         <Box flexGrow={1}>
           <PieChart
@@ -65,7 +68,6 @@ function RoomStatusBar() {
                     value: occupiedRooms.length,
                     label: RoomStatus.Occupied,
                     color: "#f7b924",
-                    
                   },
                   {
                     id: 1,
@@ -78,6 +80,11 @@ function RoomStatusBar() {
             ]}
             width={width <= 680 ? 380 : width >= 1024 ? 650 : 500}
             height={width <= 680 ? 160 : width >= 1024 ? 450 : 250}
+            sx={{
+              "& .MuiPieLabel-root": {
+                fill: textColor, // Tùy chỉnh màu chữ của label
+              },
+            }}
           />
         </Box>
       </Stack>

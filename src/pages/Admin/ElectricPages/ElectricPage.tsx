@@ -9,7 +9,7 @@ import { YearMonthSelector } from "../../../components";
 import { notification } from "antd";
 import { useTheme } from "../../../contexts/ThemeContext";
 const ElectricPage = () => {
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
@@ -106,20 +106,25 @@ const ElectricPage = () => {
   };
   return (
     <div className="justify-end  w-full">
-    
-      <ExportToExcel
-        contract={contract}
-        numberIndex={numberIndex}
-        electric={electric}
-        selectedMonth={selectedMonth}
-        year={year}
-      />
+      <div
+        className={` m-2  rounded-lg shadow-lg border border-gray-200  justify-between flex-1 items-center cursor flex
+    ${bgColor} ${textColor}
+    `}
+      >
         <YearMonthSelector
-        selectedMonth={selectedMonth}
-        year={year}
-        setYear={setYear}
-        setSelectedMonth={setSelectedMonth}
-      />
+          selectedMonth={selectedMonth}
+          year={year}
+          setYear={setYear}
+          setSelectedMonth={setSelectedMonth}
+        />
+        <ExportToExcel
+          contract={contract}
+          numberIndex={numberIndex}
+          electric={electric}
+          selectedMonth={selectedMonth}
+          year={year}
+        />
+      </div>
       <ElectricTable
         contract={contract}
         electric={electric}

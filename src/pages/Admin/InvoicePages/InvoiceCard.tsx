@@ -40,7 +40,7 @@ const InvoiceCard: React.FC<Props> = ({
     <Spin spinning={isLoading}>
       {invoices.length > 0 ? (
         <div className="m-4 flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {invoices.map((invoice) => (
               <div
                 key={invoice._id}
@@ -122,7 +122,9 @@ const InvoiceCard: React.FC<Props> = ({
                         "
                         />
                       }
-                    ></Button>
+                    >
+                      Detail
+                    </Button>
                     <DeleteModal onConfirm={onDeleteInvoice} record={invoice} />
                   </div>
                 </div>

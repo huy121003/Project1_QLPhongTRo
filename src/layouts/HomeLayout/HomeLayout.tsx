@@ -4,7 +4,7 @@ import { resizeWidth } from "../../utils/resize";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { accountApi, authtApi, registerServiceAPI } from "../../api";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
-import { Badge, Dropdown, Menu, message, notification } from "antd";
+import { Badge, Drawer, Dropdown, Menu, message, notification } from "antd";
 import ChangePassword from "../../pages/AuthPages/ChangePassword";
 import { IAccount } from "../../interfaces";
 import EditAccountModal from "../../pages/Admin/AccountPages/EditAccountModal";
@@ -34,7 +34,9 @@ function HomeLayout() {
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-black";
-  const toggleNav = () => setIsNavOpen((prev) => !prev);
+  const toggleNav = () => {
+    width >= 780 ? setIsNavOpen((prev) => !prev) : setOpenDrawer(true);
+  };
 
   useEffect(() => {
     setInterval(async () => {
@@ -51,7 +53,7 @@ function HomeLayout() {
     const res = await authtApi.apiLogout();
     if (res?.data) {
       dispatch(logoutAction());
-      navigate("/");
+      navigate("/login");
       message.success("Logged out successfully");
     }
   };
@@ -68,6 +70,7 @@ function HomeLayout() {
       });
     }
   };
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   const handleChangePassword = () => setOpenChangePassword(true);
 
@@ -122,7 +125,7 @@ function HomeLayout() {
           }
         >
           <i className={`fa ${route.icon} text-2xl`} />
-          {width > 680 && isNavOpen && (
+          {isNavOpen && (
             <>
               <p className="ml-4 text-lg">{route.label}</p>
               <i
@@ -152,9 +155,7 @@ function HomeLayout() {
                   } flex`}
                 >
                   <i className={`fa ${child.icon} text-sm`} />
-                  {width > 680 && isNavOpen && (
-                    <p className="ml-4 text-sm">{child.label}</p>
-                  )}
+                  {isNavOpen && <p className="ml-4 text-sm">{child.label}</p>}
                 </p>
               </Link>
             ))}
@@ -176,9 +177,7 @@ function HomeLayout() {
           } flex`}
         >
           <i className={`fa ${route.icon} text-2xl`} />
-          {width > 680 && isNavOpen && (
-            <p className="ml-4 text-lg">{route.label}</p>
-          )}
+          {isNavOpen && <p className="ml-4 text-lg">{route.label}</p>}
         </p>
       </Link>
     );
@@ -186,36 +185,62 @@ function HomeLayout() {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <nav
-        className={`flex flex-col items-center h-full shadow-lg transition-all duration-300 ${
-          width <= 680
-            ? isNavOpen
-              ? "w-16 px-1"
-              : "w-0"
-            : isNavOpen
-            ? "px-1 w-[200px]"
-            : "w-16"
-        }
+      {width >= 780 ? (
+        <nav
+          className={`flex flex-col items-center h-full shadow-lg transition-all duration-300 ${
+            isNavOpen ? "px-1 w-[200px]" : "w-16"
+          }
       ${bgColor} ${textColor} 
         `}
-      >
-        <div className="border-b-2 w-full justify-center items-center flex">
-          <img
-            src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4"
-            alt="logo"
-            className={`${
-              width >= 780 ? "w-16 h-16" : "w-12 h-12"
-            } rounded-full my-4`}
-          />
-          {isNavOpen && width > 680 && (
-            <span className="text-2xl font-bold text-center">For Admin</span>
-          )}
-        </div>
+        >
+          <div className="border-b-2 w-full justify-center items-center flex">
+            <img
+              src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4"
+              alt="logo"
+              className={`
+               w-16 h-16  rounded-full my-4`}
+            />
+            {isNavOpen && (
+              <span className="text-2xl font-bold text-center">For Admin</span>
+            )}
+          </div>
 
-        {homeAdminRouters
-          .filter((item) => item.label !== undefined)
-          .map((item) => renderMenuChild(item))}
-      </nav>
+          {homeAdminRouters
+            .filter((item) => item.label !== undefined)
+            .map((item) => renderMenuChild(item))}
+        </nav>
+      ) : (
+        <Drawer
+          onClose={() => setOpenDrawer(false)}
+          open={openDrawer}
+          closeIcon={null}
+          closable={false}
+          placement="left"
+        >
+          <nav
+            className={`flex flex-col items-center h-auto shadow-lg transition-all duration-300 
+           px-1 
+          
+      ${bgColor} ${textColor} 
+        `}
+          >
+            <div className="border-b-2 w-full justify-center items-center flex">
+              <img
+                src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4"
+                alt="logo"
+                className={`
+               w-16 h-16  rounded-full my-4`}
+              />
+
+              <span className="text-2xl font-bold text-center">For Admin</span>
+            </div>
+
+            {homeAdminRouters
+              .filter((item) => item.label !== undefined)
+              .map((item) => renderMenuChild(item))}
+          </nav>
+        </Drawer>
+      )}
 
       <div
         className={`flex-1 transition-all duration-300 

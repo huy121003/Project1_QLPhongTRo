@@ -14,7 +14,7 @@ const ServiceFilters: React.FC<Props> = ({
   sorted,
 }) => {
   return (
-    <div className="justify-end mx-2  flex-1">
+    <div className="flex-1 p-2 w-full flex justify-between gap-4">
       <SearchFilters
         searchParams={searchParams}
         onSearchChange={handleSearchChange}

@@ -102,18 +102,14 @@ const ExportToExcel: React.FC<Props> = ({
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   return (
-    <div
-      className={` m-2  rounded-lg shadow-lg border border-gray-200  justify-end flex-1 items-center cursor flex
-    ${bgColor} ${textColor}
-    `}
-    >
+    
       <Button
         onClick={exportToExcel}
         className="m-4 py-6 px-2 bg-green-600 text-white "
       >
         <i className="fa-solid fa-file-export"></i> Export to Excel
       </Button>
-    </div>
+   
   );
 };
 export default ExportToExcel;

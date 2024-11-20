@@ -83,8 +83,6 @@ const DetailRole: React.FC<Props> = ({
         : prevPermissions.filter((id) => id !== permissionId)
     );
   };
-
-  //Handle module-level toggle 
   const handleModuleToggle = (module: string, checked: boolean) => {
     const modulePermissionIds = groupedPermissions[module].map(
       (permission: IPermisson) => permission._id
@@ -100,7 +98,6 @@ const DetailRole: React.FC<Props> = ({
         : filteredPermissions;
     });
   };
-
   const renderItem = (label: string, value: React.ReactNode) => ({
     key: label,
     label: <span className={textColor}>{label}</span>,
@@ -146,26 +143,39 @@ const DetailRole: React.FC<Props> = ({
           <div className="my-2" />
           <Collapse>
             <Collapse.Panel
-              header={<span className={`${textColor}`}>Permissions</span>}
+              header={
+                <div className="flex items-center justify-between">
+                  <span className={`${textColor}`}>Permissions</span>
+                  <Switch
+                    disabled
+                    size="small"
+                    // Check if ALL permissions are enabled
+                    checked={enablePermission?.length === permissions?.length}
+                    onChange={(checked, e) => {
+                      e.stopPropagation();
+                      setEnablePermission(
+                        checked ? permissions.map((p) => p._id) : []
+                      );
+                    }}
+                  />
+                </div>
+              }
               key="1"
             >
               {Object.keys(groupedPermissions).map((module) => (
                 <Collapse key={module} style={{ marginBottom: "16px" }}>
                   <Collapse.Panel
-                    //Add module-level toggle switch
                     header={
                       <div className="flex items-center justify-between">
                         <span className={`${textColor}`}>{module}</span>
                         <Switch
+                          disabled
                           size="small"
                           // Check if ALL permissions in module are enabled
                           checked={groupedPermissions[module].every(
                             (permission: IPermisson) =>
-                              enablePermission.includes(permission._id)
+                              enablePermission?.includes(permission._id)
                           )}
-                          onChange={(checked) =>
-                            handleModuleToggle(module, checked)
-                          }
                         />
                       </div>
                     }

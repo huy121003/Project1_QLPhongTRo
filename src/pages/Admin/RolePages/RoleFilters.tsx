@@ -13,7 +13,7 @@ const RoleFilters: React.FC<Props> = ({
   sorted,
 }) => {
   return (
-    <div className="justify-end p-2 w-full">
+    <div className="flex-1 p-2 w-full flex justify-between gap-4">
       <SearchFilters
         searchParams={searchParams}
         onSearchChange={handleSearchChange}

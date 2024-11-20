@@ -22,7 +22,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   const { theme } = useTheme();
   return (
     <div
-      className={` p-4 rounded-lg mb-2 shadow-lg border border-gray-200 my-2 flex flex-wrap
+      className={`w-1/2 p-4 rounded-lg  shadow-lg border border-gray-200  flex flex-wrap
     ${
       theme === "light"
         ? "bg-white text-black"
