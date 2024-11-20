@@ -1,37 +1,38 @@
-import { useState } from "react";
+import React, { useState } from "react";
+
 import {
   ColumnSelector,
   DeleteModal,
   TableComponent,
 } from "../../../components";
-
+import { IPermisson } from "../../../interfaces";
 import { Button } from "antd";
-
-import { getServiceTypeColor } from "../../../utils/getMethodColor";
-import { IService } from "../../../interfaces";
 import { useTheme } from "../../../contexts/ThemeContext";
+import { getMethodColor } from "../../../utils/getMethodColor";
+import { ApiMethod } from "../../../enums";
+
 interface Props {
-  services: IService[];
+  permissions: IPermisson[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteService: (record: IService) => Promise<void>;
-  setOpenEditService: (value: boolean) => void;
-  setOpenDetailService: (value: boolean) => void;
-  setRecord: (record: IService) => void;
+  onDeletePermission: (record: any) => Promise<void>;
+  setOpenEditPermission: (value: boolean) => void;
+  setOpenDetailPermission: (value: boolean) => void;
+  setRecord: (value: any) => void;
 }
-const ServiceTable: React.FC<Props> = ({
-  services,
+const PermissionTable: React.FC<Props> = ({
+  permissions,
   isLoading,
   current,
   pageSize,
   total,
   onChange,
-  onDeleteService,
-  setOpenEditService,
-  setOpenDetailService,
+  onDeletePermission,
+  setOpenEditPermission,
+  setOpenDetailPermission,
   setRecord,
 }) => {
   const { theme } = useTheme();
@@ -40,14 +41,14 @@ const ServiceTable: React.FC<Props> = ({
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const columns = [
     {
-      title: "Id",
+      title: "ID",
       dataIndex: "_id",
       key: "_id",
-      render: (_id: string, record: IService) => (
+      render: (_id: string, record: IPermisson) => (
         <p
           className="text-blue-600 hover:text-blue-300"
           onClick={() => {
-            setOpenDetailService(true);
+            setOpenDetailPermission(true);
             setRecord(record);
           }}
         >
@@ -55,47 +56,60 @@ const ServiceTable: React.FC<Props> = ({
         </p>
       ),
     },
-    { title: "Name", dataIndex: "serviceName", key: "serviceName" },
-    { title: "Description", dataIndex: "description", key: "description" },
     {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-      render: (price: number) => <p>{price.toLocaleString()} đ</p>,
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
     },
-    { title: "Unit", dataIndex: "unit", key: "unit" },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-      render: (type: string) => (
-        <p className={`${getServiceTypeColor(type)} font-bold`}>{type}</p>
+      title: "Method",
+      dataIndex: "method",
+      key: "method",
+      render: (method: string) => (
+        <span
+          className={` text-${getMethodColor(
+            method as ApiMethod
+          )}-400 font-bold`}
+        >
+          {method}
+        </span>
+      ),
+    },
+    {
+      title: "Module",
+      dataIndex: "module",
+      key: "module",
+    },
+    {
+      title: "API Path",
+      dataIndex: "apiPath",
+      key: "apiPath",
+      render: (apiPath: string) => (
+        // chữ nghiêng
+        <i>{apiPath}</i>
       ),
     },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (_: any, record: IService) => (
+      render: (text: any, record: any) => (
         <div className="gap-2 flex">
           <Button
+            onClick={() => {
+              setRecord(record);
+              setOpenEditPermission(true);
+            }}
             icon={
               <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
             }
-            onClick={() => {
-              setOpenEditService(true), setRecord(record);
-            }}
           >
             Edit
           </Button>
-
-          <DeleteModal
-            onConfirm={(record) => onDeleteService(record)} // Pass the delete function
-            record={record} // Pass the record to delete
-          />
+          <DeleteModal record={record} onConfirm={onDeletePermission} />
         </div>
       ),
-      with: 150,
+      width: 150,
     },
   ];
 
@@ -103,7 +117,10 @@ const ServiceTable: React.FC<Props> = ({
     columns.map((column) => column.dataIndex)
   );
   return (
-    <div className={` p-2 rounded-lg m-2 `}>
+    <div
+      className={` p-2 rounded-lg m-2
+  `}
+    >
       <div>
         <ColumnSelector
           columns={columns}
@@ -112,8 +129,8 @@ const ServiceTable: React.FC<Props> = ({
         />
       </div>
       <TableComponent
-        data={services}
         columns={columns}
+        data={permissions}
         visibleColumns={visibleColumns}
         isLoading={isLoading}
         current={current}
@@ -125,4 +142,4 @@ const ServiceTable: React.FC<Props> = ({
   );
 };
 
-export default ServiceTable;
+export default PermissionTable;

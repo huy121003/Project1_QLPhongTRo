@@ -90,7 +90,9 @@ const RoomCard: React.FC<Props> = ({
                       icon={
                         <i className="fa-solid fa-eye text-xl text-blue-500" />
                       }
-                    />
+                    >
+                      Detail
+                    </Button>
                     <Button
                       className="transition duration-300"
                       icon={
@@ -100,7 +102,9 @@ const RoomCard: React.FC<Props> = ({
                         setOpenEditRoom(true);
                         setRecord(room);
                       }}
-                    />
+                    >
+                      Edit
+                    </Button>
                     <DeleteModal onConfirm={onDeleteRoom} record={room} />
                   </div>
                 </div>

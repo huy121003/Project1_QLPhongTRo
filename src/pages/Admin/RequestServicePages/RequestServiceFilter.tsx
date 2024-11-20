@@ -24,7 +24,6 @@ const RequestServiceFilter: React.FC<Props> = ({
             field: "status",
             type: "select",
             options: [
-              { label: "All Status", value: "" },
               { label: "PENDING", value: RegisterServiceStatus.PENDING },
               { label: "APPROVED", value: RegisterServiceStatus.APPROVED },
               { label: "SUCCESS", value: RegisterServiceStatus.SUCCESS },

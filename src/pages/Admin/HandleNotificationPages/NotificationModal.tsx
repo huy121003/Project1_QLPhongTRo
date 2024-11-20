@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, notification } from "antd";
-import { serviceApi } from "../../../api";
+import { registerServiceAPI, serviceApi } from "../../../api";
 import { RegisterServiceStatus } from "../../../enums";
 import { IRegisterService } from "../../../interfaces";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ const NotificationModal: React.FC<Props> = ({
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   useEffect(() => {
     const getRegisterService = async () => {
-      const res = await serviceApi.fetchRegisterServiceApi(
+      const res = await registerServiceAPI.fetchRegisterServiceApi(
         `status=${RegisterServiceStatus.PENDING}`
       );
       if (res.data) {
@@ -43,7 +43,7 @@ const NotificationModal: React.FC<Props> = ({
   }, []);
   const handleClickNotification = (id: string) => {
     onSelectNotification(id); // Cập nhật trạng thái menu khi click vào thông báo
-    navigate(`/admin/service/registerService`); // Dẫn đến trang chi tiết
+    navigate(`/admin/service/requestService`); // Dẫn đến trang chi tiết
     setOpen(false); // Đóng modal khi chọn thông báo
   };
 
@@ -83,7 +83,7 @@ const NotificationModal: React.FC<Props> = ({
                     className="rounded-full w-[50px] h-[50px] mr-4"
                   />
                 ) : (
-                  <i className="fa fa-user-circle fa-3x text-[#2b6534] mr-4"></i>
+                  <i className="fa fa-user-circle fa-3x text-green-300 mr-4"></i>
                 )}
               </>
               <div>
@@ -94,14 +94,14 @@ const NotificationModal: React.FC<Props> = ({
                   }}
                 >
                   {item.user.name} in{" "}
-                  <span style={{ color: "blue" }}>{item.room.roomName}</span>
+                  <span className="text-blue-300">{item.room.roomName}</span>
                 </p>
                 <p>
                   {item.type
                     ? `${item.user.name} want to register
                 the service `
                     : `${item.user.name} want to cancelc the service `}
-                  <span style={{ fontWeight: "bold", color: "green" }}>
+                  <span className="font-bold text-green-300">
                     {item.service.serviceName}
                   </span>
                   .

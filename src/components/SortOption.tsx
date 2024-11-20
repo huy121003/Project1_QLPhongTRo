@@ -16,7 +16,7 @@ const SortOption: React.FC<SortByProps> = ({ options, onChange, sorted }) => {
   const { theme } = useTheme();
   return (
     <div
-      className={` p-4 rounded-lg shadow-lg border border-gray-200 flex flex-col
+      className={`w-1/2 p-4 rounded-lg shadow-lg border border-gray-200 flex flex-col flex-1
       ${
         theme === "light"
           ? "bg-white text-black"

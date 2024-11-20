@@ -57,6 +57,20 @@ function ContractPage() {
       });
     }
   };
+  const onDelete = async (record: any) => {
+    const res = await contractApi.deleteContractApi(record._id);
+    if (res.data) {
+      message.success("Delete contract successfully");
+      getContracts();
+      setCurrent(1);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
+  };
+
   const getContracts = async () => {
     const queryParams: Record<string, any> = {
       currentPage: current,
@@ -132,6 +146,7 @@ function ContractPage() {
           pageSize={pageSize}
           total={total}
           onChange={handlePaginationChange}
+          onDelete={onDelete}
         />
       </div>
 

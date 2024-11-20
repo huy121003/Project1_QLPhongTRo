@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { message, notification } from "antd";
+import { Dropdown, Menu, notification, Button, Pagination } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 import { IRoom } from "../../../interfaces";
 import { roomApi } from "../../../api";
-import { resizeWidth } from "../../../utils/resize";
 import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
@@ -11,21 +11,16 @@ interface Props {
 }
 
 const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
-  const witdh = resizeWidth();
-  const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [total, setTotal] = useState(0);
   const [rooms, setRooms] = useState<IRoom[]>([]);
-  useEffect(() => {
-    setPageSize(witdh < 900 ? 5 : 10);
-  }, [witdh]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(9999);
+
   const getRoom = async () => {
     const res = await roomApi.fetchRoomApi(
-      `currentPage=${current}&pageSize=${pageSize}`
+      `currentPage=${currentPage}&pageSize=${pageSize}&sort=roomName`
     );
     if (res.data) {
       setRooms(res.data.result);
-      setTotal(res.data.meta.totalPage);
     } else {
       notification.error({
         message: "Error",
@@ -36,52 +31,71 @@ const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
 
   useEffect(() => {
     getRoom();
-  }, [current, pageSize]);
+  }, []);
+
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
-  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
-  return (
-    <div
-      className={` p-4  rounded-lg shadow-lg border border-gray-200 m-2 flex justify-between items-center
- ${bgColor} ${textColor}
-    `}
-    >
-      <div
-        className={`flex py-4 px-4 border-2 rounded-2xl cursor-pointer ${
-          choosenRoom === "" ? "border-blue-600 text-blue-600" : ""
-        } mr-2`}
+
+  // Tạo menu cho Dropdown
+  const menu = (
+    <Menu>
+      {/* Tùy chọn "All" */}
+      <Menu.Item
+        key="all"
         onClick={() => setChooenRoom("")}
+        style={{
+          fontWeight: choosenRoom === "" ? "bold" : "normal",
+          color: choosenRoom === "" ? "#1890ff" : "inherit",
+        }}
       >
         All
-      </div>
-      <div className="flex-1 flex items-center">
-        <button
-          onClick={() => current > 1 && setCurrent(current - 1)}
-          className="text-blue-500 font-bold mr-2 hover:text-blue-300  flex justify-center items-center"
-        >
-          <i className="fas fa-chevron-left text-2xl"></i>
-        </button>
+      </Menu.Item>
+      {/* Các phòng */}
+      <Menu.Divider />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(5, 1fr)",
+          gap: "8px",
+          padding: "8px",
+        }}
+      >
         {rooms.map((room) => (
-          <div
+          <Menu.Item
             key={room._id}
-            className={`flex flex-1 py-4 border-2 rounded-2xl cursor-pointer text-center justify-center items-center ${
-              choosenRoom === room._id
-                ? "border-blue-600 text-blue-600"
-                : "border-gray-400 text-gray-400"
-            } mx-1`}
             onClick={() => setChooenRoom(room._id)}
+            style={{
+              fontWeight: choosenRoom === room._id ? "bold" : "normal",
+              color: choosenRoom === room._id ? "#1890ff" : "inherit",
+              textAlign: "center",
+              border:
+                choosenRoom === room._id
+                  ? "1px solid #1890ff"
+                  : "1px solid #d9d9d9",
+              borderRadius: "4px",
+              padding: "4px",
+            }}
           >
             {room.roomName}
-          </div>
+          </Menu.Item>
         ))}
-        <button
-          onClick={() => current < total && setCurrent(current + 1)}
-          className="text-blue-500 font-bold ml-2 hover:text-blue-300  flex justify-center items-center"
-        >
-          <i className="fas fa-chevron-right text-2xl"></i>
-        </button>
       </div>
+    </Menu>
+  );
+
+  return (
+    <div className="  py-4 my-2 rounded-lg   ">
+      <Dropdown overlay={menu} trigger={["click"]}>
+        <Button>
+          {choosenRoom
+            ? rooms.find((room) => room._id === choosenRoom)?.roomName ||
+              "Unknown"
+            : "Select a Room"}
+
+          <DownOutlined />
+        </Button>
+      </Dropdown>
     </div>
   );
 };

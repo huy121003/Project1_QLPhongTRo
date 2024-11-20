@@ -108,19 +108,25 @@ const WaterPage = () => {
 
   return (
     <div className="justify-end  w-full">
-      <ExportToExcel
-        contract={contract}
-        numberIndex={numberIndex}
-        water={water}
-        selectedMonth={selectedMonth}
-        year={year}
-      />
-      <YearMonthSelector
-        selectedMonth={selectedMonth}
-        year={year}
-        setYear={setYear}
-        setSelectedMonth={setSelectedMonth}
-      />
+      <div
+        className={`  m-2  rounded-lg shadow-lg border border-gray-200  justify-between flex-1 items-center cursor flex
+      ${bgColor} ${textColor}
+        `}
+      >
+        <YearMonthSelector
+          selectedMonth={selectedMonth}
+          year={year}
+          setYear={setYear}
+          setSelectedMonth={setSelectedMonth}
+        />
+        <ExportToExcel
+          contract={contract}
+          numberIndex={numberIndex}
+          water={water}
+          selectedMonth={selectedMonth}
+          year={year}
+        />
+      </div>
       <WaterTable
         contract={contract}
         numberIndex={numberIndex}

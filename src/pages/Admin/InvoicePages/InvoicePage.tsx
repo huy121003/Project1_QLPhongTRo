@@ -99,15 +99,25 @@ const InvoicePage = () => {
   return (
     <>
       <div className="justify-end  w-full">
-        <ChoosenRoom choosenRoom={choosenRoom} setChooenRoom={setChooenRoom} />
-
         <div
           className={` rounded-lg border border-gray-200  justify-between items-center mx-2 flex
   ${bgColor} ${textColor} 
           `}
         >
-          <div></div>
-          <div className="  rounded-lg shadow-lg  justify-end flex-1 items-center cursor flex">
+          <div className="flex justify-start">
+            <YearMonthSelector
+              selectedMonth={selectedMonth}
+              year={year}
+              setYear={setYear}
+              setSelectedMonth={setSelectedMonth}
+            />
+            <ChoosenRoom
+              choosenRoom={choosenRoom}
+              setChooenRoom={setChooenRoom}
+            />
+            <StatusInvoice status={status} setStatus={setStatus} />
+          </div>
+          <div className="   justify-end flex-1 items-center  flex">
             <Button
               size="large"
               onClick={() => setOpenPaymentConfirm(true)}
@@ -120,15 +130,7 @@ const InvoicePage = () => {
             <ExportToExcel invoices={invoices} />
           </div>
         </div>
-        <StatusInvoice status={status} setStatus={setStatus} />
-        <div className="justify-end  w-full">
-          <YearMonthSelector
-            selectedMonth={selectedMonth}
-            year={year}
-            setYear={setYear}
-            setSelectedMonth={setSelectedMonth}
-          />
-        </div>
+
         <InvoiceCard
           invoices={invoices}
           isLoading={isLoading}

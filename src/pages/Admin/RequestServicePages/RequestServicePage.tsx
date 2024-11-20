@@ -14,15 +14,16 @@ function RequestServicePage() {
   const [pageSize, setPageSize] = React.useState(5);
   const [loading, setLoading] = React.useState(false);
   const [searchParams, setSearchParams] = React.useState({
-    status: "",
+    status: "PENDING",
     type: "",
   });
-  const [sorted, setSorted] = React.useState<string>("");
+  const [sorted, setSorted] = React.useState<string>("-createdAt");
   const getRegisterService = async () => {
     const queryParams: Record<string, any> = {
       currentPage: currentPage,
       pageSize: pageSize,
-      status: status,
+      // status: status,
+      sort: sorted,
     };
     Object.entries(searchParams).forEach(([key, value]) => {
       if (value) {

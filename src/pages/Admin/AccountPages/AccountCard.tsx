@@ -37,23 +37,28 @@ const AccountCard: React.FC<Props> = ({
     <Spin spinning={isLoading}>
       {accounts.length > 0 ? (
         <div className="m-4">
-          <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {accounts.map((account) => (
               <div
                 key={account._id}
-                className={` shadow-lg rounded-xl p-6 border-t-4 hover:shadow-xl transform transition-all hover:scale-105 flex flex-col items-center
-                  ${bgColor} ${textColor}
-                  `}
+                className={`shadow-lg rounded-xl p-6 border-t-4 hover:shadow-xl transform transition-all hover:scale-105 flex flex-col items-center
+        ${bgColor} ${textColor}
+      `}
               >
                 <div
-                  className={`absolute right-0 top-0 border-2 m-2 px-4 py-1 rounded-xl font-bold
-                ${
-                  account?.isActive
-                    ? "border-green-300 text-green-300"
-                    : "border-red-300 text-red-300"
-                }
-                `}
+                  className={`absolute right-0 top-0 p-2 font-bold
+          ${
+            account?.isActive
+              ? "border-green-300 text-green-600"
+              : "border-red-300 text-red-700"
+          }
+        `}
                 >
+                  <i
+                    className={`fa-solid fa-${
+                      account?.isActive ? "smile-wink" : "sad-cry"
+                    } mr-2`}
+                  ></i>
                   {account?.isActive ? "ACTIVE" : "INACTIVE"}
                 </div>
                 <div className="flex-1 flex flex-col items-center justify-center">
@@ -111,27 +116,31 @@ const AccountCard: React.FC<Props> = ({
                       icon={
                         <i
                           className="fa-solid fa-eye text-xl
-                        text-blue-500
-                        "
+              text-blue-500
+              "
                         />
                       }
-                    />
+                    >
+                      Detail
+                    </Button>
                     {account.email === "admin@gmail.com" ? null : (
                       <div className="flex gap-2">
                         <Button
                           icon={
                             <i
                               className="fa-solid fa-pen-to-square text-xl
-                          text-green-600
-                            "
+                  text-green-600
+                  "
                             />
                           }
                           onClick={() => {
                             setOpenEditAccount(true);
                             setRecord(account);
                           }}
-                          className="  transition"
-                        />
+                          className="transition"
+                        >
+                          Edit
+                        </Button>
                         <DeleteModal
                           onConfirm={(record) => onDeleteAccount(record)}
                           record={account}
@@ -143,6 +152,7 @@ const AccountCard: React.FC<Props> = ({
               </div>
             ))}
           </div>
+
           <div className="mt-8 flex justify-end">
             <Pagination
               current={current}

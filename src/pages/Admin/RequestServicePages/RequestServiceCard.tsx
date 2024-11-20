@@ -47,21 +47,21 @@ const RequestServiceCard: React.FC<Props> = ({
 
     if (status === RegisterServiceStatus.PENDING) {
       if (type) {
-        notificationMessage = `${user} wants to <span class='text-blue-500 font-bold'>REGISTER</span> ${service} for room ${room}.`;
+        notificationMessage = `${user} wants to <span class='text-green-500 font-bold'>REGISTER</span> ${service} for room ${room}.`;
       } else {
         notificationMessage = `${user} wants to <span class='text-red-500 font-bold'>CANCEL</span> ${service} for room ${room}.`;
       }
     }
     if (status === RegisterServiceStatus.APPROVED) {
       if (type) {
-        notificationMessage = `Request to <span class='text-blue-500 font-bold'>REGISTER</span> ${service} for ${user} in room ${room} has been approved and will be executed on ${implementationDate}`;
+        notificationMessage = `Request to <span class='text-green-500 font-bold'>REGISTER</span> ${service} for ${user} in room ${room} has been approved and will be executed on ${implementationDate}`;
       } else {
         notificationMessage = `Request to <span class='text-red-500 font-bold'>CANCEL</span> ${service} for ${user} in room ${room} has been approved and will be executed on ${implementationDate}`;
       }
     }
     if (status === RegisterServiceStatus.SUCCESS) {
       if (type) {
-        notificationMessage = `Successfully <span class='text-blue-500 font-bold'>REGISTER</span> ${service} for ${user} in room ${room}.`;
+        notificationMessage = `Successfully <span class='text-green-500 font-bold'>REGISTER</span> ${service} for ${user} in room ${room}.`;
       } else {
         notificationMessage = `Successfully <span class='text-red-500 font-bold'>CANCEL</span> ${service} for ${user} in room ${room}.`;
       }
@@ -82,11 +82,11 @@ const RequestServiceCard: React.FC<Props> = ({
   return (
     <Spin spinning={isLoading}>
       {registerService.length > 0 ? (
-        <div className="space-y-6 my-6 mx-12">
+        <div className="space-y-6 my-6 mx-2">
           {registerService.map((service, index) => (
             <div
               key={index}
-              className={`p-6 rounded-lg shadow-md border hover:shadow-xl transform transition-all hover:scale-105 ${bgColor} ${cardBorderColor}`}
+              className={`p-6 rounded-lg shadow-md border hover:shadow-xl transform transition-all  ${bgColor} ${cardBorderColor}`}
             >
               <div className="flex justify-between items-center mb-4">
                 <div>
@@ -125,24 +125,33 @@ const RequestServiceCard: React.FC<Props> = ({
                   )
                 )}
               </p>
-              {service.status === RegisterServiceStatus.PENDING && (
-                <Popconfirm
-                  title={
-                    service.type
-                      ? "Approve Cancellation"
-                      : "Approve Registration"
-                  }
-                  description={`Are you sure you want to approve this ${
-                    service.type ? "cancellation" : "registration"
-                  }?`}
-                  onConfirm={() => onApprove(service._id, service.type)}
-                  okText="Yes"
-                  cancelText="No"
-                  placement="topRight"
-                >
-                  <Button className="mt-4">Approve</Button>
-                </Popconfirm>
-              )}
+              <div className="flex flex-1 justify-end">
+                {service.status === RegisterServiceStatus.PENDING && (
+                  <Popconfirm
+                    title={
+                      service.type
+                        ? "Approve Cancellation"
+                        : "Approve Registration"
+                    }
+                    description={`Are you sure you want to approve this ${
+                      service.type ? "cancellation" : "registration"
+                    }?`}
+                    onConfirm={() => onApprove(service._id, service.type)}
+                    okText="Yes"
+                    cancelText="No"
+                    placement="topRight"
+                  >
+                    <Button
+                      className="mt-4"
+                      icon={
+                        <i className="fa-solid fa-check text-green-500 text-xl font-bold"></i>
+                      }
+                    >
+                      Approve
+                    </Button>
+                  </Popconfirm>
+                )}
+              </div>
             </div>
           ))}
           <div className="mt-8 flex justify-end">

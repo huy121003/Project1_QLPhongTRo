@@ -85,14 +85,13 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
   };
 
   return (
-    <div className="  p-4 m-2 rounded-lg   ">
+    <div className="  py-4 m-2 rounded-lg   ">
       <DatePicker
         picker="month" // Chỉ cho phép chọn tháng và năm
         format="MM-YYYY"
         onChange={handleDateChange}
         // locale={locale}
         defaultValue={dayjs(`${selectedMonth}-${year}`, "MM-YYYY")}
-        size="large"
       />
     </div>
   );

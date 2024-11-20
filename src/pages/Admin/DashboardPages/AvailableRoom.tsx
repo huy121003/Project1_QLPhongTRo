@@ -27,7 +27,7 @@ function AvailableRoom() {
       dataIndex: "type",
       key: "type",
       render: (type: string) => (
-        <p className={`${getRoomTypeColor(type)} font-bold`}>{type}</p>
+        <p className={`text-${getRoomTypeColor(type)} font-bold`}>{type}</p>
       ),
     },
     {

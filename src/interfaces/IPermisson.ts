@@ -11,10 +11,10 @@ interface IPermission {
   };
   createdAt: Date;
   updatedAt: Date;
+
   updatedBy: {
     _id: string;
     email: string;
   };
 }
 export default IPermission;
-

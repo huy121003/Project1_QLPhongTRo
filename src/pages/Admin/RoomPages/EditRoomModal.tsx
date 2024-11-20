@@ -198,7 +198,21 @@ const EditRoomModal: React.FC<Props> = ({
         </Form>
         <Collapse>
           <Collapse.Panel
-            header={<span className={` ${textColor} `}>Services</span>}
+            header={
+              <div className="flex items-center justify-between">
+                <span className={`${textColor}`}>Services</span>
+                <Switch
+                  // Check if ALL permissions are enabled
+                  checked={enableService?.length === services?.length}
+                  onChange={(checked, e) => {
+                    e.stopPropagation();
+                    setEnableService(
+                      checked ? services?.map((s) => s._id) : []
+                    );
+                  }}
+                />
+              </div>
+            }
             key="1"
           >
             {services.map((service) => (
