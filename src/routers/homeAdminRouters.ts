@@ -95,13 +95,13 @@ const homeAdminRouters: IRouter[] = [
         icon: "fa-solid fa-folder", // Icon thư mục cho Contract List
         label: "Contract List",
       },
-      {
-        path: "extendContract",
-        component: ExtendContractPage,
-        isShowNav: true,
-        icon: "fa-solid fa-calendar-plus", // Icon lịch thêm cho Extend Contract
-        label: "Extend Contract",
-      },
+      // {
+      //   path: "extendContract",
+      //   component: ExtendContractPage,
+      //   isShowNav: true,
+      //   icon: "fa-solid fa-calendar-plus", // Icon lịch thêm cho Extend Contract
+      //   label: "Extend Contract",
+      // },
     ],
   },
   {

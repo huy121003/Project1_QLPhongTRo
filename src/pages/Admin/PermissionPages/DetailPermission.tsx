@@ -25,15 +25,15 @@ const DetailPermission: React.FC<Props> = ({ open, setOpen, record }) => {
   });
   const items = [
     renderItem("Name", record?.name),
-    renderItem("Method", record?.method),
+    renderItem("Module", record?.module),
     renderItem(
-      "Module",
+      "Method",
       <span
         className={` text-${getMethodColor(
           record?.method as ApiMethod
-        )}-400 font-bold text-xl`}
+        )}-600 font-bold `}
       >
-        {record?.module}
+        {record?.method}
       </span>
     ),
     renderItem("API Path", record?.apiPath),
@@ -44,6 +44,7 @@ const DetailPermission: React.FC<Props> = ({ open, setOpen, record }) => {
   ];
   return (
     <Drawer
+      bodyStyle={{ padding: 0, margin: 0 }} // Xóa khoảng trắng mặc định
       closeIcon={true}
       className={`${bgColor} ${textColor}`}
       closable={false}

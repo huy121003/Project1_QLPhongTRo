@@ -14,8 +14,10 @@ const WaterPage = () => {
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const [year, setYear] = useState(currentYear);
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(
+    currentMonth
+  );
+  const [year, setYear] = useState<number | null>(currentYear);
   const [contract, setContract] = useState<IContract[]>([]);
   const [loading, setLoading] = useState(true);
   const [numberIndex, setNumberIndex] = useState<{
@@ -48,8 +50,16 @@ const WaterPage = () => {
         const newContract = res.data.result.filter((contract: IContract) => {
           const startDate = new Date(contract.startDate);
           const endDate = new Date(contract.endDate);
-          const monthStart = new Date(year, selectedMonth - 1, 1);
-          const monthEnd = new Date(year, selectedMonth, 0);
+          const monthStart = new Date(
+            year ?? currentYear,
+            (selectedMonth ?? currentMonth) - 1,
+            1
+          );
+          const monthEnd = new Date(
+            year ?? currentYear,
+            selectedMonth ?? currentMonth,
+            0
+          );
           const actualEndDate = new Date(contract.actualEndDate);
           if (contract.status === ContractStatus.ACTIVE) {
             return startDate <= monthEnd && endDate >= monthStart;
@@ -107,36 +117,40 @@ const WaterPage = () => {
   };
 
   return (
-    <div className="justify-end  w-full">
-      <div
-        className={`  m-2  rounded-lg shadow-lg border border-gray-200  justify-between flex-1 items-center cursor flex
+    <>
+      {" "}
+      <h1 className="text-2xl font-bold m-2"></h1>
+      <div className="justify-end  w-full">
+        <div
+          className={`  m-2  rounded-lg shadow-lg   justify-between flex-1 items-center cursor flex
       ${bgColor} ${textColor}
         `}
-      >
-        <YearMonthSelector
-          selectedMonth={selectedMonth}
-          year={year}
-          setYear={setYear}
-          setSelectedMonth={setSelectedMonth}
-        />
-        <ExportToExcel
+        >
+          <YearMonthSelector
+            selectedMonth={selectedMonth}
+            year={year}
+            setYear={setYear}
+            setSelectedMonth={setSelectedMonth}
+          />
+          <ExportToExcel
+            contract={contract}
+            numberIndex={numberIndex}
+            water={water}
+            selectedMonth={selectedMonth || currentMonth}
+            year={year || currentYear}
+          />
+        </div>
+        <WaterTable
           contract={contract}
           numberIndex={numberIndex}
+          loading={loading}
+          handleInputChange={handleInputChange}
           water={water}
-          selectedMonth={selectedMonth}
-          year={year}
+          selectedMonth={selectedMonth || currentMonth}
+          year={year || currentYear}
         />
       </div>
-      <WaterTable
-        contract={contract}
-        numberIndex={numberIndex}
-        loading={loading}
-        handleInputChange={handleInputChange}
-        water={water}
-        selectedMonth={selectedMonth}
-        year={year}
-      />
-    </div>
+    </>
   );
 };
 

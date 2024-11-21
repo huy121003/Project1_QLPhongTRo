@@ -26,7 +26,7 @@ export default function AvailableService({
   const fetchAvailableServices = useCallback(async () => {
     try {
       const response = await serviceApi.fetchServiceApi(
-        `pageSize=${pageSize}&currentPage=${current}`
+        `pageSize=99999&currentPage=1`
       );
 
       if (response.data) {
@@ -134,15 +134,6 @@ export default function AvailableService({
           })}
         </tbody>
       </table>
-      <div className="flex justify-start pt-5 sm:justify-end">
-        <Pagination
-          current={current}
-          pageSize={pageSize}
-          total={total}
-          onChange={handlePaginationChange}
-          showSizeChanger
-        />
-      </div>
 
       {isModalOpen && selectedService && (
         <RegisterService

@@ -159,6 +159,7 @@ function UserLayout() {
           openEditAccount={openEditAccount}
           setOpenEditAccount={setOpenEditAccount}
           record={account}
+         isChangeRole={true}
         />
       )}
     </div>

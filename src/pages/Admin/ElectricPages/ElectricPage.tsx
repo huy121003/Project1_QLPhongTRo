@@ -15,8 +15,10 @@ const ElectricPage = () => {
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const [year, setYear] = useState(currentYear);
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(
+    currentMonth
+  );
+  const [year, setYear] = useState<number | null>(currentYear);
   const [contract, setContract] = useState<IContract[]>([]);
   const [loading, setLoading] = useState(true);
   const [numberIndex, setNumberIndex] = useState<{
@@ -51,8 +53,16 @@ const ElectricPage = () => {
           const startDate = new Date(contract.startDate);
           const endDate = new Date(contract.endDate);
           const actualEndDate = new Date(contract.actualEndDate);
-          const monthStart = new Date(year, selectedMonth - 1, 1);
-          const monthEnd = new Date(year, selectedMonth, 0);
+          const monthStart = new Date(
+            year ?? currentYear,
+            (selectedMonth ?? currentMonth) - 1,
+            1
+          );
+          const monthEnd = new Date(
+            year ?? currentYear,
+            selectedMonth ?? currentMonth,
+            0
+          );
           if (contract.status === ContractStatus.ACTIVE) {
             return startDate <= monthEnd && endDate >= monthStart;
           }
@@ -105,36 +115,39 @@ const ElectricPage = () => {
     }));
   };
   return (
-    <div className="justify-end  w-full">
-      <div
-        className={` m-2  rounded-lg shadow-lg border border-gray-200  justify-between flex-1 items-center cursor flex
+    <>
+      <h1 className="text-2xl font-bold m-2">Electricity</h1>
+      <div className="justify-end  w-full">
+        <div
+          className={` m-2  rounded-lg shadow-lg   justify-between flex-1 items-center cursor flex
     ${bgColor} ${textColor}
     `}
-      >
-        <YearMonthSelector
-          selectedMonth={selectedMonth}
-          year={year}
-          setYear={setYear}
-          setSelectedMonth={setSelectedMonth}
-        />
-        <ExportToExcel
+        >
+          <YearMonthSelector
+            selectedMonth={selectedMonth ?? currentMonth}
+            year={year}
+            setYear={setYear}
+            setSelectedMonth={setSelectedMonth}
+          />
+          <ExportToExcel
+            contract={contract}
+            numberIndex={numberIndex}
+            electric={electric}
+            selectedMonth={selectedMonth ?? currentMonth}
+            year={year ?? currentYear}
+          />
+        </div>
+        <ElectricTable
           contract={contract}
-          numberIndex={numberIndex}
           electric={electric}
-          selectedMonth={selectedMonth}
-          year={year}
+          numberIndex={numberIndex}
+          loading={loading}
+          handleInputChange={handleInputChange}
+          selectedMonth={selectedMonth ?? currentMonth}
+          year={year ?? currentYear}
         />
       </div>
-      <ElectricTable
-        contract={contract}
-        electric={electric}
-        numberIndex={numberIndex}
-        loading={loading}
-        handleInputChange={handleInputChange}
-        selectedMonth={selectedMonth}
-        year={year}
-      />
-    </div>
+    </>
   );
 };
 export default ElectricPage;

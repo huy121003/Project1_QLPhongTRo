@@ -26,18 +26,20 @@ interface Props {
   openEditAccount: boolean;
   setOpenEditAccount: (value: boolean) => void;
   record: IAccount;
+  isChangeRole: boolean;
 }
 
 const EditAccountModal: React.FC<Props> = ({
   openEditAccount,
   setOpenEditAccount,
   record,
+  isChangeRole,
 }) => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
-
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const [role, setRole] = useState<IRole[]>([]);
   const [avatar, setAvatar] = useState<File | null>(null);
@@ -50,7 +52,7 @@ const EditAccountModal: React.FC<Props> = ({
   const [imageBackId, setImageBackId] = useState<string>("");
   const [imageTemporaryResidence, setImageTemporaryResidence] =
     useState<string>("");
-  const [isLoad, setIsLoad] = useState(true);
+
   useEffect(() => {
     const getRole = async () => {
       const res = await roleApi.fecthRoleApi("");
@@ -65,11 +67,11 @@ const EditAccountModal: React.FC<Props> = ({
     };
     getRole();
   }, [openEditAccount]);
-  useEffect(() => {
-    setTimeout(() => {
-      setIsLoad(false);
-    }, 1000);
-  }, [openEditAccount]);
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     setIsLoad(false);
+  //   }, 1000);
+  // }, [openEditAccount]);
   useEffect(() => {
     if (openEditAccount && record) {
       // Split the name into three parts
@@ -112,23 +114,24 @@ const EditAccountModal: React.FC<Props> = ({
     let backIdFileName = imageBackId;
     let temporaryResidenceFileName = imageTemporaryResidence;
 
-    if (!checkIdCard(values.idCard)) {
-      notification.error({
-        message: "Error",
-        description: "IdCard is not correct",
-      });
+    // if (!checkIdCard(values.idCard)) {
+    //   notification.error({
+    //     message: "Error",
+    //     description: "IdCard is not correct",
+    //   });
 
-      return;
-    }
-    if (checkPhoneNumberVN(values.phone)) {
-      notification.error({
-        message: "Error",
-        description: "Phone number is not correct",
-      });
+    //   return;
+    // }
+    // if (checkPhoneNumberVN(values.phone)) {
+    //   notification.error({
+    //     message: "Error",
+    //     description: "Phone number is not correct",
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
     // Kiểm tra sự thay đổi của ảnh và upload nếu có
+    setLoading(true);
     if (avatar) {
       const res = await upfileApi.postAvatarApi(avatar);
       if (res.statusCode === 201) {
@@ -183,6 +186,7 @@ const EditAccountModal: React.FC<Props> = ({
 
         return;
       }
+     
     }
 
     // Gọi API cập nhật thông tin tài khoản sau khi tất cả ảnh đã được tải lên
@@ -208,6 +212,7 @@ const EditAccountModal: React.FC<Props> = ({
         description: response.message,
       });
     }
+    setLoading(false);
   };
   const refresh = () => {
     setOpenEditAccount(false);
@@ -221,17 +226,14 @@ const EditAccountModal: React.FC<Props> = ({
     setImageFrontId("");
     setImageTemporaryResidence("");
     setRole([]);
-    setIsLoad(true);
   };
 
   return (
     <Modal
       closable={false}
-      loading={isLoad}
       width={800}
       centered
       open={openEditAccount}
-      //title={<h1 className="text-3xl font-bold text-center">Edit Account</h1>}
       onCancel={refresh}
       footer={null}
     >
@@ -396,7 +398,7 @@ const EditAccountModal: React.FC<Props> = ({
                 rules={[{ required: true, message: "Please input the Role!" }]}
                 className="flex-1 m-1"
               >
-                <Select size="large">
+                <Select size="large" disabled={isChangeRole}>
                   {role.map((item) => (
                     <Select.Option key={item._id} value={item._id}>
                       {item.name}
@@ -447,10 +449,14 @@ const EditAccountModal: React.FC<Props> = ({
           <Button key="back" onClick={refresh} className="mr-2">
             Cancel
           </Button>
-          <Button key="submit" type="primary" onClick={handleOk}>
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleOk}
+            loading={loading}
+          >
             Save
           </Button>
-          
         </div>
       </div>
     </Modal>

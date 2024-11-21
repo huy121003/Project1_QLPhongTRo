@@ -107,6 +107,7 @@ const DetailAccount: React.FC<Props> = ({
       ${textColor} ${bgColor}`}
     >
       <Drawer
+        bodyStyle={{ padding: 0 }} // Xóa khoảng trắng mặc định
         onClose={() => setOpenDetailAccount(false)}
         closable={false}
         open={openDetailAccount}

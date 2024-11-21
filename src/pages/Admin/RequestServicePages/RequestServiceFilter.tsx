@@ -1,6 +1,6 @@
 import React from "react";
 import { RegisterServiceStatus } from "../../../enums";
-import { SearchFilters } from "../../../components";
+import { SearchFilters, SortOption } from "../../../components";
 interface Props {
   searchParams: any;
   sorted: string;
@@ -14,7 +14,7 @@ const RequestServiceFilter: React.FC<Props> = ({
   handleSortChange,
 }) => {
   return (
-    <div className="justify-end  w-full ">
+    <div className="justify-end flex gap-2  w-full ">
       <SearchFilters
         searchParams={searchParams}
         onSearchChange={handleSearchChange}
@@ -38,6 +38,22 @@ const RequestServiceFilter: React.FC<Props> = ({
               { label: "Register", value: "true" },
               { label: "Unregister", value: "false" },
             ],
+          },
+        ]}
+      />
+      <SortOption
+        sorted={sorted}
+        onChange={handleSortChange}
+        options={[
+          { label: "Newest", value: "-createdAt" },
+          { label: "Oldest", value: "createdAt" },
+          {
+            label: "Status",
+            value: "status",
+          },
+          {
+            label: "Type",
+            value: "type",
           },
         ]}
       />

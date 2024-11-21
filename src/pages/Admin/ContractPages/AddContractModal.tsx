@@ -28,7 +28,7 @@ const AddContractModal: React.FC<Props> = ({
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
-
+  const [loading, setLoading] = useState(false);
   const [time, setTime] = useState({
     number: 0,
     unit: "month",
@@ -48,9 +48,10 @@ const AddContractModal: React.FC<Props> = ({
     price: "",
   });
   useEffect(() => {
+    const currentStartDate = form.getFieldValue("startDate");
     form.setFieldsValue({
       deposit: choosenRoom?.price || 0,
-      startDate: dayjs(),
+      startDate: currentStartDate || dayjs(), // Giữ nguyên ngày đã chọn nếu có
     });
   }, [choosenRoom]);
 
@@ -89,6 +90,7 @@ const AddContractModal: React.FC<Props> = ({
   }, [openAddContract]);
 
   const handleOk = async () => {
+    setLoading(true);
     const values = await form.validateFields();
     const endDate = dayjs(values.startDate)
       .add(time.number, time.unit as dayjs.ManipulateType)
@@ -113,6 +115,7 @@ const AddContractModal: React.FC<Props> = ({
         description: response.message,
       });
     }
+    setLoading(false);
   };
 
   return (
@@ -306,7 +309,12 @@ const AddContractModal: React.FC<Props> = ({
           >
             Cancel
           </Button>
-          <Button key="submit" type="primary" onClick={handleOk}>
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleOk}
+            loading={loading}
+          >
             Add
           </Button>
         </div>

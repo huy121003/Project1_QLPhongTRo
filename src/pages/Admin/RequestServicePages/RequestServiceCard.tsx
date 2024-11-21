@@ -4,7 +4,7 @@ import { useTheme } from "../../../contexts/ThemeContext";
 import { RegisterServiceStatus } from "../../../enums";
 import { Button, Pagination, Popconfirm, Spin } from "antd";
 import dayjs from "dayjs";
-import { NotItem } from "../../../components";
+import { DeleteModal, NotItem } from "../../../components";
 
 interface Props {
   registerService: IRegisterService[];
@@ -14,6 +14,7 @@ interface Props {
   onChange: (page: number, pageSize?: number) => void;
   onApprove: (id: string, type: boolean) => void;
   loading: boolean;
+  onDelete: (id: string) => Promise<void>;
 }
 
 const RequestServiceCard: React.FC<Props> = ({
@@ -24,6 +25,7 @@ const RequestServiceCard: React.FC<Props> = ({
   onChange,
   onApprove,
   loading: isLoading,
+  onDelete,
 }) => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
@@ -151,6 +153,12 @@ const RequestServiceCard: React.FC<Props> = ({
                     </Button>
                   </Popconfirm>
                 )}
+                {/* {service.status === RegisterServiceStatus.SUCCESS && (
+                  <DeleteModal
+                    onConfirm={() => onDelete(service._id)}
+                    record={service}
+                  />
+                )} */}
               </div>
             </div>
           ))}

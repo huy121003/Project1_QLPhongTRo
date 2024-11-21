@@ -126,6 +126,7 @@ const DetailRole: React.FC<Props> = ({
     ${textColor} ${bgColor}`}
     >
       <Drawer
+        bodyStyle={{ padding: 0, margin: 0 }} // Xóa khoảng trắng mặc định
         closable={false}
         className={`
         ${textColor} ${bgColor}`}

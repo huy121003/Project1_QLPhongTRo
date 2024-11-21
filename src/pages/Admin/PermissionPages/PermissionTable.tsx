@@ -67,9 +67,9 @@ const PermissionTable: React.FC<Props> = ({
       key: "method",
       render: (method: string) => (
         <span
-          className={` text-${getMethodColor(
+          className={`text-${getMethodColor(
             method as ApiMethod
-          )}-400 font-bold`}
+          )}-600 font-bold`}
         >
           {method}
         </span>

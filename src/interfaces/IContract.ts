@@ -24,8 +24,8 @@ interface IContract {
   depositAmount: number;
   status: ContractStatus;
   rentCycleCount: number;
-  createdAt: Date;
   actualEndDate: Date;
+  createdAt: Date;
   updatedAt: Date;
   createdBy: {
     _id: string;
