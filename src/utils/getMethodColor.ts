@@ -1,4 +1,12 @@
-import { ApiMethod, ContractStatus, Gender, InvoiceStatus, RoomStatus, RoomType, ServiceType } from "../enums";
+import {
+  ApiMethod,
+  ContractStatus,
+  Gender,
+  InvoiceStatus,
+  RoomStatus,
+  RoomType,
+  ServiceType,
+} from "../enums";
 
 export const getMethodColor = (method: ApiMethod) => {
   switch (method) {
@@ -9,7 +17,7 @@ export const getMethodColor = (method: ApiMethod) => {
     case ApiMethod.PATCH:
       return "purple";
     case ApiMethod.DELETE:
-      return "orange";
+      return "red";
     default:
       return "gray";
   }
@@ -36,13 +44,13 @@ export const getRoomStatusColor = (status: string) => {
 export const getRoomTypeColor = (type: string) => {
   switch (type) {
     case RoomType.Single:
-      return "text-orange-600 ";
+      return "orange-600 ";
     case RoomType.Double:
-      return "text-purple-600 ";
+      return "purple-600 ";
     case RoomType.Quad:
-      return "text-blue-600 ";
+      return "blue-600 ";
     case RoomType.Studio:
-      return "text-pink-600 ";
+      return "pink-600 ";
   }
 };
 
@@ -85,4 +93,8 @@ export const getGenderColor = (gender: string) => {
     default:
       return "text-purple-600 ";
   }
+};
+
+export const getRequestServiceTypeColor = (type: boolean) => {
+  return type ? "text-red-600 " : "text-green-600 ";
 };

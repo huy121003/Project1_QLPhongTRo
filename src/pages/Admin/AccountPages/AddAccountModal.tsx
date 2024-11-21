@@ -32,6 +32,7 @@ const AddAccountModal: React.FC<Props> = ({
   openAddAccount,
   setOpenAddAccount,
 }) => {
+  const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
@@ -90,32 +91,33 @@ const AddAccountModal: React.FC<Props> = ({
     //   return;
     // }
 
-    if (!checkPassword(values.password)) {
-      notification.error({
-        message: "Error",
-        description:
-          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character",
-      });
+    // if (!checkPassword(values.password)) {
+    //   notification.error({
+    //     message: "Error",
+    //     description:
+    //       "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character",
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
 
-    if (!checkIdCard(values.idCard)) {
-      notification.error({
-        message: "Error",
-        description: "IdCard is not correct",
-      });
+    // if (!checkIdCard(values.idCard)) {
+    //   notification.error({
+    //     message: "Error",
+    //     description: "IdCard is not correct",
+    //   });
 
-      return;
-    }
-    if (checkPhoneNumberVN(values.phone)) {
-      notification.error({
-        message: "Error",
-        description: "Phone number is not correct",
-      });
+    //   return;
+    // }
+    // if (checkPhoneNumberVN(values.phone)) {
+    //   notification.error({
+    //     message: "Error",
+    //     description: "Phone number is not correct",
+    //   });
 
-      return;
-    }
+    //   return;
+    // }
+    setLoading(true);
     if (avatar) {
       const response = await upfileApi.postAvatarApi(avatar);
       if (response.statusCode === 201) {
@@ -195,6 +197,7 @@ const AddAccountModal: React.FC<Props> = ({
         description: response.message,
       });
     }
+    setLoading(false);
   };
   const refesh = () => {
     setOpenAddAccount(false);
@@ -207,6 +210,7 @@ const AddAccountModal: React.FC<Props> = ({
   };
   return (
     <Modal
+      bodyStyle={{ padding: 0, margin: 0 }} // Xóa khoảng trắng mặc định
       closable={false}
       centered
       open={openAddAccount}
@@ -388,7 +392,13 @@ const AddAccountModal: React.FC<Props> = ({
           <Button size="large" key="back" onClick={refesh} className="mr-2">
             Cancel
           </Button>
-          <Button key="submit" type="primary" onClick={handleOk} size="large">
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleOk}
+            size="large"
+            loading={loading}
+          >
             <p className="font-xl text-white flex">Add</p>
           </Button>
         </div>

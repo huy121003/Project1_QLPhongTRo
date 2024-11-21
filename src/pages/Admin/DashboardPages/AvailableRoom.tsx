@@ -27,7 +27,7 @@ function AvailableRoom() {
       dataIndex: "type",
       key: "type",
       render: (type: string) => (
-        <p className={`${getRoomTypeColor(type)} font-bold`}>{type}</p>
+        <p className={`text-${getRoomTypeColor(type)} font-bold`}>{type}</p>
       ),
     },
     {
@@ -78,7 +78,7 @@ function AvailableRoom() {
   };
   return (
     <div
-      className={` p-2 rounded-lg m-1 flex-1 
+      className={` p-2 rounded-lg m-1 flex-1 shadow-lg
      ${bgColor} ${textColor}
       `}
     >
@@ -101,7 +101,7 @@ function AvailableRoom() {
               // pageSizeOptions: [5, 10, 20, 50, 100, 200],
             }}
             rowClassName={`
-              ${bgColor} ${textColor}
+              ${bgColor} ${textColor} hover:text-black
             `}
           />
         </Box>

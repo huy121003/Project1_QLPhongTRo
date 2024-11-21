@@ -8,17 +8,18 @@ import roomApi from "./roomApi";
 import serviceApi from "./serviceApi";
 import upfileApi from "./upfileApi";
 import payOSApi from "./payOSApi";
+import registerServiceAPI from "./registerServiceAPI";
 
 export {
-  accountApi,
-  authtApi,
-  contractApi,
-  invoiceApi,
-  permissionApi,
-  roleApi,
-  roomApi,
-  serviceApi,
-  upfileApi,
-  payOSApi
-
+    accountApi,
+    authtApi,
+    contractApi,
+    invoiceApi,
+    permissionApi,
+    roleApi,
+    roomApi,
+    serviceApi,
+    upfileApi,
+    payOSApi,
+    registerServiceAPI,
 };

@@ -46,7 +46,7 @@ const EditRoleModal: React.FC<Props> = ({
   }, [openEditRole, record, form]);
   useEffect(() => {
     const getPermissions = async () => {
-      setEnablePermission(record.permissions);
+      setEnablePermission(record?.permissions);
       const response = await permissionApi.fetchPermissionApi(
         "pageSize=1000&current=1"
       );
@@ -110,6 +110,21 @@ const EditRoleModal: React.FC<Props> = ({
       setEnablePermission(enablePermission.filter((id) => id !== permissionId));
     }
   };
+  const handleModuleToggle = (module: string, checked: boolean) => {
+    const modulePermissionIds = groupedPermissions[module].map(
+      (permission: IPermisson) => permission._id
+    );
+
+    setEnablePermission((prevPermissions) => {
+      const filteredPermissions = prevPermissions.filter(
+        (id) => !modulePermissionIds.includes(id)
+      );
+
+      return checked
+        ? [...filteredPermissions, ...modulePermissionIds]
+        : filteredPermissions;
+    });
+  };
   return (
     <Modal
       width={800}
@@ -152,13 +167,45 @@ const EditRoleModal: React.FC<Props> = ({
           <div className="my-2" />
           <Collapse>
             <Collapse.Panel
-              header={<span className={`${textColor}`}>Permissions</span>}
+              header={
+                <div className="flex items-center justify-between">
+                  <span className={`${textColor}`}>Permissions</span>
+                  <Switch
+                    size="small"
+                    // Check if ALL permissions are enabled
+                    checked={enablePermission?.length === permissions?.length}
+                    onChange={(checked, e) => {
+                      e.stopPropagation();
+                      setEnablePermission(
+                        checked ? permissions?.map((p) => p._id) : []
+                      );
+                    }}
+                  />
+                </div>
+              }
               key="1"
             >
               {Object.keys(groupedPermissions).map((module) => (
                 <Collapse key={module} style={{ marginBottom: "16px" }}>
                   <Collapse.Panel
-                    header={<span className={`${textColor}`}>{module}</span>}
+                    header={
+                      <div className="flex items-center justify-between">
+                        <span className={`${textColor}`}>{module}</span>
+                        <Switch
+                          size="small"
+                          // Check if ALL permissions in module are enabled
+                          checked={groupedPermissions[module].every(
+                            (permission: IPermisson) =>
+                              enablePermission?.includes(permission._id)
+                          )}
+                          onChange={(checked, e) => {
+                            e.stopPropagation();
+
+                            handleModuleToggle(module, checked);
+                          }}
+                        />
+                      </div>
+                    }
                     key={module}
                     className={`${bgColor} ${textColor} round-xl`}
                   >
@@ -186,7 +233,7 @@ const EditRoleModal: React.FC<Props> = ({
                               </p>
                             </div>
                             <Switch
-                              checked={enablePermission.includes(
+                              checked={enablePermission?.includes(
                                 permission._id
                               )}
                               onChange={(checked: boolean) =>

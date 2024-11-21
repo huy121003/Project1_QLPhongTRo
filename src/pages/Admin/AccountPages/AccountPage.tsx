@@ -13,7 +13,7 @@ import { useTheme } from "../../../contexts/ThemeContext";
 function AccountPage() {
   const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [roles, setRoles] = useState<any[]>([]);
   const [openAddAccount, setOpenAddAccount] = useState(false);
@@ -121,6 +121,7 @@ function AccountPage() {
 
   return (
     <>
+      <h1 className="font-bold text-2xl m-2">Account</h1>
       <div className="justify-end  w-full rounded-[20px] ">
         <AccountFilters
           searchParams={searchParams}
@@ -130,7 +131,7 @@ function AccountPage() {
           roles={roles}
         />
         <div
-          className={` p-2 mx-2 rounded-lg mb-2 shadow-lg border border-gray-200 justify-between items-center flex
+          className={` p-2 mx-2 rounded-lg mb-2 shadow-lg  justify-between items-center flex
         ${bgColor} ${textColor}
           `}
         >
@@ -165,6 +166,7 @@ function AccountPage() {
         openEditAccount={openEditAccount}
         setOpenEditAccount={setOpenEditAccount}
         record={record}
+        isChangeRole={false}
       />
       <DetailAccount
         openDetailAccount={openDetailAccount}

@@ -20,7 +20,7 @@ function ContractPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
@@ -57,6 +57,20 @@ function ContractPage() {
       });
     }
   };
+  const onDelete = async (record: any) => {
+    const res = await contractApi.deleteContractApi(record._id);
+    if (res.data) {
+      message.success("Delete contract successfully");
+      getContracts();
+      setCurrent(1);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
+  };
+
   const getContracts = async () => {
     const queryParams: Record<string, any> = {
       currentPage: current,
@@ -100,6 +114,7 @@ function ContractPage() {
   };
   return (
     <>
+      <h1 className="font-bold text-2xl m-2">Contract</h1>
       <div className="justify-end p-2 flex-1">
         <ContractFilters
           searchParams={searchParams}
@@ -108,7 +123,7 @@ function ContractPage() {
           sorted={sorted}
         />
         <div
-          className={` p-2 rounded-lg shadow-lg border border-gray-200 mt-2 justify-between flex items-center
+          className={` p-2 rounded-lg shadow-lg mx-2 mt-2 justify-between flex items-center
      ${bgColor} ${textColor}
           `}
         >
@@ -132,6 +147,7 @@ function ContractPage() {
           pageSize={pageSize}
           total={total}
           onChange={handlePaginationChange}
+          onDelete={onDelete}
         />
       </div>
 

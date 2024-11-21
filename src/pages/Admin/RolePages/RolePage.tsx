@@ -13,7 +13,7 @@ import { useTheme } from "../../../contexts/ThemeContext";
 function RolePage() {
   const [roles, setRoles] = useState<IRole[]>([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [openAddRole, setOpenAddRole] = useState(false);
   const [openEditRole, setOpenEditRole] = useState(false);
@@ -83,51 +83,57 @@ function RolePage() {
     }
   };
   return (
-    <div className="justify-end  flex-1">
-      <RoleFilters
-        searchParams={searchParams}
-        handleSearchChange={handleSearchChange}
-        handleSortChange={handleSortChange}
-        sorted={sorted}
-      />
-      <div
-        className={` p-2  rounded-lg shadow-lg border border-gray-200 mx-2 justify-between flex items-center
+    <>
+      <h1 className="text-2xl font-bold m-2">Role</h1>
+      <div className="justify-end  flex-1">
+        <RoleFilters
+          searchParams={searchParams}
+          handleSearchChange={handleSearchChange}
+          handleSortChange={handleSortChange}
+          sorted={sorted}
+        />
+        <div
+          className={` p-2  rounded-lg shadow-lg  mx-2 justify-between flex items-center
     ${bgColor} ${textColor}
         `}
-      >
-        <div></div>
+        >
+          <div></div>
 
-        <div className="flex items-center">
-          <ExportToExcel roles={roles} />
-          <AddButton onClick={() => setOpenAddRole(true)} label="Add Role" />
+          <div className="flex items-center">
+            <ExportToExcel roles={roles} />
+            <AddButton onClick={() => setOpenAddRole(true)} label="Add Role" />
+          </div>
         </div>
+
+        <DetailRole
+          openDetailRole={openDetailRole}
+          setOpenDetailRole={setOpenDetailRole}
+          record={record}
+        />
+        <RoleTable
+          roles={roles}
+          onDeleteRole={onDeleteRole}
+          setOpenDetailRole={setOpenDetailRole}
+          setOpenEditRole={setOpenEditRole}
+          setRecord={setRecord}
+          isLoading={isLoading}
+          current={current}
+          pageSize={pageSize}
+          total={total}
+          onChange={onChange}
+        />
+        <AddRoleModel
+          openAddRole={openAddRole}
+          setOpenAddRole={setOpenAddRole}
+        />
+
+        <EditRoleModal
+          openEditRole={openEditRole}
+          setOpenEditRole={setOpenEditRole}
+          record={record}
+        />
       </div>
-
-      <DetailRole
-        openDetailRole={openDetailRole}
-        setOpenDetailRole={setOpenDetailRole}
-        record={record}
-      />
-      <RoleTable
-        roles={roles}
-        onDeleteRole={onDeleteRole}
-        setOpenDetailRole={setOpenDetailRole}
-        setOpenEditRole={setOpenEditRole}
-        setRecord={setRecord}
-        isLoading={isLoading}
-        current={current}
-        pageSize={pageSize}
-        total={total}
-        onChange={onChange}
-      />
-      <AddRoleModel openAddRole={openAddRole} setOpenAddRole={setOpenAddRole} />
-
-      <EditRoleModal
-        openEditRole={openEditRole}
-        setOpenEditRole={setOpenEditRole}
-        record={record}
-      />
-    </div>
+    </>
   );
 }
 

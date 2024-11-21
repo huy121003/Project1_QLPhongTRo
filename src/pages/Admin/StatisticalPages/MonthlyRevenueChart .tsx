@@ -90,13 +90,6 @@ const MonthlyRevenueChart = () => {
         borderColor: "#055c29",
         borderWidth: 1,
       },
-      {
-        type: "line" as const,
-        label: "Revenue",
-        data: monthlyData.map((item) => item.totalAmount),
-        borderColor: "#055c29",
-        borderWidth: 1,
-      },
     ],
   };
 

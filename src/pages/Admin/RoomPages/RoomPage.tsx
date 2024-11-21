@@ -13,7 +13,7 @@ import { useTheme } from "../../../contexts/ThemeContext";
 function RoomPage() {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [openAddRoom, setOpenAddRoom] = useState(false);
   const [openEditRoom, setOpenEditRoom] = useState(false);
@@ -85,6 +85,9 @@ function RoomPage() {
   };
   return (
     <>
+      <h1 className="text-2xl font-bold m-2">
+        Room
+      </h1>
       <div className="justify-end  flex-1">
         <RoomFilters
           searchParams={searchParams}
@@ -93,7 +96,7 @@ function RoomPage() {
           sorted={sorted}
         />
         <div
-          className={`p-2 r rounded-lg shadow-lg border border-gray-200 mx-2 justify-between flex items-center
+          className={`p-2 r rounded-lg shadow-lg  mx-2 justify-between flex items-center
           ${bgColor} ${textColor}
           `}
         >

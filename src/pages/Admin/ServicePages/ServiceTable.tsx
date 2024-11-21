@@ -85,7 +85,9 @@ const ServiceTable: React.FC<Props> = ({
             onClick={() => {
               setOpenEditService(true), setRecord(record);
             }}
-          />
+          >
+            Edit
+          </Button>
 
           <DeleteModal
             onConfirm={(record) => onDeleteService(record)} // Pass the delete function
@@ -93,6 +95,7 @@ const ServiceTable: React.FC<Props> = ({
           />
         </div>
       ),
+      with: 150,
     },
   ];
 

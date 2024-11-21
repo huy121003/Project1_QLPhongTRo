@@ -1,5 +1,5 @@
 import React from "react";
-import {SortOption,SearchFilters} from "../../../components";
+import { SortOption, SearchFilters } from "../../../components";
 import { ContractStatus } from "../../../enums";
 interface Props {
   searchParams: any;
@@ -14,7 +14,7 @@ const ContractFilters: React.FC<Props> = ({
   sorted,
 }) => {
   return (
-    <div className="justify-end  w-full ">
+    <div className="flex-1 p-2 w-full flex justify-between gap-4">
       <SearchFilters
         searchParams={searchParams}
         onSearchChange={handleSearchChange}
@@ -57,6 +57,7 @@ const ContractFilters: React.FC<Props> = ({
             value: "endDate",
             label: "By End Date",
           },
+          { value: "-createdAt", label: "By Created At" },
         ]}
         onChange={handleSortChange}
         sorted={sorted}

@@ -29,7 +29,8 @@ function LoginPage(): JSX.Element {
       localStorage.setItem("access_token", res.data.access_token);
       dispatch(loginaction(res.data.user));
       message.success("Login successfully!");
-      navigate("/admin");
+      if (res.data.user.role.name === "NORMAL USER") navigate("/user");
+      else navigate("/admin");
     } else {
       if (res?.message === "Account has not been activated!") {
         notification.error({

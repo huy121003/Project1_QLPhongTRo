@@ -84,7 +84,7 @@ export default function RoomContract() {
                         key={contract._id}
                         className={`px-4 py-2 rounded-lg shadow-md font-normal text-base  ${
                             selectedRoomId === contract.room._id
-                                ? "bg-green-300 text-white cursor-pointer"
+                                ? "bg-green-300 text-[#2b6534] cursor-pointer font-semibold"
                                 : "bg-green-100 hover:bg-green-200"
                         }`}
                         onClick={() => {

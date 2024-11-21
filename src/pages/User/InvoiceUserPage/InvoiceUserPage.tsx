@@ -11,136 +11,140 @@ import { useNavigate } from "react-router-dom";
 
 export default function InvoiceUserPage() {
   const [showModal, setShowModal] = useState(false);
-  //const [hasCheckedInvoice, setHasCheckedInvoice] = useState(false);
   const [selectedBank, setSelectedBank] = useState("");
   const [idInvoice, setIdInvoice] = useState<Array<string>>(
-    //lấy mảng id hóa đơn từ local storage
-    JSON.parse(localStorage.getItem("idInvoice") || "[]")
+    // Retrieve invoice IDs from localStorage and ensure it's a valid array
+    () => {
+      const storedInvoice = localStorage.getItem("idInvoice");
+      try {
+        const parsedInvoices = JSON.parse(storedInvoice || "[]");
+        return Array.isArray(parsedInvoices) ? parsedInvoices : [];
+      } catch (e) {
+        console.error("Invalid invoice data in localStorage", e);
+        return [];
+      }
+    }
   );
-  console.log(idInvoice);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "idInvoice",
-      JSON.stringify(
-        idInvoice.filter((item, index) => idInvoice.indexOf(item) === index)
-      )
-    );
-  }, [idInvoice]);
-
   const [res, setRes] = useState<string>("");
 
+  const navigate = useNavigate();
+
+  // Effect to update localStorage whenever idInvoice changes
+  useEffect(() => {
+    if (idInvoice.length > 0) {
+      console.log("Updating localStorage:", idInvoice);
+      localStorage.setItem(
+        "idInvoice",
+        JSON.stringify(
+          idInvoice.filter((item, index) => idInvoice.indexOf(item) === index) // Ensure uniqueness
+        )
+      );
+    } else {
+      localStorage.removeItem("idInvoice"); // Clear localStorage if no invoices
+    }
+  }, [idInvoice]);
+
   const closeModal = () => setShowModal(false);
+
+  // Open modal with payment URL creation logic
   const openModal = async () => {
     if (!selectedBank) {
-      setShowModal(true); // Chưa chọn ngân hàng
+      setShowModal(true); // No bank selected
     } else if (idInvoice.length === 0) {
-      setShowModal(true); // Chưa chọn hóa đơn
+      setShowModal(true); // No invoices selected
     } else {
-      // ngân hàng và hóa đơn đều hợp lệ
-      const response = await payOSApi.createLinkPayment(idInvoice);
-      if (response) {
-        setRes(response.data.checkoutUrl);
-        setShowModal(true);
-      } else {
+      // Bank and invoices are valid
+      try {
+        const response = await payOSApi.createLinkPayment(idInvoice);
+        if (response) {
+          setRes(response.data.checkoutUrl);
+          setShowModal(true);
+        } else {
+          notification.error({
+            message: "Error",
+            description: "Something went wrong while creating payment link.",
+          });
+        }
+      } catch (error) {
         notification.error({
           message: "Error",
-          description: "Something went wrong",
+          description: "Failed to create payment link.",
         });
       }
     }
   };
-  const navigate = useNavigate();
+
+  // Handle URL query params to process payment response
   useEffect(() => {
-    // Kiểm tra phần pathname
     if (window.location.pathname === "/user/invoiceUser") {
-      // Tạo đối tượng URL từ window.location.href
       const url = new URL(window.location.href);
+      const cancel = url.searchParams.get("cancel");
+      const status = url.searchParams.get("status");
+      const orderCode = url.searchParams.get("orderCode");
 
-      // Kiểm tra xem query string có chứa "code" không
-      if (url.searchParams.has("code")) {
-        console.log("Đang ở URL /user/invoiceUser với code");
+      if (cancel === "true") {
+        notification.success({
+          message: "Payment Cancel",
+          description: "Your payment has been canceled.",
+        });
+        return;
+      }
 
-        // Lấy giá trị từ query string
-        //const code = url.searchParams.get("code");
-        // const id = url.searchParams.get("id");
-        const cancel = url.searchParams.get("cancel");
-        const status = url.searchParams.get("status");
-        const orderCode = url.searchParams.get("orderCode");
-        if (cancel === "true") {
-          notification.success({
-            message: "Payment Cancel",
-            description: "Your payment has been canceled",
-          });
-          return;
-        }
-        if (status === InvoiceStatus.PAID && orderCode) {
-          notification.success({
-            message: "Payment Success",
-            description: "Your payment has been successfully",
-          });
-          //   console.log("aaa", idInvoice);
-          const update = async () => {
+      if (status === InvoiceStatus.PAID && orderCode) {
+        const update = async () => {
+          try {
             const res = await invoiceApi.postInvoiceStatusPaymentApi(
               orderCode,
               idInvoice
             );
             if (res.status === 201) {
               message.success("Payment success");
+              setIdInvoice([]); // Reset invoice IDs
 
-              setIdInvoice([]);
-
-              //reload lại trang
-              navigate("/user/invoiceUser");
-
-              //   xóa id hóa đơn trong local
+              navigate("/user/invoiceUser"); // Reload the page or navigate to the same page
             }
-          };
-          update();
-
-          return;
-        }
-
-        //     console.log({ code, id });
+          } catch (error) {
+            console.error("Error updating invoice status:", error);
+            message.error("Failed to update invoice status.");
+          }
+        };
+        update();
       }
     }
-  }, [window.location.href]);
+  }, [window.location.href, idInvoice]);
 
-  //   const checkIfInvoiceSelected = () => {
-  //     // Kiểm tra xem có hóa đơn nào được chọn không
-  //     return hasCheckedInvoice; // Trả về true nếu có hóa đơn được chọn
-  //   };
-
+  // Handle bank change selection
   const handleBankChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedBank(event.target.value);
   };
 
   return (
-    <div className="bg-[#e0f5e4] h-full flex flex-col  ">
+    <div className="bg-[#e0f5e4] h-full flex flex-col">
       <div
         aria-label="breadcrumb"
         className="text-xl text-[#2b6534] bg-neutral-100 px-7 py-4 shadow-lg"
       >
         <ol className="flex space-x-2">
           <li>
-            <a href="/tai-chinh" className=" hover:underline">
+            <a href="/tai-chinh" className="hover:underline">
               Finance
             </a>
           </li>
           <li>
             <span className="text-[#2b6534]">›</span>
           </li>
-          <li className="font-semibold ">Pay online</li>
+          <li className="font-semibold">Pay online</li>
         </ol>
       </div>
-      <div className="bg-white mb-5 mx-5 mt-5 rounded-2xl p-6 shadow-lg text-[#2b6534] ">
-        {/* Thông tin cá nhân */}
+
+      <div className="bg-white mb-5 mx-5 mt-5 rounded-2xl p-6 shadow-lg text-[#2b6534]">
+        {/* Personal Information */}
         <InformationPersonal />
 
-        {/* Chức năng thanh toán */}
-        <div className="flex items-center justify-end space-x-4  text-lg">
+        {/* Payment Section */}
+        <div className="flex items-center justify-end space-x-4 text-lg">
           <select
-            className=" border-2 border-lime-600 rounded-md p-2"
+            className="border-2 border-lime-600 rounded-md p-2"
             defaultValue="SelectBank"
             value={selectedBank}
             onChange={handleBankChange}
@@ -150,7 +154,7 @@ export default function InvoiceUserPage() {
           </select>
           <button
             onClick={openModal}
-            className="bg-amber-300 text-[#2b6534]  px-4 py-2 rounded-md flex items-center hover:bg-amber-500 bg:text-[#1f5e28]"
+            className="bg-amber-300 text-[#2b6534] px-4 py-2 rounded-md flex items-center hover:bg-amber-500"
           >
             <SlPaperPlane size={24} />
             <span className="pl-2">Make Payment</span>
@@ -158,18 +162,10 @@ export default function InvoiceUserPage() {
         </div>
       </div>
 
-      {/* Thông tin thanh toán */}
-      <PaymentInformantion
-        setIdInvoices={setIdInvoice}
-        idInvoice={idInvoice}
-        //     onInvoiceSelectChange={(selected: boolean, selectedIds: string[]) => {
-        //   //    setHasCheckedInvoice(selected); // Cập nhật trạng thái chọn hóa đơn
-        //       setIdInvoice(selectedIds); // Lưu id hóa đơn đã chọn
-        //       //lư id hóa đơn vào local storage nó là 1 mảng nếu id đã tồn tại thì không thêm vào
-        //     }}
-      />
+      {/* Payment Information */}
+      <PaymentInformantion setIdInvoices={setIdInvoice} idInvoice={idInvoice} />
 
-      {/* Modal */}
+      {/* Modal for displaying payment link or errors */}
       {showModal && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
@@ -197,7 +193,7 @@ export default function InvoiceUserPage() {
             )}
             <button
               onClick={closeModal}
-              className=" text-[#2b6534] rounded-lg mt-4 font-semibold flex items-center justify-self-end"
+              className="text-[#2b6534] rounded-lg mt-4 font-semibold flex items-center justify-self-end"
             >
               <IoClose /> Close
             </button>

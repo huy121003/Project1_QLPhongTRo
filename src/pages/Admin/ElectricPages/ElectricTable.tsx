@@ -232,13 +232,16 @@ const ElectricTable: React.FC<Props> = ({
       dataIndex: "action",
       key: "action",
       render: (_: any, record: IContract) => (
-        <div
-          className=" text-blue-500  rounded-lg w-[40px] h-[40px] flex justify-center items-center cursor-pointer border-2  border-blue-500 hover:border-blue-300 hover:text-blue-300 "
+        <Button
           onClick={() => handleOK(record._id)}
+          icon={
+            <i className="fa-solid fa-floppy-disk text-xl text-green-500"></i>
+          }
         >
-          <i className="fa-solid fa-floppy-disk text-2xl"></i>
-        </div>
+          Save
+        </Button>
       ),
+      with: 100,
     },
   ];
 

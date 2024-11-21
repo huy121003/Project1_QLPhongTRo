@@ -37,9 +37,9 @@ const DetailInvoice: React.FC<Props> = ({ open, setOpen, record }) => {
     renderItem(
       "Status",
       <p
-        className={`border ${getInvoiceStatusColor(
+        className={` ${getInvoiceStatusColor(
           record?.status
-        )} text-center rounded border-2 w-[120px] p-2`}
+        )} text-xl font-bold p-2`}
       >
         {record?.status}
       </p>
@@ -64,6 +64,7 @@ const DetailInvoice: React.FC<Props> = ({ open, setOpen, record }) => {
   ];
   return (
     <Drawer
+      bodyStyle={{ padding: 0, margin: 0 }} // Xóa khoảng trắng mặc định
       onClose={() => setOpen(false)}
       open={open}
       width={"100vh"}

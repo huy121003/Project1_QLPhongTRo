@@ -111,6 +111,7 @@ const DetailRoom: React.FC<Props> = ({
   ${textColor} ${bgColor}`}
     >
       <Drawer
+        bodyStyle={{ padding: 0, margin: 0 }} // Xóa khoảng trắng mặc định
         closable={false}
         loading={isLoading}
         onClose={() => setOpenDetailRoom(false)}
@@ -127,7 +128,15 @@ const DetailRoom: React.FC<Props> = ({
           <div className="my-2" />
           <Collapse>
             <Collapse.Panel
-              header={<span className={`${textColor}`}>Services</span>}
+              header={
+                <div className="flex items-center justify-between">
+                  <span className={`${textColor}`}>Services</span>
+                  <Switch
+                    disabled
+                    checked={enableService?.length === services?.length}
+                  />
+                </div>
+              }
               key="1"
             >
               {services.map((service) => (

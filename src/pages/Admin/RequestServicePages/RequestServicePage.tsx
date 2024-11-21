@@ -1,26 +1,20 @@
 import React, { useEffect } from "react";
-import { useTheme } from "../../../contexts/ThemeContext";
 import { RegisterServiceStatus } from "../../../enums";
 import RegisterServiceFilter from "./RequestServiceFilter";
-import { serviceApi } from "../../../api";
+import { registerServiceAPI } from "../../../api";
 import { message, notification } from "antd";
 import RegisterServiceCard from "./RequestServiceCard";
 import { IRegisterService } from "../../../interfaces";
-
 function RequestServicePage() {
-  const { theme } = useTheme();
-  const isLightTheme = theme === "light";
-
-
   const [registerService, setRegisterService] = React.useState<
     IRegisterService[]
   >([]);
   const [total, setTotal] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState(5);
+  const [pageSize, setPageSize] = React.useState(10);
   const [loading, setLoading] = React.useState(false);
   const [searchParams, setSearchParams] = React.useState({
-    status: "",
+    status: "PENDING",
     type: "",
   });
   const [sorted, setSorted] = React.useState<string>("");
@@ -28,7 +22,8 @@ function RequestServicePage() {
     const queryParams: Record<string, any> = {
       currentPage: currentPage,
       pageSize: pageSize,
-      status: status,
+      // status: status,
+      sort: sorted,
     };
     Object.entries(searchParams).forEach(([key, value]) => {
       if (value) {
@@ -37,7 +32,7 @@ function RequestServicePage() {
     });
     const query = new URLSearchParams(queryParams).toString();
     setLoading(true);
-    const res = await serviceApi.fetchRegisterServiceApi(query);
+    const res = await registerServiceAPI.fetchRegisterServiceApi(query);
     if (res.data) {
       setRegisterService(res.data.result);
       setTotal(res.data.meta.totalDocument);
@@ -49,15 +44,27 @@ function RequestServicePage() {
     }
     setLoading(false);
   };
+  const deleteRegisterService = async (id: string) => {
+    const res = await registerServiceAPI.deleteRegisterServiceApi(id);
+    if (res.statusCode === 200) {
+      message.success("Delete register service successfully");
+      getRegisterService();
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
+  };
   useEffect(() => {
     getRegisterService();
-  }, [ currentPage, pageSize, searchParams, sorted]);
+  }, [currentPage, pageSize, searchParams, sorted]);
   const handlePaginationChange = (page: number, pageSize?: number) => {
     setCurrentPage(page);
     if (pageSize) setPageSize(pageSize);
   };
   const handleApprove = async (id: string, type: boolean) => {
-    const res = await serviceApi.patchRegisterServiceApi(
+    const res = await registerServiceAPI.patchRegisterServiceApi(
       id,
       RegisterServiceStatus.APPROVED
     );
@@ -85,6 +92,9 @@ function RequestServicePage() {
     setCurrentPage(1);
   };
   return (
+    <>  <h1 className="text-2xl font-bold m-2">
+      Request Service
+    </h1>
     <div className="m-2">
       <RegisterServiceFilter
         handleSearchChange={handleSearchChange}
@@ -100,8 +110,11 @@ function RequestServicePage() {
         onChange={handlePaginationChange}
         onApprove={handleApprove}
         loading={loading}
+        onDelete={deleteRegisterService}
       />
+
     </div>
+    </>
   );
 }
 

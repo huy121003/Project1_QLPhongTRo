@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import { BsBell } from "react-icons/bs";
-import { RiArrowDropDownLine } from "react-icons/ri";
-import { MdOutlineDashboardCustomize } from "react-icons/md";
-import { FaRegUserCircle } from "react-icons/fa";
-import { LiaFileContractSolid } from "react-icons/lia";
-import { LiaFileInvoiceDollarSolid } from "react-icons/lia";
-import { FaServicestack } from "react-icons/fa6";
-import { GrOverview } from "react-icons/gr";
-import { SidebarUser } from "../../components";
+
 import { accountApi, authtApi } from "../../api";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
 
@@ -43,7 +35,7 @@ function UserLayout() {
     const res = await authtApi.apiLogout();
     if (res && res.data) {
       dispatch(logoutAction());
-      navigate("/");
+      navigate("/login");
       message.success("Success logout");
     }
   };
@@ -167,6 +159,7 @@ function UserLayout() {
           openEditAccount={openEditAccount}
           setOpenEditAccount={setOpenEditAccount}
           record={account}
+         isChangeRole={true}
         />
       )}
     </div>

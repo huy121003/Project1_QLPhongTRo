@@ -24,7 +24,9 @@ const DeleteModal: React.FC<Props> = ({ onConfirm, record }) => {
           />
         }
         className=" transition"
-      />
+      >
+        Delete
+      </Button>
     </Popconfirm>
   );
 };

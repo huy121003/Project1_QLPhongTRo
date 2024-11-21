@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Popconfirm, Pagination, Spin } from "antd";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
-import { NotItem } from "../../../components";
+import { DeleteModal, NotItem } from "../../../components";
 import { IContract } from "../../../interfaces";
 import { ContractStatus } from "../../../enums";
 import { useTheme } from "../../../contexts/ThemeContext";
@@ -15,6 +15,7 @@ interface Props {
   setOpenDetailContract: (value: boolean) => void;
   setRecord: (value: IContract) => void;
   handleCancelContract: (id: string, roomId: string) => void;
+  onDelete: (record: IContract) => Promise<void>;
 }
 
 const ContractCards: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const ContractCards: React.FC<Props> = ({
   setOpenDetailContract,
   setRecord,
   handleCancelContract,
+  onDelete,
 }) => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
@@ -36,7 +38,7 @@ const ContractCards: React.FC<Props> = ({
     <Spin spinning={isLoading}>
       {contracts.length > 0 ? (
         <div className="m-4 flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {contracts.map((contract) => (
               <div
                 key={contract._id}
@@ -95,10 +97,6 @@ const ContractCards: React.FC<Props> = ({
                   </p>
 
                   <p className="font-semibold">
-                    <i className="fa-solid fa-hand-holding-dollar mr-2"></i>
-                    {contract.depositAmount.toLocaleString()} đ
-                  </p>
-                  <p className="font-semibold">
                     <i className="fa-solid fa-calendar-days mr-2"></i>
                     {new Date(contract.startDate).toLocaleDateString()} {" -> "}
                     {contract.actualEndDate
@@ -117,21 +115,36 @@ const ContractCards: React.FC<Props> = ({
 
                 {/* Action Buttons */}
                 <div className="mt-3 flex items-center justify-between">
-                  <div></div>
-                  <Button
-                    className=" transition"
-                    onClick={() => {
-                      setOpenDetailContract(true);
-                      setRecord(contract);
-                    }}
-                    icon={
-                      <i
-                        className="fa-solid fa-eye text-xl
+                  <div>
+                    <p className="font-semibold  text-orange-600">
+                      <i className="fa-solid fa-hand-holding-dollar mr-2"></i>
+                      {contract.depositAmount.toLocaleString()} đ
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      className=" transition"
+                      onClick={() => {
+                        setOpenDetailContract(true);
+                        setRecord(contract);
+                      }}
+                      icon={
+                        <i
+                          className="fa-solid fa-eye text-xl
                   text-blue-500
                       "
+                        />
+                      }
+                    >
+                      Detail
+                    </Button>
+                    {contract?.status !== ContractStatus.ACTIVE && (
+                      <DeleteModal
+                        onConfirm={(record) => onDelete(record)}
+                        record={contract}
                       />
-                    }
-                  />
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

@@ -85,7 +85,9 @@ const RoleTable: React.FC<Props> = ({
               onClick={() => {
                 setOpenEditRole(true), setRecord(record);
               }}
-            />
+            >
+              Edit
+            </Button>
 
             <DeleteModal
               onConfirm={onDeleteRole} // Pass the delete function
@@ -93,6 +95,7 @@ const RoleTable: React.FC<Props> = ({
             />
           </div>
         ),
+      with: 150,
     },
   ];
   const [visibleColumns, setVisibleColumns] = useState<string[]>(

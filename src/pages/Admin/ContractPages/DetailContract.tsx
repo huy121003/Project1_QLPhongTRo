@@ -81,6 +81,7 @@ const DetailContract: React.FC<Props> = ({
   return (
     <div className={`flex-1 ${textColor} ${bgColor}`}>
       <Drawer
+        bodyStyle={{ padding: 0, margin: 0 }} // Xóa khoảng trắng mặc định
         onClose={() => setOpenDetailContract(false)}
         open={openDetailContract}
         width="100vh"
