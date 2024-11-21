@@ -11,7 +11,7 @@ import { useTheme } from "../../../contexts/ThemeContext";
 import { roomApi } from "../../../api";
 import { RoomStatus } from "../../../enums";
 import { IRoom } from "../../../interfaces";
-import { notification } from "antd";
+import { notification, Spin } from "antd";
 
 function RoomStatusBar() {
   const { theme } = useTheme();
@@ -21,7 +21,7 @@ function RoomStatusBar() {
   const [loading, setLoading] = React.useState(false);
   const [occupiedRooms, setOccupiedRooms] = React.useState<IRoom[]>([]);
   const [availableRooms, setAvailableRooms] = React.useState<IRoom[]>([]);
-  const width = window.innerWidth;
+
   useEffect(() => {
     const getStateRooms = async () => {
       setLoading(true);
@@ -50,37 +50,76 @@ function RoomStatusBar() {
   }, []);
 
   const data = [
-    { name: "Occupied", value: occupiedRooms.length, color: "#f7b924" },
-    { name: "Available", value: availableRooms.length, color: "#10da31" },
+    { name: "Occupied", value: occupiedRooms.length, color: "#f59e0b" },
+    { name: "Available", value: availableRooms.length, color: "#22c55e" },
   ];
+
+  const gradientColors = ["url(#occupiedGradient)", "url(#availableGradient)"];
 
   return (
     <div
-      className={` p-2 rounded-lg m-1 flex-1 shadow-lg
-   ${bgColor} ${textColor}
-    ${width > 1280 ? " " : "h-[300px]"}
-    `}
+      className={`p-6 rounded-xl shadow-xl ${bgColor} flex flex-col items-center m-1`}
     >
-      <ResponsiveContainer>
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="value"
-            nameKey="name"
-            cx="50%"
-            cy="50%"
-            outerRadius="80%"
-            fill="#8884d8"
-            label={({ name }) => name}
-          >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend wrapperStyle={{ color: textColor }} />
-        </PieChart>
-      </ResponsiveContainer>
+      <h3
+        className={`text-xl font-bold ${
+          isLightTheme ? "text-gray-800" : "text-gray-100"
+        }`}
+      >
+        Room Status Overview
+      </h3>
+      {loading ? (
+        <Spin size="large" />
+      ) : (
+        <ResponsiveContainer width="100%" height={300}>
+          <PieChart>
+            <defs>
+              <linearGradient id="occupiedGradient" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#fbbf24" />
+                <stop offset="100%" stopColor="#f59e0b" />
+              </linearGradient>
+              <linearGradient
+                id="availableGradient"
+                x1="0"
+                y1="0"
+                x2="1"
+                y2="1"
+              >
+                <stop offset="0%" stopColor="#4ade80" />
+                <stop offset="100%" stopColor="#22c55e" />
+              </linearGradient>
+            </defs>
+            <Pie
+              data={data}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius="80%"
+              innerRadius="60%"
+              paddingAngle={5}
+              label={({ name, percent }) =>
+                `${name}: ${(percent * 100).toFixed(0)}%`
+              }
+            >
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={gradientColors[index]} />
+              ))}
+            </Pie>
+            <Tooltip
+              contentStyle={{
+                backgroundColor: isLightTheme ? "#ffffff" : "#333333",
+                color: textColor,
+                
+              }}
+            />
+            <Legend
+              verticalAlign="bottom"
+              height={36}
+              wrapperStyle={{ color: textColor }}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 }
