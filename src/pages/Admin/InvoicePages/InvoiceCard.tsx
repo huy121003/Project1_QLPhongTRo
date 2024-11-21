@@ -1,21 +1,23 @@
 import React from "react";
-import {  DeleteModal } from "../../../components";
+import { DeleteModal, NotItem } from "../../../components";
 import { Button, Pagination, Popconfirm, Spin } from "antd";
-import InvoiceModel, { InvoiceStatus } from "../../../models/InvoiceModal";
+
 import { getInvoiceStatusColor } from "../../../utils/getMethodColor";
-import NotItem from "../../../components/NotItem";
+import { IInvoice } from "../../../interfaces";
+import { InvoiceStatus } from "../../../enums";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
-  invoices: InvoiceModel[];
+  invoices: IInvoice[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
-  onPaymentConfirm: (record: InvoiceModel) => Promise<void>;
+  onPaymentConfirm: (record: IInvoice) => Promise<void>;
   setOpenDetailInvoice: (value: boolean) => void;
-  setRecord: (value: InvoiceModel) => void;
+  setRecord: (value: IInvoice) => void;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteInvoice: (record: InvoiceModel) => Promise<void>;
+  onDeleteInvoice: (record: IInvoice) => Promise<void>;
 }
 
 const InvoiceCard: React.FC<Props> = ({
@@ -30,58 +32,29 @@ const InvoiceCard: React.FC<Props> = ({
   onChange,
   onDeleteInvoice,
 }) => {
-
-
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   return (
     <Spin spinning={isLoading}>
       {invoices.length > 0 ? (
         <div className="m-4 flex-1">
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {invoices.map((invoice) => (
               <div
                 key={invoice._id}
-                className={`bg-white shadow-md rounded-lg p-5 border-t-4  transform transition-transform hover:scale-105`}
+                className={` shadow-md rounded-lg p-5 border-t-4  transform transition-transform hover:scale-105
+                  ${bgColor} ${textColor}
+                  `}
               >
                 {/* Contract Header */}
-                <div className="border-b pb-3 mb-3">
-                  <p className="text-2xl text-gray-500 font-bold">
+                <div className="border-b pb-3 mb-3 justify-between flex">
+                  <p className="text-2xl  font-bold">
                     <i className="fa-solid fa-bed mr-2"></i>
                     {invoice.room.roomName}
                   </p>
-                </div>
-
-                {/* Contract Body */}
-                <div className="text-gray-700 space-y-2">
-                  <p className="font-semibold">
-                    <i className="fa-solid fa-user mr-2"></i>
-                    {invoice.tenant.name}
-                  </p>
-                  <p className="font-semibold">
-                    <i className="fa-solid fa-cubes mr-2"></i>
-                    {invoice.service.name}
-                  </p>
-                  <p className="font-semibold">
-                    <i className="fa-solid fa-hand-holding-dollar mr-2"></i>
-                    {invoice.amount.toLocaleString()} đ
-                  </p>
-
-                  <p className="font-semibold">
-                    <i className="fa-solid fa-calendar-days mr-2"></i>
-                    {invoice.month}
-                  </p>
-                  <p className="font-bold mt-6">
-                    <span
-                      className={`${getInvoiceStatusColor(invoice.status)} `}
-                    >
-                      <i className="fa-solid fa-circle mr-2"></i>
-                      {invoice.status}
-                    </span>
-                  </p>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex items-center justify-between mt-4">
-                  <div>
+                  <>
                     {invoice.status === InvoiceStatus.UNPAID && (
                       <Popconfirm
                         title="Payment Confirmation"
@@ -92,28 +65,75 @@ const InvoiceCard: React.FC<Props> = ({
                         placement="leftBottom"
                       >
                         <Button
-                          type="primary"
                           icon={
-                            <i className="fa-solid fa-check text-white"></i>
+                            <i className="fa-solid fa-check text-green-500 "></i>
                           }
-                          className="bg-green-500 hover:bg-green-600"
                         >
-                          Confirm Payment
+                          <p className="text-green-500 font-bold">Confirm</p>
                         </Button>
                       </Popconfirm>
                     )}
+                  </>
+                </div>
+
+                {/* Contract Body */}
+                <div className="space-y-2">
+                  <p className="font-semibold">
+                    <i className="fa-solid fa-user mr-2"></i>
+                    {invoice.tenant.name}
+                  </p>
+                  <p className="font-semibold">
+                    <i className="fa-solid fa-cubes mr-2"></i>
+                    {invoice.service.name}
+                  </p>
+
+                  <p className="font-semibold">
+                    <i className="fa-solid fa-calendar-days mr-2"></i>
+                    {invoice.month}
+                  </p>
+                  <p className="font-bold mt-6">
+                    <span
+                      className={`${getInvoiceStatusColor(invoice.status)} `}
+                    >
+                      <i
+                        className={`fa-solid ${
+                          invoice.status === InvoiceStatus.PAID
+                            ? `fa-check-circle`
+                            : `fa-times-circle`
+                        } mr-2`}
+                      ></i>
+
+                      {invoice.status}
+                    </span>
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex items-center justify-between mt-4">
+                  <div>
+                    <p className="font-semibold text-orange-500">
+                      <i className="fa-solid fa-hand-holding-dollar mr-2"></i>
+                      {invoice.amount.toLocaleString()} đ
+                    </p>
                   </div>
                   <div className="flex gap-2">
                     <Button
-                      type="primary"
-                      className="bg-blue-500 text-white hover:bg-blue-600 transition"
+                      className=" transition"
                       onClick={() => {
                         setOpenDetailInvoice(true);
                         setRecord(invoice);
                       }}
-                      icon={<i className="fa-solid fa-eye text-xl" />}
-                    ></Button>
-                    <DeleteModal onConfirm={onDeleteInvoice} record={invoice}  />
+                      icon={
+                        <i
+                          className="fa-solid fa-eye text-xl
+                        text-blue-600
+                        "
+                        />
+                      }
+                    >
+                      Detail
+                    </Button>
+                    <DeleteModal onConfirm={onDeleteInvoice} record={invoice} />
                   </div>
                 </div>
               </div>
@@ -126,6 +146,7 @@ const InvoiceCard: React.FC<Props> = ({
               total={total}
               onChange={onChange}
               showSizeChanger
+              pageSizeOptions={["4", "8", "16", "32", "64", "128", "999999"]}
             />
           </div>
         </div>

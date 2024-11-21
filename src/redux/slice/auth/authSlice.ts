@@ -6,11 +6,17 @@ export const initialState = {
   user: {
     email: "",
     name: "",
+    avatar: "",
     role: {
       _id: "",
       name: "",
     },
     _id: "",
+    // images: [
+    //   {
+    //     imagePath: "",
+    //   },
+    // ],
   },
 };
 
@@ -24,7 +30,6 @@ export const authSlice = createSlice({
       state.isLoading = false;
     },
     getUserAction: (state, action) => {
-
       state.isAuthenticated = true;
       state.user = action.payload;
       state.isLoading = false;
@@ -35,11 +40,26 @@ export const authSlice = createSlice({
       state.user = {
         email: "",
         name: "",
+        avatar: "",
         role: {
           _id: "",
           name: "",
         },
         _id: "",
+        // images: [
+        //   {
+        //     imagePath: "",
+        //   },
+        //   {
+        //     imagePath: "",
+        //   },
+        //   {
+        //     imagePath: "",
+        //   },
+        //   {
+        //     imagePath: "",
+        //   },
+        // ],
       };
     },
   },

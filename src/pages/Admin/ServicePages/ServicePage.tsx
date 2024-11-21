@@ -1,22 +1,21 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components";
-
 import AddServiceModal from "./AddServiceModal";
 import EditServiceModal from "./EditServiceModal";
-
-import { deleteServiceApi, fetchServiceApi } from "../../../api/serviceApi";
-
-import { ServiceModel } from "../../../models/ServiceModel";
-
 import DetailService from "./DetailService";
 import ServiceFilters from "./ServiceFilters";
-
 import ServiceTable from "./ServiceTable";
 import ExportToExcel from "./ExportToExcel";
-
+import { IService } from "../../../interfaces";
+import { serviceApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
 function ServicePage() {
-  const [services, setServices] = useState<ServiceModel[]>([]);
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
+  const [services, setServices] = useState<IService[]>([]);
 
   const [openAddService, setOpenAddService] = useState(false);
   const [openEditService, setOpenEditService] = useState(false);
@@ -24,7 +23,7 @@ function ServicePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null); // New state for the record to delete
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
 
   const [sorted, setSorted] = useState<string>("");
@@ -48,14 +47,17 @@ function ServicePage() {
     const query = new URLSearchParams(queryParams).toString();
 
     setIsLoading(true);
-    const res = await fetchServiceApi(query);
+    const res = await serviceApi.fetchServiceApi(query);
     setIsLoading(false);
     if (res.data.result && res) {
       setServices(res.data.result);
 
       setTotal(res.data.meta.totalDocument); // Ensure total is set correctly
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
   // Fetch services function
@@ -92,18 +94,22 @@ function ServicePage() {
   };
 
   const onDeleteService = async (record: any) => {
-    const res = await deleteServiceApi(record._id);
+    const res = await serviceApi.deleteServiceApi(record._id);
     if (res.statusCode === 200) {
       message.success("Service deleted");
       getService();
       setCurrent(1);
     } else {
-      message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
 
   return (
     <>
+      <h1 className="text-2xl font-bold m-2">Service</h1>
       <div className="justify-end  w-full">
         <ServiceFilters
           searchParams={searchParams}
@@ -111,7 +117,11 @@ function ServicePage() {
           handleSortChange={handleSortChange}
           sorted={sorted}
         />
-        <div className="bg-white mx-2  rounded-lg shadow-lg border border-gray-200 mt-2  justify-between flex items-center">
+        <div
+          className={` mx-2  rounded-lg shadow-lg  mt-2  justify-between flex items-center
+          ${bgColor} ${textColor}
+          `}
+        >
           <div></div>
           <div className="flex items-center">
             <ExportToExcel services={services} />

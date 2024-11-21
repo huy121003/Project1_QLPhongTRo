@@ -1,20 +1,23 @@
-import { Gender } from "../models/AccountModel";
-import { ContractStatus } from "../models/ContractModel";
-import { InvoiceStatus } from "../models/InvoiceModal";
-import { Method } from "../models/PermissonModel";
-import { RoomStatus, RoomType } from "../models/RoomModel";
-import { ServiceType } from "../models/ServiceModel";
+import {
+  ApiMethod,
+  ContractStatus,
+  Gender,
+  InvoiceStatus,
+  RoomStatus,
+  RoomType,
+  ServiceType,
+} from "../enums";
 
-export const getMethodColor = (method: Method) => {
+export const getMethodColor = (method: ApiMethod) => {
   switch (method) {
-    case Method.GET:
+    case ApiMethod.GET:
       return "green";
-    case Method.POST:
+    case ApiMethod.POST:
       return "yellow";
-    case Method.PATCH:
+    case ApiMethod.PATCH:
       return "purple";
-    case Method.DELETE:
-      return "orange";
+    case ApiMethod.DELETE:
+      return "red";
     default:
       return "gray";
   }
@@ -41,13 +44,13 @@ export const getRoomStatusColor = (status: string) => {
 export const getRoomTypeColor = (type: string) => {
   switch (type) {
     case RoomType.Single:
-      return "text-orange-600 ";
+      return "orange-600 ";
     case RoomType.Double:
-      return "text-purple-600 ";
+      return "purple-600 ";
     case RoomType.Quad:
-      return "text-blue-600 ";
+      return "blue-600 ";
     case RoomType.Studio:
-      return "text-pink-600 ";
+      return "pink-600 ";
   }
 };
 
@@ -90,4 +93,8 @@ export const getGenderColor = (gender: string) => {
     default:
       return "text-purple-600 ";
   }
+};
+
+export const getRequestServiceTypeColor = (type: boolean) => {
+  return type ? "text-red-600 " : "text-green-600 ";
 };

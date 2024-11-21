@@ -1,9 +1,10 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
 import { Button } from "antd";
-import InvoiceModel from "../../../models/InvoiceModal";
+import { IInvoice } from "../../../interfaces";
+
 interface Props {
-  invoices: InvoiceModel[];
+  invoices: IInvoice[];
 }
 const ExportToExcel: React.FC<Props> = ({ invoices }) => {
   const exportToExcel = () => {
@@ -78,15 +79,12 @@ const ExportToExcel: React.FC<Props> = ({ invoices }) => {
     XLSX.writeFile(workbook, `Invoices_${invoices[0]?.month || ""}.xlsx`);
   };
   return (
-    <div className="bg-white  rounded-lg shadow-lg border border-gray-200 justify-end flex-1 items-center cursor flex">
-      <Button
-        onClick={exportToExcel}
-        type="primary"
-        className="m-2 py-6 px-2 bg-green-600"
-      >
-        <i className="fa-solid fa-file-export"></i> Export to Excel
-      </Button>
-    </div>
+    <Button
+      onClick={exportToExcel}
+      className="m-2 py-6 px-2 bg-green-600 text-white "
+    >
+      <i className="fa-solid fa-file-export"></i> Export to Excel
+    </Button>
   );
 };
 export default ExportToExcel;

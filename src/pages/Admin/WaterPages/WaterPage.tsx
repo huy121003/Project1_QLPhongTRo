@@ -1,33 +1,39 @@
 import { useEffect, useState } from "react";
-import ContractModel from "../../../models/ContractModel";
-import { fetchContractApi } from "../../../api/contractApi";
-import { fetchInvoiceApi } from "../../../api/invoiceApi";
-
-import YearMonthSelector from "../../../components/YearMonthSelector ";
-import { fetchServiceApi } from "../../../api/serviceApi";
-import { ServiceModel, ServiceType } from "../../../models/ServiceModel";
 import WaterTable from "./WaterTable";
-
 import ExportToExcel from "./ExportToExcel";
+import { IContract, IService } from "../../../interfaces";
+import { ContractStatus, ServiceType } from "../../../enums";
+import { contractApi, invoiceApi, serviceApi } from "../../../api";
+import { YearMonthSelector } from "../../../components";
+import { notification } from "antd";
+import { useTheme } from "../../../contexts/ThemeContext";
 const WaterPage = () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
-
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const [year, setYear] = useState(currentYear);
-  const [contract, setContract] = useState<ContractModel[]>([]);
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(
+    currentMonth
+  );
+  const [year, setYear] = useState<number | null>(currentYear);
+  const [contract, setContract] = useState<IContract[]>([]);
   const [loading, setLoading] = useState(true);
   const [numberIndex, setNumberIndex] = useState<{
     [key: string]: { firstIndex: number; finalIndex: number; invoiceId: "" };
   }>({});
-  const [water, setWater] = useState({} as ServiceModel);
+  const [water, setWater] = useState({} as IService);
   const getWaterService = async () => {
     setLoading(true);
-    const res = await fetchServiceApi(`type=${ServiceType.Water}`);
+    const res = await serviceApi.fetchServiceApi(`type=${ServiceType.Water}`);
     if (res.data) {
       setWater(res.data.result[0]);
     } else {
-      // message.error(res.message);
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
   useEffect(() => {
@@ -37,22 +43,39 @@ const WaterPage = () => {
   const getContract = async () => {
     setLoading(true);
     try {
-      const res = await fetchContractApi(`currentPage=1&pageSize=99999`);
+      const res = await contractApi.fetchContractApi(
+        `currentPage=1&pageSize=99999`
+      );
       if (res.data) {
-        const newContract = res.data.result.filter(
-          (contract: ContractModel) => {
-            const startDate = new Date(contract.startDate);
-            const endDate = new Date(contract.endDate);
-            const monthStart = new Date(year, selectedMonth - 1, 1);
-            const monthEnd = new Date(year, selectedMonth, 0);
+        const newContract = res.data.result.filter((contract: IContract) => {
+          const startDate = new Date(contract.startDate);
+          const endDate = new Date(contract.endDate);
+          const monthStart = new Date(
+            year ?? currentYear,
+            (selectedMonth ?? currentMonth) - 1,
+            1
+          );
+          const monthEnd = new Date(
+            year ?? currentYear,
+            selectedMonth ?? currentMonth,
+            0
+          );
+          const actualEndDate = new Date(contract.actualEndDate);
+          if (contract.status === ContractStatus.ACTIVE) {
             return startDate <= monthEnd && endDate >= monthStart;
           }
-        );
+          if (contract.status === ContractStatus.CANCELED) {
+            return startDate <= monthEnd && actualEndDate >= monthStart;
+          }
+          if (contract.status === ContractStatus.EXPIRED) {
+            return startDate <= monthEnd && endDate >= monthStart;
+          }
+        });
         setContract(newContract);
 
         const initialIndices = await Promise.all(
-          newContract.map(async (contract: ContractModel) => {
-            const billResponse = await fetchInvoiceApi(
+          newContract.map(async (contract: IContract) => {
+            const billResponse = await invoiceApi.fetchInvoiceApi(
               `tenant._id=${contract.tenant._id}&room._id=${contract.room._id}&month=${selectedMonth}-${year}&service._id=${water._id}`
             );
             return {
@@ -66,7 +89,7 @@ const WaterPage = () => {
             };
           })
         );
-        //console.log("eded", initialIndices);
+
         setNumberIndex(Object.assign({}, ...initialIndices));
       }
     } catch (error) {
@@ -94,30 +117,40 @@ const WaterPage = () => {
   };
 
   return (
-    <div className="justify-end  w-full">
-      <YearMonthSelector
-        selectedMonth={selectedMonth}
-        year={year}
-        setYear={setYear}
-        setSelectedMonth={setSelectedMonth}
-      />
-      <ExportToExcel
-        contract={contract}
-        numberIndex={numberIndex}
-        water={water}
-        selectedMonth={selectedMonth}
-        year={year}
-      />
-      <WaterTable
-        contract={contract}
-        numberIndex={numberIndex}
-        loading={loading}
-        handleInputChange={handleInputChange}
-        water={water}
-        selectedMonth={selectedMonth}
-        year={year}
-      />
-    </div>
+    <>
+      {" "}
+      <h1 className="text-2xl font-bold m-2"></h1>
+      <div className="justify-end  w-full">
+        <div
+          className={`  m-2  rounded-lg shadow-lg   justify-between flex-1 items-center cursor flex
+      ${bgColor} ${textColor}
+        `}
+        >
+          <YearMonthSelector
+            selectedMonth={selectedMonth}
+            year={year}
+            setYear={setYear}
+            setSelectedMonth={setSelectedMonth}
+          />
+          <ExportToExcel
+            contract={contract}
+            numberIndex={numberIndex}
+            water={water}
+            selectedMonth={selectedMonth || currentMonth}
+            year={year || currentYear}
+          />
+        </div>
+        <WaterTable
+          contract={contract}
+          numberIndex={numberIndex}
+          loading={loading}
+          handleInputChange={handleInputChange}
+          water={water}
+          selectedMonth={selectedMonth || currentMonth}
+          year={year || currentYear}
+        />
+      </div>
+    </>
   );
 };
 

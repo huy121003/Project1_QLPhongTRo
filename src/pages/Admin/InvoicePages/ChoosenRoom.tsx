@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { fetchRoomApi } from "../../../api/roomApis";
-import RoomModel from "../../../models/RoomModel";
-import { message } from "antd";
+import { Dropdown, Menu, notification, Button, Pagination } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import { IRoom } from "../../../interfaces";
+import { roomApi } from "../../../api";
+import { useTheme } from "../../../contexts/ThemeContext";
 
 interface Props {
   choosenRoom: string;
@@ -9,70 +11,91 @@ interface Props {
 }
 
 const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
-  const [current, setCurrent] = useState(1);
-  const [pageSize] = useState(10);
-  const [total, setTotal] = useState(0);
-  const [rooms, setRooms] = useState<RoomModel[]>([]);
+  const [rooms, setRooms] = useState<IRoom[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(9999);
 
   const getRoom = async () => {
-    try {
-      const res = await fetchRoomApi(
-        `currentPage=${current}&pageSize=${pageSize}`
-      );
-      if (res.data) {
-        setRooms(res.data.result);
-        setTotal(res.data.meta.totalPage);
-      } else {
-        message.error(res.message);
-      }
-    } catch (error) {
-      message.error("Failed to fetch rooms.");
+    const res = await roomApi.fetchRoomApi(
+      `currentPage=${currentPage}&pageSize=${pageSize}&sort=roomName`
+    );
+    if (res.data) {
+      setRooms(res.data.result);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
   };
 
   useEffect(() => {
     getRoom();
-  }, [current, pageSize]);
+  }, []);
 
-  return (
-    <div className="bg-white p-4  rounded-lg shadow-lg border border-gray-200 m-2 flex justify-between items-center">
-      <div
-        className={`flex p-4 border-2 rounded-2xl cursor-pointer ${
-          choosenRoom === ""
-            ? "border-blue-600 text-blue-600"
-            : "border-gray-400 text-gray-400"
-        } mr-2`}
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+
+  // Tạo menu cho Dropdown
+  const menu = (
+    <Menu>
+      {/* Tùy chọn "All" */}
+      <Menu.Item
+        key="all"
         onClick={() => setChooenRoom("")}
+        style={{
+          fontWeight: choosenRoom === "" ? "bold" : "normal",
+          color: choosenRoom === "" ? "#1890ff" : "inherit",
+        }}
       >
-        All Rooms
-      </div>
-      <div className="flex-1 flex items-center">
-        <button
-          onClick={() => current > 1 && setCurrent(current - 1)}
-          className="text-blue-500 font-bold mr-2 hover:text-blue-300 w-12 h-12 flex justify-center items-center"
-        >
-          <i className="fas fa-chevron-left text-2xl"></i>
-        </button>
+        All
+      </Menu.Item>
+      {/* Các phòng */}
+      <Menu.Divider />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(5, 1fr)",
+          gap: "8px",
+          padding: "8px",
+        }}
+      >
         {rooms.map((room) => (
-          <div
+          <Menu.Item
             key={room._id}
-            className={`flex flex-1 p-4 border-2 rounded-2xl cursor-pointer text-center justify-center items-center ${
-              choosenRoom === room._id
-                ? "border-blue-600 text-blue-600"
-                : "border-gray-400 text-gray-400"
-            } mr-2`}
             onClick={() => setChooenRoom(room._id)}
+            style={{
+              fontWeight: choosenRoom === room._id ? "bold" : "normal",
+              color: choosenRoom === room._id ? "#1890ff" : "inherit",
+              textAlign: "center",
+              border:
+                choosenRoom === room._id
+                  ? "1px solid #1890ff"
+                  : "1px solid #d9d9d9",
+              borderRadius: "4px",
+              padding: "4px",
+            }}
           >
             {room.roomName}
-          </div>
+          </Menu.Item>
         ))}
-        <button
-          onClick={() => current < total && setCurrent(current + 1)}
-          className="text-blue-500 font-bold ml-2 hover:text-blue-300 w-12 h-12 flex justify-center items-center"
-        >
-          <i className="fas fa-chevron-right text-2xl"></i>
-        </button>
       </div>
+    </Menu>
+  );
+
+  return (
+    <div className="  py-4 my-2 rounded-lg   ">
+      <Dropdown overlay={menu} trigger={["click"]}>
+        <Button>
+          {choosenRoom
+            ? rooms.find((room) => room._id === choosenRoom)?.roomName ||
+              "Unknown"
+            : "Select a Room"}
+
+          <DownOutlined />
+        </Button>
+      </Dropdown>
     </div>
   );
 };

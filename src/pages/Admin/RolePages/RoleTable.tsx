@@ -1,20 +1,26 @@
 import React, { useState } from "react";
-import TableComponent from "../../../components/TableComponent";
-import { ColumnSelector, DeleteModal } from "../../../components";
+
+import {
+  ColumnSelector,
+  DeleteModal,
+  TableComponent,
+} from "../../../components";
 import { Button } from "antd";
 import { getRoleColor } from "../../../utils/getMethodColor";
-import { RoleModel } from "../../../models/RoleModel";
+import { IRole } from "../../../interfaces";
+import { useTheme } from "../../../contexts/ThemeContext";
+
 interface Props {
-  roles: RoleModel[];
+  roles: IRole[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteRole: (record: RoleModel) => Promise<void>;
+  onDeleteRole: (record: IRole) => Promise<void>;
   setOpenEditRole: (value: boolean) => void;
   setOpenDetailRole: (value: boolean) => void;
-  setRecord: (value: RoleModel) => void;
+  setRecord: (value: IRole) => void;
 }
 const RoleTable: React.FC<Props> = ({
   roles,
@@ -28,12 +34,16 @@ const RoleTable: React.FC<Props> = ({
   setOpenDetailRole,
   setRecord,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const columns = [
     {
       title: "ID",
       dataIndex: "_id",
       key: "_id",
-      render: (_id: string, record: RoleModel) => (
+      render: (_id: string, record: IRole) => (
         <p
           className="text-blue-600 hover:text-blue-300"
           onClick={() => {
@@ -50,13 +60,7 @@ const RoleTable: React.FC<Props> = ({
       dataIndex: "name",
       key: "name",
       render: (name: string) => (
-        <p
-          className={`border ${
-            getRoleColor(name) as string
-          } text-center rounded border-2 w-[120px] p-2`}
-        >
-          {name}
-        </p>
+        <p className={` ${getRoleColor(name) as string}  font-bold`}>{name}</p>
       ),
     },
     { title: "Description", dataIndex: "description", key: "description" },
@@ -72,8 +76,7 @@ const RoleTable: React.FC<Props> = ({
       dataIndex: "action",
       key: "action",
       render: (_: any, record: any) =>
-        record.name === "SUPER ADMIN" ||
-        record.name === "NORMAL USER" ? null : (
+        record.name === "SUPER ADMIN" || record.name === "NORMAL " ? null : (
           <div className="gap-2 flex">
             <Button
               icon={
@@ -82,7 +85,9 @@ const RoleTable: React.FC<Props> = ({
               onClick={() => {
                 setOpenEditRole(true), setRecord(record);
               }}
-            />
+            >
+              Edit
+            </Button>
 
             <DeleteModal
               onConfirm={onDeleteRole} // Pass the delete function
@@ -90,13 +95,17 @@ const RoleTable: React.FC<Props> = ({
             />
           </div>
         ),
+      with: 150,
     },
   ];
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     columns.map((column) => column.dataIndex)
   );
   return (
-    <div className="bg-white p-2 rounded-lg m-2">
+    <div
+      className={` p-2 rounded-lg m-2
+  `}
+    >
       <div>
         <ColumnSelector
           columns={columns}

@@ -1,19 +1,21 @@
-import apiConfig, { apiRequest } from "./ApiConfig";
-import { InvoiceStatus } from "../models/InvoiceModal";
-import { ApiMethod } from "./ApiMethod";
-
-export const fetchInvoiceApi = (query: string): Promise<any> => {
+import { apiRequest } from "./ApiConfig";
+import { InvoiceStatus } from "../enums";
+import { ApiMethod } from "../enums";
+const fetchInvoiceApi = (query: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/invoices?${query}`, false);
 };
-
-export const fetchInvoiceByIdApi = (id: string): Promise<any> => {
+const fetchInvoiceByIdApi = (id: string): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/invoices/${id}`, false);
 };
-export const deleteInvoiceApi = (id: string): Promise<any> => {
-  return apiRequest(ApiMethod.DELETE, `/api/v1/invoices/${id}`, false);
+
+export const fetchInvoiceByUserId = (): Promise<any> => {
+  return apiRequest(ApiMethod.GET, `/api/v1/invoices/by-user`, false);
 };
 
-export const postInvoiceApi = (
+const deleteInvoiceApi = (id: string): Promise<any> => {
+  return apiRequest(ApiMethod.DELETE, `/api/v1/invoices/${id}`, false);
+};
+const postInvoiceApi = (
   room: {
     _id: string;
     roomName: string;
@@ -31,8 +33,6 @@ export const postInvoiceApi = (
     priceUnit: number;
   },
   month: string,
-  //dueDate: Date,
-
   description: string,
   firstIndex?: number,
   finalIndex?: number
@@ -43,14 +43,11 @@ export const postInvoiceApi = (
     service,
     firstIndex,
     finalIndex,
-
     month,
-    //dueDate,
     description,
   });
 };
-
-export const patchInvoiceApi = (
+const patchInvoiceApi = (
   id: string,
   firstIndex?: number,
   finalIndex?: number
@@ -60,11 +57,33 @@ export const patchInvoiceApi = (
     finalIndex,
   });
 };
-export const patchInvoiceStatusApi = (
+
+const patchInvoiceStatusApi = (
   id: string,
   status: InvoiceStatus
 ): Promise<any> => {
   return apiRequest(ApiMethod.PATCH, `/api/v1/invoices/${id}`, false, {
     status,
   });
+};
+const postInvoiceStatusPaymentApi = (
+  id: string,
+  idInvoices: string[]
+): Promise<any> => {
+  return apiRequest(ApiMethod.POST, `/api/v1/pay/paymentCheck`, false, {
+    id,
+    idInvoices,
+  });
+};
+
+
+export default {
+  fetchInvoiceApi,
+  fetchInvoiceByIdApi,
+  deleteInvoiceApi,
+  postInvoiceApi,
+  patchInvoiceApi,
+  patchInvoiceStatusApi,
+  fetchInvoiceByUserId,
+  postInvoiceStatusPaymentApi,
 };

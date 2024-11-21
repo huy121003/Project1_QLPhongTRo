@@ -1,9 +1,9 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
 import { Button } from "antd";
-import RoomModel from "../../../models/RoomModel";
+import { IRoom } from "../../../interfaces";
 interface Props {
-  rooms: RoomModel[];
+  rooms: IRoom[];
 }
 const ExportToExcel: React.FC<Props> = ({ rooms }) => {
   const exportToExcel = () => {
@@ -62,11 +62,10 @@ const ExportToExcel: React.FC<Props> = ({ rooms }) => {
     XLSX.writeFile(workbook, `RoomReport.xlsx`);
   };
   return (
-    <div className="bg-white   rounded-lg  justify-end flex-1 items-center cursor flex">
+    <div className="  rounded-lg  justify-end flex-1 items-center cursor flex">
       <Button
         onClick={exportToExcel}
-        type="primary"
-        className="m-2 py-6 px-2 bg-green-600"
+        className="m-2 py-6 px-2 bg-green-600 text-white "
       >
         <i className="fa-solid fa-file-export"></i> Export to Excel
       </Button>

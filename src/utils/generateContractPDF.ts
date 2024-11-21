@@ -1,8 +1,9 @@
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import ContractModel from "../models/ContractModel";
 import moment from "moment";
 import { timesnewromanBase64 } from "./Base64";
+import { timesnewromanitalicBase64 } from "./ItalicBase64";
+import { IContract } from "../interfaces";
 
 const addWrappedText = (
   doc: jsPDF,
@@ -18,10 +19,13 @@ const addWrappedText = (
   });
 };
 
-export const downloadContractPDF = (contract: ContractModel) => {
+export const downloadContractPDF = (contract: IContract) => {
   const doc = new jsPDF("p", "mm", "a4", true);
 
   doc.addFileToVFS("Times-New-Roman.ttf", timesnewromanBase64);
+  doc.addFileToVFS("Times-New-Roman-Italic.ttf", timesnewromanitalicBase64);
+  doc.addFont("Times-New-Roman-Italic.ttf", "Times New Roman", "italic");
+  doc.setFont("Times New Roman", "italic");
   doc.addFont("Times-New-Roman.ttf", "Times New Roman", "normal");
   doc.setFont("Times New Roman", "normal");
 
@@ -54,6 +58,9 @@ export const downloadContractPDF = (contract: ContractModel) => {
   doc.setFont("Times New Roman", "italic");
   doc.text(`${contract.innkeeper.name}`, 90, 80);
   doc.setFont("Times New Roman", "normal");
+  doc.text("Đia chỉ: ", 40, 90);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.address}`, 60, 90);
 
   // Bên thuê
   doc.setFontSize(14);
@@ -67,10 +74,17 @@ export const downloadContractPDF = (contract: ContractModel) => {
   doc.setFont("Times New Roman", "italic");
   doc.text(`${contract.tenant.idCard}`, 60, 150);
   doc.setFont("Times New Roman", "normal");
-  doc.text("Điện thoại: ", 30, 170);
+  doc.text("Điện thoại: ", 30, 160);
   doc.setFont("Times New Roman", "italic");
-  doc.text(`${contract.tenant.phone}`, 60, 170);
+  doc.text(`${contract.tenant.phone}`, 60, 160);
   doc.setFont("Times New Roman", "normal");
+  doc.text("Email: ", 30, 170);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.tenant.email}`, 50, 170);
+  doc.setFont("Times New Roman", "normal");
+  doc.text("Địa chỉ: ", 30, 180);
+  doc.setFont("Times New Roman", "italic");
+  doc.text(`${contract.tenant.address}`, 50, 180);
 
   // Điều khoản hợp đồng
   doc.setFontSize(12);
@@ -97,22 +111,22 @@ export const downloadContractPDF = (contract: ContractModel) => {
   doc.setFont("Times New Roman", "normal");
 
   doc.setFontSize(14);
-  doc.text("Điều 2: Thời hạn hợp đồng:", 20, 260);
+  doc.text("Điều 2: Thời hạn hợp đồng:", 20, 240);
   doc.setFontSize(12);
   addWrappedText(
     doc,
     `- Bên A đồng ý cho Bên B thuê với thời gian bắt đầu từ ngày `,
     30,
-    270,
+    250,
     170,
     6
   );
   doc.setFont("Times New Roman", "italic");
-  doc.text(`${moment(contract.startDate).format("DD/MM/YYYY")}`, 135, 270);
+  doc.text(`${moment(contract.startDate).format("DD/MM/YYYY")}`, 135, 250);
   doc.setFont("Times New Roman", "normal");
-  addWrappedText(doc, ` đến ngày `, 30, 276, 170, 6);
+  addWrappedText(doc, ` đến ngày `, 30, 255, 170, 6);
   doc.setFont("Times New Roman", "italic");
-  doc.text(`${moment(contract.endDate).format("DD/MM/YYYY")}`, 50, 276);
+  doc.text(`${moment(contract.endDate).format("DD/MM/YYYY")}`, 50, 255);
   doc.setFont("Times New Roman", "normal");
   doc.addPage();
   addWrappedText(
@@ -199,6 +213,14 @@ export const downloadContractPDF = (contract: ContractModel) => {
     170,
     6
   );
+  addWrappedText(
+    doc,
+    "- Cùng phối hợp đảm bảo an ninh trật tự, công tác an toàn phòng chống cháy nổ, thiên tai, dịch bệnh theo quy định của pháp luật và địa phương.",
+    30,
+    175,
+    170,
+    6
+  );
 
   doc.setFontSize(14);
   doc.text("Điều 5: Trách nhiệm của bên B", 20, 190);
@@ -246,6 +268,14 @@ export const downloadContractPDF = (contract: ContractModel) => {
     "6.2 Chấm dứt hợp đồng do cố tình vi phạm điều khoản chấm dứt hợp đồng:",
     30,
     45
+  );
+  addWrappedText(
+    doc,
+    "- Nếu Bên B không thực hiện được trách nhiệm thanh toán tiền thuê nhà, bên A có quyền đòi lại căn nhà cho thuê, và phạt bên B số tiền tương ứng.",
+    30,
+    55,
+    170,
+    6
   );
   addWrappedText(
     doc,

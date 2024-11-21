@@ -1,26 +1,21 @@
 import React from "react";
-import AccountModel from "../../../models/AccountModel";
-import { DeleteModal } from "../../../components";
-import { Button, Pagination, Spin } from "antd";
-
-import NotItem from "../../../components/NotItem";
+import { IAccount } from "../../../interfaces";
+import { DeleteModal, NotItem } from "../../../components";
+import { Button, Pagination, Spin, Tag } from "antd";
 import { getGenderColor, getRoleColor } from "../../../utils/getMethodColor";
-
-const baseURL = import.meta.env.VITE_BACKEND_URL;
-
+import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {
-  accounts: AccountModel[];
+  accounts: IAccount[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteAccount: (record: AccountModel) => Promise<void>;
+  onDeleteAccount: (record: IAccount) => Promise<void>;
   setOpenEditAccount: (value: boolean) => void;
   setOpenDetailAccount: (value: boolean) => void;
-  setRecord: (value: AccountModel) => void;
+  setRecord: (value: IAccount) => void;
 }
-
 const AccountCard: React.FC<Props> = ({
   accounts,
   isLoading,
@@ -33,20 +28,43 @@ const AccountCard: React.FC<Props> = ({
   setOpenEditAccount,
   setRecord,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
+
   return (
     <Spin spinning={isLoading}>
       {accounts.length > 0 ? (
         <div className="m-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {accounts.map((account) => (
               <div
                 key={account._id}
-                className="bg-white shadow-lg rounded-xl p-6 border-t-4 hover:shadow-xl transform transition-all hover:scale-105 flex flex-col items-center"
+                className={`shadow-lg rounded-xl p-6 border-t-4 hover:shadow-xl transform transition-all hover:scale-105 flex flex-col items-center
+        ${bgColor} ${textColor}
+      `}
               >
+                <div
+                  className={`absolute right-0 top-0 p-2 font-bold
+          ${
+            account?.isActive
+              ? "border-green-300 text-green-600"
+              : "border-red-300 text-red-700"
+          }
+        `}
+                >
+                  <i
+                    className={`fa-solid fa-${
+                      account?.isActive ? "smile-wink" : "sad-cry"
+                    } mr-2`}
+                  ></i>
+                  {account?.isActive ? "ACTIVE" : "INACTIVE"}
+                </div>
                 <div className="flex-1 flex flex-col items-center justify-center">
-                  {account.images && account.images[0].imagePath ? (
+                  {account.avatar ? (
                     <img
-                      src={`${baseURL}/images/image/${account?.images[0]?.imagePath}`}
+                      src={`${account?.avatar}`}
                       alt="avatar"
                       className="w-[120px] h-[120px] rounded-full border-2 border-gray-300"
                     />
@@ -59,15 +77,15 @@ const AccountCard: React.FC<Props> = ({
                 </div>
                 <div className="text-sm w-full space-y-1">
                   <p className="font-medium">
-                    <i className="fa-solid fa-envelope mr-2 text-gray-600"></i>
+                    <i className="fa-solid fa-envelope mr-2 "></i>
                     {account.email}
                   </p>
                   <p className="font-medium">
-                    <i className="fa-solid fa-phone mr-2 text-gray-600"></i>
+                    <i className="fa-solid fa-phone mr-2 "></i>
                     {account.phone}
                   </p>
                   <p className="font-medium">
-                    <i className="fa-solid fa-id-card mr-2 text-gray-600"></i>
+                    <i className="fa-solid fa-id-card mr-2 "></i>
                     {account.idCard}
                   </p>
                   <p
@@ -77,7 +95,7 @@ const AccountCard: React.FC<Props> = ({
                     {account.gender}
                   </p>
                   <p className="font-medium">
-                    <i className="fa-solid fa-calendar-days mr-2 text-gray-600"></i>
+                    <i className="fa-solid fa-calendar-days mr-2 "></i>
                     {new Date(account.birthday).toLocaleDateString()}
                   </p>
                   <p
@@ -91,26 +109,38 @@ const AccountCard: React.FC<Props> = ({
                   <div></div>
                   <div className="flex gap-3">
                     <Button
-                      type="primary"
                       onClick={() => {
                         setOpenDetailAccount(true);
                         setRecord(account);
                       }}
-                      icon={<i className="fa-solid fa-eye text-xl" />}
-                      className="bg-blue-500 text-white hover:bg-blue-600 transition"
-                    />
+                      icon={
+                        <i
+                          className="fa-solid fa-eye text-xl
+              text-blue-500
+              "
+                        />
+                      }
+                    >
+                      Detail
+                    </Button>
                     {account.email === "admin@gmail.com" ? null : (
                       <div className="flex gap-2">
                         <Button
                           icon={
-                            <i className="fa-solid fa-pen-to-square text-xl" />
+                            <i
+                              className="fa-solid fa-pen-to-square text-xl
+                  text-green-600
+                  "
+                            />
                           }
                           onClick={() => {
                             setOpenEditAccount(true);
                             setRecord(account);
                           }}
-                          className="bg-green-500 text-white hover:bg-green-600 transition"
-                        />
+                          className="transition"
+                        >
+                          Edit
+                        </Button>
                         <DeleteModal
                           onConfirm={(record) => onDeleteAccount(record)}
                           record={account}
@@ -122,6 +152,7 @@ const AccountCard: React.FC<Props> = ({
               </div>
             ))}
           </div>
+
           <div className="mt-8 flex justify-end">
             <Pagination
               current={current}
@@ -129,6 +160,7 @@ const AccountCard: React.FC<Props> = ({
               total={total}
               onChange={onChange}
               showSizeChanger
+              pageSizeOptions={["4", "8", "16", "32", "64", "128", "999999"]}
             />
           </div>
         </div>

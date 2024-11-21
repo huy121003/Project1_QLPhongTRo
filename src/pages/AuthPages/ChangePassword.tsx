@@ -1,10 +1,17 @@
-import { Button, Divider, Form, Input, message, Modal } from "antd";
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  message,
+  Modal,
+  notification,
+} from "antd";
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { changePasswordApi } from "../../api/accountApi";
 import { useNavigate } from "react-router-dom";
-import { apiLogout } from "../../api/authtApi";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
+import { accountApi, authtApi } from "../../api";
 
 interface Props {
   open: boolean;
@@ -19,36 +26,41 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
   const enterPassword = async () => {
     setLoading(true); // Start loading
 
-    try {
-      const values = await form.validateFields();
-      if (values.newPassword !== values.confirmPassword) {
-        message.error("new password is not same confirm password.");
-        return;
-      }
-      const res = await changePasswordApi(
-        user._id,
+    const values = await form.validateFields();
+    if (values.newPassword !== values.confirmPassword) {
+      notification.error({
+        message: "Error",
+        description: "new password is not same confirm password.",
+      });
 
-        values.confirmPassword,
-        values.password
-      );
-      if (res.statusCode === 201) {
-        message.success("Password changed successfully.");
-
-        const respone = await apiLogout();
-        if (respone && respone.data) {
-          dispatch(logoutAction());
-          setOpen(false);
-          navigate("/");
-          message.success(
-            "You have successfully changed your password. Please login again."
-          );
-        }
-      }
-    } catch (error) {
-      message.error("Please enter a valid code.");
-    } finally {
-      setLoading(false); // End loading
+      return;
     }
+    const res = await accountApi.changePasswordApi(
+      user._id,
+
+      values.confirmPassword,
+      values.password
+    );
+    if (res.statusCode === 201) {
+      message.success("Password changed successfully.");
+
+      const respone = await authtApi.apiLogout();
+      if (respone && respone.data) {
+        dispatch(logoutAction());
+        setOpen(false);
+        navigate("/");
+        message.success(
+          "You have successfully changed your password. Please login again."
+        );
+      } else {
+        notification.error({
+          message: "Error",
+          description: respone.message,
+        });
+      }
+    }
+
+    setLoading(false); // End loading
   };
 
   return (
@@ -73,7 +85,11 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
             name="password"
             rules={[{ required: true, message: "Please enter your password!" }]}
           >
-            <Input placeholder="Enter your password" size="large" />
+            <Input.Password
+              placeholder="Enter your password"
+              size="large"
+              type="password"
+            />
           </Form.Item>
           <Form.Item
             name="newPassword"
@@ -81,7 +97,10 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
               { required: true, message: "Please enter your new password!" },
             ]}
           >
-            <Input placeholder="Enter your new password" size="large" />
+            <Input.Password
+              placeholder="Enter your new password"
+              size="large"
+            />
           </Form.Item>
           <Form.Item
             name="confirmPassword"
@@ -92,7 +111,10 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
               },
             ]}
           >
-            <Input placeholder="Enter your confirm password" size="large" />
+            <Input.Password
+              placeholder="Enter your confirm password"
+              size="large"
+            />
           </Form.Item>
           <Form.Item>
             <Button

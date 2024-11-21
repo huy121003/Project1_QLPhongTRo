@@ -1,169 +1,205 @@
-import React, { useState } from "react";
-import Breadcrumb from "../../../components/Breadcrumb";
+import { useEffect, useState } from "react";
 import { SlPaperPlane } from "react-icons/sl";
-import { QRCode } from "antd";
-import PaymentSuccessful from "./PaymentSuccessful";
-import PaymentFailed from "./PaymentFailed";
+import InformationPersonal from "./InformationPersonal";
+import PaymentInformantion from "./PaymentInformantion";
+import { IoClose } from "react-icons/io5";
+import Payment from "./Payment";
+import { invoiceApi, payOSApi } from "../../../api";
+import { message, notification } from "antd";
+import { InvoiceStatus } from "../../../enums";
+import { useNavigate } from "react-router-dom";
 
 export default function InvoiceUserPage() {
-    const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBank, setSelectedBank] = useState("");
+  const [idInvoice, setIdInvoice] = useState<Array<string>>(
+    // Retrieve invoice IDs from localStorage and ensure it's a valid array
+    () => {
+      const storedInvoice = localStorage.getItem("idInvoice");
+      try {
+        const parsedInvoices = JSON.parse(storedInvoice || "[]");
+        return Array.isArray(parsedInvoices) ? parsedInvoices : [];
+      } catch (e) {
+        console.error("Invalid invoice data in localStorage", e);
+        return [];
+      }
+    }
+  );
+  const [res, setRes] = useState<string>("");
 
-    const openModal = () => setShowModal(true);
-    const closeModal = () => setShowModal(false);
+  const navigate = useNavigate();
 
-    // const [transactionDetails, setTransactionDetails] = useState({
-    //     senderName: "Hoàng Thị Chúc",
-    //     senderBank: "Vietinbank",
-    //     receiverName: "Nguyễn Thị Thương",
-    //     receiverBank: "Sacombank",
-    //     amount: "1.999.999 VND",
-    //     transferContent: "Phòng 203 đóng trọ",
-    // });
-    // const [showSuccess, setShowSuccess] = useState(false);
-    // const [showFailed, setShowFailed] = useState(true);
-    return (
-        <div className="bg-[#e0f5e4] h-full flex flex-col flex-shrink-0">
-            <Breadcrumb />
-            <div className="bg-neutral-100 flex-grow m-5 rounded-2xl p-6 shadow-lg text-[#2b6534] relative">
-                {/* <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg"> */}
-                {/* Thông tin cá nhân */}
-                <div className="border-b pb-4 mb-4">
-                    <h2 className="text-2xl font-semibold ">
-                        PERSONAL INFORMATION
-                    </h2>
+  // Effect to update localStorage whenever idInvoice changes
+  useEffect(() => {
+    if (idInvoice.length > 0) {
+      console.log("Updating localStorage:", idInvoice);
+      localStorage.setItem(
+        "idInvoice",
+        JSON.stringify(
+          idInvoice.filter((item, index) => idInvoice.indexOf(item) === index) // Ensure uniqueness
+        )
+      );
+    } else {
+      localStorage.removeItem("idInvoice"); // Clear localStorage if no invoices
+    }
+  }, [idInvoice]);
 
-                    <div className="grid grid-cols-2 gap-4 mt-4 text-xl">
-                        <div>
-                            <p className="font-medium py-2">
-                                Full Name:{" "}
-                                <span className="font-semibold">
-                                    Lưu Huy Hiếu
-                                </span>
-                            </p>
-                            <p className="font-medium py-2">
-                                Address:{" "}
-                                <span className="font-semibold">
-                                    Cầu giấy - Hà Nội
-                                </span>
-                            </p>
-                            <p className="font-medium py-2">
-                                Phone:{" "}
-                                <span className="font-semibold">
-                                    0343310165
-                                </span>
-                            </p>
-                        </div>
-                        <div>
-                            <p className="font-medium py-2">
-                                ID Card:{" "}
-                                <span className="font-semibold">240820829</span>
-                            </p>
-                            <p className="font-medium py-2">
-                                Date of Birth:{" "}
-                                <span className="font-semibold">24/2/2000</span>
-                            </p>
-                            <p className="font-medium py-2">
-                                Email:{" "}
-                                <span className="font-semibold">
-                                    xeoxeo1895@gmail.com
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                {/* Chức năng thanh toán */}
-                <div className="flex items-center justify-end space-x-4 mb-4 text-lg">
-                    <select className=" border-2 border-lime-600 rounded-md p-2">
-                        <option value="">QR Code</option>
-                        {/* Thêm các tùy chọn khác nếu cần */}
-                    </select>
-                    <button
-                        onClick={openModal}
-                        className="bg-amber-300 text-[#2b6534]  px-4 py-2 rounded-md flex items-center hover:bg-amber-500 bg:text-[#1f5e28]"
-                    >
-                        <SlPaperPlane size={24} />
-                        <span className="pl-2">Make Payment</span>
-                    </button>
-                </div>
-                {/* Thông tin thanh toán */}
-                <h3 className="text-xl font-semibold text-[#2b6534] mb-2">
-                    Payment Information
-                </h3>
-                <table className="w-full border text-left border-collapse ">
-                    <thead>
-                        <tr className="border">
-                            <th className="py-2 px-4 border-r">No.</th>
-                            <th className="py-2 px-4 border-r">Description</th>
-                            <th className="py-2 px-4 border-r">Amount</th>
-                            <th className="py-2 px-4 border-r">Note</th>
-                            <th className="py-2 px-4">Select</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {/* Ví dụ một hàng trong bảng */}
-                        <tr>
-                            <td className="py-2 px-4 border">1</td>
-                            <td className="py-2 px-4 border">Tiền nhà</td>
-                            <td className="py-2 px-4 border">3.000.000 VND</td>
-                            <td className="py-2 px-4 border">-</td>
-                            <td className="py-2 px-4">
-                                <input
-                                    type="checkbox"
-                                    className="form-checkbox h-5 w-5"
-                                />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="py-2 px-4 border">2</td>
-                            <td className="py-2 px-4 border">Tiền nước</td>
-                            <td className="py-2 px-4 border">150.000 VND</td>
-                            <td className="py-2 px-4 border">-</td>
-                            <td className="py-2 px-4">
-                                <input
-                                    type="checkbox"
-                                    className="form-checkbox h-5 w-5"
-                                />
-                            </td>
-                        </tr>
-                        {/* Thêm các hàng khác tại đây */}
-                    </tbody>
-                </table>
-                {/* Tổng tiền */}
-                <div className="text-red-600 text-right mt-4 font-semibold">
-                    Total Selected Amount: 0
-                </div>
-                {/* </div> */}
-                {/* Modal */}
-                {showModal && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                        <div className="bg-white rounded-lg p-6 max-w-sm w-full">
-                            <h3 className="text-xl font-semibold mb-4 text-center">
-                                Scan QR Code to Pay
-                            </h3>
-                            <div className="flex justify-center mb-4">
-                                <QRCode
-                                    value="YourPaymentLinkHere"
-                                    size={200}
-                                />
-                            </div>
-                            <button
-                                onClick={closeModal}
-                                className="bg-red-500 text-white w-full py-2 rounded-lg mt-4 hover:bg-red-600"
-                            >
-                                Close
-                            </button>
-                        </div>
-                    </div>
-                )}
-                {/* Hiển thị kết quả thanh toán */}
-                {/* {showSuccess && (
-                    <PaymentSuccessful
-                        transactionDetails={transactionDetails}
-                    />
-                )} */}
-                {/* {showFailed && <PaymentFailed />}{" "} */}
-                {/* Hiển thị trang thanh toán thất bại */}
-            </div>
+  const closeModal = () => setShowModal(false);
+
+  // Open modal with payment URL creation logic
+  const openModal = async () => {
+    if (!selectedBank) {
+      setShowModal(true); // No bank selected
+    } else if (idInvoice.length === 0) {
+      setShowModal(true); // No invoices selected
+    } else {
+      // Bank and invoices are valid
+      try {
+        const response = await payOSApi.createLinkPayment(idInvoice);
+        if (response) {
+          setRes(response.data.checkoutUrl);
+          setShowModal(true);
+        } else {
+          notification.error({
+            message: "Error",
+            description: "Something went wrong while creating payment link.",
+          });
+        }
+      } catch (error) {
+        notification.error({
+          message: "Error",
+          description: "Failed to create payment link.",
+        });
+      }
+    }
+  };
+
+  // Handle URL query params to process payment response
+  useEffect(() => {
+    if (window.location.pathname === "/user/invoiceUser") {
+      const url = new URL(window.location.href);
+      const cancel = url.searchParams.get("cancel");
+      const status = url.searchParams.get("status");
+      const orderCode = url.searchParams.get("orderCode");
+
+      if (cancel === "true") {
+        notification.success({
+          message: "Payment Cancel",
+          description: "Your payment has been canceled.",
+        });
+        return;
+      }
+
+      if (status === InvoiceStatus.PAID && orderCode) {
+        const update = async () => {
+          try {
+            const res = await invoiceApi.postInvoiceStatusPaymentApi(
+              orderCode,
+              idInvoice
+            );
+            if (res.status === 201) {
+              message.success("Payment success");
+              setIdInvoice([]); // Reset invoice IDs
+
+              navigate("/user/invoiceUser"); // Reload the page or navigate to the same page
+            }
+          } catch (error) {
+            console.error("Error updating invoice status:", error);
+            message.error("Failed to update invoice status.");
+          }
+        };
+        update();
+      }
+    }
+  }, [window.location.href, idInvoice]);
+
+  // Handle bank change selection
+  const handleBankChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedBank(event.target.value);
+  };
+
+  return (
+    <div className="bg-[#e0f5e4] h-full flex flex-col">
+      <div
+        aria-label="breadcrumb"
+        className="text-xl text-[#2b6534] bg-neutral-100 px-7 py-4 shadow-lg"
+      >
+        <ol className="flex space-x-2">
+          <li>
+            <a href="/tai-chinh" className="hover:underline">
+              Finance
+            </a>
+          </li>
+          <li>
+            <span className="text-[#2b6534]">›</span>
+          </li>
+          <li className="font-semibold">Pay online</li>
+        </ol>
+      </div>
+
+      <div className="bg-white mb-5 mx-5 mt-5 rounded-2xl p-6 shadow-lg text-[#2b6534]">
+        {/* Personal Information */}
+        <InformationPersonal />
+
+        {/* Payment Section */}
+        <div className="flex items-center justify-end space-x-4 text-lg">
+          <select
+            className="border-2 border-lime-600 rounded-md p-2"
+            defaultValue="SelectBank"
+            value={selectedBank}
+            onChange={handleBankChange}
+          >
+            <option value="SelectBank">Chọn tài khoản ngân hàng</option>
+            <option value="QRCode">QR Code</option>
+          </select>
+          <button
+            onClick={openModal}
+            className="bg-amber-300 text-[#2b6534] px-4 py-2 rounded-md flex items-center hover:bg-amber-500"
+          >
+            <SlPaperPlane size={24} />
+            <span className="pl-2">Make Payment</span>
+          </button>
         </div>
-    );
+      </div>
+
+      {/* Payment Information */}
+      <PaymentInformantion setIdInvoices={setIdInvoice} idInvoice={idInvoice} />
+
+      {/* Modal for displaying payment link or errors */}
+      {showModal && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+          onClick={closeModal}
+        >
+          <div
+            className="bg-white rounded-lg p-3 max-w-sm w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-xl font-semibold mb-4 text-center border-b pb-2 text-[#2b6534]">
+              Thông báo
+            </h3>
+            {!selectedBank && (
+              <p className="text-[#2b6534] text-center mb-4">
+                Vui lòng chọn ngân hàng
+              </p>
+            )}
+            {idInvoice.length === 0 && (
+              <p className="text-[#2b6534] text-center mb-4">
+                Vui lòng chọn khoản thanh toán
+              </p>
+            )}
+            {selectedBank && idInvoice.length > 0 && (
+              <Payment idInvoice={idInvoice} res={res} />
+            )}
+            <button
+              onClick={closeModal}
+              className="text-[#2b6534] rounded-lg mt-4 font-semibold flex items-center justify-self-end"
+            >
+              <IoClose /> Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

@@ -1,7 +1,18 @@
-import { Button, Divider, Form, Input, message, Modal, Steps } from "antd";
+import {
+  Button,
+  Divider,
+  Form,
+  Input,
+  message,
+  Modal,
+  notification,
+  Steps,
+} from "antd";
 import React, { useState } from "react";
-import { apiActiveAccount } from "../../api/authtApi";
+
 import { useNavigate } from "react-router-dom";
+import { authtApi } from "../../api";
+import { useTheme } from "../../contexts/ThemeContext";
 
 interface Props {
   open: boolean;
@@ -9,6 +20,10 @@ interface Props {
   id: string;
 }
 const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const navigate = useNavigate();
   const [formCode] = Form.useForm();
 
@@ -17,27 +32,31 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
 
   const activateAccount = async () => {
     setLoading(true); // Start loading
-    try {
-      const values = await formCode.validateFields();
-      const code = values.code;
 
-      const res = await apiActiveAccount(id, code);
-      if (res.statusCode === 201) {
-        message.success("Account activated successfully.");
-        setCurrent(current + 1);
-      } else {
-        message.error(res.message);
-      }
-    } catch (error) {
-      message.error("Please enter a valid code.");
-    } finally {
-      setLoading(false); // End loading
+    const values = await formCode.validateFields();
+    const code = values.code;
+
+    const res = await authtApi.apiActiveAccount(id, code);
+    if (res.statusCode === 201) {
+      message.success("Account activated successfully.");
+      setCurrent(current + 1);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
+
+    setLoading(false); // End loading
   };
 
   const EnterCode = () => (
-    <div className="mt-12">
-      <p className="text-gray-500 mb-4">
+    <div
+      className={`mt-12
+      ${bgColor} ${textColor}
+    `}
+    >
+      <p className=" mb-4">
         A code has been sent to your email address. Please enter the code to
         activate your account.
       </p>
@@ -64,9 +83,7 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
   const Done = () => (
     <div className="mt-12 flex flex-col items-center">
       <i className="fa-solid fa-circle-check text-[100px] text-blue-500 mb-4"></i>
-      <p className="text-gray-500">
-        Your account has been activated successfully.
-      </p>
+      <p className="">Your account has been activated successfully.</p>
       <Button
         size="large"
         type="primary"
@@ -75,6 +92,7 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
           setCurrent(0);
           navigate("/login");
         }}
+        className="mt-4"
       >
         Go back to login
       </Button>
@@ -83,12 +101,28 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
 
   const steps = [
     {
-      title: "Enter Code",
+      title: (
+        <span
+          className={` 
+          ${bgColor} ${textColor}
+        `}
+        >
+          Enter Code
+        </span>
+      ),
       content: <EnterCode />,
       icon: <i className="fa-solid fa-lock" />,
     },
     {
-      title: "Done",
+      title: (
+        <span
+          className={` 
+          ${bgColor} ${textColor}
+        `}
+        >
+          Done
+        </span>
+      ),
       content: <Done />,
       icon: <i className="fa-solid fa-check" />,
     },
@@ -96,6 +130,7 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
 
   return (
     <Modal
+      closable={false}
       open={open}
       centered
       onCancel={() => {
@@ -103,25 +138,28 @@ const ActiveAccountPage: React.FC<Props> = ({ open, setOpen, id }) => {
         setCurrent(0);
       }}
       footer={null}
-      title={
-        <h1 className="text-3xl font-bold text-center">Activate Account</h1>
-      }
     >
-      <h2 className="text-4xl font-bold text-center text-white mb-8">
-        Activate Account
-      </h2>
-      <Divider />
-      <Steps current={current}>
-        {steps.map((item, index) => (
-          <Steps.Step
-            key={index}
-            title={item.title}
-            icon={item.icon}
-            className="flex"
-          />
-        ))}
-      </Steps>
-      <div className="mt-8">{steps[current].content}</div>
+      <div
+        className={`p-4
+      ${bgColor} ${textColor}
+    `}
+      >
+        <h2 className="text-4xl font-bold text-center  mb-8">
+          Activate Account
+        </h2>
+        <Divider />
+        <Steps current={current}>
+          {steps.map((item, index) => (
+            <Steps.Step
+              key={index}
+              title={item.title}
+              icon={item.icon}
+              className="flex"
+            />
+          ))}
+        </Steps>
+        <div className="mt-8">{steps[current].content}</div>
+      </div>
     </Modal>
   );
 };

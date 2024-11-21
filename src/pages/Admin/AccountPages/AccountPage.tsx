@@ -1,22 +1,19 @@
-import { message } from "antd";
+import { message, notification } from "antd";
 import { useEffect, useState } from "react";
 import { AddButton } from "../../../components"; // Change to CustomModal
-
-import { deleteAcountApi, fecthAccountApi } from "../../../api/accountApi";
+import { accountApi, roleApi } from "../../../api/";
 import AddAccountModal from "./AddAccountModal";
-import AccountModel from "../../../models/AccountModel";
+import { IAccount } from "../../../interfaces";
 import EditAccountModal from "./EditAccountModal";
 import DetailAccount from "./DetailAccount";
 import AccountFilters from "./AccountFilter";
-
 import ExportToExcel from "./ExportToExcel";
-import { fecthRoleApi } from "../../../api/roleApi";
-
 import AccountCard from "./AccountCard";
+import { useTheme } from "../../../contexts/ThemeContext";
 function AccountPage() {
-  const [accounts, setAccounts] = useState<AccountModel[]>([]);
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [roles, setRoles] = useState<any[]>([]);
   const [openAddAccount, setOpenAddAccount] = useState(false);
@@ -25,6 +22,10 @@ function AccountPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null); // New state for the record to delete
   const [sorted, setSorted] = useState<string>("");
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [searchParams, setSearchParams] = useState({
     name: "",
     email: "",
@@ -33,7 +34,7 @@ function AccountPage() {
   });
 
   const getRole = async () => {
-    const res = await fecthRoleApi("current=1&pageSize=99900");
+    const res = await roleApi.fecthRoleApi("current=1&pageSize=99900");
     if (res.data.result) {
       setRoles(res.data.result);
     }
@@ -50,7 +51,7 @@ function AccountPage() {
 
     Object.entries(searchParams).forEach(([key, value]) => {
       if (value) {
-        if (key === "role") {
+        if (key === "role" || key === "isActive") {
           queryParams[key] = value;
         } else queryParams[key] = `/${value}/i`;
       }
@@ -59,20 +60,23 @@ function AccountPage() {
     const query = new URLSearchParams(queryParams).toString();
     setIsLoading(true);
 
-    const res = await fecthAccountApi(query);
+    const res = await accountApi.fecthAccountApi(query);
 
     setIsLoading(false);
     if (res.data.result) {
-      const formattedAccounts = res.data.result.map(
-        (account: AccountModel) => ({
-          ...account,
-          roleName: account.role?.name || "Unknown Role",
-        })
-      );
+      const formattedAccounts = res.data.result.map((account: IAccount) => ({
+        ...account,
+        roleName: account.role?.name || "Unknown Role",
+      }));
 
       setAccounts(formattedAccounts);
       setTotal(res.data.meta.total);
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
   useEffect(() => {
     getAccount();
@@ -102,16 +106,22 @@ function AccountPage() {
   };
 
   const onDeleteAccount = async (record: any) => {
-    const res = await deleteAcountApi(record._id);
+    const res = await accountApi.deleteAcountApi(record._id);
     if (res.statusCode === 200) {
       message.success("Account deleted");
       getAccount();
       setCurrent(1);
-    } else message.error(res.message);
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
 
   return (
     <>
+      <h1 className="font-bold text-2xl m-2">Account</h1>
       <div className="justify-end  w-full rounded-[20px] ">
         <AccountFilters
           searchParams={searchParams}
@@ -120,7 +130,11 @@ function AccountPage() {
           sorted={sorted}
           roles={roles}
         />
-        <div className="bg-white p-2 mx-2 rounded-lg mb-2 shadow-lg border border-gray-200 justify-between items-center flex">
+        <div
+          className={` p-2 mx-2 rounded-lg mb-2 shadow-lg  justify-between items-center flex
+        ${bgColor} ${textColor}
+          `}
+        >
           <div></div>
           <div className="flex justify-center items-center">
             <ExportToExcel accounts={accounts} />
@@ -152,6 +166,7 @@ function AccountPage() {
         openEditAccount={openEditAccount}
         setOpenEditAccount={setOpenEditAccount}
         record={record}
+        isChangeRole={false}
       />
       <DetailAccount
         openDetailAccount={openDetailAccount}

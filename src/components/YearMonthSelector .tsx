@@ -1,10 +1,12 @@
 import React from "react";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
 
 interface YearMonthSelectorProps {
-  selectedMonth: number;
-  year: number;
-  setYear: (year: number) => void;
-  setSelectedMonth: (month: number) => void;
+  selectedMonth: number | null;
+  year: number | null;
+  setYear: (year: number | null) => void;
+  setSelectedMonth: (month: number | null) => void;
 }
 
 const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
@@ -13,39 +15,36 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
   setYear,
   setSelectedMonth,
 }) => {
-  const handlePreviousYear = () => setYear(year - 1);
-  const handleNextYear = () => setYear(year + 1);
+  const handleDateChange = (date: dayjs.Dayjs | null) => {
+    if (date) {
+      const formattedDate = date.format("MM-YYYY");
+      const [month, year] = formattedDate.split("-");
+
+      setSelectedMonth(parseInt(month));
+      setYear(parseInt(year));
+    } else {
+      // Xử lý khi xóa giá trị
+      setSelectedMonth(null);
+      setYear(null);
+    }
+  };
 
   return (
-    <div className="flex items-center bg-gray-100 mt-2 mx-2 rounded-lg flex-1">
-      <button
-        onClick={handlePreviousYear}
-        className="text-blue-500 font-bold mr-4 hover:bg-blue-200 w-[50px] h-[50px] rounded-full border border-blue-500"
-      >
-        <i className="fas fa-chevron-left font-bold text-2xl"></i>
-      </button>
-      <div className="flex space-x-4 flex-1 justify-between">
-        {Array.from({ length: 12 }, (_, i) => (
-          <div
-            key={i}
-            className={`flex flex-col items-center px-2 py-2 rounded-lg cursor-pointer flex-1 ${
-              selectedMonth === i + 1
-                ? "bg-green-100 text-blue-500 border-2 border-blue-500"
-                : "bg-white text-gray-700"
-            } hover:bg-gray-200 transition duration-300`}
-            onClick={() => setSelectedMonth(i + 1)}
-          >
-            <span className="font-semibold text-xl">M.{i + 1}</span>
-            <span className="text-sm">{year}</span>
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={handleNextYear}
-        className="text-blue-400 font-bold ml-4 hover:bg-blue-200 w-[50px] h-[50px] rounded-full border border-blue-500"
-      >
-        <i className="fas fa-chevron-right font-bold text-2xl"></i>
-      </button>
+    <div className="py-4 m-2 rounded-lg">
+      <DatePicker
+        picker="month" // Chỉ cho phép chọn tháng và năm
+        format="MM-YYYY"
+        onChange={handleDateChange}
+        value={
+          selectedMonth && year && !isNaN(selectedMonth) && !isNaN(year)
+            ? dayjs(
+                `${String(selectedMonth).padStart(2, "0")}-${year}`,
+                "MM-YYYY"
+              )
+            : null
+        }
+        allowClear // Cho phép xóa giá trị
+      />
     </div>
   );
 };

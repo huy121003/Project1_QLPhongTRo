@@ -1,7 +1,6 @@
 import React from "react";
-import SearchFilters from "../../../components/SearchFilter";
-import { ServiceType } from "../../../models/ServiceModel";
-import SortOption from "../../../components/SortOption";
+import { SearchFilters, SortOption } from "../../../components";
+import { ServiceType } from "../../../enums";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;
@@ -15,7 +14,7 @@ const ServiceFilters: React.FC<Props> = ({
   sorted,
 }) => {
   return (
-    <div className="justify-end mx-2  flex-1">
+    <div className="flex-1 p-2 w-full flex justify-between gap-4">
       <SearchFilters
         searchParams={searchParams}
         onSearchChange={handleSearchChange}

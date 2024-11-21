@@ -1,20 +1,26 @@
 import { useState } from "react";
-import { ColumnSelector, DeleteModal } from "../../../components";
-import TableComponent from "../../../components/TableComponent";
+import {
+  ColumnSelector,
+  DeleteModal,
+  TableComponent,
+} from "../../../components";
+
 import { Button } from "antd";
-import { ServiceModel } from "../../../models/ServiceModel";
+
 import { getServiceTypeColor } from "../../../utils/getMethodColor";
+import { IService } from "../../../interfaces";
+import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {
-  services: ServiceModel[];
+  services: IService[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteService: (record: ServiceModel) => Promise<void>;
+  onDeleteService: (record: IService) => Promise<void>;
   setOpenEditService: (value: boolean) => void;
   setOpenDetailService: (value: boolean) => void;
-  setRecord: (record: ServiceModel) => void;
+  setRecord: (record: IService) => void;
 }
 const ServiceTable: React.FC<Props> = ({
   services,
@@ -28,12 +34,16 @@ const ServiceTable: React.FC<Props> = ({
   setOpenDetailService,
   setRecord,
 }) => {
+  const { theme } = useTheme();
+  const isLightTheme = theme === "light";
+  const textColor = isLightTheme ? "text-black" : "text-white";
+  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const columns = [
     {
       title: "Id",
       dataIndex: "_id",
       key: "_id",
-      render: (_id: string, record: ServiceModel) => (
+      render: (_id: string, record: IService) => (
         <p
           className="text-blue-600 hover:text-blue-300"
           onClick={() => {
@@ -66,7 +76,7 @@ const ServiceTable: React.FC<Props> = ({
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (_: any, record: ServiceModel) => (
+      render: (_: any, record: IService) => (
         <div className="gap-2 flex">
           <Button
             icon={
@@ -75,7 +85,9 @@ const ServiceTable: React.FC<Props> = ({
             onClick={() => {
               setOpenEditService(true), setRecord(record);
             }}
-          />
+          >
+            Edit
+          </Button>
 
           <DeleteModal
             onConfirm={(record) => onDeleteService(record)} // Pass the delete function
@@ -83,6 +95,7 @@ const ServiceTable: React.FC<Props> = ({
           />
         </div>
       ),
+      with: 150,
     },
   ];
 
@@ -90,7 +103,7 @@ const ServiceTable: React.FC<Props> = ({
     columns.map((column) => column.dataIndex)
   );
   return (
-    <div className="bg-white p-2 rounded-lg m-2">
+    <div className={` p-2 rounded-lg m-2 `}>
       <div>
         <ColumnSelector
           columns={columns}

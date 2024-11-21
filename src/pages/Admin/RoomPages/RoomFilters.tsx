@@ -1,9 +1,6 @@
 import React from "react";
-
-import SearchFilters from "../../../components/SearchFilter";
-import { RoomStatus, RoomType } from "../../../models/RoomModel";
-import SortOption from "../../../components/SortOption";
-
+import { SearchFilters, SortOption } from "../../../components";
+import { RoomStatus, RoomType } from "../../../enums";
 interface Props {
   searchParams: any;
   handleSearchChange: (field: string, value: string) => void;
@@ -17,7 +14,7 @@ const RoomFilters: React.FC<Props> = ({
   sorted,
 }) => {
   return (
-    <div className="justify-end p-2 w-full">
+    <div className="flex-1 p-2 w-full flex justify-between gap-4">
       <SearchFilters
         searchParams={searchParams}
         onSearchChange={handleSearchChange}
