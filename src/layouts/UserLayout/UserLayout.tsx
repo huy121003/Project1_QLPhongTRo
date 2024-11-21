@@ -141,7 +141,7 @@ function UserLayout() {
           </Dropdown>
         </div>
         <div
-          className="flex-1 flex-row overflow-y-scroll rounded-tl-lg rounded-bl-lg "
+          className="flex-1 flex-row rounded-tl-lg rounded-bl-lg overflow-y-auto"
           style={{
             maxHeight: "calc(100vh - 4rem)",
             maxWidth: "100vw",

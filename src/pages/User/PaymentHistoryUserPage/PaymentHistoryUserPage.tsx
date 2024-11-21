@@ -99,9 +99,9 @@ export default function PaymentHistoryUserPage() {
     setSelectedInvoice(null);
   };
   return (
-    <div className="bg-[#e0f5e4] text-[#2b6534] h-screen flex flex-col overflow-y-auto custom-scrollbar overflow-x-scroll sm:overflow-x-hidden">
+    <div className="bg-[#e0f5e4] text-[#2b6534] h-full flex flex-col overflow-x-scroll sm:overflow-x-hidden">
       
-      <div className="p-6 m-0 sm:m-6 bg-white rounded-lg shadow-md h-full">
+      <div className="p-6 m-0 sm:m-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-4">Payment History</h2>
 
         {/* Danh sách các phòng */}
