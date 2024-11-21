@@ -41,7 +41,7 @@ const RoomCard: React.FC<Props> = ({
     <Spin spinning={isLoading}>
       {rooms.length > 0 ? (
         <div className="m-4 flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {rooms.map((room) => (
               <div
                 key={room._id}
