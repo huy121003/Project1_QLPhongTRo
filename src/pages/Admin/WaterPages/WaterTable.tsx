@@ -115,6 +115,7 @@ const WaterTable: React.FC<Props> = ({
       key: "firstIndex",
       render: (_: any, record: IContract) => (
         <Input
+        disabled
           type="number"
           value={numberIndex[record._id]?.firstIndex}
           onChange={(e) =>

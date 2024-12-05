@@ -82,7 +82,7 @@ const AddAccountModal: React.FC<Props> = ({
     let backIdFileName = imageBackId;
     let temporaryResidenceFileName = imageTemporaryResidence;
     // Upload images if they exist
-    if (!checkEmail(values.email)) {
+    if (!checkEmail(values.Email)) {
       notification.error({
         message: "Error",
         description: "Email is not correct",
@@ -91,17 +91,17 @@ const AddAccountModal: React.FC<Props> = ({
       return;
     }
 
-    if (!checkPassword(values.password)) {
+    if (!checkPassword(values.Password)) {
       notification.error({
         message: "Error",
         description:
-          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character",
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character.",
       });
 
-      return;
+      return; // Stop further execution if password is invalid
     }
 
-    if (!checkIdCard(values.idCard)) {
+    if (!checkIdCard(values.IdCard)) {
       notification.error({
         message: "Error",
         description: "IdCard is not correct",
@@ -109,7 +109,7 @@ const AddAccountModal: React.FC<Props> = ({
 
       return;
     }
-    if (checkPhoneNumberVN(values.phone)) {
+    if (!checkPhoneNumberVN(values.Phone)) {
       notification.error({
         message: "Error",
         description: "Phone number is not correct",
