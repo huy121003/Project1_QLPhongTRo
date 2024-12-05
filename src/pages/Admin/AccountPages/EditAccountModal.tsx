@@ -16,6 +16,7 @@ import { Gender } from "../../../enums";
 import {
   checkEmail,
   checkIdCard,
+  checkPassword,
   checkPhoneNumberVN,
 } from "../../../utils/regex";
 import dayjs from "dayjs";
@@ -120,9 +121,7 @@ const EditAccountModal: React.FC<Props> = ({
       return;
     }
 
-    
-
-    if (!checkIdCard(values.idCard)) {
+    if (!checkIdCard(values.IdCard)) {
       notification.error({
         message: "Error",
         description: "IdCard is not correct",
@@ -130,7 +129,7 @@ const EditAccountModal: React.FC<Props> = ({
 
       return;
     }
-    if (checkPhoneNumberVN(values.phone)) {
+    if (!checkPhoneNumberVN(values.Phone)) {
       notification.error({
         message: "Error",
         description: "Phone number is not correct",
