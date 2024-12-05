@@ -3,10 +3,10 @@ import { DatePicker } from "antd";
 import dayjs from "dayjs";
 
 interface YearMonthSelectorProps {
-  selectedMonth: number | null;
-  year: number | null;
-  setYear: (year: number | null) => void;
-  setSelectedMonth: (month: number | null) => void;
+  selectedMonth: number ;
+  year: number ;
+  setYear: (year: number ) => void;
+  setSelectedMonth: (month: number ) => void;
 }
 
 const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
@@ -15,18 +15,19 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
   setYear,
   setSelectedMonth,
 }) => {
-  const handleDateChange = (date: dayjs.Dayjs | null) => {
+  const handleDateChange = (date: dayjs.Dayjs ) => {
     if (date) {
       const formattedDate = date.format("MM-YYYY");
       const [month, year] = formattedDate.split("-");
 
       setSelectedMonth(parseInt(month));
       setYear(parseInt(year));
-    } else {
-      // Xử lý khi xóa giá trị
-      setSelectedMonth(null);
-      setYear(null);
     }
+    //  else {
+    //   // Xử lý khi xóa giá trị
+    //   setSelectedMonth();
+    //   setYear(null);
+    // }
   };
 
   return (

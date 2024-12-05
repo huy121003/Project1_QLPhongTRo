@@ -14,18 +14,24 @@ const WaterPage = () => {
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
-  const [selectedMonth, setSelectedMonth] = useState<number | null>(
+  const [selectedMonth, setSelectedMonth] = useState(
     currentMonth
   );
-  const [year, setYear] = useState<number | null>(currentYear);
+  const [year, setYear] = useState(currentYear);
   const [contract, setContract] = useState<IContract[]>([]);
   const [loading, setLoading] = useState(true);
-  const [numberIndex, setNumberIndex] = useState<{
-    [key: string]: { firstIndex: number; finalIndex: number; invoiceId: "" };
-  }>({});
-  const [water, setWater] = useState({} as IService);
+    interface NumberIndex {
+      [key: string]: {
+        firstIndex: number;
+        finalIndex: number;
+        invoiceId: string;
+      };
+    }
+  const [numberIndex, setNumberIndex] = useState<NumberIndex>({});
+  const [water, setWater] = useState<any>();
   const getWaterService = async () => {
     setLoading(true);
+   
     const res = await serviceApi.fetchServiceApi(`type=${ServiceType.Water}`);
     if (res.data) {
       setWater(res.data.result[0]);
@@ -36,71 +42,72 @@ const WaterPage = () => {
       });
     }
   };
+  const fetchContracts = async () => {
+    setLoading(true);
+
+    const res = await contractApi.fetchContractApi(
+      `currentPage=1&pageSize=99999`
+    );
+    const filteredContracts = res.data.result.filter((contract: IContract) => {
+      const { startDate, endDate, actualEndDate, status } = contract;
+      const monthStart = new Date(year, selectedMonth - 1, 1);
+      const monthEnd = new Date(year, selectedMonth, 0);
+
+      if (status === ContractStatus.ACTIVE) {
+        return (
+          new Date(startDate) <= monthEnd && new Date(endDate) >= monthStart
+        );
+      }
+      if (status === ContractStatus.CANCELED) {
+        return (
+          new Date(startDate) <= monthEnd &&
+          new Date(actualEndDate) >= monthStart
+        );
+      }
+      return (
+        status === ContractStatus.EXPIRED &&
+        new Date(startDate) <= monthEnd &&
+        new Date(endDate) >= monthStart
+      );
+    });
+
+    setContract(filteredContracts);
+    setLoading(false);
+  };
+
+  // Hàm lấy chỉ số điện theo hợp đồng
+  const fetchElectricIndices = async (contracts: IContract[]) => {
+    const promises = contracts.map(async (contract) => {
+      const [billResponse, lastMonthResponse] = await Promise.all([
+        invoiceApi.fetchInvoiceApi(
+          `room._id=${contract.room._id}&month=${selectedMonth}-${year}&service._id=${water?._id}`
+        ),
+        invoiceApi.fetchInvoiceApi(
+          `room._id=${contract.room._id}&month=${
+            selectedMonth - 1
+          }-${year}&service._id=${water?._id}`
+        ),
+      ]);
+      return {
+        [contract._id]: {
+          firstIndex: lastMonthResponse.data?.result?.[0]?.finalIndex || 0,
+          finalIndex: billResponse.data?.result?.[0]?.finalIndex || null,
+          invoiceId: billResponse.data?.result?.[0]?._id || "",
+        },
+      };
+    });
+    const indices = await Promise.all(promises);
+    setNumberIndex(Object.assign({}, ...indices));
+  };
+
   useEffect(() => {
     getWaterService();
   }, []);
 
-  const getContract = async () => {
-    setLoading(true);
-    try {
-      const res = await contractApi.fetchContractApi(
-        `currentPage=1&pageSize=99999`
-      );
-      if (res.data) {
-        const newContract = res.data.result.filter((contract: IContract) => {
-          const startDate = new Date(contract.startDate);
-          const endDate = new Date(contract.endDate);
-          const monthStart = new Date(
-            year ?? currentYear,
-            (selectedMonth ?? currentMonth) - 1,
-            1
-          );
-          const monthEnd = new Date(
-            year ?? currentYear,
-            selectedMonth ?? currentMonth,
-            0
-          );
-          const actualEndDate = new Date(contract.actualEndDate);
-          if (contract.status === ContractStatus.ACTIVE) {
-            return startDate <= monthEnd && endDate >= monthStart;
-          }
-          if (contract.status === ContractStatus.CANCELED) {
-            return startDate <= monthEnd && actualEndDate >= monthStart;
-          }
-          if (contract.status === ContractStatus.EXPIRED) {
-            return startDate <= monthEnd && endDate >= monthStart;
-          }
-        });
-        setContract(newContract);
-
-        const initialIndices = await Promise.all(
-          newContract.map(async (contract: IContract) => {
-            const billResponse = await invoiceApi.fetchInvoiceApi(
-              `tenant._id=${contract.tenant._id}&room._id=${contract.room._id}&month=${selectedMonth}-${year}&service._id=${water._id}`
-            );
-            return {
-              [contract._id]: billResponse.data?.result?.[0]
-                ? {
-                    firstIndex: billResponse.data.result[0].firstIndex,
-                    finalIndex: billResponse.data.result[0].finalIndex,
-                    invoiceId: billResponse.data.result[0]._id,
-                  }
-                : { firstIndex: 0, finalIndex: 0, invoiceId: "" },
-            };
-          })
-        );
-
-        setNumberIndex(Object.assign({}, ...initialIndices));
-      }
-    } catch (error) {
-      console.error("Failed to fetch contracts:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    getContract();
+    if (water) {
+      fetchContracts().then(() => fetchElectricIndices(contract));
+    }
   }, [selectedMonth, year, water]);
   const handleInputChange = (
     id: string,
@@ -136,8 +143,8 @@ const WaterPage = () => {
             contract={contract}
             numberIndex={numberIndex}
             water={water}
-            selectedMonth={selectedMonth || currentMonth}
-            year={year || currentYear}
+            selectedMonth={selectedMonth }
+            year={year }
           />
         </div>
         <WaterTable
@@ -146,8 +153,8 @@ const WaterPage = () => {
           loading={loading}
           handleInputChange={handleInputChange}
           water={water}
-          selectedMonth={selectedMonth || currentMonth}
-          year={year || currentYear}
+          selectedMonth={selectedMonth }
+          year={year }
         />
       </div>
     </>

@@ -14,6 +14,7 @@ import ActiveAccountPage from "./ActiveAccountPage";
 import { authtApi } from "../../api";
 import { Gender } from "../../enums";
 import { useTheme } from "../../contexts/ThemeContext";
+import { checkEmail, checkIdCard, checkPassword, checkPhoneNumberVN } from "../../utils/regex";
 
 const { Option } = Select;
 
@@ -25,13 +26,46 @@ function RegisterPage() {
   const [id, setId] = useState<string>("");
   const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
 
-  const handleRegister = async (values: any) => {
+  const handleRegister = async (values:any) => {
     const birthdayDate = values.birthday.toDate();
     const birthdayIsoString = new Date(birthdayDate).toISOString();
     const birthdayAsDate = new Date(birthdayIsoString);
     const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
       values.LastName
     }`.trim();
+    if (!checkEmail(values.Email)) {
+      notification.error({
+        message: "Error",
+        description: "Email is not correct",
+      });
+
+      return;
+    }
+    if(!checkPassword(values.password)){
+      notification.error({
+        message: "Error",
+        description: "Password is not correct",
+      });
+
+      return;
+    }
+    if(!checkIdCard(values.idCard)){
+      notification.error({
+        message: "Error",
+        description: "IdCard is not correct",
+      });
+
+      return;
+    }
+    if(checkPhoneNumberVN(values.phone)){
+      notification.error({
+        message: "Error",
+        description: "Phone is not correct",
+      });
+
+      return
+    } 
+
 
     const res = await authtApi.apiRegister(
       values.email,

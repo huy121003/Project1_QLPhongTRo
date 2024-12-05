@@ -26,9 +26,10 @@ const AddPermissionModal: React.FC<Props> = ({
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const handleOk = async () => {
-    setLoading(true);
+ 
     // Validate the form fields
     const values = await form.validateFields();
+       setLoading(true);
     const response = await permissionApi.postPermissionApi(
       values.name,
       values.apiPath,

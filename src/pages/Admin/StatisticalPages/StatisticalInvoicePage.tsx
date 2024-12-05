@@ -1,10 +1,10 @@
 import React from "react";
-import MonthlyRevenueChart from "./MonthlyRevenueChart ";
+import MonthlyRevenueChart from "./MonthlyRevenueChart";
 
-function StatisticalPage() {
+function StatisticalInvoicePage() {
   return (
     <>  <h1 className="text-2xl font-bold m-2">
-      Statistical
+      Statistical Invoice
     </h1>
     <div className="justify-end p-2 flex-1 overflow-y-hidden">
       <MonthlyRevenueChart />
@@ -13,4 +13,4 @@ function StatisticalPage() {
   );
 }
 
-export default StatisticalPage;
+export default StatisticalInvoicePage;

@@ -90,8 +90,9 @@ const AddContractModal: React.FC<Props> = ({
   }, [openAddContract]);
 
   const handleOk = async () => {
-    setLoading(true);
+   
     const values = await form.validateFields();
+     setLoading(true);
     const endDate = dayjs(values.startDate)
       .add(time.number, time.unit as dayjs.ManipulateType)
       .toDate();

@@ -39,7 +39,7 @@ const WaterTable: React.FC<Props> = ({
   const handleOK = async (key: string) => {
     const indexData = numberIndex[key];
     if (
-      !indexData.firstIndex ||
+      indexData.firstIndex<0 ||
       !indexData.finalIndex ||
       indexData.firstIndex > indexData.finalIndex
     ) {

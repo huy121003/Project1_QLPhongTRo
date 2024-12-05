@@ -9,8 +9,6 @@ import {
   DatePicker,
   notification,
 } from "antd";
-import moment from "moment"; // Import moment for date handling
-
 import { IRole, IAccount } from "../../../interfaces";
 import { RenderUploadField } from "../../../components";
 import { accountApi, roleApi, upfileApi } from "../../../api";
@@ -113,23 +111,33 @@ const EditAccountModal: React.FC<Props> = ({
     let frontIdFileName = imageFrontId;
     let backIdFileName = imageBackId;
     let temporaryResidenceFileName = imageTemporaryResidence;
+    if (!checkEmail(values.Email)) {
+      notification.error({
+        message: "Error",
+        description: "Email is not correct",
+      });
 
-    // if (!checkIdCard(values.idCard)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description: "IdCard is not correct",
-    //   });
+      return;
+    }
 
-    //   return;
-    // }
-    // if (checkPhoneNumberVN(values.phone)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description: "Phone number is not correct",
-    //   });
+    
 
-    //   return;
-    // }
+    if (!checkIdCard(values.idCard)) {
+      notification.error({
+        message: "Error",
+        description: "IdCard is not correct",
+      });
+
+      return;
+    }
+    if (checkPhoneNumberVN(values.phone)) {
+      notification.error({
+        message: "Error",
+        description: "Phone number is not correct",
+      });
+
+      return;
+    }
     // Kiểm tra sự thay đổi của ảnh và upload nếu có
     setLoading(true);
     if (avatar) {
