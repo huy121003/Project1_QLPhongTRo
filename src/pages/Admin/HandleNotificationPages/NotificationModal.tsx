@@ -9,14 +9,9 @@ import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {
   open: boolean;
   setOpen: (value: boolean) => void;
-  onSelectNotification: (notificationId: string) => void;
 }
 
-const NotificationModal: React.FC<Props> = ({
-  open,
-  setOpen,
-  onSelectNotification,
-}) => {
+const NotificationModal: React.FC<Props> = ({ open, setOpen }) => {
   const [registerService, setRegisterService] = useState<IRegisterService[]>(
     []
   );
@@ -42,7 +37,6 @@ const NotificationModal: React.FC<Props> = ({
     getRegisterService();
   }, []);
   const handleClickNotification = (id: string) => {
-    onSelectNotification(id); // Cập nhật trạng thái menu khi click vào thông báo
     navigate(`/admin/service/requestService`); // Dẫn đến trang chi tiết
     setOpen(false); // Đóng modal khi chọn thông báo
   };
@@ -63,7 +57,7 @@ const NotificationModal: React.FC<Props> = ({
       ${bgColor} ${textColor} 
         `}
       >
-        <h1 className="text-xl font-bold">Notifications</h1>
+        <h1 className="text-2xl font-bold">Notifications</h1>
         {registerService.length === 0 ? (
           <p>No pending registrations or cancellations.</p>
         ) : (

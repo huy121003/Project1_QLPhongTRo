@@ -41,7 +41,7 @@ const RoomCard: React.FC<Props> = ({
     <Spin spinning={isLoading}>
       {rooms.length > 0 ? (
         <div className="m-4 flex-1">
-          <div className="grid grid-cols-1 md:grid-cols-2  xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {rooms.map((room) => (
               <div
                 key={room._id}
@@ -60,26 +60,27 @@ const RoomCard: React.FC<Props> = ({
                     <i className="fa-solid fa-cube mr-2"></i> {room.area} m²
                   </p>
                   <p
-                    className={`font-semibold my-2 ${getRoomTypeColor(
+                    className={`font-semibold my-2 text-${getRoomTypeColor(
                       room.type
                     )} `}
                   >
                     <i className="fa-solid fa-people-roof mr-2"></i>
                     {room.type}
                   </p>
-                  <p className="font-semibold">
-                    <i className="fa-solid fa-hand-holding-dollar mr-2"></i>
-                    {room.price.toLocaleString()} đ
-                  </p>
+
                   <p className="font-bold mt-6">
-                    <span className={` ${getRoomStatusColor(room.status)}`}>
+                    <span className={`${getRoomStatusColor(room.status)}`}>
                       <i className="fa-solid fa-circle mr-2"></i>
                       {room.status}
                     </span>
                   </p>
+                  <p className="font-semibold  text-orange-400">
+                    <i className="fa-solid fa-hand-holding-dollar mr-2"></i>
+                    {room.price.toLocaleString()} đ
+                  </p>
                 </div>
                 <div className="mt-10 flex items-center justify-between">
-                  <div />
+                  <div></div>
                   <div className="flex gap-3">
                     <Button
                       className=" transition duration-300"

@@ -11,11 +11,10 @@ import { invoiceApi } from "../../../api";
 import { YearMonthSelector } from "../../../components";
 import PaymentConfirm from "./PaymentConfirm";
 import { useTheme } from "../../../contexts/ThemeContext";
+import InvoiceAmount from "./InvoiceAmount";
 const InvoicePage = () => {
-  const currentMonth = new Date().getMonth() + 1;
-  const currentYear = new Date().getFullYear();
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const [year, setYear] = useState(currentYear);
+  const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
+  const [year, setYear] = useState<number | null>(null);
   const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [status, setStatus] = useState<InvoiceStatus | "">("");
   const [openDetailInvoice, setOpenDetailInvoice] = useState(false);
@@ -24,16 +23,16 @@ const InvoicePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null);
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(4);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const getInvoices = async () => {
     const queryParams: Record<string, any> = {
       currentPage: current,
       pageSize: pageSize,
-      month: `${selectedMonth}-${year}`,
+      month: selectedMonth && year ? `${selectedMonth}-${year}` : "",
       "room._id": choosenRoom,
       status: status,
-      sort: "month",
+      sort: "-month",
     };
     const query = new URLSearchParams(queryParams).toString();
     setIsLoading(true);
@@ -98,9 +97,10 @@ const InvoicePage = () => {
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   return (
     <>
+      <h1 className="text-2xl font-bold m-2">Invoice</h1>
       <div className="justify-end  w-full">
         <div
-          className={` rounded-lg border border-gray-200  justify-between items-center mx-2 flex
+          className={` rounded-lg   justify-between items-center mx-2 flex
   ${bgColor} ${textColor} 
           `}
         >
@@ -117,20 +117,23 @@ const InvoicePage = () => {
             />
             <StatusInvoice status={status} setStatus={setStatus} />
           </div>
+
           <div className="   justify-end flex-1 items-center  flex">
-            <Button
+            {/* <Button
               size="large"
               onClick={() => setOpenPaymentConfirm(true)}
               className="m-2 py-6 px-2 bg-purple-600 text-white"
             >
               <i className="fa-solid fa-credit-card"></i>
               Payment Confirm
-            </Button>
+            </Button> */}
 
             <ExportToExcel invoices={invoices} />
           </div>
         </div>
-
+        <div className="flex-1 m-2">
+          <InvoiceAmount selectMonth={selectedMonth} year={year} />
+        </div>
         <InvoiceCard
           invoices={invoices}
           isLoading={isLoading}

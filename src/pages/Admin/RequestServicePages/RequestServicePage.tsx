@@ -11,13 +11,13 @@ function RequestServicePage() {
   >([]);
   const [total, setTotal] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState(5);
+  const [pageSize, setPageSize] = React.useState(10);
   const [loading, setLoading] = React.useState(false);
   const [searchParams, setSearchParams] = React.useState({
     status: "PENDING",
     type: "",
   });
-  const [sorted, setSorted] = React.useState<string>("-createdAt");
+  const [sorted, setSorted] = React.useState<string>("");
   const getRegisterService = async () => {
     const queryParams: Record<string, any> = {
       currentPage: currentPage,
@@ -43,6 +43,18 @@ function RequestServicePage() {
       });
     }
     setLoading(false);
+  };
+  const deleteRegisterService = async (id: string) => {
+    const res = await registerServiceAPI.deleteRegisterServiceApi(id);
+    if (res.statusCode === 200) {
+      message.success("Delete register service successfully");
+      getRegisterService();
+    } else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
+    }
   };
   useEffect(() => {
     getRegisterService();
@@ -80,6 +92,9 @@ function RequestServicePage() {
     setCurrentPage(1);
   };
   return (
+    <>  <h1 className="text-2xl font-bold m-2">
+      Request Service
+    </h1>
     <div className="m-2">
       <RegisterServiceFilter
         handleSearchChange={handleSearchChange}
@@ -95,8 +110,11 @@ function RequestServicePage() {
         onChange={handlePaginationChange}
         onApprove={handleApprove}
         loading={loading}
+        onDelete={deleteRegisterService}
       />
+
     </div>
+    </>
   );
 }
 

@@ -12,6 +12,8 @@ import { homeAdminRouters } from "../../routers";
 import NotificationModal from "../../pages/Admin/HandleNotificationPages/NotificationModal";
 import { RegisterServiceStatus } from "../../enums";
 import { useTheme } from "../../contexts/ThemeContext";
+import DrawerMenu from "./DrawerMenu";
+import NavMenu from "./NavMenu";
 
 function HomeLayout() {
   const dispatch = useAppDispatch();
@@ -25,9 +27,6 @@ function HomeLayout() {
   const [account, setAccount] = useState<IAccount>();
   const [isNavOpen, setIsNavOpen] = useState<boolean>(true);
   const [totalRegisterService, setTotalRegisterService] = useState<number>(0);
-  const [expandedMenus, setExpandedMenus] = useState<{
-    [key: string]: boolean;
-  }>({}); // Trạng thái menu con
 
   const user = useAppSelector((state) => state.auth.user);
   const { theme, toggleTheme } = useTheme();
@@ -97,149 +96,20 @@ function HomeLayout() {
     </Menu>
   );
 
-  const handleSelectNotification = (notificationId: string) => {
-    // Cập nhật menu chính khi thông báo được chọn
-    setSelected("Register Service"); // Cập nhật menu chính (hoặc chọn một menu tương ứng với thông báo)
-
-    // Cập nhật trạng thái submenu
-    setExpandedMenus((prev) => ({
-      ...prev,
-      "Register Service": true, // Ví dụ, mở submenu "Register Service"
-    }));
-  };
-
-  const renderMenuChild = (route: any) => {
-    const isExpanded = expandedMenus[route.label] || false; // Kiểm tra xem submenu có mở hay không
-
-    return route.children ? (
-      <div key={route.label} className="flex flex-col w-full">
-        <div
-          className={`flex items-center  py-2 mt-2 px-4 cursor-pointer  w-full
-        
-            `}
-          onClick={() =>
-            setExpandedMenus((prev) => ({
-              ...prev,
-              [route.label]: !isExpanded, // Toggle mở/đóng submenu
-            }))
-          }
-        >
-          <i className={`fa ${route.icon} text-2xl`} />
-          {isNavOpen && (
-            <>
-              <p className="ml-4 text-lg">{route.label}</p>
-              <i
-                className={`fa fa-chevron-${
-                  isExpanded ? "up" : "down"
-                } ml-auto`}
-              />
-            </>
-          )}
-        </div>
-
-        {isExpanded && (
-          <div className="pl-6">
-            {route.children.map((child: any) => (
-              <Link
-                key={child.path}
-                to={`/admin/${route.path}/${child.path}`}
-                className={`flex  flex-row items-center  rounded-md my-1 py-1 transition-colors duration-300 
-                 
-              ${textColor} 
-                `}
-                onClick={() => setSelected(child.label ?? route.label)}
-              >
-                <p
-                  className={`${
-                    selected === child.label ? "text-blue-700 font-bold" : ""
-                  } flex`}
-                >
-                  <i className={`fa ${child.icon} text-sm`} />
-                  {isNavOpen && <p className="ml-4 text-sm">{child.label}</p>}
-                </p>
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    ) : (
-      <Link
-        to={route.path}
-        key={route.label}
-        className={`flex flex-row items-center  rounded-md my-1 px-4 py-1 w-full transition-colors duration-300 
-        ${textColor} 
-        `}
-        onClick={() => setSelected(route.label ?? "Dashboard")}
-      >
-        <p
-          className={`${
-            selected === route.label ? "text-blue-700 font-bold" : ""
-          } flex`}
-        >
-          <i className={`fa ${route.icon} text-2xl`} />
-          {isNavOpen && <p className="ml-4 text-lg">{route.label}</p>}
-        </p>
-      </Link>
-    );
-  };
-
   return (
     <div className="flex h-screen overflow-hidden">
       {width >= 780 ? (
-        <nav
-          className={`flex flex-col items-center h-full shadow-lg transition-all duration-300 ${
-            isNavOpen ? "px-1 w-[200px]" : "w-16"
-          }
-      ${bgColor} ${textColor} 
-        `}
-        >
-          <div className="border-b-2 w-full justify-center items-center flex">
-            <img
-              src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4"
-              alt="logo"
-              className={`
-               w-16 h-16  rounded-full my-4`}
-            />
-            {isNavOpen && (
-              <span className="text-2xl font-bold text-center">For Admin</span>
-            )}
-          </div>
-
-          {homeAdminRouters
-            .filter((item) => item.label !== undefined)
-            .map((item) => renderMenuChild(item))}
-        </nav>
+        <NavMenu
+          isNavOpen={isNavOpen}
+          //  setIsNavOpen={setIsNavOpen}
+        />
       ) : (
-        <Drawer
-          onClose={() => setOpenDrawer(false)}
-          open={openDrawer}
-          closeIcon={null}
-          closable={false}
-          placement="left"
-        >
-          <nav
-            className={`flex flex-col items-center h-auto shadow-lg transition-all duration-300 
-           px-1 
-          
-      ${bgColor} ${textColor} 
-        `}
-          >
-            <div className="border-b-2 w-full justify-center items-center flex">
-              <img
-                src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4"
-                alt="logo"
-                className={`
-               w-16 h-16  rounded-full my-4`}
-              />
-
-              <span className="text-2xl font-bold text-center">For Admin</span>
-            </div>
-
-            {homeAdminRouters
-              .filter((item) => item.label !== undefined)
-              .map((item) => renderMenuChild(item))}
-          </nav>
-        </Drawer>
+        <DrawerMenu
+          openDrawer={openDrawer}
+          setOpenDrawer={setOpenDrawer}
+          textColor={textColor}
+          bgColor={bgColor}
+        />
       )}
 
       <div
@@ -249,12 +119,11 @@ function HomeLayout() {
       >
         <div
           className={`flex items-center text-black h-16 px-5 justify-between 
-      ${bgColor} ${textColor} 
+      ${theme === "light" ? "bg-white" : "bg-gray-800 "} ${textColor} 
           `}
         >
           <div className="flex hover:text-slate-300" onClick={toggleNav}>
             <i className="fa fa-bars text-2xl cursor-pointer font-bold" />
-            <h2 className="ml-4 text-2xl font-bold">{selected}</h2>
           </div>
           <div className="flex justify-center items-center">
             <i
@@ -289,7 +158,7 @@ function HomeLayout() {
           </div>
         </div>
 
-        <div className="flex-1 flex-row overflow-y-auto overflow-x-auto max-h-[calc(100vh-4rem)] max-w-[100vw]">
+        <div className="flex-1 flex-row overflow-y-auto overflow-x-auto max-h-[calc(100vh-4rem)] max-w-[100vw] p-2">
           <Outlet />
         </div>
       </div>
@@ -303,12 +172,12 @@ function HomeLayout() {
           openEditAccount={openEditAccount}
           setOpenEditAccount={setOpenEditAccount}
           record={account}
+          isChangeRole={true}
         />
       )}
       <NotificationModal
         open={openRegisterService}
         setOpen={setOpenRegisterService}
-        onSelectNotification={(id: string) => handleSelectNotification(id)} // Truyền hàm cập nhật menu
       />
     </div>
   );

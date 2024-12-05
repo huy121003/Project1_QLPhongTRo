@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { IPermisson } from "../../../interfaces";
 
 import {
@@ -23,6 +23,7 @@ const EditPermissionModal: React.FC<Props> = ({
   setOpenEditPermission,
   record,
 }) => {
+  const [loading, setLoading] = useState(false);
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
@@ -39,6 +40,7 @@ const EditPermissionModal: React.FC<Props> = ({
     }
   }, [record, form, openEditPermission]);
   const handleOk = async () => {
+    setLoading(true);
     const values = await form.validateFields();
     const response = await permissionApi.patchPermissionApi(
       record?._id || "",
@@ -57,6 +59,7 @@ const EditPermissionModal: React.FC<Props> = ({
         description: response.message,
       });
     }
+    setLoading(false);
   };
   return (
     <Modal
@@ -122,7 +125,12 @@ const EditPermissionModal: React.FC<Props> = ({
           >
             Cancel
           </Button>
-          <Button key="submit" type="primary" onClick={handleOk}>
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleOk}
+            loading={loading}
+          >
             <p className="font-xl text-white flex">Add</p>
           </Button>
         </div>

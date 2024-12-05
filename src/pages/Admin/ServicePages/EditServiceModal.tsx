@@ -9,7 +9,7 @@ import {
   notification,
 } from "antd";
 import { IService } from "../../../interfaces";
-import { ServiceType } from "../../../enums";
+import { ServiceType, UnitService } from "../../../enums";
 import { serviceApi } from "../../../api";
 import { useTheme } from "../../../contexts/ThemeContext";
 
@@ -24,6 +24,7 @@ const EditServiceModal: React.FC<Props> = ({
   setOpenEditService,
   service,
 }) => {
+  const [loading, setLoading] = React.useState(false);
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
@@ -42,6 +43,7 @@ const EditServiceModal: React.FC<Props> = ({
   }, [service, form, openEditService]);
 
   const handleOk = async () => {
+    setLoading(true);
     const values = await form.validateFields();
     const response = await serviceApi.patchServiceApi(
       service?._id || "",
@@ -62,6 +64,7 @@ const EditServiceModal: React.FC<Props> = ({
         description: response.message,
       });
     }
+    setLoading(false);
   };
 
   return (
@@ -111,7 +114,13 @@ const EditServiceModal: React.FC<Props> = ({
             label={<span className={` ${textColor} `}>Unit</span>}
             rules={[{ required: true, message: "Please input the unit!" }]}
           >
-            <Input placeholder="Enter Unit" />
+            <Select>
+              {Object.values(UnitService).map((unit) => (
+                <Select.Option key={unit} value={unit}>
+                  {unit}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             name="type"
@@ -140,7 +149,12 @@ const EditServiceModal: React.FC<Props> = ({
           >
             Cancel
           </Button>
-          <Button key="submit" type="primary" onClick={handleOk}>
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleOk}
+            loading={loading}
+          >
             Save
           </Button>
         </div>

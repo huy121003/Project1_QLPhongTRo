@@ -9,7 +9,7 @@ import {
   notification,
 } from "antd";
 import { serviceApi } from "../../../api";
-import { ServiceType } from "../../../enums";
+import { ServiceType, UnitService } from "../../../enums";
 import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {
   openAddService: boolean;
@@ -20,14 +20,17 @@ const AddServiceModal: React.FC<Props> = ({
   openAddService,
   setOpenAddService,
 }) => {
+  const [loading, setLoading] = React.useState(false);
   const [form] = Form.useForm();
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const handleOk = async () => {
+   
     // Validate the form fields
     const values = await form.validateFields();
+     setLoading(true);
     const response = await serviceApi.postServiceApi(
       values.serviceName,
       values.description,
@@ -47,6 +50,7 @@ const AddServiceModal: React.FC<Props> = ({
         description: response.message,
       });
     }
+    setLoading(false);
   };
 
   return (
@@ -95,7 +99,13 @@ const AddServiceModal: React.FC<Props> = ({
             name="unit"
             rules={[{ required: true, message: "unit is required" }]}
           >
-            <Input placeholder="Enter unit" />
+            <Select>
+              {Object.values(UnitService).map((unit) => (
+                <Select.Option key={unit} value={unit}>
+                  {unit}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             label={<span className={` ${textColor} `}>Type</span>}
@@ -122,7 +132,9 @@ const AddServiceModal: React.FC<Props> = ({
           >
             Cancel
           </Button>
-          <Button key="submit" type="primary" onClick={handleOk}>
+          <Button key="submit" type="primary" onClick={handleOk}
+          loading={loading}
+          >
             <p className="font-xl text-white flex">Add</p>
           </Button>
         </div>

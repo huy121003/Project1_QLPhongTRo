@@ -86,10 +86,6 @@ const InvoiceCard: React.FC<Props> = ({
                     <i className="fa-solid fa-cubes mr-2"></i>
                     {invoice.service.name}
                   </p>
-                  <p className="font-semibold">
-                    <i className="fa-solid fa-hand-holding-dollar mr-2"></i>
-                    {invoice.amount.toLocaleString()} đ
-                  </p>
 
                   <p className="font-semibold">
                     <i className="fa-solid fa-calendar-days mr-2"></i>
@@ -99,7 +95,14 @@ const InvoiceCard: React.FC<Props> = ({
                     <span
                       className={`${getInvoiceStatusColor(invoice.status)} `}
                     >
-                      <i className="fa-solid fa-circle mr-2"></i>
+                      <i
+                        className={`fa-solid ${
+                          invoice.status === InvoiceStatus.PAID
+                            ? `fa-check-circle`
+                            : `fa-times-circle`
+                        } mr-2`}
+                      ></i>
+
                       {invoice.status}
                     </span>
                   </p>
@@ -107,7 +110,12 @@ const InvoiceCard: React.FC<Props> = ({
 
                 {/* Action Buttons */}
                 <div className="flex items-center justify-between mt-4">
-                  <div></div>
+                  <div>
+                    <p className="font-semibold text-orange-500">
+                      <i className="fa-solid fa-hand-holding-dollar mr-2"></i>
+                      {invoice.amount.toLocaleString()} đ
+                    </p>
+                  </div>
                   <div className="flex gap-2">
                     <Button
                       className=" transition"

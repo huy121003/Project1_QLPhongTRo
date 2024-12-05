@@ -1,7 +1,7 @@
 import React from "react";
 import { IAccount } from "../../../interfaces";
 import { DeleteModal, NotItem } from "../../../components";
-import { Button, Pagination, Spin, Tag } from "antd";
+import { Button, Pagination, Spin } from "antd";
 import { getGenderColor, getRoleColor } from "../../../utils/getMethodColor";
 import { useTheme } from "../../../contexts/ThemeContext";
 interface Props {

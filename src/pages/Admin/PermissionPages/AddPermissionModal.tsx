@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Modal,
   Button,
@@ -19,14 +19,17 @@ const AddPermissionModal: React.FC<Props> = ({
   openAddPermission,
   setOpenAddPermission,
 }) => {
+  const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const handleOk = async () => {
+ 
     // Validate the form fields
     const values = await form.validateFields();
+       setLoading(true);
     const response = await permissionApi.postPermissionApi(
       values.name,
       values.apiPath,
@@ -44,6 +47,7 @@ const AddPermissionModal: React.FC<Props> = ({
         description: response.message,
       });
     }
+    setLoading(false);
   };
   return (
     <Modal
@@ -109,7 +113,12 @@ const AddPermissionModal: React.FC<Props> = ({
           >
             Cancel
           </Button>
-          <Button key="submit" type="primary" onClick={handleOk}>
+          <Button
+            key="submit"
+            type="primary"
+            onClick={handleOk}
+            loading={loading}
+          >
             <p className="font-xl text-white flex">Add</p>
           </Button>
         </div>

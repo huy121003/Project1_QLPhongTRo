@@ -23,7 +23,7 @@ function ServicePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [record, setRecord] = useState<any>(null); // New state for the record to delete
   const [current, setCurrent] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
 
   const [sorted, setSorted] = useState<string>("");
@@ -109,6 +109,7 @@ function ServicePage() {
 
   return (
     <>
+      <h1 className="text-2xl font-bold m-2">Service</h1>
       <div className="justify-end  w-full">
         <ServiceFilters
           searchParams={searchParams}
@@ -117,7 +118,7 @@ function ServicePage() {
           sorted={sorted}
         />
         <div
-          className={` mx-2  rounded-lg shadow-lg border border-gray-200 mt-2  justify-between flex items-center
+          className={` mx-2  rounded-lg shadow-lg  mt-2  justify-between flex items-center
           ${bgColor} ${textColor}
           `}
         >

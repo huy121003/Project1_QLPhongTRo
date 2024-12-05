@@ -97,10 +97,6 @@ const ContractCards: React.FC<Props> = ({
                   </p>
 
                   <p className="font-semibold">
-                    <i className="fa-solid fa-hand-holding-dollar mr-2"></i>
-                    {contract.depositAmount.toLocaleString()} đ
-                  </p>
-                  <p className="font-semibold">
                     <i className="fa-solid fa-calendar-days mr-2"></i>
                     {new Date(contract.startDate).toLocaleDateString()} {" -> "}
                     {contract.actualEndDate
@@ -119,7 +115,12 @@ const ContractCards: React.FC<Props> = ({
 
                 {/* Action Buttons */}
                 <div className="mt-3 flex items-center justify-between">
-                  <div></div>
+                  <div>
+                    <p className="font-semibold  text-orange-600">
+                      <i className="fa-solid fa-hand-holding-dollar mr-2"></i>
+                      {contract.depositAmount.toLocaleString()} đ
+                    </p>
+                  </div>
                   <div className="flex gap-2">
                     <Button
                       className=" transition"

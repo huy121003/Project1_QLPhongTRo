@@ -15,7 +15,7 @@ function PermissionPage() {
   const [permission, setPermission] = React.useState<IPermission[]>([]);
   const [total, setTotal] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState(5);
+  const [pageSize, setPageSize] = React.useState(10);
   const [loading, setLoading] = React.useState(false);
   const [openAddPermission, setOpenAddPermission] = React.useState(false);
   const [openEditPermission, setOpenEditPermission] = React.useState(false);
@@ -98,55 +98,58 @@ function PermissionPage() {
     }
   };
   return (
-    <div className="justify-end flex-1">
-      <PermissionFilter
-        searchParams={searchParams}
-        handleSearchChange={handleSearchChange}
-        handleSortChange={handleSortChange}
-        sorted={sorted}
-      />
-      <div
-        className={` p-2  rounded-lg shadow-lg border border-gray-200 mx-2 justify-between flex items-center
+    <>
+      <h1 className="text-2xl font-bold m-2">Permission</h1>
+      <div className="justify-end flex-1">
+        <PermissionFilter
+          searchParams={searchParams}
+          handleSearchChange={handleSearchChange}
+          handleSortChange={handleSortChange}
+          sorted={sorted}
+        />
+        <div
+          className={` p-2  rounded-lg shadow-lg  mx-2 justify-between flex items-center
     ${bgColor} ${textColor}
         `}
-      >
-        <div></div>
+        >
+          <div></div>
 
-        <div className="flex items-center">
-          <ExportToExcel permissions={permission} />
-          <AddButton
-            onClick={() => setOpenAddPermission(true)}
-            label="Add Permission"
-          />
+          <div className="flex items-center">
+            <ExportToExcel permissions={permission} />
+            <AddButton
+              onClick={() => setOpenAddPermission(true)}
+              label="Add Permission"
+            />
+          </div>
         </div>
+        <DetailPermission
+          open={openDetailPermission}
+          setOpen={setOpenDetailPermission}
+          record={record}
+        />
+        <PermissionTable
+          permissions={permission}
+          total={total}
+          current={currentPage}
+          pageSize={pageSize}
+          onChange={onChange}
+          onDeletePermission={onDeleted}
+          isLoading={loading}
+          setOpenEditPermission={setOpenEditPermission}
+          setOpenDetailPermission={setOpenDetailPermission}
+          setRecord={setRecord}
+        />
+        <AddPermissionModal
+          openAddPermission={openAddPermission}
+          setOpenAddPermission={setOpenAddPermission}
+        />
+        <EditPermissionModal
+          openEditPermission={openEditPermission}
+          setOpenEditPermission={setOpenEditPermission}
+          record={record}
+        />
       </div>
-      <DetailPermission
-        open={openDetailPermission}
-        setOpen={setOpenDetailPermission}
-        record={record}
-      />
-      <PermissionTable
-        permissions={permission}
-        total={total}
-        current={currentPage}
-        pageSize={pageSize}
-        onChange={onChange}
-        onDeletePermission={onDeleted}
-        isLoading={loading}
-        setOpenEditPermission={setOpenEditPermission}
-        setOpenDetailPermission={setOpenDetailPermission}
-        setRecord={setRecord}
-      />
-      <AddPermissionModal
-        openAddPermission={openAddPermission}
-        setOpenAddPermission={setOpenAddPermission}
-      />
-      <EditPermissionModal
-        openEditPermission={openEditPermission}
-        setOpenEditPermission={setOpenEditPermission}
-        record={record}
-      />
-    </div>
+    </>
   );
 }
 

@@ -57,6 +57,7 @@ const ContractFilters: React.FC<Props> = ({
             value: "endDate",
             label: "By End Date",
           },
+          { value: "-createdAt", label: "By Created At" },
         ]}
         onChange={handleSortChange}
         sorted={sorted}

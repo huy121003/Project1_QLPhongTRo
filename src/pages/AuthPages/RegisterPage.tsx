@@ -6,21 +6,15 @@ import {
   Button,
   Select,
   message,
-  DatePicker,
   notification,
+  DatePicker,
 } from "antd";
-
 import { useState } from "react";
 import ActiveAccountPage from "./ActiveAccountPage";
 import { authtApi } from "../../api";
 import { Gender } from "../../enums";
-import {
-  checkEmail,
-  checkIdCard,
-  checkPassword,
-  checkPhoneNumberVN,
-} from "../../utils/regex";
 import { useTheme } from "../../contexts/ThemeContext";
+import { checkEmail, checkIdCard, checkPassword, checkPhoneNumberVN } from "../../utils/regex";
 
 const { Option } = Select;
 
@@ -32,46 +26,46 @@ function RegisterPage() {
   const [id, setId] = useState<string>("");
   const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
 
-  const handleRegister = async (values: any) => {
+  const handleRegister = async (values:any) => {
     const birthdayDate = values.birthday.toDate();
     const birthdayIsoString = new Date(birthdayDate).toISOString();
     const birthdayAsDate = new Date(birthdayIsoString);
     const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
       values.LastName
     }`.trim();
+    if (!checkEmail(values.Email)) {
+      notification.error({
+        message: "Error",
+        description: "Email is not correct",
+      });
 
-    // if (!checkEmail(values.email)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description: "Email is not correct",
-    //   });
-    //   return;
-    // }
+      return;
+    }
+    if(!checkPassword(values.password)){
+      notification.error({
+        message: "Error",
+        description: "Password is not correct",
+      });
 
-    // if (!checkPassword(values.password)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description:
-    //       "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character",
-    //   });
-    //   return;
-    // }
+      return;
+    }
+    if(!checkIdCard(values.idCard)){
+      notification.error({
+        message: "Error",
+        description: "IdCard is not correct",
+      });
 
-    // if (!checkIdCard(values.idCard)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description: "IdCard is not correct",
-    //   });
-    //   return;
-    // }
+      return;
+    }
+    if(checkPhoneNumberVN(values.phone)){
+      notification.error({
+        message: "Error",
+        description: "Phone is not correct",
+      });
 
-    // if (checkPhoneNumberVN(values.phone)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description: "Phone number is not correct",
-    //   });
-    //   return;
-    // }
+      return
+    } 
+
 
     const res = await authtApi.apiRegister(
       values.email,
@@ -101,11 +95,12 @@ function RegisterPage() {
       <div
         className={`p-10 rounded-3xl shadow-lg lg:w-[800px] mx-3 ${bgColor} ${textColor}`}
       >
-        <h2 className={`text-4xl font-bold text-center  mb-8`}>Register</h2>
+        <h2 className="text-4xl font-bold text-center mb-8">Register</h2>
         <Form layout="vertical" onFinish={handleRegister}>
           <Form.Item
-            label={<span className={` ${bgColor} ${textColor}`}>Name</span>}
+            label={<span className={`${textColor}`}>Full Name</span>}
             wrapperCol={{ span: 24 }}
+            style={{ marginBottom: "12px" }}
           >
             <div className="flex justify-between">
               <Form.Item
@@ -114,10 +109,15 @@ function RegisterPage() {
                   { required: true, message: "Please input the first name!" },
                 ]}
                 className="mr-2 flex-1"
+                style={{ marginBottom: 0 }}
               >
                 <Input placeholder="First Name" size="large" />
               </Form.Item>
-              <Form.Item name="MiddleName" className="mr-2 flex-1">
+              <Form.Item
+                name="MiddleName"
+                className="mr-2 flex-1"
+                style={{ marginBottom: 0 }}
+              >
                 <Input placeholder="Middle Name" size="large" />
               </Form.Item>
               <Form.Item
@@ -125,130 +125,98 @@ function RegisterPage() {
                 rules={[
                   { required: true, message: "Please input the last name!" },
                 ]}
-                style={{ flex: 1 }}
+                className="flex-1"
+                style={{ marginBottom: 0 }}
               >
                 <Input placeholder="Last Name" size="large" />
               </Form.Item>
             </div>
           </Form.Item>
-          <Form.Item wrapperCol={{ span: 24 }}>
+
+          <Form.Item
+            label={<span className={`${textColor}`}>Email & Password</span>}
+            wrapperCol={{ span: 24 }}
+            style={{ marginBottom: "12px" }}
+          >
             <div className="flex justify-between">
               <Form.Item
-                label={
-                  <span
-                    className={` 
-                      ${bgColor} ${textColor}`}
-                  >
-                    Email
-                  </span>
-                }
                 name="email"
                 rules={[
                   { required: true, message: "Please enter your email!" },
-                  { type: "email", message: "The input is not a valid email!" },
+                  { type: "email", message: "Invalid email!" },
                 ]}
                 className="mr-2 flex-1"
+                style={{ marginBottom: 0 }}
               >
                 <Input placeholder="Enter email" size="large" />
               </Form.Item>
               <Form.Item
-                label={
-                  <span
-                    className={`
-                      ${bgColor} ${textColor}
-                      `}
-                  >
-                    Password
-                  </span>
-                }
                 name="password"
                 rules={[
                   { required: true, message: "Please enter your password!" },
                 ]}
-                className="mr-2 flex-1"
+                className="flex-1"
+                style={{ marginBottom: 0 }}
               >
                 <Input.Password placeholder="Enter password" size="large" />
               </Form.Item>
             </div>
           </Form.Item>
-          <Form.Item wrapperCol={{ span: 24 }}>
+
+          <Form.Item
+            label={
+              <span className={`${textColor}`}>IdCard & Phone Number</span>
+            }
+            wrapperCol={{ span: 24 }}
+            style={{ marginBottom: "12px" }}
+          >
             <div className="flex justify-between">
               <Form.Item
-                label={
-                  <span
-                    className={`
-                      ${bgColor} ${textColor}
-                      `}
-                  >
-                    IdCard
-                  </span>
-                }
                 name="idCard"
                 rules={[{ required: true, message: "IdCard is required" }]}
                 className="mr-2 flex-1"
+                style={{ marginBottom: 0 }}
               >
                 <Input placeholder="Enter account IdCard" size="large" />
               </Form.Item>
               <Form.Item
-                label={
-                  <span
-                    className={`
-                  ${bgColor} ${textColor}
-                  `}
-                  >
-                    Phone
-                  </span>
-                }
                 name="phone"
                 rules={[
                   { required: true, message: "Please enter your phone!" },
                 ]}
-                className=" flex-1"
+                className="flex-1"
+                style={{ marginBottom: 0 }}
               >
                 <Input placeholder="Enter phone" type="number" size="large" />
               </Form.Item>
             </div>
           </Form.Item>
-          <Form.Item wrapperCol={{ span: 24 }}>
+
+          <Form.Item
+            label={<span className={`${textColor}`}>Birthday & Gender</span>}
+            wrapperCol={{ span: 24 }}
+            style={{ marginBottom: "12px" }}
+          >
             <div className="flex justify-between">
               <Form.Item
-                label={
-                  <span
-                    className={`
-                      ${bgColor} ${textColor}
-                      `}
-                  >
-                    Birthday
-                  </span>
-                }
                 name="birthday"
                 rules={[
                   { required: true, message: "Please enter your Birthday!" },
                 ]}
-                className="mr-2 "
+                className="mr-2"
+                style={{ marginBottom: 0 }}
               >
                 <DatePicker placeholder="Enter BirthDay" size="large" />
               </Form.Item>
               <Form.Item
-                label={
-                  <span
-                    className={`
-                      ${bgColor} ${textColor}`}
-                  >
-                    Gender
-                  </span>
-                }
                 name="gender"
                 rules={[
                   { required: true, message: "Please select your gender!" },
                 ]}
-                className=" flex-1"
+                className="flex-1"
+                style={{ marginBottom: 0 }}
               >
-                <Select
-                  size="large"
-                  placeholder="Select gender"
-                  className="text-lg rounded-md border-gray-300 flex-1"
-                >
+                <Select size="large" placeholder="Select gender">
                   {Object.values(Gender).map((gender) => (
                     <Option value={gender} key={gender}>
                       {gender}
@@ -258,25 +226,16 @@ function RegisterPage() {
               </Form.Item>
             </div>
           </Form.Item>
+
           <Form.Item
-            label={
-              <span
-                className={` 
-                  ${bgColor} ${textColor}`}
-              >
-                Address
-              </span>
-            }
+            label={<span className={`${textColor}`}>Address</span>}
             name="address"
             rules={[{ required: true, message: "Please enter your address!" }]}
           >
-            <Input
-              size="large"
-              placeholder="Enter address"
-              className="text-lg rounded-md border-gray-300"
-            />
+            <Input placeholder="Enter address" size="large" />
           </Form.Item>
 
+          {/* Submit Button */}
           <Form.Item>
             <Button
               size="large"
@@ -289,18 +248,21 @@ function RegisterPage() {
           </Form.Item>
         </Form>
 
+        {/* Already have an account link */}
         <div className="mt-6 text-center">
           <p className="text-gray-400">
-            Already have an account?
+            Already have an account?{" "}
             <Link
               to="/login"
-              className={` ${theme === "light" ? "text-black" : "text-white"}
-            font-semibold`}
+              className={`${
+                theme === "light" ? "text-black" : "text-white"
+              } font-semibold`}
             >
               Login
             </Link>
           </p>
         </div>
+
         <ActiveAccountPage
           open={openActiveAccount}
           setOpen={setOpenActiveAccount}
