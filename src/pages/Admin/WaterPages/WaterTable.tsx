@@ -115,7 +115,7 @@ const WaterTable: React.FC<Props> = ({
       key: "firstIndex",
       render: (_: any, record: IContract) => (
         <Input
-        disabled
+      
           type="number"
           value={numberIndex[record._id]?.firstIndex}
           onChange={(e) =>
@@ -204,7 +204,7 @@ const WaterTable: React.FC<Props> = ({
       title: "price",
       dataIndex: "price",
       key: "price",
-      render: () => <p>{parseFloat(water.price).toLocaleString()}đ</p>,
+      render: () => <p>{parseFloat(water?.price).toLocaleString()}đ</p>,
     },
     {
       title: "Total",
@@ -219,7 +219,7 @@ const WaterTable: React.FC<Props> = ({
                   (numberIndex[record._id]?.finalIndex || 0) -
                   (numberIndex[record._id]?.firstIndex || 0)
                 }`
-              ) * parseFloat(water.price)
+              ) * parseFloat(water?.price)
             ).toLocaleString()}
             đ
           </p>

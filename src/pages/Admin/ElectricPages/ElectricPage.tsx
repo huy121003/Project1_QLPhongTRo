@@ -23,30 +23,29 @@ const ElectricPage = () => {
   interface NumberIndex {
     [key: string]: {
       firstIndex: number;
-      finalIndex: number ;
+      finalIndex: number;
       invoiceId: string;
     };
   }
-  
+
   const [numberIndex, setNumberIndex] = useState<NumberIndex>({});
-  const [electric, setElectric] = useState<any >();
+  const [electric, setElectric] = useState<any>();
 
   // Hàm lấy dịch vụ điện
   const fetchElectricService = async () => {
     setLoading(true);
-  
-      const res = await serviceApi.fetchServiceApi(
-        `type=${ServiceType.Electricity}`
-      );
-        if (res.data) {
+
+    const res = await serviceApi.fetchServiceApi(
+      `type=${ServiceType.Electricity}`
+    );
+    if (res.data) {
       setElectric(res.data?.result?.[0] || null);
-    } else
-     {
+    } else {
       notification.error({
         message: "Error",
         description: "Failed to fetch electric service",
       });
-   
+
       setLoading(false);
     }
   };
@@ -54,74 +53,75 @@ const ElectricPage = () => {
   // Hàm lấy hợp đồng theo tháng/năm
   const fetchContracts = async () => {
     setLoading(true);
-  
-      const res = await contractApi.fetchContractApi(
-        `currentPage=1&pageSize=99999`
-      );
-      const filteredContracts = res.data.result.filter(
-        (contract: IContract) => {
-          const { startDate, endDate, actualEndDate, status } = contract;
-          const monthStart = new Date(year, selectedMonth - 1, 1);
-          const monthEnd = new Date(year, selectedMonth, 0);
 
-          if (status === ContractStatus.ACTIVE) {
-            return (
-              new Date(startDate) <= monthEnd && new Date(endDate) >= monthStart
-            );
-          }
-          if (status === ContractStatus.CANCELED) {
-            return (
-              new Date(startDate) <= monthEnd &&
-              new Date(actualEndDate) >= monthStart
-            );
-          }
-          return (
-            status === ContractStatus.EXPIRED &&
-            new Date(startDate) <= monthEnd &&
-            new Date(endDate) >= monthStart
-          );
-        }
-      );
+    const res = await contractApi.fetchContractApi(
+      `currentPage=1&pageSize=99999`
+    );
+    const filteredContracts = res.data.result.filter((contract: IContract) => {
+      const { startDate, endDate, actualEndDate, status } = contract;
+      const monthStart = new Date(year, selectedMonth - 1, 1);
+      const monthEnd = new Date(year, selectedMonth, 0);
 
-      setContracts(filteredContracts);
-      setLoading(false);
-    
+      if (status === ContractStatus.ACTIVE) {
+        return (
+          new Date(startDate) <= monthEnd && new Date(endDate) >= monthStart
+        );
+      }
+      if (status === ContractStatus.CANCELED) {
+        return (
+          new Date(startDate) <= monthEnd &&
+          new Date(actualEndDate) >= monthStart
+        );
+      }
+      return (
+        status === ContractStatus.EXPIRED &&
+        new Date(startDate) <= monthEnd &&
+        new Date(endDate) >= monthStart
+      );
+    });
+
+    setContracts(filteredContracts);
+    setLoading(false);
   };
 
   // Hàm lấy chỉ số điện theo hợp đồng
   const fetchElectricIndices = async (contracts: IContract[]) => {
-      const promises = contracts.map(async (contract) => {
-        const [billResponse, lastMonthResponse] = await Promise.all([
-          invoiceApi.fetchInvoiceApi(
-            `room._id=${contract.room._id}&month=${selectedMonth}-${year}&service._id=${electric?._id}`
-          ),
-          invoiceApi.fetchInvoiceApi(
-            `room._id=${contract.room._id}&month=${
-              selectedMonth - 1
-            }-${year}&service._id=${electric?._id}`
-          ),
-        ]);
-        return {
-          [contract._id]: {
-            firstIndex: lastMonthResponse.data?.result?.[0]?.finalIndex || 0,
-            finalIndex: billResponse.data?.result?.[0]?.finalIndex || null,
-            invoiceId: billResponse.data?.result?.[0]?._id || "",
-          },
-        };
-      });
-      const indices = await Promise.all(promises);
-      setNumberIndex(Object.assign({}, ...indices));
+    let adjustedMonth = selectedMonth - 1;
+    let adjustedYear = year;
+    if (selectedMonth === 0) {
+      adjustedMonth = 12;
+      adjustedYear = year - 1;
+    }
+    const promises = contracts.map(async (contract) => {
+      const [billResponse, lastMonthResponse] = await Promise.all([
+        invoiceApi.fetchInvoiceApi(
+          `tenant._id=${contract.tenant._id}&room._id=${contract.room._id}&month=${selectedMonth}-${year}&service._id=${electric?._id}`
+        ),
+        invoiceApi.fetchInvoiceApi(
+          `tenant._id=${contract.tenant._id}&room._id=${contract.room._id}&month=${adjustedMonth}-${adjustedYear}&service._id=${electric?._id}`
+        ),
+      ]);
+      return {
+        [contract._id]: {
+          firstIndex: lastMonthResponse.data?.result?.[0]?.finalIndex || 0,
+          finalIndex: billResponse.data?.result?.[0]?.finalIndex || null,
+          invoiceId: billResponse.data?.result?.[0]?._id || "",
+        },
+      };
+    });
+    const indices = await Promise.all(promises);
+    setNumberIndex(Object.assign({}, ...indices));
   };
 
   useEffect(() => {
     fetchElectricService();
   }, []);
-
   useEffect(() => {
-    if (electric) {
-      fetchContracts().then(() => fetchElectricIndices(contracts));
-    }
-  }, [selectedMonth, year, electric]);
+    fetchContracts();
+  }, [selectedMonth, year,electric]);
+  useEffect(() => {
+    fetchElectricIndices(contracts);
+  }, [selectedMonth, year, contracts]);
 
   const handleInputChange = (
     id: string,
@@ -142,7 +142,9 @@ const ElectricPage = () => {
       <h1 className="text-2xl font-bold m-2">Electricity</h1>
       <div className="justify-end w-full">
         <div
-          className={`m-2 rounded-lg shadow-lg flex ${bgColor} ${textColor}`}
+          className={`  m-2  rounded-lg shadow-lg   justify-between flex-1 items-center cursor flex
+      ${bgColor} ${textColor}
+        `}
         >
           <YearMonthSelector
             selectedMonth={selectedMonth}

@@ -117,7 +117,7 @@ const ElectricTable: React.FC<Props> = ({
       key: "firstIndex",
       render: (_: any, record: IContract) => (
         <Input
-        disabled 
+        
           type="number"
           value={numberIndex[record._id]?.firstIndex}
           onChange={(e) =>
@@ -206,7 +206,7 @@ const ElectricTable: React.FC<Props> = ({
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: () => <p>{parseFloat(electric.price).toLocaleString()}đ</p>,
+      render: () => <p>{parseFloat(electric?.price).toLocaleString()}đ</p>,
     },
     {
       title: "Total",
@@ -220,7 +220,7 @@ const ElectricTable: React.FC<Props> = ({
                 `${(numberIndex[record._id]?.finalIndex || 0) -
                 (numberIndex[record._id]?.firstIndex || 0)
                 }`
-              ) * parseFloat(electric.price)
+              ) * parseFloat(electric?.price)
             ).toLocaleString()}
             đ
           </p>

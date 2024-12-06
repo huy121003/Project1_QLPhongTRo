@@ -93,7 +93,7 @@ const RequestServiceCard: React.FC<Props> = ({
               <div className="flex justify-between items-center mb-4">
                 <div>
                   <h3 className={`text-xl font-semibold ${textColor}`}>
-                    {service.user.name} - Room {service.room.roomName}
+                    {service?.user?.name} - Room {service?.room?.roomName}
                   </h3>
                   <p className={`text-sm ${textColor}`}>
                     {dayjs(
@@ -120,8 +120,8 @@ const RequestServiceCard: React.FC<Props> = ({
                   getNotification(
                     service.status,
                     service.type,
-                    service.user.name,
-                    service.room.roomName,
+                    service?.user?.name,
+                    service?.room?.roomName,
                     service.service.serviceName,
                     service.implementationDate || ""
                   )

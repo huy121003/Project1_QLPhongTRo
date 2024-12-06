@@ -11,7 +11,7 @@ function UnpaidInvoid() {
   const [unpaidInvoices, setUnpaidInvoices] = React.useState<IInvoice[]>([]);
   const [total, setTotal] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState(10);
+  const [pageSize, setPageSize] = React.useState(5);
   const [loading, setLoading] = React.useState(false);
   useEffect(() => {
     getUnpaidInvoices();

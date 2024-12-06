@@ -11,10 +11,12 @@ import {
 } from "antd";
 import { useState } from "react";
 import ActiveAccountPage from "./ActiveAccountPage";
-import { authtApi } from "../../api";
+import { addressApi, authtApi } from "../../api";
 import { Gender } from "../../enums";
 import { useTheme } from "../../contexts/ThemeContext";
 import { checkEmail, checkIdCard, checkPassword, checkPhoneNumberVN } from "../../utils/regex";
+import { IAddress } from "../../interfaces";
+import debounce from "lodash.debounce";
 
 const { Option } = Select;
 
@@ -25,50 +27,64 @@ function RegisterPage() {
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const [id, setId] = useState<string>("");
   const [openActiveAccount, setOpenActiveAccount] = useState<boolean>(false);
+  const [address, setAddress] = useState<IAddress[]>([]);
 
-  const handleRegister = async (values:any) => {
+  // Hàm tìm kiếm địa chỉ
+  const searchAddress = debounce(async (value: string) => {
+    if (value) {
+      try {
+        //tách chuoi bằng +
+        value = value.split(" ").join("+");
+        const result = await addressApi.fecthAddress(value);
+        setAddress(result);
+      } catch (error) {
+        console.error("Error fetching address:", error);
+      }
+    }
+  }, 500); // Debounce 500ms, có thể thay đổi tùy theo nhu cầu
+
+  const handleRegister = async (values: any) => {
     const birthdayDate = values.birthday.toDate();
     const birthdayIsoString = new Date(birthdayDate).toISOString();
     const birthdayAsDate = new Date(birthdayIsoString);
     const fullName = `${values.FirstName} ${values.MiddleName || ""} ${
       values.LastName
     }`.trim();
-     if (!checkEmail(values.email)) {
-       notification.error({
-         message: "Error",
-         description: "Email is not correct",
-       });
+    if (!checkEmail(values.email)) {
+      notification.error({
+        message: "Error",
+        description: "Email is not correct",
+      });
 
-       return;
-     }
+      return;
+    }
 
-     if (!checkPassword(values.password)) {
-       notification.error({
-         message: "Error",
-         description:
-           "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character.",
-       });
+    if (!checkPassword(values.password)) {
+      notification.error({
+        message: "Error",
+        description:
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character.",
+      });
 
-       return; // Stop further execution if password is invalid
-     }
+      return; // Stop further execution if password is invalid
+    }
 
-     if (!checkIdCard(values.idCard)) {
-       notification.error({
-         message: "Error",
-         description: "IdCard is not correct",
-       });
+    if (!checkIdCard(values.idCard)) {
+      notification.error({
+        message: "Error",
+        description: "IdCard is not correct",
+      });
 
-       return;
-     }
-     if (!checkPhoneNumberVN(values.phone)) {
-       notification.error({
-         message: "Error",
-         description: "Phone number is not correct",
-       });
+      return;
+    }
+    if (!checkPhoneNumberVN(values.phone)) {
+      notification.error({
+        message: "Error",
+        description: "Phone number is not correct",
+      });
 
-       return;
-     }
-
+      return;
+    }
 
     const res = await authtApi.apiRegister(
       values.email,
@@ -235,7 +251,19 @@ function RegisterPage() {
             name="address"
             rules={[{ required: true, message: "Please enter your address!" }]}
           >
-            <Input placeholder="Enter address" size="large" />
+            <Select
+              showSearch
+              onSearch={searchAddress} // Khi người dùng nhập vào trường này, gọi hàm tìm kiếm
+              placeholder="Select address"
+              size="large"
+              filterOption={false} // Tắt chức năng filter mặc định của Ant Design
+            >
+              {address.map((a) => (
+                <Option key={a.place_id} value={a.display_name}>
+                  {a.display_name}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
 
           {/* Submit Button */}

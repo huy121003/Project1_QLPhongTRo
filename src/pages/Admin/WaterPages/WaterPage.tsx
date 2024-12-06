@@ -77,15 +77,19 @@ const WaterPage = () => {
 
   // Hàm lấy chỉ số điện theo hợp đồng
   const fetchElectricIndices = async (contracts: IContract[]) => {
+    let adjustedMonth = selectedMonth-1;
+    let adjustedYear = year;
+    if (adjustedMonth === 0) {
+      adjustedMonth = 12;
+      adjustedYear = year-1;
+    }
     const promises = contracts.map(async (contract) => {
       const [billResponse, lastMonthResponse] = await Promise.all([
         invoiceApi.fetchInvoiceApi(
-          `room._id=${contract.room._id}&month=${selectedMonth}-${year}&service._id=${water?._id}`
+          `tenant._id=${contract.tenant._id}&room._id=${contract.room._id}&month=${selectedMonth}-${year}&service._id=${water?._id}`
         ),
         invoiceApi.fetchInvoiceApi(
-          `room._id=${contract.room._id}&month=${
-            selectedMonth - 1
-          }-${year}&service._id=${water?._id}`
+          `tenant._id=${contract.tenant._id}&room._id=${contract.room._id}&month=${adjustedMonth}-${adjustedYear}&service._id=${water?._id}`
         ),
       ]);
       return {
@@ -103,12 +107,15 @@ const WaterPage = () => {
   useEffect(() => {
     getWaterService();
   }, []);
+  useEffect(() => {
+    fetchContracts();
+  }
+  , [selectedMonth, year,water]);
 
   useEffect(() => {
-    if (water) {
-      fetchContracts().then(() => fetchElectricIndices(contract));
-    }
-  }, [selectedMonth, year, water]);
+   fetchElectricIndices(contract)
+    
+  }, [selectedMonth, year, contract]);
   const handleInputChange = (
     id: string,
     field: "firstIndex" | "finalIndex",
@@ -125,8 +132,8 @@ const WaterPage = () => {
 
   return (
     <>
-      {" "}
-      <h1 className="text-2xl font-bold m-2"></h1>
+      
+      <h1 className="text-2xl font-bold m-2">Water</h1>
       <div className="justify-end  w-full">
         <div
           className={`  m-2  rounded-lg shadow-lg   justify-between flex-1 items-center cursor flex
