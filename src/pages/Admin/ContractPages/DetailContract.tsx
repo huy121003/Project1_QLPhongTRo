@@ -1,12 +1,9 @@
 import React from "react";
-import { Descriptions, Drawer, Button, Typography } from "antd";
-import { PrinterOutlined } from "@ant-design/icons";
+import { Descriptions, Drawer, Typography } from "antd";
 import moment from "moment";
 import { getContractStatusColor } from "../../../utils/getMethodColor";
-import { downloadContractPDF } from "../../../utils/generateContractPDF";
 import { IContract } from "../../../interfaces";
 import { useTheme } from "../../../contexts/ThemeContext";
-
 interface Props {
   openDetailContract: boolean;
   setOpenDetailContract: (value: boolean) => void;
@@ -26,10 +23,6 @@ const DetailContract: React.FC<Props> = ({
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
 
   const formatDate = (date: Date) => moment(date).format("DD/MM/YYYY");
-
-  const handlePrintPDF = () => {
-    if (record) downloadContractPDF(record);
-  };
 
   const renderItem = (label: string, value: React.ReactNode) => ({
     key: label,
@@ -92,15 +85,6 @@ const DetailContract: React.FC<Props> = ({
           className={`flex items-center justify-between p-2 ${textColor} ${bgColor}`}
         >
           <h1 className="text-4xl font-bold">Contract Detail</h1>
-          <Button
-            type="primary"
-            size="large"
-            className="bg-orange-600 hover:bg-orange-700 transition duration-200"
-            icon={<PrinterOutlined />}
-            onClick={handlePrintPDF}
-          >
-            Print Contract
-          </Button>
         </div>
         <div className={`p-2 ${textColor} ${bgColor}`}>
           <Descriptions bordered column={1} items={items} />

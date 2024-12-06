@@ -40,22 +40,6 @@ const RoleTable: React.FC<Props> = ({
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const columns = [
     {
-      title: "ID",
-      dataIndex: "_id",
-      key: "_id",
-      render: (_id: string, record: IRole) => (
-        <p
-          className="text-blue-600 hover:text-blue-300"
-          onClick={() => {
-            setOpenDetailRole(true);
-            setRecord(record);
-          }}
-        >
-          {_id}
-        </p>
-      ),
-    },
-    {
       title: "Role Name",
       dataIndex: "name",
       key: "name",
@@ -75,27 +59,45 @@ const RoleTable: React.FC<Props> = ({
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (_: any, record: any) =>
-        record.name === "SUPER ADMIN" || record.name === "NORMAL " ? null : (
-          <div className="gap-2 flex">
-            <Button
-              icon={
-                <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
-              }
-              onClick={() => {
-                setOpenEditRole(true), setRecord(record);
-              }}
-            >
-              Edit
-            </Button>
+      render: (_: any, record: any) => (
+        <div className="gap-2 flex">
+          <Button
+            onClick={() => {
+              setOpenDetailRole(true);
+              setRecord(record);
+            }}
+            icon={
+              <i
+                className="fa-solid fa-eye text-xl
+              text-blue-500
+              "
+              />
+            }
+          >
+            Detail
+          </Button>
+          {record.name === "SUPER ADMIN" || record.name === "NORMAL " ? null : (
+            <>
+              <Button
+                icon={
+                  <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
+                }
+                onClick={() => {
+                  setOpenEditRole(true), setRecord(record);
+                }}
+              >
+                Edit
+              </Button>
 
-            <DeleteModal
-              onConfirm={onDeleteRole} // Pass the delete function
-              record={record} // Pass the record to delete
-            />
-          </div>
-        ),
-      with: 150,
+              <DeleteModal
+                onConfirm={onDeleteRole} // Pass the delete function
+                record={record} // Pass the record to delete
+              />
+            </>
+          )}
+        </div>
+      ),
+      width: 150,
     },
   ];
   const [visibleColumns, setVisibleColumns] = useState<string[]>(

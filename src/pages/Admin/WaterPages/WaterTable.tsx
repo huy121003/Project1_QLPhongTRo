@@ -201,7 +201,7 @@ const WaterTable: React.FC<Props> = ({
       ),
     },
     {
-      title: "price",
+      title: "Price",
       dataIndex: "price",
       key: "price",
       render: () => <p>{parseFloat(water?.price).toLocaleString()}đ</p>,

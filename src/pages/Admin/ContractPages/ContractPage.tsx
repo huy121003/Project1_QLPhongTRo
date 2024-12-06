@@ -5,11 +5,11 @@ import AddContractModal from "./AddContractModal";
 import DetailContract from "./DetailContract";
 import ContractFilters from "./ContractFilter";
 import ExportToExcel from "./ExportToExcel";
-import ContractCards from "./ContractCard";
 import { IContract } from "../../../interfaces";
 import { ContractStatus, RoomStatus } from "../../../enums";
 import { contractApi, roomApi } from "../../../api";
 import { useTheme } from "../../../contexts/ThemeContext";
+import ContractTable from "./ContractTable";
 
 function ContractPage() {
   const [contracts, setContracts] = useState<IContract[]>([]);
@@ -99,10 +99,16 @@ function ContractPage() {
   useEffect(() => {
     getContracts();
   }, [current, pageSize, sorted, searchParams, openAddContract]);
-  const handlePaginationChange = (page: number, pageSize?: number) => {
-    setCurrent(page);
-    if (pageSize) setPageSize(pageSize);
+  const onChange = (pagination: any) => {
+    if (pagination.current !== current && pagination) {
+      setCurrent(pagination.current);
+    }
+    if (pagination.pageSize !== pageSize && pagination) {
+      setPageSize(pagination.pageSize);
+      setCurrent(1);
+    }
   };
+
   const handleSearchChange = (field: string, value: string) => {
     setSearchParams((prev) => ({ ...prev, [field]: value }));
     setCurrent(1);
@@ -137,18 +143,18 @@ function ContractPage() {
             />
           </div>
         </div>
-        <ContractCards
-          contracts={contracts}
-          handleCancelContract={handleCancelContract}
-          setOpenDetailContract={setOpenDetailContract}
-          setRecord={setRecord}
-          isLoading={isLoading}
-          current={current}
-          pageSize={pageSize}
-          total={total}
-          onChange={handlePaginationChange}
-          onDelete={onDelete}
-        />
+       <ContractTable
+        contracts={contracts}
+        isLoading={isLoading}
+        current={current}
+        pageSize={pageSize}
+        total={total}
+        onChange={onChange}
+        setOpenDetailContract={setOpenDetailContract}
+        setRecord={setRecord}
+        handleCancelContract={handleCancelContract}
+        onDelete={onDelete}
+      />
       </div>
 
       <DetailContract

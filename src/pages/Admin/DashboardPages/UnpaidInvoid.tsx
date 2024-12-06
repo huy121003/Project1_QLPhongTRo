@@ -46,6 +46,12 @@ function UnpaidInvoid() {
       key: "tenant",
       render: (tenant: any) => <p>{tenant.name}</p>,
     },
+    {
+      title:"Description",
+      dataIndex:"description",
+      key:"description"
+
+    },
 
     { title: "Month", dataIndex: "month", key: "month" },
     {

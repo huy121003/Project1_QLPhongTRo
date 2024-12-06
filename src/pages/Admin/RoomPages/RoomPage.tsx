@@ -6,10 +6,10 @@ import EditRoomModal from "./EditRoomModal";
 import DetailRoom from "./DetailRoom";
 import RoomFilters from "./RoomFilters";
 import ExportToExcel from "./ExportToExcel";
-import RoomCard from "./RoomCard";
 import { IRoom } from "../../../interfaces";
 import { roomApi } from "../../../api";
 import { useTheme } from "../../../contexts/ThemeContext";
+import RoomTable from "./RoomTable";
 function RoomPage() {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [current, setCurrent] = useState(1);
@@ -58,9 +58,14 @@ function RoomPage() {
   useEffect(() => {
     getRoom();
   }, [current, pageSize, sorted, searchParams, openAddRoom, openEditRoom]);
-  const handlePaginationChange = (page: number, pageSize?: number) => {
-    setCurrent(page);
-    if (pageSize) setPageSize(pageSize);
+  const onChange = (pagination: any) => {
+    if (pagination.current !== current && pagination) {
+      setCurrent(pagination.current);
+    }
+    if (pagination.pageSize !== pageSize && pagination) {
+      setPageSize(pagination.pageSize);
+      setCurrent(1);
+    }
   };
   const handleSearchChange = (field: string, value: string) => {
     setSearchParams((prev) => ({ ...prev, [field]: value }));
@@ -106,7 +111,8 @@ function RoomPage() {
             <AddButton onClick={() => setOpenAddRoom(true)} label="Add Room" />
           </div>
         </div>
-        <RoomCard
+  
+        <RoomTable
           rooms={rooms}
           onDeleteRoom={onDeleteRoom}
           setOpenDetailRoom={setOpenDetailRoom}
@@ -116,7 +122,7 @@ function RoomPage() {
           current={current}
           pageSize={pageSize}
           total={total}
-          onChange={handlePaginationChange}
+          onChange={onChange}
         />
       </div>
       <AddRoomModal openAddRoom={openAddRoom} setOpenAddRoom={setOpenAddRoom} />

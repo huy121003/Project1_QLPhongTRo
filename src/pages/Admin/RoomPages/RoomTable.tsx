@@ -6,32 +6,34 @@ import {
 } from "../../../components";
 
 import { Button } from "antd";
-
-import { getServiceTypeColor } from "../../../utils/getMethodColor";
-import { IService } from "../../../interfaces";
+import { IRoom } from "../../../interfaces";
 import { useTheme } from "../../../contexts/ThemeContext";
+import {
+  getRoomStatusColor,
+  getRoomTypeColor,
+} from "../../../utils/getMethodColor";
 interface Props {
-  services: IService[];
+  rooms: IRoom[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteService: (record: IService) => Promise<void>;
-  setOpenEditService: (value: boolean) => void;
-  setOpenDetailService: (value: boolean) => void;
-  setRecord: (record: IService) => void;
+  onDeleteRoom: (record: IRoom) => Promise<void>;
+  setOpenEditRoom: (open: boolean) => void;
+  setOpenDetailRoom: (open: boolean) => void;
+  setRecord: (record: IRoom) => void;
 }
-const ServiceTable: React.FC<Props> = ({
-  services,
+const RoomTable: React.FC<Props> = ({
+  rooms,
   isLoading,
   current,
   pageSize,
   total,
   onChange,
-  onDeleteService,
-  setOpenEditService,
-  setOpenDetailService,
+  onDeleteRoom,
+  setOpenEditRoom,
+  setOpenDetailRoom,
   setRecord,
 }) => {
   const { theme } = useTheme();
@@ -39,32 +41,43 @@ const ServiceTable: React.FC<Props> = ({
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const columns = [
-    { title: "Name", dataIndex: "serviceName", key: "serviceName" },
-    { title: "Description", dataIndex: "description", key: "description" },
+    { title: "Room", dataIndex: "roomName", key: "roomName" },
+    { title: "Area(m2)", dataIndex: "area", key: "area" },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+      render: (type: string) => (
+        <span className={`font-semibold my-2 text-${getRoomTypeColor(type)} `}>
+          {type}
+        </span>
+      ),
+    },
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
       render: (price: number) => <p>{price.toLocaleString()} đ</p>,
     },
-    { title: "Unit", dataIndex: "unit", key: "unit" },
     {
-      title: "Type",
-      dataIndex: "type",
-      key: "type",
-      render: (type: string) => (
-        <p className={`${getServiceTypeColor(type)} font-bold`}>{type}</p>
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <span className={`px-2 py-1  font-bold ${getRoomStatusColor(status)}`}>
+          {status}
+        </span>
       ),
     },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (_: any, record: IService) => (
-        <div className="gap-2 flex">
+      render: (_:any,record: IRoom) => (
+        <div className="flex space-x-2">
           <Button
             onClick={() => {
-              setOpenDetailService(true);
+              setOpenDetailRoom(true);
               setRecord(record);
             }}
             icon={
@@ -77,27 +90,24 @@ const ServiceTable: React.FC<Props> = ({
           >
             Detail
           </Button>
+
           <Button
             icon={
               <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
             }
             onClick={() => {
-              setOpenEditService(true), setRecord(record);
+              setRecord(record);
+              setOpenEditRoom(true);
             }}
           >
             Edit
           </Button>
-
-          <DeleteModal
-            onConfirm={(record) => onDeleteService(record)} // Pass the delete function
-            record={record} // Pass the record to delete
-          />
+          <DeleteModal onConfirm={() => onDeleteRoom(record)} record={record} />
         </div>
       ),
-      width: 150,
+      width: 200,
     },
   ];
-
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     columns.map((column) => column.dataIndex)
   );
@@ -111,8 +121,8 @@ const ServiceTable: React.FC<Props> = ({
         />
       </div>
       <TableComponent
-        data={services}
         columns={columns}
+        data={rooms}
         visibleColumns={visibleColumns}
         isLoading={isLoading}
         current={current}
@@ -123,5 +133,4 @@ const ServiceTable: React.FC<Props> = ({
     </div>
   );
 };
-
-export default ServiceTable;
+export default RoomTable;
