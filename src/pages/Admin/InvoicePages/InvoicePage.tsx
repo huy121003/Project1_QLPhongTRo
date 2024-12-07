@@ -105,6 +105,9 @@ const InvoicePage = () => {
     <>
       <h1 className="text-2xl font-bold m-2">Invoice</h1>
       <div className="justify-end  w-full">
+        <div className="flex-1 m-2">
+          <InvoiceAmount selectMonth={selectedMonth} year={year} />
+        </div>
         <div
           className={` rounded-lg   justify-between items-center mx-2 flex
   ${bgColor} ${textColor} 
@@ -137,10 +140,7 @@ const InvoicePage = () => {
             <ExportToExcel invoices={invoices} />
           </div>
         </div>
-        <div className="flex-1 m-2">
-          <InvoiceAmount selectMonth={selectedMonth} year={year} />
-        </div>
-       <InvoiceTable
+        <InvoiceTable
           invoices={invoices}
           onDeleteInvoice={onDeleteInvoice}
           onPaymentConfirm={onPaymentConfirm}

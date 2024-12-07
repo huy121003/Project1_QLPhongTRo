@@ -38,7 +38,7 @@ const ContractTable: React.FC<Props> = ({
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
- 
+
   const columns = [
     {
       title: "Room",
@@ -106,15 +106,12 @@ const ContractTable: React.FC<Props> = ({
             Detail
           </Button>
           <Button
-          
-           
-          
             icon={<i className="fa-solid fa-print text-orange-600 text-xl"></i>}
-            onClick={()=>{
-               if (record) downloadContractPDF(record);
+            onClick={() => {
+              if (record) downloadContractPDF(record);
             }}
           >
-            Print 
+            Print
           </Button>
           {record?.status === ContractStatus.ACTIVE && (
             <Popconfirm
@@ -128,7 +125,6 @@ const ContractTable: React.FC<Props> = ({
               placement="topRight"
             >
               <Button
-                danger
                 icon={
                   <i
                     className="fa-solid fa-house-circle-xmark

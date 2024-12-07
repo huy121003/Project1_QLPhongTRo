@@ -6,7 +6,6 @@ import {
 } from "../../../components";
 import { IAccount } from "../../../interfaces";
 import { getGenderColor, getRoleColor } from "../../../utils/getMethodColor";
-import { useTheme } from "../../../contexts/ThemeContext";
 import { Button } from "antd";
 interface Props {
   accounts: IAccount[];
@@ -32,10 +31,7 @@ const AccountTable: React.FC<Props> = ({
   setOpenEditAccount,
   setRecord,
 }) => {
-  const { theme } = useTheme();
-  const isLightTheme = theme === "light";
-  const textColor = isLightTheme ? "text-black" : "text-white";
-  const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
+
   const columns = [
     {
       title: "Name",
@@ -81,8 +77,8 @@ const AccountTable: React.FC<Props> = ({
       dataIndex: "role",
       key: "role",
       render: (role: any) => (
-        <p className={`font-medium ${getRoleColor(role.name)}`}>
-          {role.name}
+        <p className={`font-medium ${getRoleColor(role?.name)}`}>
+          {role?.name}
         </p>
       ),
     },

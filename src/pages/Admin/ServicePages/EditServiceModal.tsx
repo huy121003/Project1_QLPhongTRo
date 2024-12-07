@@ -91,7 +91,7 @@ const EditServiceModal: React.FC<Props> = ({
               { required: true, message: "Please input the service name!" },
             ]}
           >
-            <Input placeholder="Enter Service Name" />
+            <Input disabled placeholder="Enter Service Name" />
           </Form.Item>
           <Form.Item
             name="description"
@@ -129,7 +129,7 @@ const EditServiceModal: React.FC<Props> = ({
               { required: true, message: "Please select the service type!" },
             ]}
           >
-            <Select placeholder="Select Type">
+            <Select placeholder="Select Type" disabled>
               {Object.values(ServiceType).map((type) => (
                 <Select.Option key={type} value={type}>
                   {type}

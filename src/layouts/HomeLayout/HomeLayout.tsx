@@ -26,7 +26,7 @@ function HomeLayout() {
     useState<boolean>(false);
   const [account, setAccount] = useState<IAccount>();
   const [isNavOpen, setIsNavOpen] = useState<boolean>(true);
-  const [totalRegisterService, setTotalRegisterService] = useState<number>(0);
+  // const [totalRegisterService, setTotalRegisterService] = useState<number>(0);
 
   const user = useAppSelector((state) => state.auth.user);
   const { theme, toggleTheme } = useTheme();
@@ -37,16 +37,16 @@ function HomeLayout() {
     width >= 780 ? setIsNavOpen((prev) => !prev) : setOpenDrawer(true);
   };
 
-  useEffect(() => {
-    setInterval(async () => {
-      const res = await registerServiceAPI.fetchRegisterServiceApi(
-        `status=${RegisterServiceStatus.PENDING}`
-      );
-      if (res.data) {
-        setTotalRegisterService(res.data.result.length);
-      }
-    }, 10000);
-  }, []);
+  // useEffect(() => {
+  //   setInterval(async () => {
+  //     const res = await registerServiceAPI.fetchRegisterServiceApi(
+  //       `status=${RegisterServiceStatus.PENDING}`
+  //     );
+  //     if (res.data) {
+  //       setTotalRegisterService(res.data.result.length);
+  //     }
+  //   }, 10000);
+  // }, []);
 
   const handleLogout = async () => {
     const res = await authtApi.apiLogout();
@@ -125,21 +125,21 @@ function HomeLayout() {
           <div className="flex hover:text-slate-300" onClick={toggleNav}>
             <i className="fa fa-bars text-2xl cursor-pointer font-bold" />
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center gap-2">
             <i
               className={`fa-solid  text-2xl cursor-pointer hover:opacity-80 ${textColor} ${
                 theme === "light" ? "fa-sun " : " fa-moon"
               } `}
               onClick={toggleTheme}
             />
-            <div className="mx-4">
+            {/* <div className="mx-4">
               <Badge
                 count={totalRegisterService}
                 onClick={() => setOpenRegisterService(true)}
               >
                 <i className="fa fa-bell text-2xl cursor-pointer text-red-600" />
               </Badge>
-            </div>
+            </div> */}
             <Dropdown overlay={menu} trigger={["hover"]}>
               <div className="flex justify-center items-center hover:text-blue-500">
                 {user?.avatar ? (

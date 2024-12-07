@@ -10,6 +10,7 @@ import IPayment from "./IPayment";
 import IRegisterService from "./IRegisterService";
 import IRouter from "./IRouter";
 import IAddress from "./IAddress";
+import IRequestContract from "./IRequestContract";
 export type {
   IAccount,
   IContract,
@@ -23,4 +24,5 @@ export type {
   IRegisterService,
   IRouter,
   IAddress,
+  IRequestContract,
 };

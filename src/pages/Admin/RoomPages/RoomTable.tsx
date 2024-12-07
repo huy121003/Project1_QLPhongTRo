@@ -12,6 +12,7 @@ import {
   getRoomStatusColor,
   getRoomTypeColor,
 } from "../../../utils/getMethodColor";
+import { RoomStatus } from "../../../enums";
 interface Props {
   rooms: IRoom[];
   isLoading: boolean;
@@ -73,7 +74,7 @@ const RoomTable: React.FC<Props> = ({
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (_:any,record: IRoom) => (
+      render: (_: any, record: IRoom) => (
         <div className="flex space-x-2">
           <Button
             onClick={() => {
@@ -90,22 +91,28 @@ const RoomTable: React.FC<Props> = ({
           >
             Detail
           </Button>
-
-          <Button
-            icon={
-              <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
-            }
-            onClick={() => {
-              setRecord(record);
-              setOpenEditRoom(true);
-            }}
-          >
-            Edit
-          </Button>
-          <DeleteModal onConfirm={() => onDeleteRoom(record)} record={record} />
+          {record.status === RoomStatus.Available && (
+            <>
+              <Button
+                icon={
+                  <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
+                }
+                onClick={() => {
+                  setRecord(record);
+                  setOpenEditRoom(true);
+                }}
+              >
+                Edit
+              </Button>
+              <DeleteModal
+                onConfirm={() => onDeleteRoom(record)}
+                record={record}
+              />
+            </>
+          )}
         </div>
       ),
-      width: 200,
+      width: 100,
     },
   ];
   const [visibleColumns, setVisibleColumns] = useState<string[]>(

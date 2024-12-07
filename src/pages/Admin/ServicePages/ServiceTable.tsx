@@ -10,6 +10,7 @@ import { Button } from "antd";
 import { getServiceTypeColor } from "../../../utils/getMethodColor";
 import { IService } from "../../../interfaces";
 import { useTheme } from "../../../contexts/ThemeContext";
+import { ServiceType } from "../../../enums";
 interface Props {
   services: IService[];
   isLoading: boolean;
@@ -88,10 +89,13 @@ const ServiceTable: React.FC<Props> = ({
             Edit
           </Button>
 
-          <DeleteModal
-            onConfirm={(record) => onDeleteService(record)} // Pass the delete function
-            record={record} // Pass the record to delete
-          />
+          {record.type !== ServiceType.Electricity &&
+            record.type !== ServiceType.Water && (
+              <DeleteModal
+                onConfirm={(record) => onDeleteService(record)} // Pass the delete function
+                record={record} // Pass the record to delete
+              />
+            )}
         </div>
       ),
       width: 150,

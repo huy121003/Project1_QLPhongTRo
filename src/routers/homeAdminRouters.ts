@@ -15,6 +15,7 @@ import PermissionPage from "../pages/Admin/PermissionPages/PermissionPage";
 import StatisticalLayout from "../layouts/StatisticalLayout/StatisticalLayout";
 import StatisticalInvoicePage from "../pages/Admin/StatisticalPages/StatisticalInvoicePage";
 import StatisticalRoomPage from "../pages/Admin/StatisticalRoomPage/StatisticalRoomPage";
+import RequestContractPage from "../pages/Admin/RequestContractPages/RequestContractPage";
 const homeAdminRouters: IRouter[] = [
   {
     path: "dashboard",
@@ -111,13 +112,13 @@ const homeAdminRouters: IRouter[] = [
         icon: "fa-solid fa-folder", // Icon thư mục cho Contract List
         label: "Contract List",
       },
-      // {
-      //   path: "extendContract",
-      //   component: ExtendContractPage,
-      //   isShowNav: true,
-      //   icon: "fa-solid fa-calendar-plus", // Icon lịch thêm cho Extend Contract
-      //   label: "Extend Contract",
-      // },
+      {
+        path:"requestContract",
+        component: RequestContractPage,
+        isShowNav: true,
+        icon: "fa-solid fa-file-signature", // Icon ký hiệu tài liệu cho Request Contract
+        label: "Request Contract",
+      }
     ],
   },
   {

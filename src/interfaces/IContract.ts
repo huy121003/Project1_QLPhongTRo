@@ -19,6 +19,7 @@ interface IContract {
     _id: string;
     name: string;
   };
+  isRenewed: boolean;
   startDate: Date;
   endDate: Date;
   depositAmount: number;
