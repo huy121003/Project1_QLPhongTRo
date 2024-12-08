@@ -20,6 +20,7 @@ interface IContract {
     address: string;
     phone: string;
   };
+  isRenewed: boolean;
   startDate: Date;
   endDate: Date;
   depositAmount: number;

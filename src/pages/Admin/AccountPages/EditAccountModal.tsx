@@ -9,19 +9,20 @@ import {
   DatePicker,
   notification,
 } from "antd";
-import moment from "moment"; // Import moment for date handling
-
-import { IRole, IAccount } from "../../../interfaces";
+const { Option } = Select;
+import { IRole, IAccount, IAddress } from "../../../interfaces";
 import { RenderUploadField } from "../../../components";
-import { accountApi, roleApi, upfileApi } from "../../../api";
+import { accountApi, addressApi, roleApi, upfileApi } from "../../../api";
 import { Gender } from "../../../enums";
 import {
   checkEmail,
   checkIdCard,
+  checkPassword,
   checkPhoneNumberVN,
 } from "../../../utils/regex";
 import dayjs from "dayjs";
 import { useTheme } from "../../../contexts/ThemeContext";
+import debounce from "lodash.debounce";
 interface Props {
   openEditAccount: boolean;
   setOpenEditAccount: (value: boolean) => void;
@@ -52,6 +53,21 @@ const EditAccountModal: React.FC<Props> = ({
   const [imageBackId, setImageBackId] = useState<string>("");
   const [imageTemporaryResidence, setImageTemporaryResidence] =
     useState<string>("");
+  const [address, setAddress] = useState<IAddress[]>([]);
+
+  // Hàm tìm kiếm địa chỉ
+  const searchAddress = debounce(async (value: string) => {
+    if (value) {
+      try {
+        //tách chuoi bằng +
+        value = value.split(" ").join("+");
+        const result = await addressApi.fecthAddress(value);
+        setAddress(result);
+      } catch (error) {
+        console.error("Error fetching address:", error);
+      }
+    }
+  }, 500); // Debounce 500ms, có thể thay đổi tùy theo nhu cầu
 
   useEffect(() => {
     const getRole = async () => {
@@ -113,23 +129,31 @@ const EditAccountModal: React.FC<Props> = ({
     let frontIdFileName = imageFrontId;
     let backIdFileName = imageBackId;
     let temporaryResidenceFileName = imageTemporaryResidence;
+    if (!checkEmail(values.Email)) {
+      notification.error({
+        message: "Error",
+        description: "Email is not correct",
+      });
 
-    // if (!checkIdCard(values.idCard)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description: "IdCard is not correct",
-    //   });
+      return;
+    }
 
-    //   return;
-    // }
-    // if (checkPhoneNumberVN(values.phone)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description: "Phone number is not correct",
-    //   });
+    if (!checkIdCard(values.IdCard)) {
+      notification.error({
+        message: "Error",
+        description: "IdCard is not correct",
+      });
 
-    //   return;
-    // }
+      return;
+    }
+    if (!checkPhoneNumberVN(values.Phone)) {
+      notification.error({
+        message: "Error",
+        description: "Phone number is not correct",
+      });
+
+      return;
+    }
     // Kiểm tra sự thay đổi của ảnh và upload nếu có
     setLoading(true);
     if (avatar) {
@@ -186,7 +210,6 @@ const EditAccountModal: React.FC<Props> = ({
 
         return;
       }
-     
     }
 
     // Gọi API cập nhật thông tin tài khoản sau khi tất cả ảnh đã được tải lên
@@ -421,7 +444,19 @@ const EditAccountModal: React.FC<Props> = ({
             rules={[{ required: true, message: "Please input the address!" }]}
             className="flex-1 m-1"
           >
-            <Input placeholder="Enter Address" size="large" />
+            <Select
+              showSearch
+              onSearch={searchAddress} // Khi người dùng nhập vào trường này, gọi hàm tìm kiếm
+              placeholder="Select address"
+              size="large"
+              filterOption={false} // Tắt chức năng filter mặc định của Ant Design
+            >
+              {address.map((a) => (
+                <Option key={a.place_id} value={a.display_name}>
+                  {a.display_name}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
 
           <div className="lg:flex flex-1 justify-between">

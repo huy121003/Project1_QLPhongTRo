@@ -3,7 +3,6 @@ import ContractLayout from "../layouts/ContractLayout/ContractLayout";
 import ServiceLayout from "../layouts/ServiceLayout/ServiceLayout";
 import AccountPage from "../pages/Admin/AccountPages/AccountPage";
 import ContractPage from "../pages/Admin/ContractPages/ContractPage";
-import ExtendContractPage from "../pages/Admin/ContractPages/ExtendContractPage";
 import DashboardPage from "../pages/Admin/DashboardPages/DashboardPage";
 import ElectricPage from "../pages/Admin/ElectricPages/ElectricPage";
 import InvoicePage from "../pages/Admin/InvoicePages/InvoicePage";
@@ -11,10 +10,12 @@ import RolePage from "../pages/Admin/RolePages/RolePage";
 import RoomPage from "../pages/Admin/RoomPages/RoomPage";
 import RequestServicePage from "../pages/Admin/RequestServicePages/RequestServicePage";
 import ServicePage from "../pages/Admin/ServicePages/ServicePage";
-import StatisticalPage from "../pages/Admin/StatisticalPages/StatisticalPage";
 import WaterPage from "../pages/Admin/WaterPages/WaterPage";
 import PermissionPage from "../pages/Admin/PermissionPages/PermissionPage";
-
+import StatisticalLayout from "../layouts/StatisticalLayout/StatisticalLayout";
+import StatisticalInvoicePage from "../pages/Admin/StatisticalPages/StatisticalInvoicePage";
+import StatisticalRoomPage from "../pages/Admin/StatisticalRoomPage/StatisticalRoomPage";
+import RequestContractPage from "../pages/Admin/RequestContractPages/RequestContractPage";
 const homeAdminRouters: IRouter[] = [
   {
     path: "dashboard",
@@ -76,10 +77,26 @@ const homeAdminRouters: IRouter[] = [
   },
   {
     path: "statistical",
-    component: StatisticalPage,
+    component: StatisticalLayout,
     isShowNav: true,
     icon: "fa-solid fa-chart-bar", // Icon biểu đồ cột cho Statistical
     label: "Statistical",
+    children: [
+      {
+        path: "statisticalInvoice",
+        component: StatisticalInvoicePage,
+        isShowNav: true,
+        icon: "fa-solid fa-file-invoice-dollar", // Icon hóa đơn tiền cho Statistical Invoice
+        label: "Statistical Invoice",
+      },
+      {
+        path:"statisticalRoom",
+        component: StatisticalRoomPage,
+        isShowNav: true,
+        icon: "fa-solid fa-door-open", // Icon cửa mở cho Statistical Room
+        label: "Statistical Room",
+      }
+    ],
   },
   {
     path: "contract",
@@ -95,13 +112,13 @@ const homeAdminRouters: IRouter[] = [
         icon: "fa-solid fa-folder", // Icon thư mục cho Contract List
         label: "Contract List",
       },
-      // {
-      //   path: "extendContract",
-      //   component: ExtendContractPage,
-      //   isShowNav: true,
-      //   icon: "fa-solid fa-calendar-plus", // Icon lịch thêm cho Extend Contract
-      //   label: "Extend Contract",
-      // },
+      {
+        path:"requestContract",
+        component: RequestContractPage,
+        isShowNav: true,
+        icon: "fa-solid fa-file-signature", // Icon ký hiệu tài liệu cho Request Contract
+        label: "Request Contract",
+      }
     ],
   },
   {

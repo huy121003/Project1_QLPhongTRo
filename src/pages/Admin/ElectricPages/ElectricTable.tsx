@@ -40,7 +40,7 @@ const ElectricTable: React.FC<Props> = ({
   const handleOK = async (key: string) => {
     const indexData = numberIndex[key];
     if (
-      !indexData.firstIndex ||
+      indexData.firstIndex <0 ||
       !indexData.finalIndex ||
       indexData.firstIndex > indexData.finalIndex
     ) {
@@ -60,9 +60,9 @@ const ElectricTable: React.FC<Props> = ({
       res.statusCode === 200
         ? message.success("Electric  updated successfully")
         : notification.error({
-            message: "Error",
-            description: res.message,
-          });
+          message: "Error",
+          description: res.message,
+        });
     } else {
       const contractInfo = contract.find((c) => c._id === key);
       if (!contractInfo) return;
@@ -92,9 +92,9 @@ const ElectricTable: React.FC<Props> = ({
       res.statusCode === 201
         ? message.success(res.message)
         : notification.error({
-            message: "Error",
-            description: res.message,
-          });
+          message: "Error",
+          description: res.message,
+        });
     }
   };
 
@@ -117,6 +117,7 @@ const ElectricTable: React.FC<Props> = ({
       key: "firstIndex",
       render: (_: any, record: IContract) => (
         <Input
+        
           type="number"
           value={numberIndex[record._id]?.firstIndex}
           onChange={(e) =>
@@ -129,15 +130,15 @@ const ElectricTable: React.FC<Props> = ({
           style={
             theme === "light"
               ? {
-                  backgroundColor: "#fff",
-                  color: "#000",
-                  border: "1px solid #444",
-                }
+                backgroundColor: "#fff",
+                color: "#000",
+                border: "1px solid #444",
+              }
               : {
-                  backgroundColor: "#333",
-                  color: "#fff",
-                  border: "1px solid #444",
-                }
+                backgroundColor: "#333",
+                color: "#fff",
+                border: "1px solid #444",
+              }
           }
         />
       ),
@@ -160,15 +161,15 @@ const ElectricTable: React.FC<Props> = ({
           style={
             theme === "light"
               ? {
-                  backgroundColor: "#fff",
-                  color: "#000",
-                  border: "1px solid #444",
-                }
+                backgroundColor: "#fff",
+                color: "#000",
+                border: "1px solid #444",
+              }
               : {
-                  backgroundColor: "#333",
-                  color: "#fff",
-                  border: "1px solid #444",
-                }
+                backgroundColor: "#333",
+                color: "#fff",
+                border: "1px solid #444",
+              }
           }
         />
       ),
@@ -188,15 +189,15 @@ const ElectricTable: React.FC<Props> = ({
           style={
             theme === "light"
               ? {
-                  backgroundColor: "#fff",
-                  color: "#000",
-                  border: "1px solid #444",
-                }
+                backgroundColor: "#fff",
+                color: "#000",
+                border: "1px solid #444",
+              }
               : {
-                  backgroundColor: "#333",
-                  color: "#fff",
-                  border: "1px solid #444",
-                }
+                backgroundColor: "#333",
+                color: "#fff",
+                border: "1px solid #444",
+              }
           }
         />
       ),
@@ -205,7 +206,7 @@ const ElectricTable: React.FC<Props> = ({
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: () => <p>{parseFloat(electric.price).toLocaleString()}đ</p>,
+      render: () => <p>{parseFloat(electric?.price).toLocaleString()}đ</p>,
     },
     {
       title: "Total",
@@ -216,11 +217,10 @@ const ElectricTable: React.FC<Props> = ({
           <p>
             {(
               parseFloat(
-                `${
-                  (numberIndex[record._id]?.finalIndex || 0) -
-                  (numberIndex[record._id]?.firstIndex || 0)
+                `${(numberIndex[record._id]?.finalIndex || 0) -
+                (numberIndex[record._id]?.firstIndex || 0)
                 }`
-              ) * parseFloat(electric.price)
+              ) * parseFloat(electric?.price)
             ).toLocaleString()}
             đ
           </p>

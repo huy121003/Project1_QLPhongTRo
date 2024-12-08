@@ -94,7 +94,7 @@ const NotificationModal: React.FC<Props> = ({ open, setOpen }) => {
                   {item.type
                     ? `${item.user.name} want to register
                 the service `
-                    : `${item.user.name} want to cancelc the service `}
+                    : `${item.user.name} want to cancel the service `}
                   <span className="font-bold text-green-300">
                     {item.service.serviceName}
                   </span>

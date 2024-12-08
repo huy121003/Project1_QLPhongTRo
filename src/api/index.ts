@@ -9,7 +9,7 @@ import serviceApi from "./serviceApi";
 import upfileApi from "./upfileApi";
 import payOSApi from "./payOSApi";
 import registerServiceAPI from "./registerServiceAPI";
-
+import addressApi from "./addressApi";
 export {
     accountApi,
     authtApi,
@@ -22,4 +22,5 @@ export {
     upfileApi,
     payOSApi,
     registerServiceAPI,
+    addressApi,
 };

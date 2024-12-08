@@ -48,7 +48,7 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
       if (respone && respone.data) {
         dispatch(logoutAction());
         setOpen(false);
-        navigate("/");
+        navigate("/login");
         message.success(
           "You have successfully changed your password. Please login again."
         );
@@ -58,6 +58,12 @@ const ChangePassword: React.FC<Props> = ({ open, setOpen }) => {
           description: respone.message,
         });
       }
+    }
+    else {
+      notification.error({
+        message: "Error",
+        description: res.message,
+      });
     }
 
     setLoading(false); // End loading

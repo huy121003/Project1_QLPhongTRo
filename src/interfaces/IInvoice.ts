@@ -17,6 +17,7 @@ interface IInvoice {
     unit: string;
     priceUnit: number;
   };
+  send:boolean;
   firstIndex?: number;
   finalIndex?: number;
   totalNumber?: number;

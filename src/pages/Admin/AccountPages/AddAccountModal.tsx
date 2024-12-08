@@ -10,9 +10,10 @@ import {
   notification,
 } from "antd";
 import { Gender } from "../../../enums";
-import { IRole } from "../../../interfaces";
+import { IAddress, IRole } from "../../../interfaces";
 import { RenderUploadField } from "../../../components";
-import { upfileApi, roleApi, accountApi } from "../../../api";
+import { upfileApi, roleApi, accountApi, addressApi } from "../../../api";
+import debounce from "lodash.debounce";
 import {
   checkEmail,
   checkIdCard,
@@ -47,6 +48,21 @@ const AddAccountModal: React.FC<Props> = ({
   const [imageFrontId] = useState<string>("");
   const [imageBackId] = useState<string>("");
   const [imageTemporaryResidence] = useState<string>("");
+  const [address, setAddress] = useState<IAddress[]>([]);
+
+  // Hàm tìm kiếm địa chỉ
+  const searchAddress = debounce(async (value: string) => {
+    if (value) {
+      try {
+        //tách chuoi bằng +
+        value = value.split(" ").join("+");
+        const result = await addressApi.fecthAddress(value);
+        setAddress(result);
+      } catch (error) {
+        console.error("Error fetching address:", error);
+      }
+    }
+  }, 500); // Debounce 500ms, có thể thay đổi tùy theo nhu cầu
 
   useEffect(() => {
     const getRole = async () => {
@@ -82,41 +98,41 @@ const AddAccountModal: React.FC<Props> = ({
     let backIdFileName = imageBackId;
     let temporaryResidenceFileName = imageTemporaryResidence;
     // Upload images if they exist
-    // if (!checkEmail(values.email)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description: "Email is not correct",
-    //   });
+    if (!checkEmail(values.Email)) {
+      notification.error({
+        message: "Error",
+        description: "Email is not correct",
+      });
 
-    //   return;
-    // }
+      return;
+    }
 
-    // if (!checkPassword(values.password)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description:
-    //       "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character",
-    //   });
+    if (!checkPassword(values.Password)) {
+      notification.error({
+        message: "Error",
+        description:
+          "Password must contain at least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character.",
+      });
 
-    //   return;
-    // }
+      return; // Stop further execution if password is invalid
+    }
 
-    // if (!checkIdCard(values.idCard)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description: "IdCard is not correct",
-    //   });
+    if (!checkIdCard(values.IdCard)) {
+      notification.error({
+        message: "Error",
+        description: "IdCard is not correct",
+      });
 
-    //   return;
-    // }
-    // if (checkPhoneNumberVN(values.phone)) {
-    //   notification.error({
-    //     message: "Error",
-    //     description: "Phone number is not correct",
-    //   });
+      return;
+    }
+    if (!checkPhoneNumberVN(values.Phone)) {
+      notification.error({
+        message: "Error",
+        description: "Phone number is not correct",
+      });
 
-    //   return;
-    // }
+      return;
+    }
     setLoading(true);
     if (avatar) {
       const response = await upfileApi.postAvatarApi(avatar);
@@ -368,7 +384,20 @@ const AddAccountModal: React.FC<Props> = ({
             rules={[{ required: true, message: "Address is required" }]}
             className="flex-1 m-1"
           >
-            <Input placeholder="Enter address" size="large" />
+            {/* <Input placeholder="Enter address" size="large" /> */}
+            <Select
+              showSearch
+              onSearch={searchAddress} // Khi người dùng nhập vào trường này, gọi hàm tìm kiếm
+              placeholder="Select address"
+              size="large"
+              filterOption={false} // Tắt chức năng filter mặc định của Ant Design
+            >
+              {address.map((a) => (
+                <Option key={a.place_id} value={a.display_name}>
+                  {a.display_name}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
           <div className="lg:flex justify-between">
             <RenderUploadField

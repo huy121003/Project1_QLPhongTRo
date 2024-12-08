@@ -40,22 +40,7 @@ const PermissionTable: React.FC<Props> = ({
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const columns = [
-    {
-      title: "ID",
-      dataIndex: "_id",
-      key: "_id",
-      render: (_id: string, record: IPermisson) => (
-        <p
-          className="text-blue-600 hover:text-blue-300"
-          onClick={() => {
-            setOpenDetailPermission(true);
-            setRecord(record);
-          }}
-        >
-          {_id}
-        </p>
-      ),
-    },
+ 
     {
       title: "Name",
       dataIndex: "name",
@@ -95,6 +80,21 @@ const PermissionTable: React.FC<Props> = ({
       key: "action",
       render: (text: any, record: any) => (
         <div className="gap-2 flex">
+          <Button
+            onClick={() => {
+              setOpenDetailPermission(true);
+              setRecord(record);
+            }}
+            icon={
+              <i
+                className="fa-solid fa-eye text-xl
+              text-blue-500
+              "
+              />
+            }
+          >
+            Detail
+          </Button>
           <Button
             onClick={() => {
               setRecord(record);

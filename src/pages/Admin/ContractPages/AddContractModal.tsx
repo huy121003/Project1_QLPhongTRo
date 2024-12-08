@@ -10,10 +10,11 @@ import {
   notification,
 } from "antd";
 import dayjs from "dayjs";
-import { IAccount, IRoom } from "../../../interfaces";
-import { accountApi, contractApi, roomApi } from "../../../api";
+import { IAccount, IAddress, IRoom } from "../../../interfaces";
+import { accountApi, addressApi, contractApi, roomApi } from "../../../api";
 import { ContractStatus } from "../../../enums";
 import { useTheme } from "../../../contexts/ThemeContext";
+import debounce from "lodash.debounce";
 
 interface Props {
   openAddContract: boolean;
@@ -47,6 +48,22 @@ const AddContractModal: React.FC<Props> = ({
     roomName: "",
     price: "",
   });
+  const [address, setAddress] = useState<IAddress[]>([]);
+
+  // Hàm tìm kiếm địa chỉ
+  const searchAddress = debounce(async (value: string) => {
+    if (value) {
+      try {
+        //tách chuoi bằng +
+        value = value.split(" ").join("+");
+        const result = await addressApi.fecthAddress(value);
+        setAddress(result);
+      } catch (error) {
+        console.error("Error fetching address:", error);
+      }
+    }
+  }, 500); // Debounce 500ms, có thể thay đổi tùy theo nhu cầu
+
   useEffect(() => {
     const currentStartDate = form.getFieldValue("startDate");
     form.setFieldsValue({
@@ -90,8 +107,8 @@ const AddContractModal: React.FC<Props> = ({
   }, [openAddContract]);
 
   const handleOk = async () => {
-    setLoading(true);
     const values = await form.validateFields();
+    setLoading(true);
     const endDate = dayjs(values.startDate)
       .add(time.number, time.unit as dayjs.ManipulateType)
       .toDate();
@@ -279,7 +296,19 @@ const AddContractModal: React.FC<Props> = ({
             name="address"
             rules={[{ required: true, message: "Please input address" }]}
           >
-            <Input />
+            <Select
+              showSearch
+              onSearch={searchAddress} // Khi người dùng nhập vào trường này, gọi hàm tìm kiếm
+              placeholder="Select address"
+              size="large"
+              filterOption={false} // Tắt chức năng filter mặc định của Ant Design
+            >
+              {address.map((a) => (
+                <Select.Option key={a.place_id} value={a.display_name}>
+                  {a.display_name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             label={

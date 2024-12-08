@@ -11,7 +11,7 @@ function UnpaidInvoid() {
   const [unpaidInvoices, setUnpaidInvoices] = React.useState<IInvoice[]>([]);
   const [total, setTotal] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState(10);
+  const [pageSize, setPageSize] = React.useState(5);
   const [loading, setLoading] = React.useState(false);
   useEffect(() => {
     getUnpaidInvoices();
@@ -45,6 +45,12 @@ function UnpaidInvoid() {
       dataIndex: "tenant",
       key: "tenant",
       render: (tenant: any) => <p>{tenant.name}</p>,
+    },
+    {
+      title:"Description",
+      dataIndex:"description",
+      key:"description"
+
     },
 
     { title: "Month", dataIndex: "month", key: "month" },

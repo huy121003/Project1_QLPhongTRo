@@ -1,4 +1,4 @@
-import  { apiRequest } from "./ApiConfig";
+import { apiRequest } from "./ApiConfig";
 import { ApiMethod, ContractStatus } from "../enums";
 const fetchContractApi = (query: any): Promise<any> => {
   return apiRequest(ApiMethod.GET, `/api/v1/contracts?${query}`, false);
@@ -33,7 +33,7 @@ const postContractApi = (
   return apiRequest(ApiMethod.POST, `/api/v1/contracts`, false, {
     room,
     tenant,
-
+    isRenewed: false,
     startDate,
     endDate,
     address,
@@ -52,10 +52,17 @@ const patchContractApi = (
     status,
   });
 };
+const patchExtendContractApi = (id: string): Promise<any> => {
+  return apiRequest(ApiMethod.PATCH, `/api/v1/contracts/${id}`, false, {
+    isRenewed: true,
+    status: ContractStatus.ACTIVE,
+  });
+};
 export default {
   fetchContractApi,
   fetchContractByIdApi,
   deleteContractApi,
   postContractApi,
   patchContractApi,
+  patchExtendContractApi,
 };

@@ -1,37 +1,40 @@
-import React, { useState } from "react";
-
+import { useState } from "react";
 import {
   ColumnSelector,
   DeleteModal,
   TableComponent,
 } from "../../../components";
-import { Button } from "antd";
-import { getRoleColor } from "../../../utils/getMethodColor";
-import { IRole } from "../../../interfaces";
-import { useTheme } from "../../../contexts/ThemeContext";
 
+import { Button } from "antd";
+import { IRoom } from "../../../interfaces";
+import { useTheme } from "../../../contexts/ThemeContext";
+import {
+  getRoomStatusColor,
+  getRoomTypeColor,
+} from "../../../utils/getMethodColor";
+import { RoomStatus } from "../../../enums";
 interface Props {
-  roles: IRole[];
+  rooms: IRoom[];
   isLoading: boolean;
   current: number;
   pageSize: number;
   total: number;
   onChange: (page: number, pageSize?: number) => void;
-  onDeleteRole: (record: IRole) => Promise<void>;
-  setOpenEditRole: (value: boolean) => void;
-  setOpenDetailRole: (value: boolean) => void;
-  setRecord: (value: IRole) => void;
+  onDeleteRoom: (record: IRoom) => Promise<void>;
+  setOpenEditRoom: (open: boolean) => void;
+  setOpenDetailRoom: (open: boolean) => void;
+  setRecord: (record: IRoom) => void;
 }
-const RoleTable: React.FC<Props> = ({
-  roles,
+const RoomTable: React.FC<Props> = ({
+  rooms,
   isLoading,
   current,
   pageSize,
   total,
   onChange,
-  onDeleteRole,
-  setOpenEditRole,
-  setOpenDetailRole,
+  onDeleteRoom,
+  setOpenEditRoom,
+  setOpenDetailRoom,
   setRecord,
 }) => {
   const { theme } = useTheme();
@@ -39,31 +42,43 @@ const RoleTable: React.FC<Props> = ({
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-gray-800";
   const columns = [
+    { title: "Room", dataIndex: "roomName", key: "roomName" },
+    { title: "Area(m2)", dataIndex: "area", key: "area" },
     {
-      title: "Role Name",
-      dataIndex: "name",
-      key: "name",
-      render: (name: string) => (
-        <p className={` ${getRoleColor(name) as string}  font-bold`}>{name}</p>
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+      render: (type: string) => (
+        <span className={`font-semibold my-2 text-${getRoomTypeColor(type)} `}>
+          {type}
+        </span>
       ),
     },
-    { title: "Description", dataIndex: "description", key: "description" },
-
     {
-      title: "Created At",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      render: (createdAt: string) => new Date(createdAt).toLocaleDateString(),
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      render: (price: number) => <p>{price.toLocaleString()} đ</p>,
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      render: (status: string) => (
+        <span className={`px-2 py-1  font-bold ${getRoomStatusColor(status)}`}>
+          {status}
+        </span>
+      ),
     },
     {
       title: "Action",
       dataIndex: "action",
       key: "action",
-      render: (_: any, record: any) => (
-        <div className="gap-2 flex">
+      render: (_: any, record: IRoom) => (
+        <div className="flex space-x-2">
           <Button
             onClick={() => {
-              setOpenDetailRole(true);
+              setOpenDetailRoom(true);
               setRecord(record);
             }}
             icon={
@@ -76,38 +91,35 @@ const RoleTable: React.FC<Props> = ({
           >
             Detail
           </Button>
-          {record.name === "SUPER ADMIN" || record.name === "NORMAL " ? null : (
+          {record.status === RoomStatus.Available && (
             <>
               <Button
                 icon={
                   <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
                 }
                 onClick={() => {
-                  setOpenEditRole(true), setRecord(record);
+                  setRecord(record);
+                  setOpenEditRoom(true);
                 }}
               >
                 Edit
               </Button>
-
               <DeleteModal
-                onConfirm={onDeleteRole} // Pass the delete function
-                record={record} // Pass the record to delete
+                onConfirm={() => onDeleteRoom(record)}
+                record={record}
               />
             </>
           )}
         </div>
       ),
-      width: 150,
+      width: 100,
     },
   ];
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     columns.map((column) => column.dataIndex)
   );
   return (
-    <div
-      className={` p-2 rounded-lg m-2
-  `}
-    >
+    <div className={` p-2 rounded-lg m-2 `}>
       <div>
         <ColumnSelector
           columns={columns}
@@ -116,8 +128,8 @@ const RoleTable: React.FC<Props> = ({
         />
       </div>
       <TableComponent
-        data={roles}
         columns={columns}
+        data={rooms}
         visibleColumns={visibleColumns}
         isLoading={isLoading}
         current={current}
@@ -128,5 +140,4 @@ const RoleTable: React.FC<Props> = ({
     </div>
   );
 };
-
-export default RoleTable;
+export default RoomTable;

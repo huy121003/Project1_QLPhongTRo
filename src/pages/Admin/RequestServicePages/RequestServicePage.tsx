@@ -3,8 +3,8 @@ import { RegisterServiceStatus } from "../../../enums";
 import RegisterServiceFilter from "./RequestServiceFilter";
 import { registerServiceAPI } from "../../../api";
 import { message, notification } from "antd";
-import RegisterServiceCard from "./RequestServiceCard";
 import { IRegisterService } from "../../../interfaces";
+import RequestServiceTable from "./RequestServiceTable";
 function RequestServicePage() {
   const [registerService, setRegisterService] = React.useState<
     IRegisterService[]
@@ -14,7 +14,7 @@ function RequestServicePage() {
   const [pageSize, setPageSize] = React.useState(10);
   const [loading, setLoading] = React.useState(false);
   const [searchParams, setSearchParams] = React.useState({
-    status: "PENDING",
+    status: "",
     type: "",
   });
   const [sorted, setSorted] = React.useState<string>("");
@@ -59,9 +59,14 @@ function RequestServicePage() {
   useEffect(() => {
     getRegisterService();
   }, [currentPage, pageSize, searchParams, sorted]);
-  const handlePaginationChange = (page: number, pageSize?: number) => {
-    setCurrentPage(page);
-    if (pageSize) setPageSize(pageSize);
+  const onChange = (pagination: any) => {
+    if (pagination.current !== currentPage && pagination) {
+      setCurrentPage(pagination.current);
+    }
+    if (pagination.pageSize !== pageSize && pagination) {
+      setPageSize(pagination.pageSize);
+      setCurrentPage(1);
+    }
   };
   const handleApprove = async (id: string, type: boolean) => {
     const res = await registerServiceAPI.patchRegisterServiceApi(
@@ -92,28 +97,27 @@ function RequestServicePage() {
     setCurrentPage(1);
   };
   return (
-    <>  <h1 className="text-2xl font-bold m-2">
-      Request Service
-    </h1>
-    <div className="m-2">
-      <RegisterServiceFilter
-        handleSearchChange={handleSearchChange}
-        handleSortChange={handleSortChange}
-        searchParams={searchParams}
-        sorted={sorted}
-      />
-      <RegisterServiceCard
-        registerService={registerService}
-        total={total}
-        currentPage={currentPage}
-        pageSize={pageSize}
-        onChange={handlePaginationChange}
-        onApprove={handleApprove}
-        loading={loading}
-        onDelete={deleteRegisterService}
-      />
-
-    </div>
+    <>
+      {" "}
+      <h1 className="text-2xl font-bold m-2">Request Service</h1>
+      <div className="m-2">
+        <RegisterServiceFilter
+          handleSearchChange={handleSearchChange}
+          handleSortChange={handleSortChange}
+          searchParams={searchParams}
+          sorted={sorted}
+        />
+        <RequestServiceTable
+          registerService={registerService}
+          total={total}
+          currentPage={currentPage}
+          pageSize={pageSize}
+          onChange={onChange}
+          onApprove={handleApprove}
+          loading={loading}
+          onDelete={deleteRegisterService}
+        />
+      </div>
     </>
   );
 }
