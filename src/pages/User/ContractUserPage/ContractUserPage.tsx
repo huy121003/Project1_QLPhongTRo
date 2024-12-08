@@ -1,17 +1,21 @@
 import { useAppSelector } from "../../../redux/hook";
-import { Alert, notification } from "antd";
+import { notification, Result } from "antd";
 import ContractExtension from "./ContractExtesion";
 import { useEffect, useState } from "react";
-import { IContract } from "../../../interfaces";
+import { IContract, IRoom } from "../../../interfaces";
 import { contractApi } from "../../../api";
+import roomApi from "../../../api/roomApi.ts";
+import RentalContract from "./RentalContract.tsx";
 
 export default function ContractUserPage() {
 
     const iduser = useAppSelector((state) => state.auth.user._id);
     const [contracts, setContracts] = useState<IContract[]>([]);
+    const [room, setRoom] = useState<IRoom>();
     const [openContractIndex, setOpenContractIndex] = useState<number>(0); // Mặc định mở hợp đồng đầu tiên
     const [isRenewable, setIsRenewable] = useState<boolean[]>([]); // Theo dõi trạng thái nút gia hạn từng hợp đồng
     const [openAddContract, setOpenAddContract] = useState(false);
+
     useEffect(() => {
         const getContracts = async () => {
             const res = await contractApi.fetchContractApi(
@@ -23,8 +27,13 @@ export default function ContractUserPage() {
                 const activeContracts = allContracts.filter(
                     (contract: IContract) => contract.status === "ACTIVE"
                 );
-                console.log(activeContracts);
+                // console.log(activeContracts);
+
                 setContracts(activeContracts);
+                const roomContract = await roomApi.fetchRoomByIdApi(activeContracts[openContractIndex].room._id);
+                if (roomContract) {
+                    setRoom(roomContract.data);
+                }
                 // Tính toán trạng thái gia hạn cho từng hợp đồng
                 const renewableStates = activeContracts.map(
                     (contract: IContract) => {
@@ -43,7 +52,7 @@ export default function ContractUserPage() {
             }
         };
         getContracts();
-    }, [iduser]);
+    }, [iduser, openContractIndex]);
 
     const toggleContract = (index: number) => {
         setOpenContractIndex(index);
@@ -60,154 +69,175 @@ export default function ContractUserPage() {
         if (contracts.length > 0 && isRenewable[openContractIndex]) {
             notification.open({
                 message: "Contract Renewal Reminder",
-                description: `The contract for room ${
-                    contracts[openContractIndex]?.room.roomName
-                } is about to expire on ${new Date(
-                    contracts[openContractIndex]?.endDate
-                ).toLocaleDateString(
-                    "en-GB"
-                )}. Please renew to avoid interruption.`,
+                description: `The contract for room ${contracts[openContractIndex]?.room.roomName
+                    } is about to expire on ${new Date(
+                        contracts[openContractIndex]?.endDate
+                    ).toLocaleDateString(
+                        "en-GB"
+                    )}. Please renew to avoid interruption.`,
                 placement: "topRight",
                 duration: 5, // Thời gian hiển thị (5 giây)
                 className: "bg-yellow-100 text-yellow-700", // Tuỳ chỉnh style nếu cần
             });
         }
+        
     }, [openContractIndex, contracts, isRenewable]);
     return (
-        <div className="bg-[#e0f5e4] text-[#2b6534] h-screen flex flex-col">
-            {/* Danh sách các phòng */}
-            <div className="h-14 flex flex-row flex-shrink-0 items-center px-4  gap-4 text-xl font-semibold  sticky top-0 z-50 border-b-2 border-gray-300 bg-white">
-                {contracts.map((contract, index) => (
-                    <span
-                        key={contract._id}
-                        // className="flex justify-between cursor-pointer"
-                        className={`p-2 rounded-lg text-xl font-medium ${
-                            openContractIndex === index
-                                ? " text-[#49cb5e] underline "
-                                : " hover:text-[#49cb5e]"
-                        }`}
-                        onClick={() => toggleContract(index)}
-                    >
-                        Room {contract.room.roomName}
-                    </span>
-                ))}
-            </div>
-            {/* Hiển thị thông tin hợp đồng */}
-            <div className="flex-grow bg-[#e0f5e4] ">
-                {contracts.length > 0 && openContractIndex !== -1 && (
-                    <div className="">
-                        <div className="bg-white rounded-lg shadow-md p-6 m-5">
-                            <h2 className="text-2xl font-semibold mb-4">
-                                Contract Information
-                            </h2>
-                            <p className="text-lg">
-                                Start Date:{" "}
-                                {new Date(
-                                    contracts[openContractIndex].startDate
-                                ).toLocaleDateString("en-GB")}
-                            </p>
-                            <p className="text-lg">
-                                End Date:{" "}
-                                {new Date(
-                                    contracts[openContractIndex].endDate
-                                ).toLocaleDateString("en-GB")}
-                            </p>
-                            <p className="text-lg">
-                                Status: {contracts[openContractIndex].status}
-                            </p>
+
+                <div className="bg-[#e0f5e4] text-black h-screen flex flex-col mr-10">
+
+                    {room !== undefined ?
+                        <div>
+                            <div
+                            className="h-14 flex flex-row flex-shrink-0 items-center px-4  gap-4 text-xl font-semibold  sticky top-0 z-50 border-b-2 border-gray-300 bg-[#e0f5e4]">
+                            {contracts.map((contract, index) => (
+                                <span
+                                    key={contract._id}
+                                    // className="flex justify-between cursor-pointer"
+                                    className={`p-2 rounded-lg text-xl font-medium ${
+                                        openContractIndex === index
+                                            ? " text-[#4096ff] underline "
+                                            : " hover:text-[#49cb5e]"
+                                    }`}
+                                    onClick={() => toggleContract(index)}
+                                >
+                                Room {contract.room.roomName}
+                            </span>
+                            ))}
                         </div>
-                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
-                            <h2 className="text-2xl font-semibold mb-4">
-                                Landlord Information
-                            </h2>
-                            <p className="text-lg">
-                                Name:{" "}
-                                {contracts[openContractIndex].innkeeper.name}
-                            </p>
-                            <p className="text-lg">Address: Số 7, Quan Trung</p>
-                            <p className="text-lg">Phone: 0343310165</p>
+                            {/* <div className="flex-grow bg-[#e0f5e4] pb-2 rounded-lg ">
+                                {contracts.length > 0 && openContractIndex !== -1 && (
+                                    <div className="">
+                                        <div className="bg-white rounded-lg shadow-md p-6 m-5">
+                                            <h2 className="text-2xl font-semibold mb-4">
+                                                Contract Information
+                                            </h2>
+                                            <p className="text-lg">
+                                                Start Date:{" "}
+                                                {new Date(
+                                                    contracts[openContractIndex].startDate
+                                                ).toLocaleDateString("en-GB")}
+                                            </p>
+                                            <p className="text-lg">
+                                                End Date:{" "}
+                                                {new Date(
+                                                    contracts[openContractIndex].endDate
+                                                ).toLocaleDateString("en-GB")}
+                                            </p>
+                                            <p className="text-lg">
+                                                Status: {contracts[openContractIndex].status}
+                                            </p>
+                                        </div>
+                                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
+                                            <h2 className="text-2xl font-semibold mb-4">
+                                                Landlord Information
+                                            </h2>
+                                            <p className="text-lg">
+                                                Name:{" "}
+                                                {contracts[openContractIndex].innkeeper.name}
+                                            </p>
+                                            <p className="text-lg">{contracts[openContractIndex].innkeeper.address}</p>
+                                            <p className="text-lg">{contracts[openContractIndex].innkeeper.phone}</p>
+                                        </div>
+
+                                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
+                                            <h2 className="text-2xl font-semibold mb-4">
+                                                Tenant Information
+                                            </h2>
+                                            <p className="text-lg">
+                                                Name: {contracts[openContractIndex].tenant.name}
+                                            </p>
+                                            <p className="text-lg">
+                                                Address:{" "}
+                                                {contracts[openContractIndex].tenant.address}
+                                            </p>
+                                            <p className="text-lg">
+                                                Phone:{" "}
+                                                {contracts[openContractIndex].tenant.phone}
+                                            </p>
+                                            <p className="text-lg">
+                                                Email:{" "}
+                                                {contracts[openContractIndex].tenant.email}
+                                            </p>
+                                        </div>
+
+                                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
+                                            <h2 className="text-2xl font-semibold mb-4">
+                                                Room Details
+                                            </h2>
+                                            <p className="text-lg">
+                                                Room Name:{" "}
+                                                {room?.roomName}
+                                            </p>
+                                            <p className="text-lg"> Room Type: {room?.type}</p>
+                                            <p className="text-lg">Area: {room?.area}</p>
+                                            <p className="text-lg">
+                                                Rent Price:{" "}
+                                                {room?.price.toLocaleString('it-IT', {style: 'currency', currency: 'VND'})}
+                                            </p>
+                                            <p className="text-lg">
+                                                Amenities: {room?.description}
+                                            </p>
+                                        </div>
+                                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
+                                            <h2 className="text-2xl font-semibold mb-4">
+                                                Payment Terms
+                                            </h2>
+                                            <p className="text-lg">
+                                                Rent:{" "}
+                                                {room?.price.toLocaleString('it-IT', {style: 'currency', currency: 'VND'})}
+                                            </p>
+                                            <p className="text-lg">Deposit: {contracts[openContractIndex].depositAmount.toLocaleString('it-IT', {
+                                                style: 'currency',
+                                                currency: 'VND'
+                                            })}</p>
+                                            <p className="text-lg">
+                                                Payment Method: Chuyển khoản
+                                            </p>
+                                            <p className="text-lg">Payment Due
+                                                Date: {contracts[openContractIndex].rentCycleCount} month</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <div className="bg-white px-4 pb-4 mt-2 flex justify-end mr-2">
+                                <button
+                                    className={`text-xl text-green-100 p-4 rounded-xl ${
+                                        isRenewable[openContractIndex]
+                                            ? "bg-[#1677ff] hover:bg-[#4096ff]"
+                                            : "bg-gray-400 cursor-not-allowed"
+                                    }`}
+                                    disabled={!isRenewable[openContractIndex]} // Vô hiệu nút nếu chưa hết hạn
+                                    onClick={() => {
+                                        handleExtension(contracts[openContractIndex]._id);
+                                        setOpenAddContract(true);
+                                    }}
+                                >
+                                    Contract extension
+                                </button>
+                            </div> */}
+                            <RentalContract />
+
+                            <ContractExtension
+                                openAddContract={openAddContract}
+                                setOpenAddContract={setOpenAddContract}
+                                contractextension={contracts[openContractIndex]}
+                            />
                         </div>
 
-                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
-                            <h2 className="text-2xl font-semibold mb-4">
-                                Tenant Information
-                            </h2>
-                            <p className="text-lg">
-                                Name: {contracts[openContractIndex].tenant.name}
-                            </p>
-                            <p className="text-lg">
-                                Address:{" "}
-                                {contracts[openContractIndex].tenant.address}
-                            </p>
-                            <p className="text-lg">
-                                Phone:{" "}
-                                {contracts[openContractIndex].tenant.phone}
-                            </p>
-                            <p className="text-lg">
-                                Email:{" "}
-                                {contracts[openContractIndex].tenant.email}
-                            </p>
-                        </div>
+            :
+                        <Result
+                status="404"
+                title="404"
+                subTitle="Sorry, No contracts found."
 
-                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
-                            <h2 className="text-2xl font-semibold mb-4">
-                                Room Details
-                            </h2>
-                            <p className="text-lg">
-                                Room Name:{" "}
-                                {contracts[openContractIndex].room.roomName}
-                            </p>
-                            <p className="text-lg">Room Type: Quad</p>
-                            <p className="text-lg">Area: A</p>
-                            <p className="text-lg">
-                                Rent Price:{" "}
-                                {contracts[openContractIndex].room.price}
-                            </p>
-                            <p className="text-lg">
-                                Amenities: Self-contained room, 45m2, with loft,
-                                2 windows, refrigerator, water heater, full
-                                kitchen
-                            </p>
-                        </div>
-                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
-                            <h2 className="text-2xl font-semibold mb-4">
-                                Payment Terms
-                            </h2>
-                            <p className="text-lg">
-                                Rent:{" "}
-                                {contracts[openContractIndex].depositAmount}
-                            </p>
-                            <p className="text-lg">Deposit: 2.500.000 VND</p>
-                            <p className="text-lg">
-                                Payment Method: Chuyển khoản
-                            </p>
-                            <p className="text-lg">Payment Due Date: 13</p>
-                        </div>
-                    </div>
-                )}
-            </div>
-            <div className="bg-[#e0f5e4] px-4 pb-4">
-                <button
-                    className={`text-xl text-green-100 p-4 rounded-xl ${
-                        isRenewable[openContractIndex]
-                            ? "bg-[#259729] hover:bg-[#36c53b]"
-                            : "bg-gray-400 cursor-not-allowed"
-                    }`}
-                    disabled={!isRenewable[openContractIndex]} // Vô hiệu nút nếu chưa hết hạn
-                    onClick={() => {
-                        handleExtension(contracts[openContractIndex]._id);
-                        setOpenAddContract(true);
-                    }}
-                >
-                    Contract extension
-                </button>
-            </div>
-            <ContractExtension
-                openAddContract={openAddContract}
-                setOpenAddContract={setOpenAddContract}
-                contractextension={contracts[openContractIndex]}
             />
-        </div>
+        }
+                </div>
+       
+
+
+
     );
 
 }

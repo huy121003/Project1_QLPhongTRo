@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useAppSelector } from "../../../redux/hook";
 import { IContract, IRegisterService, IService } from "../../../interfaces";
 import { contractApi, registerServiceAPI, roomApi } from "../../../api";
-import { Button, message } from "antd";
+import {Button, message, Popconfirm, PopconfirmProps} from "antd";
 
 const ServiceRoom = ({
     setServiceRooms,
@@ -65,6 +65,11 @@ const ServiceRoom = ({
         }
     };
 
+
+    const cancel: PopconfirmProps['onCancel'] = (e) => {
+
+    };
+
     // Xóa dịch vụ
     const handleDeleteService = async (
         idService: string,
@@ -118,8 +123,8 @@ const ServiceRoom = ({
                         key={contract._id}
                         className={`px-4 py-2 rounded-lg shadow font-normal text-base ${
                             selectedRoomId === contract.room._id
-                                ? "bg-green-300 text-[#2b6534] cursor-pointer font-semibold"
-                                : "bg-green-100 hover:bg-green-200"
+                                ? "bg-[#1677ff] hover:bg-[#4096ff] text-white cursor-pointer font-semibold"
+                                : "bg-green-100 hover:bg-[#4096ff]"
                         }`}
                         onClick={() => setSelectedRoomId(contract.room._id)}
                     >
@@ -177,22 +182,35 @@ const ServiceRoom = ({
                                         )
                                     ) : service.type !== "ELECTRICITY" &&
                                       service.type !== "WATER" ? (
-                                        <Button
-                                            loading={loading}
-                                            onClick={() =>
-                                                handleDeleteService(
-                                                    service._id,
-                                                    service.type
-                                                )
-                                            }
-                                            danger
-                                            type="primary"
+                                            <Popconfirm
+                                                title="Delete the task"
+                                                description="Are you sure to delete this task?"
+                                                onConfirm={() => handleDeleteService(
+                                                            service._id,
+                                                            service.type
+                                                        )}
+                                                onCancel={cancel}
+                                                okText="Yes"
+                                                cancelText="No"
+                                            >
+                                                <Button
+                                                    loading={loading}
+                                                    // onClick={() =>
+                                                    //     handleDeleteService(
+                                                    //         service._id,
+                                                    //         service.type
+                                                    //     )
+                                                    // }
+                                                    danger
+                                                    type="primary"
 
-                                            // className="text-red-500 transition-all duration-300 transform hover:text-red-500 hover:scale-110 active:text-red-900 active:scale-95 cursor-pointer"
-                                        >
-                                            <i className="fa fa-times text-xl   mr-3"></i>
-                                            Cancel
-                                        </Button>
+                                                    // className="text-red-500 transition-all duration-300 transform hover:text-red-500 hover:scale-110 active:text-red-900 active:scale-95 cursor-pointer"
+                                                >
+                                                    <i className="fa fa-times text-xl   mr-3"></i>
+                                                    Cancel
+                                                </Button>
+                                            </Popconfirm>
+
                                     ) : null}
                                 </td>
                             </tr>

@@ -7,7 +7,7 @@ interface IRoom {
   status: RoomStatus;
   price: number;
   description: string;
-  services: any[];
+  services: string[];
   createdBy: {
     _id: string;
     email: string;

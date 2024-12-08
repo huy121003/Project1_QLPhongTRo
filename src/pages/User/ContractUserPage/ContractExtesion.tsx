@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Button, Input, DatePicker, Form, Select, message } from "antd";
-
+import { Modal, Button, Input, DatePicker, Form, Select } from "antd";
 import { IContract } from "../../../interfaces";
 import moment from "moment";
 
@@ -22,7 +21,10 @@ const ContractExtension: React.FC<Props> = ({
     });
     const [form] = Form.useForm();
 
-    const handleOk = async () => {};
+    const handleOk = async () => {
+        const values = await form.validateFields();
+        alert(values);
+    };
 
     return (
         <Modal
@@ -65,16 +67,14 @@ const ContractExtension: React.FC<Props> = ({
                 <Form.Item
                     label="Tenant"
                     name="tenantId"
-                    // rules={[
-                    //     { required: true, message: "Please select tenant" },
-                    // ]}
+
                 >
                     <Input disabled />
                 </Form.Item>
                 <Form.Item
                     label="Room"
                     name="roomId"
-                    // rules={[{ required: true, message: "Please select room" }]}
+
                 >
                     <Select disabled></Select>
                 </Form.Item>
@@ -86,7 +86,7 @@ const ContractExtension: React.FC<Props> = ({
                         name="startDate"
                         className="flex-1"
                     >
-                        <DatePicker disabled />
+                        <DatePicker  />
                     </Form.Item>
                     <Form.Item
                         label="End Date"

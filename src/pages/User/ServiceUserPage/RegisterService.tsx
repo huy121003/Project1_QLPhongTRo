@@ -80,7 +80,7 @@ export default function RegisterService({
             title={
                 <div
                     style={{
-                        color: "#2b6534",
+                        color: "#000000",
                         textAlign: "center",
                         fontWeight: "500",
                         fontSize: "26px",
@@ -105,7 +105,7 @@ export default function RegisterService({
             >
                 <Form.Item<FieldType>
                     label={
-                        <span style={{ fontSize: "18px", color: "#2b6534" }}>
+                        <span style={{ fontSize: "18px", color: "#000000" }}>
                             Service
                         </span>
                     }
@@ -113,10 +113,10 @@ export default function RegisterService({
                     initialValue={selectedService.serviceName}
                     style={{ fontSize: "26px", color: "#2b6534" }}
                 >
-                    <Input
+                    <Input disabled={true}
                         style={{
                             borderRadius: "8px",
-                            color: "#2b6534",
+                            color: "#000000",
                             fontSize: "16px",
                         }}
                     />
@@ -124,7 +124,7 @@ export default function RegisterService({
 
                 <Form.Item<FieldType>
                     label={
-                        <span style={{ fontSize: "18px", color: "#2b6534" }}>
+                        <span style={{ fontSize: "18px", color: "#000000" }}>
                             Registration time
                         </span>
                     }
@@ -141,7 +141,7 @@ export default function RegisterService({
                                 label: (
                                     <span
                                         style={{
-                                            color: "#2b6534",
+                                            color: "#000000",
                                             fontSize: "14px",
                                         }}
                                     >
@@ -154,7 +154,7 @@ export default function RegisterService({
                                 label: (
                                     <span
                                         style={{
-                                            color: "#2b6534",
+                                            color: "#000000",
                                             fontSize: "14px",
                                         }}
                                     >
@@ -170,10 +170,10 @@ export default function RegisterService({
                     <Button
                         type="primary"
                         htmlType="submit"
-                        className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                        className="bg-[#1677ff] hover:bg-[#4096ff] text-white font-bold py-4 px-6 rounded transition duration-300"
                         loading={loading}
                     >
-                        Submit
+                        Confirm
                     </Button>
                 </Form.Item>
             </Form>

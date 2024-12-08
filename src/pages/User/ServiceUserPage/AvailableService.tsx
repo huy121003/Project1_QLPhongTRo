@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { message, Pagination } from "antd";
+import { message, Skeleton } from "antd";
 import { IRegisterService, IService } from "../../../interfaces";
 import { serviceApi, registerServiceAPI } from "../../../api";
 import RegisterService from "./RegisterService";
@@ -100,6 +100,7 @@ export default function AvailableService({
                         <th className="py-2 px-4">Register</th>
                     </tr>
                 </thead>
+                {services !== null ? 
                 <tbody>
                     {services.map((service) => {
                         const registerService = statusRegister.find(
@@ -122,7 +123,7 @@ export default function AvailableService({
                                     registerService.room._id ===
                                         selectedRoomId ? (
                                         registerService.status === "PENDING" ? (
-                                            <button className="text-lg bg-yellow-300 px-3 py-2 rounded-md text-[#2b6534]">
+                                            <button className="text-lg bg-yellow-300 px-3 py-2 rounded-md text-black">
                                                 Pending...
                                             </button>
                                         ) : (
@@ -132,7 +133,7 @@ export default function AvailableService({
                                         )
                                     ) : (
                                         <button
-                                            className="px-4 py-2 rounded bg-green-500 text-lg transition-all duration-300 transform hover:bg-green-600 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300 active:bg-green-700"
+                                            className="px-4 py-2 rounded bg-[#1677ff] text-white text-lg transition-all duration-300 transform hover:bg-[#4096ff] hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-300 active:bg-green-700"
                                             onClick={() =>
                                                 handleRegisterClick(service)
                                             }
@@ -145,6 +146,7 @@ export default function AvailableService({
                         );
                     })}
                 </tbody>
+                : <Skeleton active />}
             </table>
 
             {isModalOpen && selectedService && (

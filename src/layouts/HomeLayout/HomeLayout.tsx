@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { resizeWidth } from "../../utils/resize";
 import { useAppDispatch, useAppSelector } from "../../redux/hook";
 import { accountApi, authtApi, registerServiceAPI } from "../../api";
 import { logoutAction } from "../../redux/slice/auth/authSlice";
-import { Badge, Drawer, Dropdown, Menu, message, notification } from "antd";
+import { Badge, Dropdown, Menu, message, notification } from "antd";
 import ChangePassword from "../../pages/AuthPages/ChangePassword";
 import { IAccount } from "../../interfaces";
 import EditAccountModal from "../../pages/Admin/AccountPages/EditAccountModal";
-import { homeAdminRouters } from "../../routers";
 import NotificationModal from "../../pages/Admin/HandleNotificationPages/NotificationModal";
 import { RegisterServiceStatus } from "../../enums";
 import { useTheme } from "../../contexts/ThemeContext";
@@ -19,7 +18,6 @@ function HomeLayout() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const width = resizeWidth();
-  const [selected, setSelected] = useState<string>("Dashboard");
   const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
   const [openEditAccount, setOpenEditAccount] = useState(false);
   const [openRegisterService, setOpenRegisterService] =
@@ -34,6 +32,7 @@ function HomeLayout() {
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-black";
   const toggleNav = () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     width >= 780 ? setIsNavOpen((prev) => !prev) : setOpenDrawer(true);
   };
 
