@@ -1,13 +1,14 @@
 import React from "react";
-import { RegisterServiceStatus } from "../../../enums";
 import { SearchFilters, SortOption } from "../../../components";
+import { RequestContractStatus } from "../../../enums";
+
 interface Props {
   searchParams: any;
   sorted: string;
   handleSearchChange: (field: string, value: string) => void;
   handleSortChange: (e: any) => void;
 }
-const RequestServiceFilter: React.FC<Props> = ({
+const RequestContractFilter: React.FC<Props> = ({
   searchParams,
   sorted,
   handleSearchChange,
@@ -24,11 +25,22 @@ const RequestServiceFilter: React.FC<Props> = ({
             field: "status",
             type: "select",
             options: [
-              { label: "All Status", value: "" },
-
-              { label: "PENDING", value: RegisterServiceStatus.PENDING },
-              { label: "APPROVED", value: RegisterServiceStatus.APPROVED },
-              { label: "SUCCESS", value: RegisterServiceStatus.SUCCESS },
+              {
+                label: "All Status",
+                value: "",
+              },
+              {
+                label: RequestContractStatus.PENDING,
+                value: RequestContractStatus.PENDING,
+              },
+              {
+                label: RequestContractStatus.REJECTED,
+                value: RequestContractStatus.REJECTED,
+              },
+              {
+                label: RequestContractStatus.SUCCESS,
+                value: RequestContractStatus.SUCCESS,
+              },
             ],
           },
           {
@@ -37,8 +49,8 @@ const RequestServiceFilter: React.FC<Props> = ({
             type: "select",
             options: [
               { label: "All Type", value: "" },
-              { label: "Register", value: "true" },
-              { label: "Unregister", value: "false" },
+              { label: "Extend", value: "true" },
+              { label: "Cancel", value: "false" },
             ],
           },
         ]}
@@ -62,5 +74,4 @@ const RequestServiceFilter: React.FC<Props> = ({
     </div>
   );
 };
-
-export default RequestServiceFilter;
+export default RequestContractFilter;

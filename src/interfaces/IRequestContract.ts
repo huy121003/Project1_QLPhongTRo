@@ -1,23 +1,17 @@
-import { RequestContractStatus, RoomType,  } from "../enums";
+import { RequestContractStatus, RoomType } from "../enums";
+import IContract from "./IContract";
 
 interface IRequestContract {
   _id: string;
   user: {
     _id: string;
-    email: string;
     name: string;
-    phone: string;
-    idCard: string;
-    birthday: Date;
     avatar: string;
   };
-  room: {
-    _id: string;
-    roomName: string;
-    type: RoomType;
-  };
+  contract: IContract;
   status: RequestContractStatus;
   type: boolean;
+  amount: number;
   createdAt: Date;
   updatedAt: Date;
   createdBy: {

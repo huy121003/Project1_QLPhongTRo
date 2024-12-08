@@ -3,6 +3,8 @@ import {
   ContractStatus,
   Gender,
   InvoiceStatus,
+  RegisterServiceStatus,
+  RequestContractStatus,
   RoomStatus,
   RoomType,
   ServiceType,
@@ -97,4 +99,28 @@ export const getGenderColor = (gender: string) => {
 
 export const getRequestServiceTypeColor = (type: boolean) => {
   return type ? "text-red-600 " : "text-green-600 ";
+};
+
+export const getRequestContractStatusColor = (
+  status: RequestContractStatus
+) => {
+  switch (status) {
+    case RequestContractStatus.PENDING:
+      return "text-yellow-600 ";
+    case RequestContractStatus.SUCCESS:
+      return "text-green-600 ";
+    case RequestContractStatus.REJECTED:
+      return "text-red-600 ";
+  }
+};
+
+export const getRequestServiceStatusColor = (status: RegisterServiceStatus) => {
+  switch (status) {
+    case RegisterServiceStatus.PENDING:
+      return "text-yellow-600 ";
+    case RegisterServiceStatus.APPROVED:
+      return "text-blue-600 ";
+    case RegisterServiceStatus.SUCCESS:
+      return "text-green-600 ";
+  }
 };
