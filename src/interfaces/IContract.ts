@@ -4,7 +4,6 @@ interface IContract {
   room: {
     _id: string;
     roomName: string;
-
     price: number;
   };
   tenant: {
@@ -18,6 +17,8 @@ interface IContract {
   innkeeper: {
     _id: string;
     name: string;
+    address: string;
+    phone: string;
   };
   startDate: Date;
   endDate: Date;

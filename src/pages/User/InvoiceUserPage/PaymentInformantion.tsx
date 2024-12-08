@@ -72,12 +72,13 @@ export default function PaymentInformantion({
   };
 
   return (
-    <div className="bg-white mb-5 mx-5 rounded-2xl p-6 shadow-lg text-[#2b6534] flex-grow overflow-y-auto h-[362px] custom-scrollbar">
-      <h3 className="text-xl font-semibold text-[#2b6534] mb-2">
-        Payment Information
-      </h3>
-      <table className="w-full border text-left border-collapse">
-        <thead>
+      <div
+          className="bg-white mb-5 mx-5 rounded-2xl p-6 shadow-lg text-black flex-grow overflow-y-auto h-[362px] custom-scrollbar">
+        <h3 className="text-xl font-semibold text-black mb-2">
+          Payment Information
+        </h3>
+        <table className="w-full border text-left border-collapse">
+          <thead>
           <tr className="border">
             <th className="py-2 px-4 border-r">No.</th>
             <th className="py-2 px-4 border-r">ID</th>
@@ -88,59 +89,60 @@ export default function PaymentInformantion({
             <th className="py-2 px-4 border-r">Status</th>
             <th className="py-2 px-4">Select</th>
           </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
           {invoices?.map((invoice, index) => (
-            <tr key={invoice._id}>
-              <td className="py-2 px-4 border">{index + 1}</td>
-              <td
-                className="py-2 px-4 border cursor-pointer"
-                onClick={() => openModal(invoice)}
-              >
-                {invoice._id}
-              </td>
-              <td className="py-2 px-4 border">{invoice.room.roomName}</td>
-              <td className="py-2 px-4 border">{invoice.service.name}</td>
-              <td className="py-2 px-4 border">
-                {invoice.amount
-                  .toString()
-                  .replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ"}
-              </td>
-              <td className="py-2 px-4 border">{invoice.description}</td>
-              <td className="py-2 px-4 border">{invoice.status}</td>
-              <td className="py-2 px-4">
-                <input
-                  type="checkbox"
-                  checked={idInvoice.includes(invoice._id)}
-                  onChange={(e) => handleCheckbox(e, invoice._id)}
-                  className="form-checkbox h-5 w-5"
-                />
-              </td>
-            </tr>
+              <tr key={invoice._id}>
+                <td className="py-2 px-4 border">{index + 1}</td>
+                <td
+                    className="py-2 px-4 border cursor-pointer text-[#1677ff]"
+                    onClick={() => openModal(invoice)}
+                >
+                  {invoice._id}
+                </td>
+                <td className="py-2 px-4 border">{invoice.room.roomName}</td>
+                <td className="py-2 px-4 border">{invoice.service.name}</td>
+                <td className="py-2 px-4 border">
+                  {invoice.amount
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ"}
+                </td>
+                <td className="py-2 px-4 border">{invoice.description}</td>
+                <td className="py-2 px-4 border">{invoice.status}</td>
+                <td className="py-2 px-4 text-center border">
+                  <input
+                      type="checkbox"
+                      checked={idInvoice.includes(invoice._id)}
+                      onChange={(e) => handleCheckbox(e, invoice._id)}
+                      className="form-checkbox h-5 w-5 "
+                  />
+                </td>
+              </tr>
           ))}
-        </tbody>
-      </table>
-      <div className="mt-8 flex justify-end">
-        <Pagination
-          current={current}
-          pageSize={pageSize}
-          total={totalPage}
-          onChange={handlePaginationChange}
-          showSizeChanger
-          pageSizeOptions={["4", "8", "16", "32", "64", "128", "999999"]}
-        />
-      </div>
-      <div className="text-red-600 text-right mt-4 font-semibold">
-        Total Selected Amount:
-        <span className="p-3 font-semibold border-t">
+          </tbody>
+        </table>
+        <div className="text-red-600 text-right mt-4 font-semibold">
+          Total Selected Amount:
+          <span className="p-3 font-semibold border-t">
           {total.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ"}
         </span>
+        </div>
+        <div className="mt-8 flex justify-end">
+          <Pagination
+              current={current}
+              pageSize={pageSize}
+              total={totalPage}
+              onChange={handlePaginationChange}
+              showSizeChanger
+              pageSizeOptions={["5", "10", "50", "999"]}
+          />
+        </div>
+
+        <ModalDetailInvoice
+            visible={isModalVisible}
+            onClose={closeModal}
+            invoice={selectedInvoice}
+        />
       </div>
-      <ModalDetailInvoice
-        visible={isModalVisible}
-        onClose={closeModal}
-        invoice={selectedInvoice}
-      />
-    </div>
   );
 }

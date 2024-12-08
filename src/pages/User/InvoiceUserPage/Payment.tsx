@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 
 import { payOSApi } from "../../../api/";
 
@@ -40,7 +40,7 @@ const CheckoutMessage = ({ message }: { message: string }) => (
 
 export default function Payment({
     idInvoice,
-    res,
+
 }: {
     idInvoice: string[];
     res: any;

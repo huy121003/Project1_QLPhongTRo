@@ -66,8 +66,10 @@ export default function InvoiceUserPage() {
           });
         }
       } catch (error) {
+
         notification.error({
-          message: "Error",
+
+          message: `Error: `,
           description: "Failed to create payment link.",
         });
       }
@@ -120,41 +122,26 @@ export default function InvoiceUserPage() {
 
   return (
     <div className="bg-[#e0f5e4] h-full flex flex-col">
-      <div
-        aria-label="breadcrumb"
-        className="text-xl text-[#2b6534] bg-neutral-100 px-7 py-4 shadow-lg"
-      >
-        <ol className="flex space-x-2">
-          <li>
-            <a href="/tai-chinh" className="hover:underline">
-              Finance
-            </a>
-          </li>
-          <li>
-            <span className="text-[#2b6534]">›</span>
-          </li>
-          <li className="font-semibold">Pay online</li>
-        </ol>
-      </div>
 
-      <div className="bg-white mb-5 mx-5 mt-5 rounded-2xl p-6 shadow-lg text-[#2b6534]">
+
+      <div className="bg-white mb-5 mx-5 mt-5 rounded-2xl p-6 shadow-lg text-black">
         {/* Personal Information */}
         <InformationPersonal />
 
         {/* Payment Section */}
         <div className="flex items-center justify-end space-x-4 text-lg">
           <select
-            className="border-2 border-lime-600 rounded-md p-2"
+            className="border-2 border-blue-400 rounded-md p-2 hover:bg-[#4096ff] hover:text-white"
             defaultValue="SelectBank"
             value={selectedBank}
             onChange={handleBankChange}
           >
-            <option value="SelectBank">Chọn tài khoản ngân hàng</option>
+
             <option value="QRCode">QR Code</option>
           </select>
           <button
             onClick={openModal}
-            className="bg-amber-300 text-[#2b6534] px-4 py-2 rounded-md flex items-center hover:bg-amber-500"
+            className="bg-[#1677ff] text-white px-4 py-2 rounded-md flex items-center hover:bg-[#4096ff]"
           >
             <SlPaperPlane size={24} />
             <span className="pl-2">Make Payment</span>

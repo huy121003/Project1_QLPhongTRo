@@ -19,7 +19,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
     );
     return (
         <Modal visible={visible} onCancel={onClose} footer={null}>
-            <div className="text-[#2b6534] text-lg">
+            <div className="text-black text-lg">
                 <p className="text-2xl items-center justify-center pb-5 font-semibold">
                     Invoice Details
                 </p>
@@ -32,7 +32,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                         idCard: invoice.tenant.idCard,
                         phone: invoice.tenant.phone,
                         serviceName: `Tiền ${invoice.service.name}`,
-                        description: `${invoice.service.priceUnit.toLocaleString()} đ/${
+                        price: `${invoice.service.priceUnit.toLocaleString()} đ/${
                             invoice.service.unit
                         }`,
                         firstIndex: invoice.firstIndex,
@@ -50,7 +50,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     <span
                                         style={{
                                             fontSize: "18px",
-                                            color: "#2b6534",
+                                            color: "#000000",
                                         }}
                                     >
                                         ID Invoice
@@ -64,7 +64,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     disabled
                                     style={{
                                         fontSize: "16px",
-                                        color: "#2b6534",
+                                        color: "#000000",
                                     }}
                                 />
                             </Form.Item>
@@ -73,7 +73,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     <span
                                         style={{
                                             fontSize: "18px",
-                                            color: "#2b6534",
+                                            color: "#000000",
                                         }}
                                     >
                                         Room Name
@@ -87,7 +87,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     disabled
                                     style={{
                                         fontSize: "16px",
-                                        color: "#2b6534",
+                                        color: "#000000",
                                     }}
                                 />
                             </Form.Item>
@@ -96,7 +96,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     <span
                                         style={{
                                             fontSize: "18px",
-                                            color: "#2b6534",
+                                            color: "#000000",
                                         }}
                                     >
                                         Renter
@@ -110,7 +110,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     disabled
                                     style={{
                                         fontSize: "16px",
-                                        color: "#2b6534",
+                                        color: "#000000",
                                     }}
                                 />
                             </Form.Item>
@@ -119,7 +119,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     <span
                                         style={{
                                             fontSize: "18px",
-                                            color: "#2b6534",
+                                            color: "#000000",
                                         }}
                                     >
                                         ID Card
@@ -133,7 +133,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     disabled
                                     style={{
                                         fontSize: "16px",
-                                        color: "#2b6534",
+                                        color: "#000000",
                                     }}
                                 />
                             </Form.Item>
@@ -142,7 +142,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     <span
                                         style={{
                                             fontSize: "18px",
-                                            color: "#2b6534",
+                                            color: "#000000",
                                         }}
                                     >
                                         Phone
@@ -156,7 +156,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     disabled
                                     style={{
                                         fontSize: "16px",
-                                        color: "#2b6534",
+                                        color: "#000000",
                                     }}
                                 />
                             </Form.Item>
@@ -165,7 +165,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     <span
                                         style={{
                                             fontSize: "18px",
-                                            color: "#2b6534",
+                                            color: "#000000",
                                         }}
                                     >
                                         Invoice Name
@@ -179,7 +179,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     disabled
                                     style={{
                                         fontSize: "16px",
-                                        color: "#2b6534",
+                                        color: "#000000",
                                     }}
                                 />
                             </Form.Item>
@@ -191,7 +191,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     <span
                                         style={{
                                             fontSize: "18px",
-                                            color: "#2b6534",
+                                            color: "#000000",
                                         }}
                                     >
                                         Month
@@ -205,7 +205,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     disabled
                                     style={{
                                         fontSize: "16px",
-                                        color: "#2b6534",
+                                        color: "#000000",
                                     }}
                                 />
                             </Form.Item>
@@ -216,13 +216,13 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                             <span
                                                 style={{
                                                     fontSize: "18px",
-                                                    color: "#2b6534",
+                                                    color: "#000000",
                                                 }}
                                             >
-                                                Description
+                                                Price
                                             </span>
                                         }
-                                        name="description"
+                                        name="price"
                                         labelCol={{ span: 24 }}
                                         wrapperCol={{ span: 24 }}
                                     >
@@ -230,7 +230,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                             disabled
                                             style={{
                                                 fontSize: "16px",
-                                                color: "#2b6534",
+                                                color: "#000000",
                                             }}
                                         />
                                     </Form.Item>
@@ -239,10 +239,10 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                             <span
                                                 style={{
                                                     fontSize: "18px",
-                                                    color: "#2b6534",
+                                                    color: "#000000",
                                                 }}
                                             >
-                                                {`Chỉ số ${invoice.service.name.toLowerCase()} đầu tháng`}
+                                                First Index
                                             </span>
                                         }
                                         name="firstIndex"
@@ -253,7 +253,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                             disabled
                                             style={{
                                                 fontSize: "16px",
-                                                color: "#2b6534",
+                                                color: "#000000",
                                             }}
                                         />
                                     </Form.Item>
@@ -262,10 +262,10 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                             <span
                                                 style={{
                                                     fontSize: "18px",
-                                                    color: "#2b6534",
+                                                    color: "#000000",
                                                 }}
                                             >
-                                                {`Chỉ số ${invoice.service.name.toLowerCase()} cuối tháng`}
+                                               Final Index
                                             </span>
                                         }
                                         name="finalIndex"
@@ -276,7 +276,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                             disabled
                                             style={{
                                                 fontSize: "16px",
-                                                color: "#2b6534",
+                                                color: "#000000",
                                             }}
                                         />
                                     </Form.Item>
@@ -288,7 +288,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     <span
                                         style={{
                                             fontSize: "18px",
-                                            color: "#2b6534",
+                                            color: "#000000",
                                         }}
                                     >
                                         Amount
@@ -302,7 +302,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     disabled
                                     style={{
                                         fontSize: "16px",
-                                        color: "#2b6534",
+                                        color: "#000000",
                                     }}
                                 />
                             </Form.Item>
@@ -311,7 +311,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     <span
                                         style={{
                                             fontSize: "18px",
-                                            color: "#2b6534",
+                                            color: "#000000",
                                         }}
                                     >
                                         Status
@@ -325,7 +325,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                                     disabled
                                     style={{
                                         fontSize: "16px",
-                                        color: "#2b6534",
+                                        color: "#000000",
                                     }}
                                 />
                             </Form.Item>

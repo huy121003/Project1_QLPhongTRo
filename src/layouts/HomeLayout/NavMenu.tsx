@@ -3,7 +3,6 @@ import { Menu } from "antd";
 import { Link } from "react-router-dom";
 import { IRouter } from "../../interfaces";
 import { homeAdminRouters } from "../../routers";
-import { MenuProps } from "antd";
 import { useTheme } from "../../contexts/ThemeContext";
 
 interface NavMenuProps {

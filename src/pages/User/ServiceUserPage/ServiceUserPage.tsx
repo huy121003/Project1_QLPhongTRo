@@ -9,7 +9,7 @@ export default function ServiceUserPage() {
     const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
     return (
-        <div className="bg-[#e0f5e4] text-[#2b6534] h-full flex flex-col">
+        <div className="bg-[#e0f5e4] text-black h-full flex flex-col">
             {/* Hiển thị thông tin phòng đã chọn */}
 
             <ServiceRoom
