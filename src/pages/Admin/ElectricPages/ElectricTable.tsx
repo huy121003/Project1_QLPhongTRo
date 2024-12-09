@@ -238,7 +238,7 @@ const ElectricTable: React.FC<Props> = ({
             <i className="fa-solid fa-floppy-disk text-xl text-green-500"></i>
           }
         >
-          Save
+          
         </Button>
       ),
       with: 100,

@@ -111,13 +111,11 @@ const RequestServiceTable: React.FC<Props> = ({
               placement="topRight"
             >
               <Button
-                className="mt-4"
+                className=""
                 icon={
                   <i className="fa-solid fa-check text-green-500 text-xl font-bold"></i>
                 }
-              >
-                Approve
-              </Button>
+              ></Button>
             </Popconfirm>
           )}
           {/* {service.status === RegisterServiceStatus.SUCCESS && (

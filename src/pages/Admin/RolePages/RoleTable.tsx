@@ -74,7 +74,7 @@ const RoleTable: React.FC<Props> = ({
               />
             }
           >
-            Detail
+            
           </Button>
           {record.name === "SUPER ADMIN" || record.name === "NORMAL " ? null : (
             <>
@@ -86,7 +86,7 @@ const RoleTable: React.FC<Props> = ({
                   setOpenEditRole(true), setRecord(record);
                 }}
               >
-                Edit
+                
               </Button>
 
               <DeleteModal

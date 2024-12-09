@@ -173,7 +173,7 @@ const RequestContractTable: React.FC<Props> = ({
                     <i className="fa-solid fa-check text-green-600 text-xl" />
                   }
                 >
-                  Accept
+                  
                 </Button>
               </Popconfirm>
               <Popconfirm
@@ -187,7 +187,7 @@ const RequestContractTable: React.FC<Props> = ({
                     <i className="fa-solid fa-xmark text-red-600 text-xl" />
                   }
                 >
-                  Reject
+                  
                 </Button>
               </Popconfirm>
             </>

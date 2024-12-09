@@ -31,7 +31,6 @@ const AccountTable: React.FC<Props> = ({
   setOpenEditAccount,
   setRecord,
 }) => {
-
   const columns = [
     {
       title: "Name",
@@ -55,24 +54,6 @@ const AccountTable: React.FC<Props> = ({
     { title: "Email", dataIndex: "email", key: "email" },
     { title: "Phone", dataIndex: "phone", key: "phone" },
     {
-      title: "IdCard",
-      dataIndex: "idCard",
-      key: "idCard",
-    },
-    {
-      title:"Address",
-      dataIndex:"address",
-      key:"address",
-    },
-    {
-      title:"Birthday",
-      dataIndex:"birthday",
-      key:"birthday",
-      render:(birthday:string)=>(
-        <p>{new Date(birthday).toLocaleDateString()}</p>
-      )
-    },
-    {
       title: "Role",
       dataIndex: "role",
       key: "role",
@@ -83,27 +64,23 @@ const AccountTable: React.FC<Props> = ({
       ),
     },
     {
-      title: "Gender",
-      dataIndex: "gender",
-      key: "gender",
-      render:(gender:string)=> (
-        <p className={`font-medium ${getGenderColor(gender)}`}>
-          {gender}
-        </p>
-      ),
-    },
-    {
-      title:"Active",
-      dataIndex:"isActive",
-      key:"isActive",
-      render:(isActive:boolean)=>(
-        <div className={`font-bold px-2 py-1
+      title: "Active",
+      dataIndex: "isActive",
+      key: "isActive",
+      render: (isActive: boolean) => (
+        <div
+          className={`font-bold px-2 py-1
         ${isActive ? "0 text-green-600" : "text-red-700"}
-        `}>
-          <i className={`fa-solid fa-${isActive ? "smile-wink" : "sad-cry"} mr-2`}></i>
+        `}
+        >
+          <i
+            className={`fa-solid fa-${
+              isActive ? "smile-wink" : "sad-cry"
+            } mr-2`}
+          ></i>
           {isActive ? "ACTIVE" : "INACTIVE"}
         </div>
-      )
+      ),
     },
     {
       title: "Action",
@@ -124,7 +101,7 @@ const AccountTable: React.FC<Props> = ({
               />
             }
           >
-            Detail
+          
           </Button>
           {record.email === "admin@gmail.com" ? null : (
             <div className="flex gap-2">
@@ -142,7 +119,7 @@ const AccountTable: React.FC<Props> = ({
                 }}
                 className="transition"
               >
-                Edit
+               
               </Button>
               <DeleteModal
                 onConfirm={(record) => onDeleteAccount(record)}
@@ -155,9 +132,9 @@ const AccountTable: React.FC<Props> = ({
       width: 150,
     },
   ];
-    const [visibleColumns, setVisibleColumns] = useState<string[]>(
-      columns.map((column) => column.dataIndex)
-    );
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(
+    columns.map((column) => column.dataIndex)
+  );
   return (
     <div className={` p-2 rounded-lg m-2 `}>
       <div>
@@ -179,5 +156,5 @@ const AccountTable: React.FC<Props> = ({
       />
     </div>
   );
-}
+};
 export default AccountTable;

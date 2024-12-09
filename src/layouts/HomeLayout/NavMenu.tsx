@@ -47,7 +47,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ isNavOpen }) => {
 
   return (
     <div
-      className={`transition-all duration-300 ${
+      className={`transition-all duration-300 overflow-y-auto ${
         isNavOpen ? "w-[200px]" : "w-20"
       } h-full ${bgColor} ${textColor}`}
     >
