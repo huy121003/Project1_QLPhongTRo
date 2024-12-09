@@ -1,15 +1,29 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { Button, Checkbox, ConfigProvider, message, Modal, Pagination, Space, Table } from "antd";
+import {
+  Button,
+  Checkbox,
+  ConfigProvider,
+  message,
+  Modal,
+  notification,
+  Pagination,
+  Space,
+  Table,
+} from "antd";
 import ModalDetailInvoice from "./ModalDetailInvoice";
 import { IInvoice } from "../../../interfaces";
 import { invoiceApi, payOSApi } from "../../../api";
 import { useAppSelector } from "../../../redux/hook";
 import { SendOutlined } from "@ant-design/icons";
-import { createStyles } from 'antd-style';
+import { createStyles } from "antd-style";
+import { InvoiceStatus } from "../../../enums";
+import { useNavigate } from "react-router-dom";
 
 const useStyle = createStyles(({ prefixCls, css }) => ({
   linearGradientButton: css`
-    &.${prefixCls}-btn-primary:not([disabled]):not(.${prefixCls}-btn-dangerous) {
+    &.${prefixCls}-btn-primary:not([disabled]):not(
+        .${prefixCls}-btn-dangerous
+      ) {
       border-width: 0;
 
       > span {
@@ -17,7 +31,7 @@ const useStyle = createStyles(({ prefixCls, css }) => ({
       }
 
       &::before {
-        content: '';
+        content: "";
         background: linear-gradient(135deg, #6253e1, #04befe);
         position: absolute;
         inset: 0;
@@ -34,7 +48,6 @@ const useStyle = createStyles(({ prefixCls, css }) => ({
 }));
 
 export default function PaymentInformantion() {
-
   const { styles } = useStyle();
   const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [selectedInvoice, setSelectedInvoice] = useState<IInvoice | null>(null);
@@ -46,35 +59,59 @@ export default function PaymentInformantion() {
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectRows, setSelectRows] = useState<{ _id: string, price: number }[]>([]);
+  const navigate = useNavigate();
+  const [selectRows, setSelectRows] = useState<
+    { _id: string; price: number }[]
+  >(() => {
+    const storedInvoice = localStorage.getItem("selectRows");
+    try {
+      const parsedInvoices = JSON.parse(storedInvoice || "[]");
+      return Array.isArray(parsedInvoices) ? parsedInvoices : [];
+    } catch (e) {
+      console.error("Invalid invoice data in localStorage", e);
+      return [];
+    }
+  });
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("");
+  useEffect(() => {
+    if (selectRows.length > 0) {
+      localStorage.setItem(
+        "selectRows",
+        JSON.stringify(
+          selectRows.filter((item, index) => selectRows.indexOf(item) === index)
+        )
+      );
+    } else {
+      localStorage.removeItem("selectRows");
+    }
+  }, [selectRows]);
 
   const showModal = () => {
     setOpen(true);
-    if(selectRows.length===0){
-      setModalText('Please make payments in advance!');
-    }else{
-      setModalText('Click on the confirm button to go to the payment page!');
+    if (selectRows.length === 0) {
+      setModalText("Please make payments in advance!");
+    } else {
+      setModalText("Click on the confirm button to go to the payment page!");
     }
   };
 
   const handleOk = async () => {
     try {
-      if(selectedIds.length>0){
+      if (selectedIds.length > 0) {
         const response = await payOSApi.createLinkPayment(selectedIds);
         if (response.data && response.data.checkoutUrl) {
           window.location.href = response.data.checkoutUrl;
-      } 
+        }
       }
       handleCancel();
-  } catch (error) {}
+    } catch (error) {}
   };
 
   const handleCancel = () => {
-    setModalText('');
+    setModalText("");
     setOpen(false);
   };
   const handlePaginationChange = (page: number, pageSize?: number) => {
@@ -97,17 +134,14 @@ export default function PaymentInformantion() {
       }
     };
     getInvoices();
-
   }, [pageSize, current]);
 
   useEffect(() => {
     let temp = selectRows.reduce((sum, row) => sum + row.price, 0);
     setTotal(temp);
-    const ids = selectRows.map(row => row._id);
+    const ids = selectRows.map((row) => row._id);
     setSelectedIds(ids);
-  }, [selectRows])
-
-
+  }, [selectRows]);
 
   const openModal = (invoice: IInvoice) => {
     setSelectedInvoice(invoice);
@@ -121,65 +155,124 @@ export default function PaymentInformantion() {
 
   const selectAllRows = (isChecker: boolean) => {
     if (isChecker) {
-      setSelectRows(invoices.map((invoice) => ({ _id: invoice._id, price: invoice.amount })));
+      setSelectRows(
+        invoices.map((invoice) => ({ _id: invoice._id, price: invoice.amount }))
+      );
     } else {
       setSelectRows([]);
     }
     setIsCheckedAll(isChecker);
-  }
+  };
 
   const selectRow = (invoice: IInvoice, isChecker: boolean) => {
     if (isChecker) {
-      setSelectRows((prev) => [...prev, { _id: invoice._id, price: invoice.amount }]);
+      setSelectRows((prev) => [
+        ...prev,
+        { _id: invoice._id, price: invoice.amount },
+      ]);
       if (selectRows.length + 1 === invoices.length) {
         setIsCheckedAll(true);
       }
     } else {
-      setSelectRows((prev) => prev.filter((idPrev) => idPrev._id !== invoice._id));
+      setSelectRows((prev) =>
+        prev.filter((idPrev) => idPrev._id !== invoice._id)
+      );
     }
-
-  }
+  };
 
   const columns = [
-
     {
-      title: 'Id',
-      dataIndex: '_id',
-      key: 'id',
-      render: (id: string, invoice: IInvoice) => <p className="text-blue-500 cursor-pointer" onClick={() => openModal(invoice)}>{id}</p>
+      title: "Id",
+      dataIndex: "_id",
+      key: "id",
+      render: (id: string, invoice: IInvoice) => (
+        <p
+          className="text-blue-500 cursor-pointer"
+          onClick={() => openModal(invoice)}
+        >
+          {id}
+        </p>
+      ),
     },
     {
-      title: 'Room',
-      dataIndex: 'room',
-      key: 'roomName',
-      render: (room: any) => <>{room.roomName}</>
+      title: "Room",
+      dataIndex: "room",
+      key: "roomName",
+      render: (room: any) => <>{room.roomName}</>,
     },
     {
-      title: 'Invoice Name',
-      dataIndex: 'description',
-      key: 'description',
+      title: "Invoice Name",
+      dataIndex: "description",
+      key: "description",
     },
     {
-      title: 'Amount',
-      dataIndex: 'amount',
-      key: 'amount',
-      render: (amount: any) => <>{amount.toLocaleString()} VND</>
+      title: "Amount",
+      dataIndex: "amount",
+      key: "amount",
+      render: (amount: any) => <>{amount.toLocaleString()} VND</>,
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
     },
     {
-      title: <Checkbox checked={isCheckedAll} onChange={(e) => selectAllRows(e.target.checked)} />,
-      dataIndex: 'checkbox',
-      key: 'checkbox',
+      title: (
+        <Checkbox
+          checked={isCheckedAll}
+          onChange={(e) => selectAllRows(e.target.checked)}
+        />
+      ),
+      dataIndex: "checkbox",
+      key: "checkbox",
       render: (_: any, invoice: IInvoice) => (
-        <Checkbox onChange={(e) => selectRow(invoice, e.target.checked)} checked={selectRows.some((invoices: any) => invoices._id === invoice._id)} />
-      )
+        <Checkbox
+          onChange={(e) => selectRow(invoice, e.target.checked)}
+          checked={selectRows.some(
+            (invoices: any) => invoices._id === invoice._id
+          )}
+        />
+      ),
     },
   ];
+  useEffect(() => {
+    if (window.location.pathname === "/user/invoiceUser") {
+      const url = new URL(window.location.href);
+      const cancel = url.searchParams.get("cancel");
+      const status = url.searchParams.get("status");
+      const orderCode = url.searchParams.get("orderCode");
 
+      if (cancel === "true") {
+        notification.success({
+          message: "Payment Cancel",
+          description: "Your payment has been canceled.",
+        });
+        return;
+      }
+
+      if (status === InvoiceStatus.PAID && orderCode) {
+        const update = async () => {
+          try {
+            const res = await invoiceApi.postInvoiceStatusPaymentApi(
+              orderCode,
+              selectedIds
+            );
+            if (res.statusCode === 201) {
+              message.success("Payment success");
+              setSelectedIds([]); // Reset invoice IDs
+              setSelectRows([]); // Reset select rows
+
+              //  navigate("/user/invoiceUser"); // Reload the page or navigate to the same page
+            }
+          } catch (error) {
+            console.error("Error updating invoice status:", error);
+            message.error("Failed to update invoice status.");
+          }
+        };
+        update();
+      }
+    }
+  }, [window.location.href, selectedIds]);
   return (
     <div className="bg-white mb-5 mx-5 rounded-2xl p-6 shadow-lg text-black flex-grow overflow-y-hidden h-auto ">
       <Modal
@@ -201,17 +294,24 @@ export default function PaymentInformantion() {
           }}
         >
           <Space>
-            <Button onClick={() => showModal()}
-             type="primary" size="large" icon={<SendOutlined />}>
+            <Button
+              onClick={() => showModal()}
+              type="primary"
+              size="large"
+              icon={<SendOutlined />}
+            >
               Make Payment
             </Button>
           </Space>
         </ConfigProvider>
-
       </div>
 
-      <Table loading={loading} dataSource={invoices} columns={columns} pagination={false
-      } />
+      <Table
+        loading={loading}
+        dataSource={invoices}
+        columns={columns}
+        pagination={false}
+      />
       <div className="text-red-600 text-right mt-4 font-semibold">
         Amount:
         <span className="p-3 font-semibold border-t">
