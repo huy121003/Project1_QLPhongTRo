@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { resizeWidth } from "../../utils/resize";
-import { useAppDispatch, useAppSelector } from "../../redux/hook";
-import { accountApi, authtApi, registerServiceAPI } from "../../api";
-import { logoutAction } from "../../redux/slice/auth/authSlice";
 import { Badge, Dropdown, Menu, message, notification } from "antd";
-import ChangePassword from "../../pages/AuthPages/ChangePassword";
-import { IAccount } from "../../interfaces";
-import EditAccountModal from "../../pages/Admin/AccountPages/EditAccountModal";
-import NotificationModal from "../../pages/Admin/HandleNotificationPages/NotificationModal";
-import { RegisterServiceStatus } from "../../enums";
-import { useTheme } from "../../contexts/ThemeContext";
-import DrawerMenu from "./DrawerMenu";
-import NavMenu from "./NavMenu";
-
+import { useAppDispatch, useAppSelector } from "redux/hook";
+import { resizeWidth } from "@utils/resize";
+import { IAccount } from "interfaces";
+import { useTheme } from "contexts/ThemeContext";
+import authApi from "api/authApi/authApi";
+import NavMenu from "./child-components/NavMenu";
+import DrawerMenu from "./child-components/DrawerMenu";
+import { logoutAction } from "redux/slice/auth/authSlice";
+import accountApi from "api/accountApi/accountApi";
+import ChangePassword from "@pages/AuthPages/ChangePassword";
+import EditAccountModal from "@pages/Admin/AccountPages/modal/EditAccountModal";
 function HomeLayout() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -32,23 +30,14 @@ function HomeLayout() {
   const textColor = isLightTheme ? "text-black" : "text-white";
   const bgColor = isLightTheme ? "bg-white" : "bg-black";
   const toggleNav = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+   
     width >= 780 ? setIsNavOpen((prev) => !prev) : setOpenDrawer(true);
   };
 
-  // useEffect(() => {
-  //   setInterval(async () => {
-  //     const res = await registerServiceAPI.fetchRegisterServiceApi(
-  //       `status=${RegisterServiceStatus.PENDING}`
-  //     );
-  //     if (res.data) {
-  //       setTotalRegisterService(res.data.result.length);
-  //     }
-  //   }, 10000);
-  // }, []);
 
+  
   const handleLogout = async () => {
-    const res = await authtApi.apiLogout();
+    const res = await authApi.apiLogout();
     if (res?.data) {
       dispatch(logoutAction());
       navigate("/login");
@@ -131,14 +120,7 @@ function HomeLayout() {
               } `}
               onClick={toggleTheme}
             />
-            {/* <div className="mx-4">
-              <Badge
-                count={totalRegisterService}
-                onClick={() => setOpenRegisterService(true)}
-              >
-                <i className="fa fa-bell text-2xl cursor-pointer text-red-600" />
-              </Badge>
-            </div> */}
+     
             <Dropdown overlay={menu} trigger={["hover"]}>
               <div className="flex justify-center items-center hover:text-blue-500">
                 {user?.avatar ? (
@@ -174,10 +156,6 @@ function HomeLayout() {
           isChangeRole={true}
         />
       )}
-      <NotificationModal
-        open={openRegisterService}
-        setOpen={setOpenRegisterService}
-      />
     </div>
   );
 }

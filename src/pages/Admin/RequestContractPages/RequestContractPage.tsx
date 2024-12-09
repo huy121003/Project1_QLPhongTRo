@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { IRequestContract } from "../../../interfaces";
 import { notification } from "antd";
-import requestContractApi from "../../../api/requestContractApi";
-import RequestContractTable from "./RequestContractTable";
-import RequestContractFilter from "./RequestContractFilter";
+import { IRequestContract } from "interfaces";
+import requestContractApi from "api/requestContractApi/requestContractApi";
+import RequestContractFilter from "./child-components/RequestContractFilter";
+import RequestContractTable from "./child-components/RequestContractTable";
+
 
 function RequestContractPage() {
   const [requestContract, setRequestContract] = React.useState<
@@ -46,8 +47,8 @@ function RequestContractPage() {
   };
   useEffect(() => {
     getRequestContract();
-  },[]);
-  
+  }, []);
+
   const onChange = (pagination: any) => {
     if (pagination.current !== current && pagination) {
       setCurrent(pagination.current);

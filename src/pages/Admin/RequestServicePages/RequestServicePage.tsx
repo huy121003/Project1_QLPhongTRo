@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
-import { RegisterServiceStatus } from "../../../enums";
-import RegisterServiceFilter from "./RequestServiceFilter";
-import { registerServiceAPI } from "../../../api";
+
 import { message, notification } from "antd";
-import { IRegisterService } from "../../../interfaces";
-import RequestServiceTable from "./RequestServiceTable";
+import { IRegisterService } from "interfaces";
+import registerServiceApi from "api/registerServiceApi/registerServiceApi";
+import { RegisterServiceStatus } from "enums";
+import RequestServiceTable from "./child-components/RequestServiceTable";
+import RegisterServiceFilter from "./child-components/RequestServiceFilter";
+
 function RequestServicePage() {
   const [registerService, setRegisterService] = React.useState<
     IRegisterService[]
@@ -32,7 +34,7 @@ function RequestServicePage() {
     });
     const query = new URLSearchParams(queryParams).toString();
     setLoading(true);
-    const res = await registerServiceAPI.fetchRegisterServiceApi(query);
+    const res = await registerServiceApi.fetchRegisterServiceApi(query);
     if (res.data) {
       setRegisterService(res.data.result);
       setTotal(res.data.meta.totalDocument);
@@ -45,7 +47,7 @@ function RequestServicePage() {
     setLoading(false);
   };
   const deleteRegisterService = async (id: string) => {
-    const res = await registerServiceAPI.deleteRegisterServiceApi(id);
+    const res = await registerServiceApi.deleteRegisterServiceApi(id);
     if (res.statusCode === 200) {
       message.success("Delete register service successfully");
       getRegisterService();
@@ -69,7 +71,7 @@ function RequestServicePage() {
     }
   };
   const handleApprove = async (id: string, type: boolean) => {
-    const res = await registerServiceAPI.patchRegisterServiceApi(
+    const res = await registerServiceApi.patchRegisterServiceApi(
       id,
       RegisterServiceStatus.APPROVED
     );

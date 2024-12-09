@@ -1,4 +1,4 @@
-import { ContractStatus } from "../enums";
+import { ContractStatus } from "enums";
 interface IContract {
   _id: string;
   room: {

@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import WaterTable from "./WaterTable";
-import ExportToExcel from "./ExportToExcel";
-import { IContract, IService } from "../../../interfaces";
-import { ContractStatus, ServiceType } from "../../../enums";
-import { contractApi, invoiceApi, serviceApi } from "../../../api";
-import { YearMonthSelector } from "../../../components";
 import { notification } from "antd";
-import { useTheme } from "../../../contexts/ThemeContext";
+import { useTheme } from "contexts/ThemeContext";
+import { IContract } from "interfaces";
+import serviceApi from "api/serviceApi/serviceApi";
+import { ContractStatus, ServiceType } from "enums";
+import contractApi from "api/contractApi/contractApi";
+import invoiceApi from "api/invoiceApi/invoiceApi";
+import YearMonthSelector from "@components/YearMonthSelector ";
+import ExportToExcel from "./child-components/ExportToExcel";
+import WaterTable from "./child-components/WaterTable";
+
 const WaterPage = () => {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();

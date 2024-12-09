@@ -1,15 +1,16 @@
 import { message, notification } from "antd";
+import roomApi from "api/roomApi/roomApi";
+import { useTheme } from "contexts/ThemeContext";
+import { IRoom } from "interfaces";
 import { useEffect, useState } from "react";
-import { AddButton } from "../../../components";
-import AddRoomModal from "./AddRoomModal";
-import EditRoomModal from "./EditRoomModal";
-import DetailRoom from "./DetailRoom";
-import RoomFilters from "./RoomFilters";
-import ExportToExcel from "./ExportToExcel";
-import { IRoom } from "../../../interfaces";
-import { roomApi } from "../../../api";
-import { useTheme } from "../../../contexts/ThemeContext";
-import RoomTable from "./RoomTable";
+import RoomFilters from "./child-components/RoomFilters";
+import ExportToExcel from "./child-components/ExportToExcel";
+import AddButton from "@components/AddButton";
+import RoomTable from "./child-components/RoomTable";
+import AddRoomModal from "./modal/AddRoomModal";
+import EditRoomModal from "./modal/EditRoomModal";
+import DetailRoom from "./drawer/DetailRoom";
+
 function RoomPage() {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [current, setCurrent] = useState(1);

@@ -1,28 +1,27 @@
 import { useEffect, useState } from "react";
 import { SlPaperPlane } from "react-icons/sl";
-import InformationPersonal from "./InformationPersonal";
-import PaymentInformantion from "./PaymentInformantion";
-import Payment from "./Payment";
-import { invoiceApi, payOSApi } from "../../../api";
+import PaymentInformantion from "./child-components/PaymentInformantion";
+import Payment from "./child-components/Payment";
 import { Button, message, notification } from "antd";
-import { InvoiceStatus } from "../../../enums";
 import { useNavigate } from "react-router-dom";
+import payOSApi from "api/payOSApi/payOSApi";
+import { InvoiceStatus } from "enums";
+import invoiceApi from "api/invoiceApi/invoiceApi";
+import InformationPersonal from "./child-components/InformationPersonal";
 
 export default function InvoiceUserPage() {
   const [showModal, setShowModal] = useState(false);
   const [selectedBank, setSelectedBank] = useState("QR");
-  const [idInvoice, setIdInvoice] = useState<Array<string>>(
-    () => {
-      const storedInvoice = localStorage.getItem("idInvoice");
-      try {
-        const parsedInvoices = JSON.parse(storedInvoice || "[]");
-        return Array.isArray(parsedInvoices) ? parsedInvoices : [];
-      } catch (e) {
-        console.error("Invalid invoice data in localStorage", e);
-        return [];
-      }
+  const [idInvoice, setIdInvoice] = useState<Array<string>>(() => {
+    const storedInvoice = localStorage.getItem("idInvoice");
+    try {
+      const parsedInvoices = JSON.parse(storedInvoice || "[]");
+      return Array.isArray(parsedInvoices) ? parsedInvoices : [];
+    } catch (e) {
+      console.error("Invalid invoice data in localStorage", e);
+      return [];
     }
-  );
+  });
   const [res, setRes] = useState<string>("");
 
   const navigate = useNavigate();
@@ -64,9 +63,7 @@ export default function InvoiceUserPage() {
           });
         }
       } catch (error) {
-
         notification.error({
-
           message: `Error: `,
           description: "Failed to create payment link.",
         });
@@ -120,8 +117,6 @@ export default function InvoiceUserPage() {
 
   return (
     <div className="bg-[#e0f5e4] h-full flex flex-col">
-
-
       <div className="bg-white mb-5 mx-5 mt-5 rounded-2xl p-6 shadow-lg text-black">
         {/* Personal Information */}
         <InformationPersonal />
@@ -133,7 +128,6 @@ export default function InvoiceUserPage() {
             value={selectedBank}
             onChange={handleBankChange}
           >
-
             <option value="QRCode">QR Code</option>
           </select>
           <button
@@ -145,10 +139,8 @@ export default function InvoiceUserPage() {
           </button>
         </div>
       </div>
-
       {/* Payment Information */}
-       <PaymentInformantion  /> */
-
+      <PaymentInformantion /> */
       {/* Modal for displaying payment link or errors */}
       {showModal && (
         <div
@@ -160,7 +152,7 @@ export default function InvoiceUserPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="text-xl font-semibold mb-4 text-center border-b pb-2 text-black">
-            Notification
+              Notification
             </h3>
             {!selectedBank && (
               <p className="text-[#2b6534] text-center mb-4">
@@ -175,8 +167,14 @@ export default function InvoiceUserPage() {
             {selectedBank && idInvoice.length > 0 && (
               <Payment idInvoice={idInvoice} res={res} />
             )}
-            
-            <Button className="flex justify-self-end" onClick={closeModal} type="primary">Close</Button>
+
+            <Button
+              className="flex justify-self-end"
+              onClick={closeModal}
+              type="primary"
+            >
+              Close
+            </Button>
           </div>
         </div>
       )}

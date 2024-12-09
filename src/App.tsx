@@ -4,21 +4,23 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "./redux/hook";
-import { getUserAction } from "./redux/slice/auth/authSlice";
-import HomeLayout from "./layouts/HomeLayout/HomeLayout";
-import { NotFoundPage, Loading } from "./components";
-import { homeUserRouters, homeAdminRouters } from "./routers";
+
 
 import { notification } from "antd";
-import UserLayout from "./layouts/UserLayout/UserLayout";
-import DashboardPage from "./pages/Admin/DashboardPages/DashboardPage";
-import LoginPage from "./pages/AuthPages/LoginPage";
-import RegisterPage from "./pages/AuthPages/RegisterPage";
+import { useAppDispatch, useAppSelector } from "redux/hook";
+import ProtectedRouter from "routers/ProtectedRouter";
+import HomeLayout from "layouts/HomeLayout";
+import NotFoundPage from "@components/NotFoundPage";
+import DashboardPage from "@pages/Admin/DashboardPages";
+import { homeAdminRouters, homeUserRouters } from "routers";
+import LoginPage from "@pages/AuthPages/LoginPage";
+import RegisterPage from "@pages/AuthPages/RegisterPage";
+import UserLayout from "layouts/UserLayout";
+import DashboardUserPage from "@pages/User/DasboardUserPage";
+import authApi from "api/authApi/authApi";
+import { getUserAction } from "redux/slice/auth/authSlice";
+import Loading from "@components/Loading";
 
-import DashboardUserPage from "./pages/User/DasboardUserPage/DasboardUserPage";
-import { authtApi } from "./api";
-import ProtectedRouter from "./routers/ProtectedRouter";
 
 // Router setup moved outside to avoid re-creating it on every render
 
@@ -87,7 +89,7 @@ function App() {
     ) {
       return;
     }
-    const res = await authtApi.apiFetchUser();
+    const res = await authApi.apiFetchUser();
 
     if (res?.data) {
       console.log(res.data);

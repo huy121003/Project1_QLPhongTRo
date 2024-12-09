@@ -1,9 +1,10 @@
 import { Avatar, Button, Flex, Segmented, Select, Table } from "antd";
-import { useAppSelector } from "../../../redux/hook";
 import { ReactNode, useEffect, useState } from "react";
-import { IContract, IInvoice, IRoom } from "../../../interfaces";
-import { contractApi, invoiceApi } from "../../../api";
 import dayjs from "dayjs";
+import { IContract, IInvoice } from "interfaces";
+import { useAppSelector } from "redux/hook";
+import invoiceApi from "api/invoiceApi/invoiceApi";
+import contractApi from "api/contractApi/contractApi";
 
 
 

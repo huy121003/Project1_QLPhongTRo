@@ -1,4 +1,4 @@
-import { InvoiceStatus } from "../enums";
+import { InvoiceStatus } from "enums";
 interface IInvoice {
   _id: string;
   room: {

@@ -1,15 +1,16 @@
 import { message, notification } from "antd";
+import roleApi from "api/roleApi/roleApi";
+import { useTheme } from "contexts/ThemeContext";
+import { IRole } from "interfaces";
 import { useEffect, useState } from "react";
-import { AddButton } from "../../../components";
-import DetailRole from "./DetailRole";
-import AddRoleModel from "./AddRoleModel";
-import EditRoleModal from "./EditRoleModal";
-import RoleFilters from "./RoleFilters";
-import RoleTable from "./RoleTable";
-import ExportToExcel from "./ExportToExcel";
-import { IRole } from "../../../interfaces";
-import { roleApi } from "../../../api";
-import { useTheme } from "../../../contexts/ThemeContext";
+import RoleFilters from "./child-components/RoleFilters";
+import ExportToExcel from "./child-components/ExportToExcel";
+import AddButton from "@components/AddButton";
+import DetailRole from "./drawer/DetailRole";
+import RoleTable from "./child-components/RoleTable";
+import AddRoleModel from "./modal/AddRoleModel";
+import EditRoleModal from "./modal/EditRoleModal";
+
 function RolePage() {
   const [roles, setRoles] = useState<IRole[]>([]);
   const [current, setCurrent] = useState(1);

@@ -1,15 +1,17 @@
 import { message, notification } from "antd";
+import accountApi from "api/accountApi/accountApi";
+import roleApi from "api/roleApi/roleApi";
+import { useTheme } from "contexts/ThemeContext";
+import { IAccount } from "interfaces";
 import { useEffect, useState } from "react";
-import { AddButton } from "../../../components"; // Change to CustomModal
-import { accountApi, roleApi } from "../../../api/";
-import AddAccountModal from "./AddAccountModal";
-import { IAccount } from "../../../interfaces";
-import EditAccountModal from "./EditAccountModal";
-import DetailAccount from "./DetailAccount";
-import AccountFilters from "./AccountFilter";
-import ExportToExcel from "./ExportToExcel";
-import { useTheme } from "../../../contexts/ThemeContext";
-import AccountTable from "./AccountTable";
+import AccountFilters from "./child-components/AccountFilter";
+import ExportToExcel from "./child-components/ExportToExcel";
+import AddButton from "@components/AddButton";
+import AccountTable from "./child-components/AccountTable";
+import AddAccountModal from "./modal/AddAccountModal";
+import EditAccountModal from "./modal/EditAccountModal";
+import DetailAccount from "./drawer/DetailAccount";
+
 function AccountPage() {
   const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [current, setCurrent] = useState(1);

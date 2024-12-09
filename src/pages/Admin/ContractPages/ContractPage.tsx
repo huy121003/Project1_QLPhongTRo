@@ -1,15 +1,17 @@
 import { message, notification } from "antd";
+import contractApi from "api/contractApi/contractApi";
+import roomApi from "api/roomApi/roomApi";
+import { useTheme } from "contexts/ThemeContext";
+import { ContractStatus, RoomStatus } from "enums";
+import { IContract } from "interfaces";
 import { useEffect, useState } from "react";
-import { AddButton } from "../../../components"; // Change to CustomModal
-import AddContractModal from "./AddContractModal";
-import DetailContract from "./DetailContract";
-import ContractFilters from "./ContractFilter";
-import ExportToExcel from "./ExportToExcel";
-import { IContract } from "../../../interfaces";
-import { ContractStatus, RoomStatus } from "../../../enums";
-import { contractApi, roomApi } from "../../../api";
-import { useTheme } from "../../../contexts/ThemeContext";
-import ContractTable from "./ContractTable";
+import ContractFilters from "./child-components/ContractFilter";
+import ExportToExcel from "./child-components/ExportToExcel";
+import AddButton from "@components/AddButton";
+import ContractTable from "./child-components/ContractTable";
+import DetailContract from "./drawer/DetailContract";
+import AddContractModal from "./modal/AddContractModal";
+
 
 function ContractPage() {
   const [contracts, setContracts] = useState<IContract[]>([]);

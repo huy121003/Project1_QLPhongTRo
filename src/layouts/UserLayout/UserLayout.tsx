@@ -1,19 +1,17 @@
-import  { useState } from "react";
-
-import { accountApi, authtApi } from "../../api";
-import { logoutAction } from "../../redux/slice/auth/authSlice";
-
-import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Dropdown, Menu, message, notification } from "antd";
+import { useAppDispatch, useAppSelector } from "redux/hook";
+import { resizeWidth } from "@utils/resize";
+import { IAccount } from "interfaces";
+import authApi from "api/authApi/authApi";
+import { logoutAction } from "redux/slice/auth/authSlice";
+import accountApi from "api/accountApi/accountApi";
+import { homeUserRouters } from "routers";
+import ChangePassword from "@pages/AuthPages/ChangePassword";
+import EditAccountModal from "@pages/Admin/AccountPages/modal/EditAccountModal";
 
-import { homeUserRouters } from "../../routers";
-import { resizeWidth } from "../../utils/resize";
-import ChangePassword from "../../pages/AuthPages/ChangePassword";
-import { IAccount } from "../../interfaces";
-import EditAccountModal from "../../pages/Admin/AccountPages/EditAccountModal";
-
-function UserLayout() {
+const UserLayout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const width = resizeWidth();
@@ -31,7 +29,7 @@ function UserLayout() {
     setIsNavOpen((prev) => !prev);
   };
   const handleLogout = async () => {
-    const res = await authtApi.apiLogout();
+    const res = await authApi.apiLogout();
     if (res && res.data) {
       dispatch(logoutAction());
       navigate("/login");
@@ -87,20 +85,27 @@ function UserLayout() {
           className={`flex flex-row justify-center items-center gap-2 border-b border-gray-400 w-full h-[130px] pb-2`}
         >
           {width > 1024 && isNavOpen ? (
-              <div>
-                <img src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4" alt=""
-                     className="object-cover w-20"/>
-                <span className="mt-2 font-bold text-amber-500 text-xl text-black ">For User</span>
-              </div>
-
-          ) : <img src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4" alt=""
-                   className="object-cover w-12"/>}
-          <div className="flex " onClick={toggleNav}>
-
-          </div>
+            <div>
+              <img
+                src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4"
+                alt=""
+                className="object-cover w-20"
+              />
+              <span className="mt-2 font-bold text-amber-500 text-xl text-black ">
+                For User
+              </span>
+            </div>
+          ) : (
+            <img
+              src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4"
+              alt=""
+              className="object-cover w-12"
+            />
+          )}
+          <div className="flex " onClick={toggleNav}></div>
         </div>
         {homeUserRouters
-            .filter((item) => item.label !== undefined)
+          .filter((item) => item.label !== undefined)
           .map((item) => (
             <Link
               to={item.path}
@@ -160,11 +165,11 @@ function UserLayout() {
           openEditAccount={openEditAccount}
           setOpenEditAccount={setOpenEditAccount}
           record={account}
-         isChangeRole={true}
+          isChangeRole={true}
         />
       )}
     </div>
   );
-}
+};
 
 export default UserLayout;

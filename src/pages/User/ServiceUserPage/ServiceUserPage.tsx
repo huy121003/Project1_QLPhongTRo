@@ -1,8 +1,7 @@
+import { IService } from "interfaces";
 import { useState } from "react";
-import AvailableService from "./AvailableService";
-
-import ServiceRoom from "./ServiceRoom";
-import { IService } from "../../../interfaces";
+import ServiceRoom from "./child-components/ServiceRoom";
+import AvailableService from "./child-components/AvailableService";
 
 export default function ServiceUserPage() {
     const [serviceRooms, setServiceRooms] = useState<IService[]>([]);

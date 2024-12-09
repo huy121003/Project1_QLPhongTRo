@@ -1,4 +1,4 @@
-import { RequestContractStatus, RoomType } from "../enums";
+import { RequestContractStatus } from "enums";
 import IContract from "./IContract";
 
 interface IRequestContract {

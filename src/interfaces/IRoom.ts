@@ -1,4 +1,4 @@
-import { RoomStatus, RoomType } from "../enums";
+import { RoomStatus, RoomType } from "enums";
 interface IRoom {
   _id: string;
   roomName: string;

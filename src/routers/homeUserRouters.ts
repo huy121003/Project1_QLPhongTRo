@@ -1,9 +1,9 @@
-import { IRouter } from "../interfaces";
-import ContractUserPage from "../pages/User/ContractUserPage/ContractUserPage";
-import DashboardUserPage from "../pages/User/DasboardUserPage/DasboardUserPage";
-import InvoiceUserPage from "../pages/User/InvoiceUserPage/InvoiceUserPage";
-import PaymentHistoryUserPage from "../pages/User/PaymentHistoryUserPage/PaymentHistoryUserPage";
-import ServiceUserPage from "../pages/User/ServiceUserPage/ServiceUserPage";
+import ContractUserPage from "@pages/User/ContractUserPage";
+import DashboardUserPage from "@pages/User/DasboardUserPage";
+import InvoiceUserPage from "@pages/User/InvoiceUserPage";
+import PaymentHistoryUserPage from "@pages/User/PaymentHistoryUserPage";
+import ServiceUserPage from "@pages/User/ServiceUserPage";
+import { IRouter } from "interfaces";
 
 const homeUserRouters: IRouter[] = [
     {

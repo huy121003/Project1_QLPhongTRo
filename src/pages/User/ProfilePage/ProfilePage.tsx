@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-
-import { useAppSelector } from "../../../redux/hook";
-
-
 import { notification } from "antd";
-import { IAccount } from "../../../interfaces";
-import { accountApi } from "../../../api";
+import { IAccount } from "interfaces";
+import { useAppSelector } from "redux/hook";
+import accountApi from "api/accountApi/accountApi";
+
 export default function ProfilePage() {
     const [accounts, setAccount] = useState<IAccount>();
 
