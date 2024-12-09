@@ -2,18 +2,16 @@ import { useEffect, useState } from "react";
 import { SlPaperPlane } from "react-icons/sl";
 import InformationPersonal from "./InformationPersonal";
 import PaymentInformantion from "./PaymentInformantion";
-import { IoClose } from "react-icons/io5";
 import Payment from "./Payment";
 import { invoiceApi, payOSApi } from "../../../api";
-import { message, notification } from "antd";
+import { Button, message, notification } from "antd";
 import { InvoiceStatus } from "../../../enums";
 import { useNavigate } from "react-router-dom";
 
 export default function InvoiceUserPage() {
   const [showModal, setShowModal] = useState(false);
-  const [selectedBank, setSelectedBank] = useState("");
+  const [selectedBank, setSelectedBank] = useState("QR");
   const [idInvoice, setIdInvoice] = useState<Array<string>>(
-    // Retrieve invoice IDs from localStorage and ensure it's a valid array
     () => {
       const storedInvoice = localStorage.getItem("idInvoice");
       try {
@@ -132,7 +130,6 @@ export default function InvoiceUserPage() {
         <div className="flex items-center justify-end space-x-4 text-lg">
           <select
             className="border-2 border-blue-400 rounded-md p-2 hover:bg-[#4096ff] hover:text-white"
-            defaultValue="SelectBank"
             value={selectedBank}
             onChange={handleBankChange}
           >
@@ -150,7 +147,7 @@ export default function InvoiceUserPage() {
       </div>
 
       {/* Payment Information */}
-      <PaymentInformantion setIdInvoices={setIdInvoice} idInvoice={idInvoice} />
+       <PaymentInformantion  /> */
 
       {/* Modal for displaying payment link or errors */}
       {showModal && (
@@ -162,28 +159,24 @@ export default function InvoiceUserPage() {
             className="bg-white rounded-lg p-3 max-w-sm w-full"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-semibold mb-4 text-center border-b pb-2 text-[#2b6534]">
-              Thông báo
+            <h3 className="text-xl font-semibold mb-4 text-center border-b pb-2 text-black">
+            Notification
             </h3>
             {!selectedBank && (
               <p className="text-[#2b6534] text-center mb-4">
-                Vui lòng chọn ngân hàng
+                Please select payment method
               </p>
             )}
             {idInvoice.length === 0 && (
               <p className="text-[#2b6534] text-center mb-4">
-                Vui lòng chọn khoản thanh toán
+                Please select payment
               </p>
             )}
             {selectedBank && idInvoice.length > 0 && (
               <Payment idInvoice={idInvoice} res={res} />
             )}
-            <button
-              onClick={closeModal}
-              className="text-[#2b6534] rounded-lg mt-4 font-semibold flex items-center justify-self-end"
-            >
-              <IoClose /> Close
-            </button>
+            
+            <Button className="flex justify-self-end" onClick={closeModal} type="primary">Close</Button>
           </div>
         </div>
       )}

@@ -1,11 +1,12 @@
 import { useAppSelector } from "../../../redux/hook";
-import { notification, Result } from "antd";
+import { Button, Flex, notification, Result, Skeleton } from "antd";
 import ContractExtension from "./ContractExtesion";
 import { useEffect, useState } from "react";
 import { IContract, IRoom } from "../../../interfaces";
 import { contractApi } from "../../../api";
 import roomApi from "../../../api/roomApi.ts";
 import RentalContract from "./RentalContract.tsx";
+import dayjs from "dayjs";
 
 export default function ContractUserPage() {
 
@@ -15,6 +16,8 @@ export default function ContractUserPage() {
     const [openContractIndex, setOpenContractIndex] = useState<number>(0); // Mặc định mở hợp đồng đầu tiên
     const [isRenewable, setIsRenewable] = useState<boolean[]>([]); // Theo dõi trạng thái nút gia hạn từng hợp đồng
     const [openAddContract, setOpenAddContract] = useState(false);
+    const [contractDetail, setContractDetail] = useState<IContract>(); 
+    const [isExtend, setIsExtend] = useState<boolean>(true);
 
     useEffect(() => {
         const getContracts = async () => {
@@ -30,6 +33,7 @@ export default function ContractUserPage() {
                 // console.log(activeContracts);
 
                 setContracts(activeContracts);
+                setContractDetail(activeContracts[0]);
                 const roomContract = await roomApi.fetchRoomByIdApi(activeContracts[openContractIndex].room._id);
                 if (roomContract) {
                     setRoom(roomContract.data);
@@ -63,6 +67,14 @@ export default function ContractUserPage() {
 
     };
 
+    const openContractDetail = (contract: IContract) => {
+       setContractDetail(contract);
+       const today = dayjs();
+       if(today.add(1, 'month').isAfter(contract.endDate) === true){
+        setIsExtend(false)
+       }
+    }
+
 
     // Hiển thị thông báo hợp đồng sắp hết hạn
     useEffect(() => {
@@ -83,156 +95,42 @@ export default function ContractUserPage() {
         
     }, [openContractIndex, contracts, isRenewable]);
     return (
-
                 <div className="bg-[#e0f5e4] text-black h-screen flex flex-col mr-10">
-
-                    {room !== undefined ?
                         <div>
                             <div
                             className="h-14 flex flex-row flex-shrink-0 items-center px-4  gap-4 text-xl font-semibold  sticky top-0 z-50 border-b-2 border-gray-300 bg-[#e0f5e4]">
-                            {contracts.map((contract, index) => (
-                                <span
-                                    key={contract._id}
-                                    // className="flex justify-between cursor-pointer"
-                                    className={`p-2 rounded-lg text-xl font-medium ${
-                                        openContractIndex === index
-                                            ? " text-[#4096ff] underline "
-                                            : " hover:text-[#49cb5e]"
-                                    }`}
-                                    onClick={() => toggleContract(index)}
-                                >
-                                Room {contract.room.roomName}
-                            </span>
-                            ))}
+                            {contracts.map((contract) => (
+                        <button
+                            key={contract._id}
+                            className={`
+                                px-4 py-2 rounded-lg shadow-md font-normal text-base
+                                bg-[#1677ff] text-white cursor-pointer font-semibold
+                                hover:bg-[#4096ff] 
+                            `}
+                            onClick={() => {
+                                openContractDetail(contract);
+                            }}
+                        >
+                            Room {contract.room.roomName}
+                        </button>
+                    ))}
+                           
                         </div>
-                            {/* <div className="flex-grow bg-[#e0f5e4] pb-2 rounded-lg ">
-                                {contracts.length > 0 && openContractIndex !== -1 && (
-                                    <div className="">
-                                        <div className="bg-white rounded-lg shadow-md p-6 m-5">
-                                            <h2 className="text-2xl font-semibold mb-4">
-                                                Contract Information
-                                            </h2>
-                                            <p className="text-lg">
-                                                Start Date:{" "}
-                                                {new Date(
-                                                    contracts[openContractIndex].startDate
-                                                ).toLocaleDateString("en-GB")}
-                                            </p>
-                                            <p className="text-lg">
-                                                End Date:{" "}
-                                                {new Date(
-                                                    contracts[openContractIndex].endDate
-                                                ).toLocaleDateString("en-GB")}
-                                            </p>
-                                            <p className="text-lg">
-                                                Status: {contracts[openContractIndex].status}
-                                            </p>
-                                        </div>
-                                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
-                                            <h2 className="text-2xl font-semibold mb-4">
-                                                Landlord Information
-                                            </h2>
-                                            <p className="text-lg">
-                                                Name:{" "}
-                                                {contracts[openContractIndex].innkeeper.name}
-                                            </p>
-                                            <p className="text-lg">{contracts[openContractIndex].innkeeper.address}</p>
-                                            <p className="text-lg">{contracts[openContractIndex].innkeeper.phone}</p>
-                                        </div>
 
-                                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
-                                            <h2 className="text-2xl font-semibold mb-4">
-                                                Tenant Information
-                                            </h2>
-                                            <p className="text-lg">
-                                                Name: {contracts[openContractIndex].tenant.name}
-                                            </p>
-                                            <p className="text-lg">
-                                                Address:{" "}
-                                                {contracts[openContractIndex].tenant.address}
-                                            </p>
-                                            <p className="text-lg">
-                                                Phone:{" "}
-                                                {contracts[openContractIndex].tenant.phone}
-                                            </p>
-                                            <p className="text-lg">
-                                                Email:{" "}
-                                                {contracts[openContractIndex].tenant.email}
-                                            </p>
-                                        </div>
-
-                                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
-                                            <h2 className="text-2xl font-semibold mb-4">
-                                                Room Details
-                                            </h2>
-                                            <p className="text-lg">
-                                                Room Name:{" "}
-                                                {room?.roomName}
-                                            </p>
-                                            <p className="text-lg"> Room Type: {room?.type}</p>
-                                            <p className="text-lg">Area: {room?.area}</p>
-                                            <p className="text-lg">
-                                                Rent Price:{" "}
-                                                {room?.price.toLocaleString('it-IT', {style: 'currency', currency: 'VND'})}
-                                            </p>
-                                            <p className="text-lg">
-                                                Amenities: {room?.description}
-                                            </p>
-                                        </div>
-                                        <div className="bg-white  rounded-lg shadow-md p-6 m-5">
-                                            <h2 className="text-2xl font-semibold mb-4">
-                                                Payment Terms
-                                            </h2>
-                                            <p className="text-lg">
-                                                Rent:{" "}
-                                                {room?.price.toLocaleString('it-IT', {style: 'currency', currency: 'VND'})}
-                                            </p>
-                                            <p className="text-lg">Deposit: {contracts[openContractIndex].depositAmount.toLocaleString('it-IT', {
-                                                style: 'currency',
-                                                currency: 'VND'
-                                            })}</p>
-                                            <p className="text-lg">
-                                                Payment Method: Chuyển khoản
-                                            </p>
-                                            <p className="text-lg">Payment Due
-                                                Date: {contracts[openContractIndex].rentCycleCount} month</p>
-                                        </div>
-                                    </div>
-                                )}
+                        {contractDetail ? <RentalContract contract={contractDetail} /> :
+                        <Skeleton/>
+                        } 
+                            <div className="py-4 bg-[#e0f5e4] my-2 rounded-lg ">
+                            <Flex gap="small" wrap className=" my-2 px-6 justify-end">
+                            
+                            <Button className ="p-5" color="danger" variant="outlined">Cancel Contract</Button>
+                            <Button className="p-5" type="primary" disabled={isExtend}>Extend Contract</Button>
+                            </Flex>
                             </div>
-                            <div className="bg-white px-4 pb-4 mt-2 flex justify-end mr-2">
-                                <button
-                                    className={`text-xl text-green-100 p-4 rounded-xl ${
-                                        isRenewable[openContractIndex]
-                                            ? "bg-[#1677ff] hover:bg-[#4096ff]"
-                                            : "bg-gray-400 cursor-not-allowed"
-                                    }`}
-                                    disabled={!isRenewable[openContractIndex]} // Vô hiệu nút nếu chưa hết hạn
-                                    onClick={() => {
-                                        handleExtension(contracts[openContractIndex]._id);
-                                        setOpenAddContract(true);
-                                    }}
-                                >
-                                    Contract extension
-                                </button>
-                            </div> */}
-                            <RentalContract />
-
-                            <ContractExtension
-                                openAddContract={openAddContract}
-                                setOpenAddContract={setOpenAddContract}
-                                contractextension={contracts[openContractIndex]}
-                            />
+                            
                         </div>
-
-            :
-                        <Result
-                status="404"
-                title="404"
-                subTitle="Sorry, No contracts found."
-
-            />
-        }
+                        
+            
                 </div>
        
 

@@ -12,6 +12,7 @@
   "dependencies": {
     "@algolia/client-search": "^5.15.0",
     "@ant-design/charts": "^2.2.1",
+    "@ant-design/icons": "^5.5.2",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.1.0",
@@ -26,6 +27,7 @@
     "@types/pdfjs-dist": "^2.10.377",
     "@types/react-redux": "^7.1.34",
     "antd": "^5.21.2",
+    "antd-style": "^3.7.1",
     "axios": "^1.7.7",
     "buffer": "^6.0.3",
     "canvg": "^4.0.2",

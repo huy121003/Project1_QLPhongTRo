@@ -15,7 +15,7 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
     if (!invoice) return null;
 
     const isUtilityInvoice = ["điện", "nước"].includes(
-        invoice.service.name.toLowerCase()
+        invoice?.service?.name.toLowerCase()
     );
     return (
         <Modal visible={visible} onCancel={onClose} footer={null}>
@@ -26,20 +26,20 @@ const ModalDetailInvoice: React.FC<InvoiceDetailModalProps> = ({
                 <Form
                     layout="vertical"
                     initialValues={{
-                        invoiceId: invoice._id,
-                        roomName: invoice.room.roomName,
-                        tenantName: invoice.tenant.name,
-                        idCard: invoice.tenant.idCard,
-                        phone: invoice.tenant.phone,
-                        serviceName: `Tiền ${invoice.service.name}`,
-                        price: `${invoice.service.priceUnit.toLocaleString()} đ/${
-                            invoice.service.unit
+                        invoiceId: invoice?._id,
+                        roomName: invoice?.room?.roomName,
+                        tenantName: invoice?.tenant?.name,
+                        idCard: invoice?.tenant?.idCard,
+                        phone: invoice?.tenant?.phone,
+                        serviceName: `Tiền ${invoice?.service?.name}`,
+                        price: `${invoice?.service?.priceUnit.toLocaleString()} đ/${
+                            invoice?.service?.unit
                         }`,
-                        firstIndex: invoice.firstIndex,
-                        finalIndex: invoice.finalIndex,
-                        amount: `${invoice.amount.toLocaleString()} đ`,
-                        month: invoice.month,
-                        status: invoice.status,
+                        firstIndex: invoice?.firstIndex,
+                        finalIndex: invoice?.finalIndex,
+                        amount: `${invoice?.amount.toLocaleString()} đ`,
+                        month: invoice?.month,
+                        status: invoice?.status,
                     }}
                 >
                     <Row gutter={[16, 16]}>

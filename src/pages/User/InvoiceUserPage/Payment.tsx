@@ -1,6 +1,7 @@
 import  { useState, useEffect } from "react";
 
 import { payOSApi } from "../../../api/";
+import { Button } from "antd";
 
 export const PaymentButton = ({
     onCreatePaymentLink,
@@ -9,14 +10,14 @@ export const PaymentButton = ({
 }) => (
     <div className="main-box">
         <div className="checkout">
-            <button
-                type="button"
+            <Button
+               
                 id="create-payment-link-btn"
                 onClick={onCreatePaymentLink}
-                className="underline text-red-300"
+                className=" text-blue-500"
             >
-                Đến trang thanh toán
-            </button>
+                Go to payment page
+            </Button>
         </div>
     </div>
 );
@@ -32,7 +33,7 @@ const CheckoutMessage = ({ message }: { message: string }) => (
                 id="create-payment-link-btn"
                 onClick={() => (window.location.href = "/")}
             >
-                Quay lại trang thanh toán
+                Return to home page
             </button>
         </div>
     </div>
@@ -47,27 +48,18 @@ export default function Payment({
 }) {
     const [message, setMessage] = useState("");
 
-    //   const handleAutoUpdateStatus = async () => {
-    //     try {
-    //       const response = await updateStatusInvoice(idInvoice);
-    //       console.log("Status updated:", response);
-    //     } catch (error) {
-    //       console.error("Error updating status:", error);
-    //     }
-    //   };
-
     const handleCreatePaymentLink = async () => {
         try {
             const response = await payOSApi.createLinkPayment(idInvoice);
-            console.log(response);
+            
             if (response.data && response.data.checkoutUrl) {
                 window.location.href = response.data.checkoutUrl;
             } else {
-                setMessage("Có lỗi xảy ra. Vui lòng thử lại sau.");
+                setMessage("An error occurred. Please try again later.");
             }
         } catch (error) {
             console.error("Error creating payment link:", error);
-            setMessage("Không thể tạo link thanh toán. Vui lòng thử lại.");
+            setMessage("Unable to create payment link. Please try again.");
         }
     };
 
@@ -76,13 +68,13 @@ export default function Payment({
         const query = new URLSearchParams(window.location.search);
         console.log(query);
         if (query.get("success")) {
-            setMessage("Thanh toán thành công. Cảm ơn bạn đã sử dụng payOS!");
+            setMessage("Payment successful. Thank you for using payOS!");
             //  handleAutoUpdateStatus(); // Gọi cập nhật trạng thái khi thanh toán thành công
         }
 
         if (query.get("canceled")) {
             setMessage(
-                "Thanh toán thất bại. Nếu có bất kỳ câu hỏi nào hãy gửi email tới support@payos.vn."
+                "Payment failed If you have any questions, please email support@payos.vn."
             );
         }
     }, []);
