@@ -54,7 +54,7 @@ const ContractTable: React.FC<Props> = ({
     },
     {
       title: "Deposit Amount",
-      dataIndex: "depositAmount",
+      dataIndex: "depositAmount", 
       key: "depositAmount",
       render: (_: any, record: IContract) => (
         <p>{record?.depositAmount.toLocaleString()}đ</p>
@@ -103,7 +103,7 @@ const ContractTable: React.FC<Props> = ({
               />
             }
           >
-            Detail
+           
           </Button>
           <Button
             icon={<i className="fa-solid fa-print text-orange-600 text-xl"></i>}
@@ -111,7 +111,7 @@ const ContractTable: React.FC<Props> = ({
               if (record) downloadContractPDF(record);
             }}
           >
-            Print
+           
           </Button>
           {record?.status === ContractStatus.ACTIVE && (
             <Popconfirm
@@ -134,7 +134,7 @@ const ContractTable: React.FC<Props> = ({
                 }
                 className=" transition"
               >
-                Cancel
+               
               </Button>
             </Popconfirm>
           )}

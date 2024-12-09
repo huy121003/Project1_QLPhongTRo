@@ -98,7 +98,7 @@ const InvoiceTable: React.FC<Props> = ({
               />
             }
           >
-            Detail
+          
           </Button>
           <DeleteModal onConfirm={onDeleteInvoice} record={record} />
 

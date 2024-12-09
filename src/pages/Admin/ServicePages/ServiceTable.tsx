@@ -76,7 +76,7 @@ const ServiceTable: React.FC<Props> = ({
               />
             }
           >
-            Detail
+            
           </Button>
           <Button
             icon={
@@ -86,7 +86,7 @@ const ServiceTable: React.FC<Props> = ({
               setOpenEditService(true), setRecord(record);
             }}
           >
-            Edit
+            
           </Button>
 
           {record.type !== ServiceType.Electricity &&

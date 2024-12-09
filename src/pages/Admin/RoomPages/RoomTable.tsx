@@ -88,9 +88,7 @@ const RoomTable: React.FC<Props> = ({
               "
               />
             }
-          >
-            Detail
-          </Button>
+          ></Button>
           {record.status === RoomStatus.Available && (
             <>
               <Button
@@ -101,9 +99,7 @@ const RoomTable: React.FC<Props> = ({
                   setRecord(record);
                   setOpenEditRoom(true);
                 }}
-              >
-                Edit
-              </Button>
+              ></Button>
               <DeleteModal
                 onConfirm={() => onDeleteRoom(record)}
                 record={record}

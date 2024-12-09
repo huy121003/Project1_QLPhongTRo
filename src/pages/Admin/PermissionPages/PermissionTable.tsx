@@ -93,7 +93,7 @@ const PermissionTable: React.FC<Props> = ({
               />
             }
           >
-            Detail
+            
           </Button>
           <Button
             onClick={() => {
@@ -104,7 +104,7 @@ const PermissionTable: React.FC<Props> = ({
               <i className="fa-solid fa-pen-to-square text-green-600 text-xl" />
             }
           >
-            Edit
+            
           </Button>
           <DeleteModal record={record} onConfirm={onDeletePermission} />
         </div>

@@ -39,7 +39,7 @@ const WaterTable: React.FC<Props> = ({
   const handleOK = async (key: string) => {
     const indexData = numberIndex[key];
     if (
-      indexData.firstIndex<0 ||
+      indexData.firstIndex < 0 ||
       !indexData.finalIndex ||
       indexData.firstIndex > indexData.finalIndex
     ) {
@@ -115,7 +115,6 @@ const WaterTable: React.FC<Props> = ({
       key: "firstIndex",
       render: (_: any, record: IContract) => (
         <Input
-      
           type="number"
           value={numberIndex[record._id]?.firstIndex}
           onChange={(e) =>
@@ -237,9 +236,7 @@ const WaterTable: React.FC<Props> = ({
           icon={
             <i className="fa-solid fa-floppy-disk text-xl text-green-500"></i>
           }
-        >
-          Save
-        </Button>
+        ></Button>
       ),
       with: 100,
     },
