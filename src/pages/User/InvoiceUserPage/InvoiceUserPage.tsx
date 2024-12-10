@@ -117,12 +117,13 @@ export default function InvoiceUserPage() {
 
   return (
     <div className="bg-[#e0f5e4] h-full flex flex-col">
-      <div className="bg-white mb-5 mx-5 mt-5 rounded-2xl p-6 shadow-lg text-black">
+      
+      <div className="bg-white mx-5 my-5 rounded-xl p-6 text-black">
         {/* Personal Information */}
         <InformationPersonal />
 
         {/* Payment Section */}
-        <div className="flex items-center justify-end space-x-4 text-lg">
+        {/* <div className="flex items-center justify-end space-x-4 text-lg">
           <select
             className="border-2 border-blue-400 rounded-md p-2 hover:bg-[#4096ff] hover:text-white"
             value={selectedBank}
@@ -137,7 +138,7 @@ export default function InvoiceUserPage() {
             <SlPaperPlane size={24} />
             <span className="pl-2">Make Payment</span>
           </button>
-        </div>
+        </div> */}
       </div>
       {/* Payment Information */}
       <PaymentInformantion /> */

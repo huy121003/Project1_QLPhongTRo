@@ -54,7 +54,6 @@ export default function ProfilePage() {
                         Birthday:
 
                         {new Date(accounts?.birthday ?? "").toLocaleDateString(
-
                             "en-GB"
                         )}
                     </span>

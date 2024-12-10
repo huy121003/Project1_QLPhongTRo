@@ -68,7 +68,7 @@ export default function Payment({
         console.log(query);
         if (query.get("success")) {
             setMessage("Payment successful. Thank you for using payOS!");
-            //  handleAutoUpdateStatus(); // Gọi cập nhật trạng thái khi thanh toán thành công
+        
         }
 
         if (query.get("canceled")) {
@@ -81,6 +81,6 @@ export default function Payment({
     return message ? (
         <CheckoutMessage message={message} />
     ) : (
-        <PaymentButton onCreatePaymentLink={handleCreatePaymentLink} />
+       <PaymentButton onCreatePaymentLink={handleCreatePaymentLink} />
     );
 }

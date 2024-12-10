@@ -11,15 +11,18 @@ import {
 import { useTheme } from "contexts/ThemeContext";
 import serviceApi from "api/serviceApi/serviceApi";
 import { ServiceType, UnitService } from "enums";
+import { IContract } from "interfaces";
 
 interface Props {
   openAddService: boolean;
   setOpenAddService: (value: boolean) => void;
+  
 }
 
 const AddServiceModal: React.FC<Props> = ({
   openAddService,
   setOpenAddService,
+  
 }) => {
   const [loading, setLoading] = React.useState(false);
   const [form] = Form.useForm();

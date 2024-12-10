@@ -95,7 +95,7 @@ export default function PaymentInformantion() {
     if (selectRows.length === 0) {
       setModalText("Please make payments in advance!");
     } else {
-      setModalText("Click on the confirm button to go to the payment page!");
+      setModalText("Click on the ok button to go to the payment page!");
     }
   };
 

@@ -16,15 +16,15 @@ const deleteRequestContractApi = (id: string): Promise<any> => {
 };
 const postRequestContractApi = (
   contract: string,
-  user: string,
   type: boolean,
-  amount?: number
+  amount?: number,
+  description?: string
 ): Promise<any> => {
   return apiRequest(ApiMethod.POST, `/api/v1/requests-contract`, false, {
     contract,
-    user,
     type,
     amount,
+    description
   });
 };
 const patchRequestContractApi = (

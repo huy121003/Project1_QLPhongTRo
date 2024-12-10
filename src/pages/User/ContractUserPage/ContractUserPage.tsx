@@ -7,20 +7,26 @@ import { IContract, IRoom } from "interfaces";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "redux/hook";
 import RentalContract from "./child-components/RentalContract";
+import ModalAddRequest from "./modal/ModalAddRequest";
+import { useForm } from "antd/es/form/Form";
+
+
 
 export default function ContractUserPage() {
-  const iduser = useAppSelector((state) => state.auth.user._id);
+  const userId = useAppSelector((state) => state?.auth.user._id);
   const [contracts, setContracts] = useState<IContract[]>([]);
   const [room, setRoom] = useState<IRoom>();
   const [openContractIndex, setOpenContractIndex] = useState<number>(0); // Mặc định mở hợp đồng đầu tiên
   const [isRenewable, setIsRenewable] = useState<boolean[]>([]); // Theo dõi trạng thái nút gia hạn từng hợp đồng
-  const [openAddContract, setOpenAddContract] = useState(false);
+  const [openCancelContract, setOpenCancelContract] = useState<boolean>(false);
   const [contractDetail, setContractDetail] = useState<IContract>();
   const [isExtend, setIsExtend] = useState<boolean>(true);
 
+
+  
   useEffect(() => {
     const getContracts = async () => {
-      const res = await contractApi.fetchContractApi(`tenant._id=${iduser}`);
+      const res = await contractApi.fetchContractApi(`tenant._id=${userId}`);
       if (res.data) {
         const allContracts = res.data.result;
         // Lọc chỉ lấy hợp đồng có status "active"
@@ -53,7 +59,7 @@ export default function ContractUserPage() {
       }
     };
     getContracts();
-  }, [iduser, openContractIndex]);
+  }, [userId, openContractIndex]);
 
   const toggleContract = (index: number) => {
     setOpenContractIndex(index);
@@ -87,9 +93,15 @@ export default function ContractUserPage() {
       });
     }
   }, [openContractIndex, contracts, isRenewable]);
+
+  const handleCancelContract = () => {
+    setOpenCancelContract(true);
+  }
+
   return (
     <div className="bg-[#e0f5e4] text-black h-screen flex flex-col mr-10">
       <div>
+        <ModalAddRequest open={openCancelContract} contract={contractDetail} setOpen={setOpenCancelContract}  />
         <div className="h-14 flex flex-row flex-shrink-0 items-center px-4  gap-4 text-xl font-semibold  sticky top-0 z-50 border-b-2 border-gray-300 bg-[#e0f5e4]">
           {contracts.map((contract) => (
             <button
@@ -115,7 +127,7 @@ export default function ContractUserPage() {
         )}
         <div className="py-4 bg-[#e0f5e4] my-2 rounded-lg ">
           <Flex gap="small" wrap className=" my-2 px-6 justify-end">
-            <Button className="p-5" color="danger" variant="outlined">
+            <Button onClick={() => handleCancelContract()} className="p-5" color="danger" variant="outlined">
               Cancel Contract
             </Button>
             <Button className="p-5" type="primary" disabled={isExtend}>

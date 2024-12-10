@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 
 
-import { message } from "antd";
+import { Badge, Descriptions, DescriptionsProps, message } from "antd";
 import dayjs from "dayjs";
 import { IAccount } from "interfaces";
 import { useAppSelector } from "redux/hook";
 import accountApi from "api/accountApi/accountApi";
+import roleApi from "api/roleApi/roleApi";
 
 export default function InformationPersonal() {
-    const [accounts, setAccount] = useState<IAccount>();
-    const iduser = useAppSelector((state) => state.auth.user._id); // Sửa tên biến id nếu cần thiết
+    const [account, setAccount] = useState<IAccount>();
+    const [role, setRole] = useState<string>("");
+    const userId = useAppSelector((state) => state.auth.user._id); 
 
     useEffect(() => {
         const getAccount = async () => {
-            const response = await accountApi.fetchAccountByIdApi(iduser);
-
+            const response = await accountApi.fetchAccountByIdApi(userId);
             if (response.data) {
                 setAccount(response.data);
             } else {
@@ -22,11 +23,46 @@ export default function InformationPersonal() {
             }
         };
         getAccount();
-    }, [iduser]);
-    return (
-        <div className="border-b pb-4 mb-4 overflow-x-scroll md:overflow-x-hidden">
-            <h2 className="text-2xl font-semibold ">PERSONAL INFORMATION</h2>
+    }, [userId]);
 
+    
+
+    const items: DescriptionsProps['items'] = [
+        {
+          key: '1',
+          label: 'UserName',
+          children: account?.name,
+        },
+        {
+          key: '2',
+          label: 'Telephone',
+          children: account?.phone,
+        },
+        {
+          key: '3',
+          label: 'Address',
+          children: account?.address,
+        },
+        {
+          key: '4',
+          label: 'Gender',
+          children: account?.gender,
+        },
+        {
+          key: '5',
+          label: 'Birthday',
+          children: dayjs(account?.birthday).format('DD-MM-YYYY'),
+        },
+        {
+            key: '6',
+            label: 'Role',
+            children: <Badge status="processing" text={account?.role.name} />, 
+          },
+      ];
+    return (
+        <div >
+            <Descriptions title="User Info" layout="vertical" items={items} bordered />
+            {/* <h2 className="text-2xl font-semibold ">PERSONAL INFORMATION</h2>
             <div className="grid grid-cols-2 gap-4 mt-4 text-lg">
                 <div>
                     <p className=" py-2">
@@ -47,14 +83,13 @@ export default function InformationPersonal() {
                         Date of Birth:
                         <span className="">
                         {  dayjs(accounts?.birthday).format("DD/MM/YYYY")}
-     
                         </span>
                     </p>
                     <p className=" py-2">
                         Email: <span className="">{accounts?.email}</span>
                     </p>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 
