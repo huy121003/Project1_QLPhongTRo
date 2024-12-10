@@ -7,7 +7,6 @@ import DeleteModal from "@components/DeleteModal";
 import ColumnSelector from "@components/ColumnSelector";
 import TableComponent from "@components/TableComponent";
 
-
 interface Props {
   invoices: IInvoice[];
   isLoading: boolean;
@@ -32,7 +31,6 @@ const InvoiceTable: React.FC<Props> = ({
   onChange,
   onDeleteInvoice,
 }) => {
-
   const columns = [
     {
       title: "Tenant",
@@ -92,12 +90,10 @@ const InvoiceTable: React.FC<Props> = ({
               "
               />
             }
-          >
-          
-          </Button>
+          ></Button>
           <DeleteModal onConfirm={onDeleteInvoice} record={record} />
 
-          {/* {record.status === InvoiceStatus.UNPAID && (
+          {record.status === InvoiceStatus.UNPAID && (
             <Popconfirm
               title="Payment Confirmation"
               description="Are you sure you want to confirm the payment?"
@@ -112,7 +108,7 @@ const InvoiceTable: React.FC<Props> = ({
                 <p className="text-green-500 font-bold">Confirm</p>
               </Button>
             </Popconfirm>
-          )} */}
+          )}
         </div>
       ),
       width: 150,

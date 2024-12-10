@@ -4,13 +4,17 @@ import { DownOutlined } from "@ant-design/icons";
 import { IRoom } from "interfaces";
 import roomApi from "api/roomApi/roomApi";
 
-
 interface Props {
   choosenRoom: string;
   setChooenRoom: (value: string) => void;
+  setCurrent?: (value: number) => void;
 }
 
-const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
+const ChoosenRoom: React.FC<Props> = ({
+  choosenRoom,
+  setChooenRoom,
+  setCurrent,
+}) => {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(9999);
@@ -33,14 +37,18 @@ const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
     getRoom();
   }, []);
 
-
   // Tạo menu cho Dropdown
   const menu = (
     <Menu>
       {/* Tùy chọn "All" */}
       <Menu.Item
         key="all"
-        onClick={() => setChooenRoom("")}
+        onClick={() => {
+          setChooenRoom("");
+          if (setCurrent) {
+            setCurrent(1);
+          }
+        }}
         style={{
           fontWeight: choosenRoom === "" ? "bold" : "normal",
           color: choosenRoom === "" ? "#1890ff" : "inherit",
@@ -61,7 +69,12 @@ const ChoosenRoom: React.FC<Props> = ({ choosenRoom, setChooenRoom }) => {
         {rooms.map((room) => (
           <Menu.Item
             key={room._id}
-            onClick={() => setChooenRoom(room._id)}
+            onClick={() => {
+              setChooenRoom(room._id);
+              if (setCurrent) {
+                setCurrent(1);
+              }
+            }}
             style={{
               fontWeight: choosenRoom === room._id ? "bold" : "normal",
               color: choosenRoom === room._id ? "#1890ff" : "inherit",

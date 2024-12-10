@@ -119,12 +119,18 @@ const InvoicePage = () => {
               year={year}
               setYear={setYear}
               setSelectedMonth={setSelectedMonth}
+              setCurrent={setCurrent}
             />
             <ChoosenRoom
               choosenRoom={choosenRoom}
               setChooenRoom={setChooenRoom}
+              setCurrent={setCurrent}
             />
-            <StatusInvoice status={status} setStatus={setStatus} />
+            <StatusInvoice
+              status={status}
+              setStatus={setStatus}
+              setCurrent={setCurrent}
+            />
           </div>
 
           <div className="   justify-end flex-1 items-center  flex">
