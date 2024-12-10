@@ -113,9 +113,45 @@ const AddContractModal: React.FC<Props> = ({
   const handleOk = async () => {
     const values = await form.validateFields();
     setLoading(true);
+    if (time.number <= 0) {
+      notification.error({
+        message: "Error",
+        description: "Duration must be greater than 0",
+      });
+      setLoading(false);
+      return;
+    }
+    if (values.rentCycleCount <= 0) {
+      notification.error({
+        message: "Error",
+        description: "Rent cycle count must be greater than 0",
+      });
+      setLoading(false);
+      return;
+    }
+    if (
+      time.unit === "year" &&
+      (time.number * 12) % values.rentCycleCount !== 0
+    ) {
+      notification.error({
+        message: "Error",
+        description: "Duration must be divisible by rent cycle count",
+      });
+      setLoading(false);
+      return;
+    }
+    if (time.unit === "month" && time.number % values.rentCycleCount !== 0) {
+      notification.error({
+        message: "Error",
+        description: "Duration must be divisible by rent cycle count",
+      });
+      setLoading(false);
+      return;
+    }
     const endDate = dayjs(values.startDate)
       .add(time.number, time.unit as dayjs.ManipulateType)
       .toDate();
+
     const response = await contractApi.postContractApi(
       choosenRoom,
       choosenTenant,

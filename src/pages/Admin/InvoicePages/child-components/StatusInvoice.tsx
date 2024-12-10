@@ -3,15 +3,15 @@ import { Select } from "antd";
 import { InvoiceStatus } from "enums";
 import { useTheme } from "contexts/ThemeContext";
 
-
 interface Props {
   status: InvoiceStatus | "";
   setStatus: (value: InvoiceStatus | "") => void;
+  setCurrent?: (value: number) => void;
 }
 
 const { Option } = Select;
 
-const StatusInvoice: React.FC<Props> = ({ status, setStatus }) => {
+const StatusInvoice: React.FC<Props> = ({ status, setStatus, setCurrent }) => {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
   const textColor = isLightTheme ? "text-black" : "text-white";
@@ -21,7 +21,12 @@ const StatusInvoice: React.FC<Props> = ({ status, setStatus }) => {
     <div className="  py-4 m-2 rounded-lg   ">
       <Select
         value={status}
-        onChange={(value) => setStatus(value as InvoiceStatus | "")}
+        onChange={(value) => {
+          setStatus(value as InvoiceStatus | "");
+          if (setCurrent) {
+            setCurrent(1);
+          }
+        }}
         className={`w-[100px] ${bgColor} ${textColor}`}
       >
         <Option value="" className="font-bold">

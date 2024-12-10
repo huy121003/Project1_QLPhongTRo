@@ -83,7 +83,7 @@ const ElectricPage = () => {
     });
 
     setContracts(filteredContracts);
-    setLoading(false);
+    // setLoading(false);
   };
 
   // Hàm lấy chỉ số điện theo hợp đồng
@@ -113,6 +113,7 @@ const ElectricPage = () => {
     });
     const indices = await Promise.all(promises);
     setNumberIndex(Object.assign({}, ...indices));
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -120,7 +121,7 @@ const ElectricPage = () => {
   }, []);
   useEffect(() => {
     fetchContracts();
-  }, [selectedMonth, year,electric]);
+  }, [selectedMonth, year, electric]);
   useEffect(() => {
     fetchElectricIndices(contracts);
   }, [selectedMonth, year, contracts]);

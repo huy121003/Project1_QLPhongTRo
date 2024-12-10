@@ -7,6 +7,7 @@ interface YearMonthSelectorProps {
   year: number | null;
   setYear: (year: number) => void;
   setSelectedMonth: (month: number) => void;
+  setCurrent?: (value: number) => void;
 }
 
 const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
@@ -14,6 +15,7 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
   year,
   setYear,
   setSelectedMonth,
+  setCurrent,
 }) => {
   const handleDateChange = (date: dayjs.Dayjs) => {
     if (date) {
@@ -22,6 +24,9 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
 
       setSelectedMonth(parseInt(month));
       setYear(parseInt(year));
+      if (setCurrent) {
+        setCurrent(1);
+      }
     }
     //  else {
     //   // Xử lý khi xóa giá trị
