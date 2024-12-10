@@ -1,8 +1,7 @@
-import AvailableRoom from "@pages/User/DasboardUserPage/child-components/AvailableRoom";
+import AvailableRoom from "./child-components/AvailableRoom";
 import InvoiceAmount from "../InvoicePages/child-components/InvoiceAmount";
 import RoomStatusBar from "./child-components/RoomStatusBar";
 import UnpaidInvoid from "./child-components/UnpaidInvoid";
-
 
 function DashboardPage() {
   return (

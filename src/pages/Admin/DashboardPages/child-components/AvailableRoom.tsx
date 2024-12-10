@@ -79,8 +79,8 @@ function AvailableRoom() {
   return (
     <div
       className={` p-2 rounded-lg m-1 flex-1 shadow-lg
-     ${bgColor} ${textColor}
-      `}
+ ${bgColor} ${textColor}
+  `}
     >
       <Stack spacing={2}>
         <Box>
