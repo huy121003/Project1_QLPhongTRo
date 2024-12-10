@@ -244,6 +244,7 @@ export default function PaymentInformantion() {
       const orderCode = url.searchParams.get("orderCode");
 
       if (cancel === "true") {
+        navigate("/user/invoiceUser");
         notification.success({
           message: "Payment Cancel",
           description: "Your payment has been canceled.",
@@ -263,7 +264,7 @@ export default function PaymentInformantion() {
               setSelectedIds([]); // Reset invoice IDs
               setSelectRows([]); // Reset select rows
 
-              //  navigate("/user/invoiceUser"); // Reload the page or navigate to the same page
+              navigate("/user/invoiceUser"); // Reload the page or navigate to the same page
             }
           } catch (error) {
             console.error("Error updating invoice status:", error);
