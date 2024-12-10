@@ -1,30 +1,27 @@
 import { useEffect, useState } from "react";
 import { SlPaperPlane } from "react-icons/sl";
-import InformationPersonal from "./InformationPersonal";
-import PaymentInformantion from "./PaymentInformantion";
-import { IoClose } from "react-icons/io5";
-import Payment from "./Payment";
-import { invoiceApi, payOSApi } from "../../../api";
-import { message, notification } from "antd";
-import { InvoiceStatus } from "../../../enums";
+import PaymentInformantion from "./child-components/PaymentInformantion";
+import Payment from "./child-components/Payment";
+import { Button, message, notification } from "antd";
 import { useNavigate } from "react-router-dom";
+import payOSApi from "api/payOSApi/payOSApi";
+import { InvoiceStatus } from "enums";
+import invoiceApi from "api/invoiceApi/invoiceApi";
+import InformationPersonal from "./child-components/InformationPersonal";
 
 export default function InvoiceUserPage() {
   const [showModal, setShowModal] = useState(false);
-  const [selectedBank, setSelectedBank] = useState("");
-  const [idInvoice, setIdInvoice] = useState<Array<string>>(
-    // Retrieve invoice IDs from localStorage and ensure it's a valid array
-    () => {
-      const storedInvoice = localStorage.getItem("idInvoice");
-      try {
-        const parsedInvoices = JSON.parse(storedInvoice || "[]");
-        return Array.isArray(parsedInvoices) ? parsedInvoices : [];
-      } catch (e) {
-        console.error("Invalid invoice data in localStorage", e);
-        return [];
-      }
+  const [selectedBank, setSelectedBank] = useState("QR");
+  const [idInvoice, setIdInvoice] = useState<Array<string>>(() => {
+    const storedInvoice = localStorage.getItem("idInvoice");
+    try {
+      const parsedInvoices = JSON.parse(storedInvoice || "[]");
+      return Array.isArray(parsedInvoices) ? parsedInvoices : [];
+    } catch (e) {
+      console.error("Invalid invoice data in localStorage", e);
+      return [];
     }
-  );
+  });
   const [res, setRes] = useState<string>("");
 
   const navigate = useNavigate();
@@ -67,7 +64,7 @@ export default function InvoiceUserPage() {
         }
       } catch (error) {
         notification.error({
-          message: "Error",
+          message: `Error: `,
           description: "Failed to create payment link.",
         });
       }
@@ -120,51 +117,30 @@ export default function InvoiceUserPage() {
 
   return (
     <div className="bg-[#e0f5e4] h-full flex flex-col">
-      <div
-        aria-label="breadcrumb"
-        className="text-xl text-[#2b6534] bg-neutral-100 px-7 py-4 shadow-lg"
-      >
-        <ol className="flex space-x-2">
-          <li>
-            <a href="/tai-chinh" className="hover:underline">
-              Finance
-            </a>
-          </li>
-          <li>
-            <span className="text-[#2b6534]">›</span>
-          </li>
-          <li className="font-semibold">Pay online</li>
-        </ol>
-      </div>
-
-      <div className="bg-white mb-5 mx-5 mt-5 rounded-2xl p-6 shadow-lg text-[#2b6534]">
+      <div className="bg-white mb-5 mx-5 mt-5 rounded-2xl p-6 shadow-lg text-black">
         {/* Personal Information */}
         <InformationPersonal />
 
         {/* Payment Section */}
         <div className="flex items-center justify-end space-x-4 text-lg">
           <select
-            className="border-2 border-lime-600 rounded-md p-2"
-            defaultValue="SelectBank"
+            className="border-2 border-blue-400 rounded-md p-2 hover:bg-[#4096ff] hover:text-white"
             value={selectedBank}
             onChange={handleBankChange}
           >
-            <option value="SelectBank">Chọn tài khoản ngân hàng</option>
             <option value="QRCode">QR Code</option>
           </select>
           <button
             onClick={openModal}
-            className="bg-amber-300 text-[#2b6534] px-4 py-2 rounded-md flex items-center hover:bg-amber-500"
+            className="bg-[#1677ff] text-white px-4 py-2 rounded-md flex items-center hover:bg-[#4096ff]"
           >
             <SlPaperPlane size={24} />
             <span className="pl-2">Make Payment</span>
           </button>
         </div>
       </div>
-
       {/* Payment Information */}
-      <PaymentInformantion setIdInvoices={setIdInvoice} idInvoice={idInvoice} />
-
+      <PaymentInformantion /> */
       {/* Modal for displaying payment link or errors */}
       {showModal && (
         <div
@@ -175,28 +151,30 @@ export default function InvoiceUserPage() {
             className="bg-white rounded-lg p-3 max-w-sm w-full"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="text-xl font-semibold mb-4 text-center border-b pb-2 text-[#2b6534]">
-              Thông báo
+            <h3 className="text-xl font-semibold mb-4 text-center border-b pb-2 text-black">
+              Notification
             </h3>
             {!selectedBank && (
               <p className="text-[#2b6534] text-center mb-4">
-                Vui lòng chọn ngân hàng
+                Please select payment method
               </p>
             )}
             {idInvoice.length === 0 && (
               <p className="text-[#2b6534] text-center mb-4">
-                Vui lòng chọn khoản thanh toán
+                Please select payment
               </p>
             )}
             {selectedBank && idInvoice.length > 0 && (
               <Payment idInvoice={idInvoice} res={res} />
             )}
-            <button
+
+            <Button
+              className="flex justify-self-end"
               onClick={closeModal}
-              className="text-[#2b6534] rounded-lg mt-4 font-semibold flex items-center justify-self-end"
+              type="primary"
             >
-              <IoClose /> Close
-            </button>
+              Close
+            </Button>
           </div>
         </div>
       )}

@@ -1,15 +1,14 @@
+import { IService } from "interfaces";
 import { useState } from "react";
-import AvailableService from "./AvailableService";
-
-import ServiceRoom from "./ServiceRoom";
-import { IService } from "../../../interfaces";
+import ServiceRoom from "./child-components/ServiceRoom";
+import AvailableService from "./child-components/AvailableService";
 
 export default function ServiceUserPage() {
     const [serviceRooms, setServiceRooms] = useState<IService[]>([]);
     const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
 
     return (
-        <div className="bg-[#e0f5e4] text-[#2b6534] h-full flex flex-col">
+        <div className="bg-[#e0f5e4] text-black h-full flex flex-col">
             {/* Hiển thị thông tin phòng đã chọn */}
 
             <ServiceRoom

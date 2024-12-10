@@ -1,20 +1,22 @@
-import { IRouter } from "../interfaces";
-import ContractLayout from "../layouts/ContractLayout/ContractLayout";
-import ServiceLayout from "../layouts/ServiceLayout/ServiceLayout";
-import AccountPage from "../pages/Admin/AccountPages/AccountPage";
-import ContractPage from "../pages/Admin/ContractPages/ContractPage";
-import DashboardPage from "../pages/Admin/DashboardPages/DashboardPage";
-import ElectricPage from "../pages/Admin/ElectricPages/ElectricPage";
-import InvoicePage from "../pages/Admin/InvoicePages/InvoicePage";
-import RolePage from "../pages/Admin/RolePages/RolePage";
-import RoomPage from "../pages/Admin/RoomPages/RoomPage";
-import RequestServicePage from "../pages/Admin/RequestServicePages/RequestServicePage";
-import ServicePage from "../pages/Admin/ServicePages/ServicePage";
-import WaterPage from "../pages/Admin/WaterPages/WaterPage";
-import PermissionPage from "../pages/Admin/PermissionPages/PermissionPage";
-import StatisticalLayout from "../layouts/StatisticalLayout/StatisticalLayout";
-import StatisticalInvoicePage from "../pages/Admin/StatisticalPages/StatisticalInvoicePage";
-import StatisticalRoomPage from "../pages/Admin/StatisticalRoomPage/StatisticalRoomPage";
+import AccountPage from "@pages/Admin/AccountPages";
+import ContractPage from "@pages/Admin/ContractPages";
+import DashboardPage from "@pages/Admin/DashboardPages";
+import ElectricPage from "@pages/Admin/ElectricPages";
+import InvoicePage from "@pages/Admin/InvoicePages";
+import PermissionPage from "@pages/Admin/PermissionPages";
+import RequestContractPage from "@pages/Admin/RequestContractPages";
+import RequestServicePage from "@pages/Admin/RequestServicePages";
+import RolePage from "@pages/Admin/RolePages";
+import RoomPage from "@pages/Admin/RoomPages";
+import ServicePage from "@pages/Admin/ServicePages";
+import StatisticalInvoicePage from "@pages/Admin/StatisticalPages";
+import StatisticalRoomPage from "@pages/Admin/StatisticalRoomPage";
+import WaterPage from "@pages/Admin/WaterPages";
+import { IRouter } from "interfaces";
+import ContractLayout from "layouts/ContractLayout";
+import ServiceLayout from "layouts/ServiceLayout";
+import StatisticalLayout from "layouts/StatisticalLayout";
+
 const homeAdminRouters: IRouter[] = [
   {
     path: "dashboard",
@@ -89,12 +91,12 @@ const homeAdminRouters: IRouter[] = [
         label: "Statistical Invoice",
       },
       {
-        path:"statisticalRoom",
+        path: "statisticalRoom",
         component: StatisticalRoomPage,
         isShowNav: true,
         icon: "fa-solid fa-door-open", // Icon cửa mở cho Statistical Room
         label: "Statistical Room",
-      }
+      },
     ],
   },
   {
@@ -111,13 +113,13 @@ const homeAdminRouters: IRouter[] = [
         icon: "fa-solid fa-folder", // Icon thư mục cho Contract List
         label: "Contract List",
       },
-      // {
-      //   path: "extendContract",
-      //   component: ExtendContractPage,
-      //   isShowNav: true,
-      //   icon: "fa-solid fa-calendar-plus", // Icon lịch thêm cho Extend Contract
-      //   label: "Extend Contract",
-      // },
+      {
+        path: "requestContract",
+        component: RequestContractPage,
+        isShowNav: true,
+        icon: "fa-solid fa-file-signature", // Icon ký hiệu tài liệu cho Request Contract
+        label: "Request Contract",
+      },
     ],
   },
   {

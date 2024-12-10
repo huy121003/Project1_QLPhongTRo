@@ -1,171 +1,132 @@
-import { useEffect, useState } from "react";
+import { Avatar, Button, Flex, Segmented, Select, Table } from "antd";
+import { ReactNode, useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { IContract, IInvoice } from "interfaces";
+import { useAppSelector } from "redux/hook";
+import invoiceApi from "api/invoiceApi/invoiceApi";
+import contractApi from "api/contractApi/contractApi";
 
-import { message } from "antd";
-import ModalDetailInvoice from "../InvoiceUserPage/ModalDetailInvoice";
 
-import { useAppSelector } from "../../../redux/hook";
-import { IContract, IInvoice, IRoom } from "../../../interfaces";
-import { contractApi, invoiceApi } from "../../../api";
+
+
 
 export default function PaymentHistoryUserPage() {
-  const iduser = useAppSelector((state) => state.auth.user._id);
-  const [invoices, setInvoices] = useState<IInvoice[]>([]);
+  const [roomWithUserId, setRoomWithUserId] = useState<IContract[]>([]);
+  const userId = useAppSelector((state) => state.auth.user._id);
+  const [query, setQuery] = useState<string>("status=PAID");
+  const [invoiceByUser, setInvoiceByUser] = useState<IInvoice[]>([]);
+  const [defaultSelect, setDefaultSelect] = useState<string>("");
 
-  const [selectedInvoice, setSelectedInvoice] = useState<IInvoice | null>(null);
 
-  //Lưu trữ danh sách các hóa đơn đã được lọc theo danh mục
-  const [filteredInvoices, setFilteredInvoices] = useState<IInvoice[]>([]);
-  
+  const fetchInvoiceByUserIdStatusPaid = async() => {
+    const invoices = await invoiceApi.fetchInvoiceApi(query);
+    if(invoices){
+      setInvoiceByUser(invoices.data.result);
+      console.log(invoices);
+    }
+  }
+  const fetchRoomByUserId = async () => {
+    if (userId) {
+      const room = await contractApi.fetchContractApi(`tenant._id=${userId}&status=ACTIVE`);
+      setRoomWithUserId(room.data.result);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  // Quản lý hợp đồng và phòng
-  const [contracts, setContracts] = useState<IContract[]>([]);
-  const [rooms, setRooms] = useState<IRoom[]>([]);
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-
+    }
+  }
   useEffect(() => {
-    const getContracts = async () => {
-      const res = await contractApi.fetchContractApi(`tenant._id=${iduser}`);
-      if (res.data) {
-        const allContracts = res.data.result;
-        // Lọc chỉ lấy hợp đồng có status "active"
-        const activeContracts = allContracts.filter(
-          (contract: IContract) => contract.status === "ACTIVE"
-        );
-        const roomsFromContracts = activeContracts.map(
-          (contract: IContract) => contract.room
-        );
-        setRooms(roomsFromContracts);
-        // Đặt phòng đầu tiên làm mặc định
-        if (roomsFromContracts.length > 0) {
-          setSelectedRoomId(roomsFromContracts[0]._id);
-        }
-      } else {
-        message.error(res.message);
-      }
-    };
-    getContracts();
-  }, [iduser]);
+    fetchRoomByUserId();
+    fetchInvoiceByUserIdStatusPaid();
 
-  useEffect(() => {
-    const getInvoices = async () => {
-      const response = await invoiceApi.fetchInvoiceByUserId();
-      if (response.data) {
-        // Lọc các hóa đơn có trạng thái PAID
-        const paidInvoices = response.data.filter(
-          (invoice: IInvoice) => invoice.status === "PAID"
-        );
-        setInvoices(paidInvoices);
-        setFilteredInvoices(paidInvoices); // Hiển thị tất cả hóa đơn PAID mặc định
-      } else {
-        message.error(response.message);
-      }
-    };
-    getInvoices();
-  }, []);
+  }, [query])
 
-  useEffect(() => {
-    // Lọc hóa đơn dựa trên danh mục đã chọn
-    const filterByCategory = () => {
-      let filtered = invoices;
+  const handleChange = (value: string) => {
+    setDefaultSelect(value);
+    const qs = query + `&room._id=${value}`;
+    setQuery(qs);
+    console.log(`selected ${value}`);
+  };
+  const options = roomWithUserId.map((room) => ({
+    label: room.room.roomName,
+    value: room.room._id,
+  }))
 
-      // Lọc theo phòng
-      if (selectedRoomId) {
-        filtered = filtered.filter(
-          (invoice) => invoice.room._id === selectedRoomId
-        );
-      }
+  const dataSource = invoiceByUser.map((invoice, index)=>({
+    no: index+1,
+    key: invoice._id,
+    id: <span className="text-blue-500">{invoice._id}</span>,
+    service: invoice.service.name,
+    updatedAt: dayjs(invoice.updatedAt).format("HH:MM:ss A | DD-MM-YYYY"),
+    month: (invoice.month ? invoice.month : "..."),
+    amount: <span className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">{invoice.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " đ"}</span>
+  }))
+  const handleReloadFilter = () => {
+    setQuery("status=PAID");
+    setDefaultSelect("");
     
+  }
 
-      setFilteredInvoices(filtered);
-    };
-
-    filterByCategory();
-  }, [invoices, selectedRoomId]);
-
-  const totalAmount = filteredInvoices.reduce(
-    (total, invoice) => total + invoice.amount,
-    0
-  );
-
-  const openModal = (invoice: IInvoice) => {
-    setSelectedInvoice(invoice);
-    setIsModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setIsModalVisible(false);
-    setSelectedInvoice(null);
-  };
+  const columns = [
+    {
+      title: 'No',
+      dataIndex: 'no',
+      key: 'name',
+    },
+    {
+      title: 'Id',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Service Name',
+      dataIndex: 'service',
+      key: 'service',
+    },
+    {
+      title: 'Payment Date',
+      dataIndex: 'updatedAt',
+      key: 'updatedAt',
+    },
+    {
+      title: 'Month',
+      dataIndex: 'month',
+      key: 'month',
+    },
+    {
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
+    },
+    
+  ];
   return (
-    <div className="bg-[#e0f5e4] text-[#2b6534] h-full flex flex-col overflow-x-scroll sm:overflow-x-hidden">
-      
-      <div className="p-6 m-0 sm:m-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-4">Payment History</h2>
-
-        {/* Danh sách các phòng */}
-        {rooms.length > 0 && (
-          <div className="flex flex-row gap-4 mb-4">
-            {rooms.map((room, index) => (
-              <button
-                key={room._id}
-                className={`px-4 py-2 rounded-lg shadow ${
-                  selectedRoomId === room._id
-                    ? "bg-green-300 text-[#2b6534] cursor-pointer font-semibold"
-                    : "bg-green-100 hover:bg-green-200"
-                }`}
-                onClick={() => setSelectedRoomId(room._id)}
-              >
-                Phòng {room.roomName}
-              </button>
-            ))}
-          </div>
-        )}
-      
-
-        <table className="w-full text-left table-auto border-collapse">
-          <thead>
-            <tr>
-              <th className="border-b p-3 text-lg">Invoice Description</th>
-              <th className="border-b p-3 text-lg">Payment Date</th>
-              <th className="border-b p-3 text-lg">Amount (VND)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredInvoices.map((invoice) => (
-              <tr
-                key={invoice._id}
-                onClick={() => openModal(invoice)}
-                className="cursor-pointer"
-              >
-                <td className="border-b p-3 text-lg">{invoice.description}</td>
-                <td className="border-b p-3 text-lg">
-                  {new Date(invoice.createdAt).toLocaleDateString("en-GB")}
-                </td>
-                <td className="border-b p-3 text-lg">
-                  {invoice.amount.toLocaleString("vi-VN")}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr className="text-red-600">
-              <td colSpan={2} className="p-3 font-semibold text-right border-t">
-                Total Amount Paid:
-              </td>
-              <td className="p-3 font-semibold border-t ">
-                {totalAmount.toLocaleString("vi-VN")} VND
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+    <div className="bg-[#e0f5e4] text-black  flex flex-col overflow-hidden mr-10">
+      <div className="m-3">
+        <div className="flex gap-5">
+        <Select className=" mb-5"
+          defaultValue={defaultSelect}
+          style={{ width: 120 }}
+          onChange={(value) => handleChange(value)}
+        >
+          <Select.Option key="All" value = "">All</Select.Option>
+          {options.map((option)=>(
+            <Select.Option key={option.label} value = {option.value}>{option.label}</Select.Option> 
+          ))}
+        </Select>
+        <Button onClick={() => handleReloadFilter()} >Reload Filter</Button>
+        </div>
+        <Segmented<string>
+          options={['All', 'Rent Room', 'Electricity & Water', 'Other']}
+          onChange={(value) => {
+            console.log(value); // string
+          }}
+          defaultValue={"All"}
+        />
+         
+        <Table
+          className="mt-10"
+          dataSource={dataSource}
+          columns={columns} />
       </div>
-      <ModalDetailInvoice
-        visible={isModalVisible}
-        onClose={closeModal}
-        invoice={selectedInvoice}
-      />
+
     </div>
   );
 }

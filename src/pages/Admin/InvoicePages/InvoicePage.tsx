@@ -1,17 +1,17 @@
 import { Button, message, notification } from "antd";
+import invoiceApi from "api/invoiceApi/invoiceApi";
+import { useTheme } from "contexts/ThemeContext";
+import { InvoiceStatus } from "enums";
+import { IInvoice } from "interfaces";
 import { useEffect, useState } from "react";
-import DetailInvoice from "./DetailInvoice";
-import ChoosenRoom from "./ChoosenRoom";
-import StatusInvoice from "./StatusInvoice";
-import ExportToExcel from "./ExportToExcel";
-import InvoiceCard from "./InvoiceCard";
-import { IInvoice } from "../../../interfaces";
-import { InvoiceStatus } from "../../../enums";
-import { invoiceApi } from "../../../api";
-import { YearMonthSelector } from "../../../components";
-import PaymentConfirm from "./PaymentConfirm";
-import { useTheme } from "../../../contexts/ThemeContext";
-import InvoiceAmount from "./InvoiceAmount";
+import InvoiceAmount from "./child-components/InvoiceAmount";
+import YearMonthSelector from "@components/YearMonthSelector ";
+import ChoosenRoom from "./child-components/ChoosenRoom";
+import StatusInvoice from "./child-components/StatusInvoice";
+import ExportToExcel from "./child-components/ExportToExcel";
+import InvoiceTable from "./child-components/InvoiceTable";
+import DetailInvoice from "./drawer/DetailInvoice";
+
 const InvoicePage = () => {
   const [selectedMonth, setSelectedMonth] = useState<number | null>(null);
   const [year, setYear] = useState<number | null>(null);
@@ -59,10 +59,16 @@ const InvoicePage = () => {
     choosenRoom,
     status,
   ]);
-  const handlePaginationChange = (page: number, pageSize?: number) => {
-    setCurrent(page);
-    if (pageSize) setPageSize(pageSize);
+  const onChange = (pagination: any) => {
+    if (pagination.current !== current && pagination) {
+      setCurrent(pagination.current);
+    }
+    if (pagination.pageSize !== pageSize && pagination) {
+      setPageSize(pagination.pageSize);
+      setCurrent(1);
+    }
   };
+
   const onDeleteInvoice = async (record: any) => {
     const res = await invoiceApi.deleteInvoiceApi(record._id);
     if (res.data) {
@@ -99,6 +105,9 @@ const InvoicePage = () => {
     <>
       <h1 className="text-2xl font-bold m-2">Invoice</h1>
       <div className="justify-end  w-full">
+        <div className="flex-1 m-2">
+          <InvoiceAmount selectMonth={selectedMonth} year={year} />
+        </div>
         <div
           className={` rounded-lg   justify-between items-center mx-2 flex
   ${bgColor} ${textColor} 
@@ -119,42 +128,26 @@ const InvoicePage = () => {
           </div>
 
           <div className="   justify-end flex-1 items-center  flex">
-            {/* <Button
-              size="large"
-              onClick={() => setOpenPaymentConfirm(true)}
-              className="m-2 py-6 px-2 bg-purple-600 text-white"
-            >
-              <i className="fa-solid fa-credit-card"></i>
-              Payment Confirm
-            </Button> */}
-
             <ExportToExcel invoices={invoices} />
           </div>
         </div>
-        <div className="flex-1 m-2">
-          <InvoiceAmount selectMonth={selectedMonth} year={year} />
-        </div>
-        <InvoiceCard
+        <InvoiceTable
           invoices={invoices}
+          onDeleteInvoice={onDeleteInvoice}
+          onPaymentConfirm={onPaymentConfirm}
+          setOpenDetailInvoice={setOpenDetailInvoice}
           isLoading={isLoading}
           current={current}
           pageSize={pageSize}
           total={total}
-          onChange={handlePaginationChange}
-          onDeleteInvoice={onDeleteInvoice}
-          onPaymentConfirm={onPaymentConfirm}
+          onChange={onChange}
           setRecord={setRecord}
-          setOpenDetailInvoice={setOpenDetailInvoice}
         />
       </div>
       <DetailInvoice
         record={record}
         open={openDetailInvoice}
         setOpen={setOpenDetailInvoice}
-      />
-      <PaymentConfirm
-        open={openPaymentConfirm}
-        setOpen={setOpenPaymentConfirm}
       />
     </>
   );

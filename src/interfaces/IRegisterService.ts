@@ -1,4 +1,4 @@
-import { RegisterServiceStatus, RoomType, ServiceType } from "../enums";
+import { RegisterServiceStatus, RoomType, ServiceType } from "enums";
 
 interface IRegisterService {
   _id: string;

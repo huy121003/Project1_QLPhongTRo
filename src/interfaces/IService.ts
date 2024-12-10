@@ -1,5 +1,5 @@
-import { ServiceType } from "../enums";
- interface IService {
+import { ServiceType } from "enums";
+interface IService {
   _id: string;
   serviceName: string;
   description: string;

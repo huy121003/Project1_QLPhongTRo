@@ -1,4 +1,4 @@
-import { EquipmentStatus } from "../enums";
+import { EquipmentStatus } from "enums";
 interface IEquipment {
   _id: string;
   name: string;

@@ -1,6 +1,4 @@
-import React from 'react'
-import MonthlyRevenueChart from './MonthlyRevenueChart';
-
+import MonthlyRevenueChart from './child-components/MonthlyRevenueChart';
 
 function StatisticalRoomPage() {
 

@@ -1,4 +1,4 @@
-import { InvoiceStatus } from "../enums";
+import { InvoiceStatus } from "enums";
 interface IInvoice {
   _id: string;
   room: {
@@ -17,6 +17,7 @@ interface IInvoice {
     unit: string;
     priceUnit: number;
   };
+  send:boolean;
   firstIndex?: number;
   finalIndex?: number;
   totalNumber?: number;
