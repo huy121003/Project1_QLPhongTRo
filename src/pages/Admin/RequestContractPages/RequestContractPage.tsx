@@ -5,7 +5,6 @@ import requestContractApi from "api/requestContractApi/requestContractApi";
 import RequestContractFilter from "./child-components/RequestContractFilter";
 import RequestContractTable from "./child-components/RequestContractTable";
 
-
 function RequestContractPage() {
   const [requestContract, setRequestContract] = React.useState<
     IRequestContract[]
@@ -47,7 +46,7 @@ function RequestContractPage() {
   };
   useEffect(() => {
     getRequestContract();
-  }, []);
+  }, [current, pageSize, searchParams, sorted]);
 
   const onChange = (pagination: any) => {
     if (pagination.current !== current && pagination) {
