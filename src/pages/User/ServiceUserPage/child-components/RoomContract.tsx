@@ -43,7 +43,7 @@ const RoomContract: React.FC<IRoomContract> = ({
     getContract();
   }, [tenantId, selectedRoomId]);
   return (
-    <div className="bg-white rounded-lg shadow-md p-6   flex gap-6">
+    <div className=" rounded-lg shadow-md p-6   flex gap-6">
       {room.map((item, index) => (
         <div
           key={index}
