@@ -3,13 +3,10 @@ import IContract from "./IContract";
 
 interface IRequestContract {
   _id: string;
-  user: {
-    _id: string;
-    name: string;
-    avatar: string;
-  };
+
   contract: IContract;
   status: RequestContractStatus;
+  description: string;
   type: boolean;
   amount: number;
   createdAt: Date;

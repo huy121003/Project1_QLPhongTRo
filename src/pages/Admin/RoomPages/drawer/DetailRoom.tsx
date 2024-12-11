@@ -76,9 +76,7 @@ const DetailRoom: React.FC<Props> = ({
     renderItem("Description", record?.description),
     renderItem(
       "Status",
-      <p
-        className={`${roomStatusColor(record?.status) as string} font-bold`}
-      >
+      <p className={`${roomStatusColor(record?.status) as string} font-bold`}>
         {record?.status}
       </p>
     ),
@@ -141,7 +139,7 @@ const DetailRoom: React.FC<Props> = ({
               {services.map((service) => (
                 <div
                   key={service._id}
-                  className={`flex items-center p-2 border border-gray-200 rounded-md 
+                  className={`flex items-center m-2 p-2 border border-gray-200 rounded-md 
                ${textColor} ${bgColor}
                  `}
                 >

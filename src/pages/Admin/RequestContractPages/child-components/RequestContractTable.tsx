@@ -102,9 +102,10 @@ const RequestContractTable: React.FC<Props> = ({
   const columns = [
     {
       title: "Tenant",
-      dataIndex: "tenant",
+      dataIndex: "contract",
       key: "tenant",
-      render: (_: any, record: IRequestContract) => record?.user?.name,
+      render: (_: any, record: IRequestContract) =>
+        record?.contract?.tenant?.name,
     },
     {
       title: "Room",
@@ -127,6 +128,11 @@ const RequestContractTable: React.FC<Props> = ({
       ),
     },
     {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
       title: "Amount (month)",
       dataIndex: "amount",
       key: "amount",
@@ -139,9 +145,7 @@ const RequestContractTable: React.FC<Props> = ({
       key: "status",
       render: (_: any, record: IRequestContract) => (
         <p
-          className={`font-bold ${requestContractStatusColor(
-            record?.status
-          )}`}
+          className={`font-bold ${requestContractStatusColor(record?.status)}`}
         >
           {record?.status}
         </p>

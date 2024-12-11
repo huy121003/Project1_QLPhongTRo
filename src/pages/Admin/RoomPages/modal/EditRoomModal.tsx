@@ -16,7 +16,6 @@ import serviceApi from "api/serviceApi/serviceApi";
 import roomApi from "api/roomApi/roomApi";
 import { RoomStatus, RoomType } from "enums";
 
-
 interface Props {
   openEditRoom: boolean;
   setOpenEditRoom: (value: boolean) => void;
@@ -220,7 +219,7 @@ const EditRoomModal: React.FC<Props> = ({
             {services.map((service) => (
               <div
                 key={service._id}
-                className={`flex items-center p-2 border border-gray-200 rounded-md 
+                className={`flex items-center m-2 p-2 border border-gray-200 rounded-md 
               ${textColor} ${bgColor}
                 `}
               >
