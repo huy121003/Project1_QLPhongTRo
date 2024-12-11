@@ -32,7 +32,6 @@ export default function AvailableRoom() {
 
     const handlePaginationChange = (page: number, pageSize?: number) => {
         setCurrent(page);
-    
         if (pageSize) setPageSize(pageSize);
     };
     const dataSource = rooms.map((room, index) => (
