@@ -243,7 +243,7 @@ const ServiceRoomTable: React.FC<IServiceRoomTable> = ({ selectedRoomId }) => {
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
+    <div className=" rounded-lg shadow-md p-6">
       <Table
         dataSource={allService}
         columns={columns}
