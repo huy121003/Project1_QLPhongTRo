@@ -76,19 +76,23 @@ export default function PaymentHistoryUserPage() {
   const handleFindByTypeInvoice = (value: string) => {
     switch (value) {
       case "All":
-        setQuery(`status=PAID&tenant._id=${userId}&currentPage=${current}&pageSize=${pageSize}`)
+        setCurrent(1);
+        setQuery(`status=PAID&tenant._id=${userId}&currentPage=${current}&pageSize=${pageSize}`);
         break;
       case "Rent Room":
+        setCurrent(1);
         setQuery(
           `status=PAID&tenant._id=${userId}&currentPage=${current}&pageSize=${pageSize}&service.name=/Rental/i`
         );
         break;
       case "Electricity & Water":
+        setCurrent(1);
         setQuery(
           `status=PAID&tenant._id=${userId}&currentPage=${current}&pageSize=${pageSize}&service.unit=/m3/i|service.unit=/kwh/i`
         );
         break;
       case "Other":
+        setCurrent(1);
         setQuery(
           `status=PAID&tenant._id=${userId}&currentPage=${current}&pageSize=${pageSize}&service.unit!=/m3/i&service.unit!=/kwh/i&&service.name!=/Rental/i`
         );
