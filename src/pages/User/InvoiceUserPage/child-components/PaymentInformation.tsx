@@ -48,7 +48,7 @@ const useStyle = createStyles(({ prefixCls, css }) => ({
   `,
 }));
 
-export default function PaymentInformantion() {
+export default function PaymentInformation() {
   const { styles } = useStyle();
   const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [selectedInvoice, setSelectedInvoice] = useState<IInvoice | null>(null);
@@ -108,7 +108,7 @@ export default function PaymentInformantion() {
         }
       }
       handleCancel();
-    } catch (error) {}
+    } catch (error) { }
   };
 
   const handleCancel = () => {

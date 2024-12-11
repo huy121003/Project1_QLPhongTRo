@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SlPaperPlane } from "react-icons/sl";
-import PaymentInformantion from "./child-components/PaymentInformantion";
+import PaymentInformation from "./child-components/PaymentInformation"; 
 import Payment from "./child-components/Payment";
 import { Button, message, notification } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -117,32 +117,15 @@ export default function InvoiceUserPage() {
 
   return (
     <div className="bg-[#e0f5e4] h-full flex flex-col">
-      
+
       <div className="bg-white mx-5 my-5 rounded-xl p-6 text-black">
-        {/* Personal Information */}
+      
         <InformationPersonal />
 
-        {/* Payment Section */}
-        {/* <div className="flex items-center justify-end space-x-4 text-lg">
-          <select
-            className="border-2 border-blue-400 rounded-md p-2 hover:bg-[#4096ff] hover:text-white"
-            value={selectedBank}
-            onChange={handleBankChange}
-          >
-            <option value="QRCode">QR Code</option>
-          </select>
-          <button
-            onClick={openModal}
-            className="bg-[#1677ff] text-white px-4 py-2 rounded-md flex items-center hover:bg-[#4096ff]"
-          >
-            <SlPaperPlane size={24} />
-            <span className="pl-2">Make Payment</span>
-          </button>
-        </div> */}
       </div>
-      {/* Payment Information */}
-      <PaymentInformantion /> */
-      {/* Modal for displaying payment link or errors */}
+     
+      <PaymentInformation />
+    
       {showModal && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
