@@ -4,10 +4,26 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  BarController,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  BarController,
+  LineElement,
+  PointElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
 import { useEffect, useState } from "react";
 import { DatePicker, notification, Select } from "antd";
 import dayjs from "dayjs";
@@ -15,14 +31,6 @@ import { IInvoice } from "interfaces";
 import { useTheme } from "contexts/ThemeContext";
 import invoiceApi from "api/invoiceApi/invoiceApi";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 function getRevenueByRoom(
   invoices: IInvoice[]

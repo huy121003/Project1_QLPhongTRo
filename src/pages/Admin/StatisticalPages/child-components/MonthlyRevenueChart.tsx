@@ -4,30 +4,32 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  BarController,
   LineElement,
   PointElement,
   Title,
   Tooltip,
   Legend,
 } from "chart.js";
-import { useEffect, useState, useMemo, useCallback } from "react";
-import { notification, Select } from "antd";
-import { IInvoice } from "interfaces";
-import { useTheme } from "contexts/ThemeContext";
-import invoiceApi from "api/invoiceApi/invoiceApi";
-import ExportRevenueToExcel from "./ExportRevenueToExcel";
-
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  BarController,
   LineElement,
   PointElement,
   Title,
   Tooltip,
   Legend
 );
+
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { notification, Select } from "antd";
+import { IInvoice } from "interfaces";
+import { useTheme } from "contexts/ThemeContext";
+import invoiceApi from "api/invoiceApi/invoiceApi";
+import ExportRevenueToExcel from "./ExportRevenueToExcel";
 
 // Hàm tính toán doanh thu theo tháng
 const getMonthlyRevenue = (invoices: IInvoice[]) =>
