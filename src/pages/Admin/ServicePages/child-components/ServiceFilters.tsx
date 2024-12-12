@@ -1,6 +1,6 @@
 import SearchFilters from "@components/SearchFilter";
 import SortOption from "@components/SortOption";
-import { ServiceType } from "enums";
+import { ServiceType, UnitService } from "enums";
 import React from "react";
 
 interface Props {
@@ -22,8 +22,18 @@ const ServiceFilters: React.FC<Props> = ({
         onSearchChange={handleSearchChange}
         fields={[
           { label: "Service Name", field: "serviceName", type: "text" },
-          { label: "Price", field: "price", type: "text" },
-          { label: "Unit", field: "unit", type: "text" },
+          {
+            label: "Unit",
+            field: "unit",
+            type: "select",
+            options: [
+              { value: "", label: "All Unit" },
+              ...Object.keys(UnitService).map((key) => ({
+                value: key,
+                label: key,
+              })),
+            ],
+          },
           {
             label: "Type",
             field: "type",

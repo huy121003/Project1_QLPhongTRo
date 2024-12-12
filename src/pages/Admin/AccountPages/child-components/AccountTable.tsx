@@ -52,6 +52,11 @@ const AccountTable: React.FC<Props> = ({
     { title: "Email", dataIndex: "email", key: "email" },
     { title: "Phone", dataIndex: "phone", key: "phone" },
     {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+    },
+    {
       title: "Role",
       dataIndex: "role",
       key: "role",

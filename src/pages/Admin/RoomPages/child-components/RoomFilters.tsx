@@ -34,7 +34,6 @@ const RoomFilters: React.FC<Props> = ({
               { value: RoomType.Studio, label: RoomType.Studio },
             ],
           },
-          { label: "Price", field: "price", type: "text" },
           {
             label: "Status",
             field: "status",

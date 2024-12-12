@@ -53,7 +53,7 @@ function AccountPage() {
 
     Object.entries(searchParams).forEach(([key, value]) => {
       if (value) {
-        if (key === "role" || key === "isActive") {
+        if (key === "role" || key === "isActive" || key === "gender") {
           queryParams[key] = value;
         } else queryParams[key] = `/${value}/i`;
       }
@@ -92,16 +92,15 @@ function AccountPage() {
     openEditAccount,
   ]);
 
-   const onChange = (pagination: any) => {
-     if (pagination.current !== current && pagination) {
-       setCurrent(pagination.current);
-     }
-     if (pagination.pageSize !== pageSize && pagination) {
-       setPageSize(pagination.pageSize);
-       setCurrent(1);
-     }
-   };
-
+  const onChange = (pagination: any) => {
+    if (pagination.current !== current && pagination) {
+      setCurrent(pagination.current);
+    }
+    if (pagination.pageSize !== pageSize && pagination) {
+      setPageSize(pagination.pageSize);
+      setCurrent(1);
+    }
+  };
 
   const handleSearchChange = (field: string, value: string) => {
     setSearchParams((prev) => ({ ...prev, [field]: value }));

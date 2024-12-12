@@ -30,7 +30,7 @@ function ServicePage() {
   const [sorted, setSorted] = useState<string>("");
   const [searchParams, setSearchParams] = useState({
     serviceName: "",
-    price: null,
+  
     unit: "",
   });
   const getService = async () => {

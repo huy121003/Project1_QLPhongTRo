@@ -6,6 +6,7 @@ import invoiceStatusColor from "constants/invoiceStatusColor";
 import DeleteModal from "@components/DeleteModal";
 import ColumnSelector from "@components/ColumnSelector";
 import TableComponent from "@components/TableComponent";
+import dayjs from "dayjs";
 
 interface Props {
   invoices: IInvoice[];
@@ -71,6 +72,22 @@ const InvoiceTable: React.FC<Props> = ({
           {status}
         </p>
       ),
+    },
+    {
+      title: "createdAt",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (createdAt: string) =>
+        dayjs(createdAt).format("DD/MM/YYYY | HH:mm:ss"),
+    },
+    {
+      title: "paymentDate",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: (updatedAt: string, record: IInvoice) =>
+        record.status === InvoiceStatus.PAID
+          ? dayjs(updatedAt).format("DD/MM/YYYY | HH:mm:ss")
+          : "-",
     },
     {
       title: "Action",

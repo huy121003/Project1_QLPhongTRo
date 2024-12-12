@@ -29,7 +29,7 @@ function RoomPage() {
   const [searchParams, setSearchParams] = useState({
     roomName: "",
     type: "",
-    price: "",
+ 
     status: "",
   });
   const getRoom = async () => {

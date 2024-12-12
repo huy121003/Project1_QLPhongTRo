@@ -1,7 +1,7 @@
 // Excel Export Function
 import * as XLSX from "xlsx";
 import { Button } from "antd";
-import { IContract } from "../../../interfaces";
+import { IContract } from "interfaces";
 interface Props {
   contracts: IContract[];
 }
