@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Modal,
   Button,
@@ -28,7 +28,7 @@ interface Props {
   record: IAccount;
   isChangeRole: boolean;
 }
-
+import { useState, useEffect } from "react";
 const EditAccountModal: React.FC<Props> = ({
   openEditAccount,
   setOpenEditAccount,
