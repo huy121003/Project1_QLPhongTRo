@@ -14,12 +14,16 @@ import { IAddress, IRole } from "interfaces";
 import debounce from "lodash.debounce";
 import addressApi from "api/addressApi/addressApi";
 import roleApi from "api/roleApi/roleApi";
-import { checkEmail, checkIdCard, checkPassword, checkPhoneNumberVN } from "regex";
+import {
+  checkEmail,
+  checkIdCard,
+  checkPassword,
+  checkPhoneNumberVN,
+} from "regex";
 import upfileApi from "api/upfileApi/upfileApi";
 import accountApi from "api/accountApi/accountApi";
-import RenderUploadField from "@components/RenderUploadField";
+import RenderUploadField from "@components/renderUploadField";
 import { Gender } from "enums";
-
 
 interface Props {
   openAddAccount: boolean;

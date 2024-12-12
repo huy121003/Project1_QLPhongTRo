@@ -18,7 +18,7 @@ import dayjs from "dayjs";
 import { checkEmail, checkIdCard, checkPhoneNumberVN } from "regex";
 import upfileApi from "api/upfileApi/upfileApi";
 import accountApi from "api/accountApi/accountApi";
-import RenderUploadField from "@components/RenderUploadField";
+import RenderUploadField from "@components/renderUploadField";
 import { Gender } from "enums";
 const { Option } = Select;
 

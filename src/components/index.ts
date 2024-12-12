@@ -7,7 +7,7 @@ import DeleteModal from "./DeleteModal";
 import Loading from "./Loading";
 import NotFoundPage from "./NotFoundPage";
 import NotItem from "./NotItem";
-import RenderUploadField from "./RenderUploadField";
+import RenderUploadField from "./renderUploadField";
 import SearchFilters from "./SearchFilter";
 import SidebarUser from "./SidebarUser";
 import SortOption from "./SortOption";
