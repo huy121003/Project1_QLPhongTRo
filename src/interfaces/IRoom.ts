@@ -1,4 +1,4 @@
-import { RoomStatus, RoomType } from "../enums";
+import { RoomStatus, RoomType } from "enums";
 interface IRoom {
   _id: string;
   roomName: string;
@@ -7,7 +7,7 @@ interface IRoom {
   status: RoomStatus;
   price: number;
   description: string;
-  services: any[];
+  services: string[];
   createdBy: {
     _id: string;
     email: string;

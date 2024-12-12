@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
-import { RegisterServiceStatus } from "../../../enums";
-import RegisterServiceFilter from "./RequestServiceFilter";
-import { registerServiceAPI } from "../../../api";
+
 import { message, notification } from "antd";
-import RegisterServiceCard from "./RequestServiceCard";
-import { IRegisterService } from "../../../interfaces";
+import { IRegisterService } from "interfaces";
+import registerServiceApi from "api/registerServiceApi/registerServiceApi";
+import { RegisterServiceStatus } from "enums";
+import RequestServiceTable from "./child-components/RequestServiceTable";
+import RegisterServiceFilter from "./child-components/RequestServiceFilter";
+
 function RequestServicePage() {
   const [registerService, setRegisterService] = React.useState<
     IRegisterService[]
@@ -14,7 +16,7 @@ function RequestServicePage() {
   const [pageSize, setPageSize] = React.useState(10);
   const [loading, setLoading] = React.useState(false);
   const [searchParams, setSearchParams] = React.useState({
-    status: "PENDING",
+    status: "",
     type: "",
   });
   const [sorted, setSorted] = React.useState<string>("");
@@ -32,7 +34,7 @@ function RequestServicePage() {
     });
     const query = new URLSearchParams(queryParams).toString();
     setLoading(true);
-    const res = await registerServiceAPI.fetchRegisterServiceApi(query);
+    const res = await registerServiceApi.fetchRegisterServiceApi(query);
     if (res.data) {
       setRegisterService(res.data.result);
       setTotal(res.data.meta.totalDocument);
@@ -45,7 +47,7 @@ function RequestServicePage() {
     setLoading(false);
   };
   const deleteRegisterService = async (id: string) => {
-    const res = await registerServiceAPI.deleteRegisterServiceApi(id);
+    const res = await registerServiceApi.deleteRegisterServiceApi(id);
     if (res.statusCode === 200) {
       message.success("Delete register service successfully");
       getRegisterService();
@@ -59,12 +61,17 @@ function RequestServicePage() {
   useEffect(() => {
     getRegisterService();
   }, [currentPage, pageSize, searchParams, sorted]);
-  const handlePaginationChange = (page: number, pageSize?: number) => {
-    setCurrentPage(page);
-    if (pageSize) setPageSize(pageSize);
+  const onChange = (pagination: any) => {
+    if (pagination.current !== currentPage && pagination) {
+      setCurrentPage(pagination.current);
+    }
+    if (pagination.pageSize !== pageSize && pagination) {
+      setPageSize(pagination.pageSize);
+      setCurrentPage(1);
+    }
   };
   const handleApprove = async (id: string, type: boolean) => {
-    const res = await registerServiceAPI.patchRegisterServiceApi(
+    const res = await registerServiceApi.patchRegisterServiceApi(
       id,
       RegisterServiceStatus.APPROVED
     );
@@ -92,28 +99,27 @@ function RequestServicePage() {
     setCurrentPage(1);
   };
   return (
-    <>  <h1 className="text-2xl font-bold m-2">
-      Request Service
-    </h1>
-    <div className="m-2">
-      <RegisterServiceFilter
-        handleSearchChange={handleSearchChange}
-        handleSortChange={handleSortChange}
-        searchParams={searchParams}
-        sorted={sorted}
-      />
-      <RegisterServiceCard
-        registerService={registerService}
-        total={total}
-        currentPage={currentPage}
-        pageSize={pageSize}
-        onChange={handlePaginationChange}
-        onApprove={handleApprove}
-        loading={loading}
-        onDelete={deleteRegisterService}
-      />
-
-    </div>
+    <>
+      {" "}
+      <h1 className="text-2xl font-bold m-2">Request Service</h1>
+      <div className="m-2">
+        <RegisterServiceFilter
+          handleSearchChange={handleSearchChange}
+          handleSortChange={handleSortChange}
+          searchParams={searchParams}
+          sorted={sorted}
+        />
+        <RequestServiceTable
+          registerService={registerService}
+          total={total}
+          currentPage={currentPage}
+          pageSize={pageSize}
+          onChange={onChange}
+          onApprove={handleApprove}
+          loading={loading}
+          onDelete={deleteRegisterService}
+        />
+      </div>
     </>
   );
 }

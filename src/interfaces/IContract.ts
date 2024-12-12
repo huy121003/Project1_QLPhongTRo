@@ -1,10 +1,9 @@
-import { ContractStatus } from "../enums";
+import { ContractStatus } from "enums";
 interface IContract {
   _id: string;
   room: {
     _id: string;
     roomName: string;
-
     price: number;
   };
   tenant: {
@@ -18,12 +17,16 @@ interface IContract {
   innkeeper: {
     _id: string;
     name: string;
+    address: string;
+    phone: string;
   };
+  isRenewed: boolean;
   startDate: Date;
   endDate: Date;
   depositAmount: number;
   status: ContractStatus;
   rentCycleCount: number;
+  numberPeople: number;
   actualEndDate: Date;
   createdAt: Date;
   updatedAt: Date;

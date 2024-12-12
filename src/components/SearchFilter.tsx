@@ -1,7 +1,7 @@
 // SearchFilters.tsx
 
 import { DatePicker, Input, Select, Space } from "antd";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "contexts/ThemeContext";
 const { Option } = Select;
 interface Field {
   label: string; // Label của trường

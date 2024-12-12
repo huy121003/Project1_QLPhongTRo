@@ -1,5 +1,5 @@
 import { Result } from "antd";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "contexts/ThemeContext";
 function NotItem() {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";

@@ -1,20 +1,17 @@
-import React, { useState } from "react";
-
-import { accountApi, authtApi } from "../../api";
-import { logoutAction } from "../../redux/slice/auth/authSlice";
-
-import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { Dropdown, Menu, message, notification } from "antd";
+import { useAppDispatch, useAppSelector } from "redux/hook";
+import { resizeWidth } from "@utils/resize";
+import { IAccount } from "interfaces";
+import authApi from "api/authApi/authApi";
+import { logoutAction } from "redux/slice/auth/authSlice";
+import accountApi from "api/accountApi/accountApi";
+import { homeUserRouters } from "routers";
+import ChangePassword from "@pages/AuthPages/ChangePassword";
+import EditAccountModal from "@pages/Admin/AccountPages/modal/EditAccountModal";
 
-import { homeUserRouters } from "../../routers";
-import { resizeWidth } from "../../utils/resize";
-import ChangePassword from "../../pages/AuthPages/ChangePassword";
-import logo from "../../access/Images/logo2.png";
-import { IAccount } from "../../interfaces";
-import EditAccountModal from "../../pages/Admin/AccountPages/EditAccountModal";
-
-function UserLayout() {
+const UserLayout = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const width = resizeWidth();
@@ -32,7 +29,7 @@ function UserLayout() {
     setIsNavOpen((prev) => !prev);
   };
   const handleLogout = async () => {
-    const res = await authtApi.apiLogout();
+    const res = await authApi.apiLogout();
     if (res && res.data) {
       dispatch(logoutAction());
       navigate("/login");
@@ -72,9 +69,9 @@ function UserLayout() {
     </Menu>
   );
   return (
-    <div className="flex h-screen overflow-hidden bg-[#083b10] ">
+    <div className="flex h-screen overflow-hidden bg-white ">
       <nav
-        className={`flex flex-col  items-center  h-full shadow-lg transition-all duration-300  text-[#7e881d]  ${
+        className={`flex flex-col  items-center  h-full shadow-lg transition-all duration-300  text-black  ${
           width <= 1024
             ? isNavOpen
               ? "w-[50px] "
@@ -88,15 +85,24 @@ function UserLayout() {
           className={`flex flex-row justify-center items-center gap-2 border-b border-gray-400 w-full h-[130px] pb-2`}
         >
           {width > 1024 && isNavOpen ? (
-            <img src={logo} alt="" className="object-cover w-44" />
-          ) : null}
-          <div className="flex " onClick={toggleNav}>
-            <i
-              className={`fa fa-bars text-2xl cursor-pointer font-bold text-[#7e881d] hover:text-[#ffd13b]  ${
-                !isNavOpen && "text-[#ffd13b] font-bold"
-              }`}
+            <div>
+              <img
+                src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4"
+                alt=""
+                className="object-cover w-20"
+              />
+              <span className="mt-2 font-bold text-amber-500 text-xl text-black ">
+                For User
+              </span>
+            </div>
+          ) : (
+            <img
+              src="https://avatars3.githubusercontent.com/u/12101536?s=400&v=4"
+              alt=""
+              className="object-cover w-12"
             />
-          </div>
+          )}
+          <div className="flex " onClick={toggleNav}></div>
         </div>
         {homeUserRouters
           .filter((item) => item.label !== undefined)
@@ -104,8 +110,8 @@ function UserLayout() {
             <Link
               to={item.path}
               key={item.label}
-              className={`flex hover:text-[#ffd13b] flex-row items-center rounded-md my-3 px-4 py-2 w-full transition-colors duration-300  ${
-                selected === item.label ? "text-[#ffd13b] font-bold" : ""
+              className={`flex hover:text-[#4096ff] flex-row items-center rounded-md my-3 px-4 py-2 w-full transition-colors duration-300  ${
+                selected === item.label ? "text-[#4096ff] font-bold" : ""
               }`}
               onClick={() => setSelected(item.label ?? "Dashboard")}
             >
@@ -119,9 +125,9 @@ function UserLayout() {
           ))}
       </nav>
 
-      <div className="flex-1 transition-all duration-300 bg-[#083b10] ">
-        <div className="flex items-center  text-[#ffd13b] h-16 px-5 justify-between bg-[#083b10] ">
-          <div className="flex hover:text-slate-300" onClick={toggleNav}>
+      <div className="flex-1 transition-all duration-300 bg-white ">
+        <div className="flex items-center  text-black h-16 px-5 justify-between bg-white ">
+          <div className="flex hover:text-[#4096ff]" onClick={toggleNav}>
             <h2 className="ml-2 text-2xl font-bold ">{selected}</h2>
           </div>
           <Dropdown overlay={menu} trigger={["hover"]}>
@@ -159,11 +165,11 @@ function UserLayout() {
           openEditAccount={openEditAccount}
           setOpenEditAccount={setOpenEditAccount}
           record={account}
-         isChangeRole={true}
+          isChangeRole={true}
         />
       )}
     </div>
   );
-}
+};
 
 export default UserLayout;

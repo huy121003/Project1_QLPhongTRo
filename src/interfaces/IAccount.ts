@@ -1,4 +1,5 @@
-import { Gender } from "../enums";
+import { Gender } from "enums";
+
 interface IAccount {
   _id: string;
   name: string;

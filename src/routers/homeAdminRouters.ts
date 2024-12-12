@@ -1,19 +1,21 @@
-import { IRouter } from "../interfaces";
-import ContractLayout from "../layouts/ContractLayout/ContractLayout";
-import ServiceLayout from "../layouts/ServiceLayout/ServiceLayout";
-import AccountPage from "../pages/Admin/AccountPages/AccountPage";
-import ContractPage from "../pages/Admin/ContractPages/ContractPage";
-import ExtendContractPage from "../pages/Admin/ContractPages/ExtendContractPage";
-import DashboardPage from "../pages/Admin/DashboardPages/DashboardPage";
-import ElectricPage from "../pages/Admin/ElectricPages/ElectricPage";
-import InvoicePage from "../pages/Admin/InvoicePages/InvoicePage";
-import RolePage from "../pages/Admin/RolePages/RolePage";
-import RoomPage from "../pages/Admin/RoomPages/RoomPage";
-import RequestServicePage from "../pages/Admin/RequestServicePages/RequestServicePage";
-import ServicePage from "../pages/Admin/ServicePages/ServicePage";
-import StatisticalPage from "../pages/Admin/StatisticalPages/StatisticalPage";
-import WaterPage from "../pages/Admin/WaterPages/WaterPage";
-import PermissionPage from "../pages/Admin/PermissionPages/PermissionPage";
+import AccountPage from "@pages/Admin/AccountPages";
+import ContractPage from "@pages/Admin/ContractPages";
+import DashboardPage from "@pages/Admin/DashboardPages";
+import ElectricPage from "@pages/Admin/ElectricPages";
+import InvoicePage from "@pages/Admin/InvoicePages";
+import PermissionPage from "@pages/Admin/PermissionPages";
+import RequestContractPage from "@pages/Admin/RequestContractPages";
+import RequestServicePage from "@pages/Admin/RequestServicePages";
+import RolePage from "@pages/Admin/RolePages";
+import RoomPage from "@pages/Admin/RoomPages";
+import ServicePage from "@pages/Admin/ServicePages";
+import StatisticalInvoicePage from "@pages/Admin/StatisticalPages";
+import StatisticalRoomPage from "@pages/Admin/StatisticalRoomPage";
+import WaterPage from "@pages/Admin/WaterPages";
+import { IRouter } from "interfaces";
+import ContractLayout from "layouts/ContractLayout";
+import ServiceLayout from "layouts/ServiceLayout";
+import StatisticalLayout from "layouts/StatisticalLayout";
 
 const homeAdminRouters: IRouter[] = [
   {
@@ -76,33 +78,49 @@ const homeAdminRouters: IRouter[] = [
   },
   {
     path: "statistical",
-    component: StatisticalPage,
+    component: StatisticalLayout,
     isShowNav: true,
     icon: "fa-solid fa-chart-bar", // Icon biểu đồ cột cho Statistical
     label: "Statistical",
-  },
-  {
-    path: "contract",
-    component: ContractLayout,
-    isShowNav: true,
-    icon: "fa-solid fa-file-contract", // Icon hợp đồng cho Contract Layout
-    label: "Contract",
     children: [
       {
-        path: "contractList",
-        component: ContractPage,
+        path: "statisticalInvoice",
+        component: StatisticalInvoicePage,
         isShowNav: true,
-        icon: "fa-solid fa-folder", // Icon thư mục cho Contract List
-        label: "Contract List",
+        icon: "fa-solid fa-file-invoice-dollar", // Icon hóa đơn tiền cho Statistical Invoice
+        label: "Statistical Invoice",
       },
-      // {
-      //   path: "extendContract",
-      //   component: ExtendContractPage,
-      //   isShowNav: true,
-      //   icon: "fa-solid fa-calendar-plus", // Icon lịch thêm cho Extend Contract
-      //   label: "Extend Contract",
-      // },
+      {
+        path: "statisticalRoom",
+        component: StatisticalRoomPage,
+        isShowNav: true,
+        icon: "fa-solid fa-door-open", // Icon cửa mở cho Statistical Room
+        label: "Statistical Room",
+      },
     ],
+  },
+  {
+    // path: "contract",
+    // component: ContractLayout,
+    // isShowNav: true,
+    // icon: "fa-solid fa-file-contract", // Icon hợp đồng cho Contract Layout
+    // label: "Contract",
+    // children: [
+    //  {
+    path: "contractList",
+    component: ContractPage,
+    isShowNav: true,
+    icon: "fa-solid fa-folder", // Icon thư mục cho Contract List
+    label: "Contract List",
+    //},
+    //   {
+    //     path: "requestContract",
+    //     component: RequestContractPage,
+    //     isShowNav: true,
+    //     icon: "fa-solid fa-file-signature", // Icon ký hiệu tài liệu cho Request Contract
+    //     label: "Request Contract",
+    //   },
+    // ],
   },
   {
     path: "account",

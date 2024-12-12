@@ -1,6 +1,6 @@
 import React from "react";
 import { Dropdown, Button, Checkbox, MenuProps } from "antd";
-import { useTheme } from "../contexts/ThemeContext";
+import { useTheme } from "contexts/ThemeContext";
 // Prop types for ColumnSelector
 interface ColumnSelectorProps {
   columns: Array<{

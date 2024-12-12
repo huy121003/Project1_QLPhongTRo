@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
-import IPermission from "../../../interfaces/IPermisson";
-import { permissionApi } from "../../../api";
 import { message, notification } from "antd";
-import { useTheme } from "../../../contexts/ThemeContext";
-import PermissionFilter from "./PermissionFilter";
-import { AddButton } from "../../../components";
-import ExportToExcel from "./ExportToExcel";
-import DetailPermission from "./DetailPermission";
-import PermissionTable from "./PermissionTable";
-import AddPermissionModal from "./AddPermissionModal";
-import EditPermissionModal from "./EditPermissionModal";
+import IPermission from "interfaces/IPermisson";
+import { useTheme } from "contexts/ThemeContext";
+import permissionApi from "api/permissionApi/permissionApi";
+import PermissionFilter from "./child-components/PermissionFilter";
+import ExportToExcel from "./child-components/ExportToExcel";
+import AddButton from "@components/AddButton";
+import DetailPermission from "./drawer/DetailPermission";
+import PermissionTable from "./child-components/PermissionTable";
+import AddPermissionModal from "./modal/AddPermissionModal";
+import EditPermissionModal from "./modal/EditPermissionModal";
+
 
 function PermissionPage() {
   const [permission, setPermission] = React.useState<IPermission[]>([]);

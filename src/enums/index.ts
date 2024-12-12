@@ -8,6 +8,7 @@ import RoomStatus from "./RoomStatus";
 import ServiceType from "./ServiceType";
 import RegisterServiceStatus from "./RegisterServiceStatus";
 import UnitService from "./UnitService";
+import RequestContractStatus from "./RequestContractStatus";
 export {
   ApiMethod,
   Gender,
@@ -19,4 +20,5 @@ export {
   ServiceType,
   RegisterServiceStatus,
   UnitService,
+  RequestContractStatus,
 };

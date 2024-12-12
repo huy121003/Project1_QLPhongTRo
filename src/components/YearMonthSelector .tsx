@@ -5,8 +5,9 @@ import dayjs from "dayjs";
 interface YearMonthSelectorProps {
   selectedMonth: number | null;
   year: number | null;
-  setYear: (year: number | null) => void;
-  setSelectedMonth: (month: number | null) => void;
+  setYear: (year: number) => void;
+  setSelectedMonth: (month: number) => void;
+  setCurrent?: (value: number) => void;
 }
 
 const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
@@ -14,19 +15,24 @@ const YearMonthSelector: React.FC<YearMonthSelectorProps> = ({
   year,
   setYear,
   setSelectedMonth,
+  setCurrent,
 }) => {
-  const handleDateChange = (date: dayjs.Dayjs | null) => {
+  const handleDateChange = (date: dayjs.Dayjs) => {
     if (date) {
       const formattedDate = date.format("MM-YYYY");
       const [month, year] = formattedDate.split("-");
 
       setSelectedMonth(parseInt(month));
       setYear(parseInt(year));
-    } else {
-      // Xử lý khi xóa giá trị
-      setSelectedMonth(null);
-      setYear(null);
+      if (setCurrent) {
+        setCurrent(1);
+      }
     }
+    //  else {
+    //   // Xử lý khi xóa giá trị
+    //   setSelectedMonth();
+    //   setYear(null);
+    // }
   };
 
   return (
