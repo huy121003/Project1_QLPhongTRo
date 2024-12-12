@@ -1,7 +1,7 @@
-import RoomStatusBar from "./RoomStatusBar";
-import AvailableRoom from "./AvailableRoom";
-import UnpaidInvoid from "./UnpaidInvoid";
-import InvoiceAmount from "../InvoicePages/InvoiceAmount";
+import AvailableRoom from "./child-components/AvailableRoom";
+import InvoiceAmount from "../InvoicePages/child-components/InvoiceAmount";
+import RoomStatusBar from "./child-components/RoomStatusBar";
+import UnpaidInvoid from "./child-components/UnpaidInvoid";
 
 function DashboardPage() {
   return (

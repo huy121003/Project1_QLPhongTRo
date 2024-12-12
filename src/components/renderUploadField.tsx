@@ -1,5 +1,5 @@
+import { useTheme } from "contexts/ThemeContext";
 import React from "react";
-import { useTheme } from "../contexts/ThemeContext";
 interface Props {
   type: "avatar" | "frontIdCard" | "backIdCard" | "temporaryResidence";
   selectedImage: File | null;

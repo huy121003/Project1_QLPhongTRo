@@ -1,4 +1,4 @@
-import { ApiMethod } from "../enums";
+import { ApiMethod } from "enums";
 interface IPermission {
   _id: string;
   name: string;

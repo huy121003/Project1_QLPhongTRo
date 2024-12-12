@@ -1,15 +1,17 @@
 import { message, notification } from "antd";
+import accountApi from "api/accountApi/accountApi";
+import roleApi from "api/roleApi/roleApi";
+import { useTheme } from "contexts/ThemeContext";
+import { IAccount } from "interfaces";
 import { useEffect, useState } from "react";
-import { AddButton } from "../../../components"; // Change to CustomModal
-import { accountApi, roleApi } from "../../../api/";
-import AddAccountModal from "./AddAccountModal";
-import { IAccount } from "../../../interfaces";
-import EditAccountModal from "./EditAccountModal";
-import DetailAccount from "./DetailAccount";
-import AccountFilters from "./AccountFilter";
-import ExportToExcel from "./ExportToExcel";
-import AccountCard from "./AccountCard";
-import { useTheme } from "../../../contexts/ThemeContext";
+import AccountFilters from "./child-components/AccountFilter";
+import ExportToExcel from "./child-components/ExportToExcel";
+import AddButton from "@components/AddButton";
+import AccountTable from "./child-components/AccountTable";
+import AddAccountModal from "./modal/AddAccountModal";
+import EditAccountModal from "./modal/EditAccountModal";
+import DetailAccount from "./drawer/DetailAccount";
+
 function AccountPage() {
   const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [current, setCurrent] = useState(1);
@@ -51,7 +53,7 @@ function AccountPage() {
 
     Object.entries(searchParams).forEach(([key, value]) => {
       if (value) {
-        if (key === "role" || key === "isActive") {
+        if (key === "role" || key === "isActive" || key === "gender") {
           queryParams[key] = value;
         } else queryParams[key] = `/${value}/i`;
       }
@@ -90,9 +92,14 @@ function AccountPage() {
     openEditAccount,
   ]);
 
-  const handlePaginationChange = (page: number, pageSize?: number) => {
-    setCurrent(page);
-    if (pageSize) setPageSize(pageSize);
+  const onChange = (pagination: any) => {
+    if (pagination.current !== current && pagination) {
+      setCurrent(pagination.current);
+    }
+    if (pagination.pageSize !== pageSize && pagination) {
+      setPageSize(pagination.pageSize);
+      setCurrent(1);
+    }
   };
 
   const handleSearchChange = (field: string, value: string) => {
@@ -144,13 +151,13 @@ function AccountPage() {
             />
           </div>
         </div>
-        <AccountCard
+        <AccountTable
           accounts={accounts}
           isLoading={isLoading}
           current={current}
           pageSize={pageSize}
           total={total}
-          onChange={handlePaginationChange}
+          onChange={onChange}
           onDeleteAccount={onDeleteAccount}
           setOpenEditAccount={setOpenEditAccount}
           setOpenDetailAccount={setOpenDetailAccount}

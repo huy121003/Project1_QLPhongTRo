@@ -1,15 +1,16 @@
 import { message, notification } from "antd";
+import serviceApi from "api/serviceApi/serviceApi";
+import { useTheme } from "contexts/ThemeContext";
+import { IService } from "interfaces";
 import { useEffect, useState } from "react";
-import { AddButton } from "../../../components";
-import AddServiceModal from "./AddServiceModal";
-import EditServiceModal from "./EditServiceModal";
-import DetailService from "./DetailService";
-import ServiceFilters from "./ServiceFilters";
-import ServiceTable from "./ServiceTable";
-import ExportToExcel from "./ExportToExcel";
-import { IService } from "../../../interfaces";
-import { serviceApi } from "../../../api";
-import { useTheme } from "../../../contexts/ThemeContext";
+import ExportToExcel from "./child-components/ExportToExcel";
+import ServiceFilters from "./child-components/ServiceFilters";
+import AddButton from "@components/AddButton";
+import ServiceTable from "./child-components/ServiceTable";
+import AddServiceModal from "./modal/AddServiceModal";
+import EditServiceModal from "./modal/EditServiceModal";
+import DetailService from "./drawer/DetailService";
+
 function ServicePage() {
   const { theme } = useTheme();
   const isLightTheme = theme === "light";
@@ -29,7 +30,7 @@ function ServicePage() {
   const [sorted, setSorted] = useState<string>("");
   const [searchParams, setSearchParams] = useState({
     serviceName: "",
-    price: null,
+  
     unit: "",
   });
   const getService = async () => {
