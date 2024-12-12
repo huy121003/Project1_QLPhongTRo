@@ -25,56 +25,51 @@ ChartJS.register(
 );
 
 function getRevenueByRoom(
-  invoices: IInvoice[],
-
+  invoices: IInvoice[]
 ): { roomName: string; totalAmount: number }[] {
   const revenueByRoom: { [roomName: string]: number } = {};
   invoices.forEach((invoice) => {
-   
-    
-        const roomName = invoice.room.roomName;
-        revenueByRoom[roomName] =
-          (revenueByRoom[roomName] || 0) + invoice.amount;
-      
-    
+    const roomName = invoice.room.roomName;
+    revenueByRoom[roomName] = (revenueByRoom[roomName] || 0) + invoice.amount;
   });
 
-  return Object.keys(revenueByRoom).map((roomName) => ({
-    roomName,
-    totalAmount: revenueByRoom[roomName],
-  }));
+  return Object.keys(revenueByRoom)
+    .map((roomName) => ({
+      roomName,
+      totalAmount: revenueByRoom[roomName],
+    }))
+    .sort((a, b) => a.roomName.localeCompare(b.roomName));
 }
 
 function MonthlyRevenueChart() {
   const [invoices, setInvoices] = useState<IInvoice[]>([]);
   const [isMonthly, setIsMonthly] = useState<boolean>(true);
   const [selectedTime, setSelectedTime] = useState<string>(
-    isMonthly ?
-    new Date().getMonth() + 1 + "-" + new Date().getFullYear() // Không có số 0
-    :
-    new Date().getFullYear().toString()
+    isMonthly
+      ? new Date().getMonth() + 1 + "-" + new Date().getFullYear() // Không có số 0
+      : new Date().getFullYear().toString()
   );
   const { theme } = useTheme();
 
-useEffect(() => {
-  const fetchInvoices = async () => {
-    const monthQuery = isMonthly
-      ? selectedTime
-      : `/${selectedTime.split("-")[0]}/i`; // For year query
-    const res = await invoiceApi.fetchInvoiceApi(
-      `pageSize=99999&currentPage=1&status=PAID&month=${monthQuery}`
-    );
-    if (res.data) {
-      setInvoices(res.data.result);
-    } else {
-      notification.error({
-        message: "Error",
-        description: res.message,
-      });
-    }
-  };
-  fetchInvoices();
-}, [selectedTime, isMonthly]);
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      const monthQuery = `/${selectedTime}/`;
+      // ? selectedTime
+      // : `/${selectedTime.split("-")[0]}/i`; // 10/2024 -> /10/i nhưng mà nếu của năm khác thì sao?
+      const res = await invoiceApi.fetchInvoiceApi(
+        `pageSize=99999&currentPage=1&status=PAID&month=${monthQuery}`
+      );
+      if (res.data) {
+        setInvoices(res.data.result);
+      } else {
+        notification.error({
+          message: "Error",
+          description: res.message,
+        });
+      }
+    };
+    fetchInvoices();
+  }, [selectedTime, isMonthly]);
 
   const monthlyData = getRevenueByRoom(invoices);
 

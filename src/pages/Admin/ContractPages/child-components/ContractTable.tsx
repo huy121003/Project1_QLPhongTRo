@@ -8,7 +8,6 @@ import DeleteModal from "@components/DeleteModal";
 import ColumnSelector from "@components/ColumnSelector";
 import TableComponent from "@components/TableComponent";
 
-
 interface Props {
   contracts: IContract[];
   isLoading: boolean;
@@ -33,8 +32,6 @@ const ContractTable: React.FC<Props> = ({
   handleCancelContract,
   onDelete,
 }) => {
-
-
   const columns = [
     {
       title: "Room",
@@ -50,7 +47,7 @@ const ContractTable: React.FC<Props> = ({
     },
     {
       title: "Deposit Amount",
-      dataIndex: "depositAmount", 
+      dataIndex: "depositAmount",
       key: "depositAmount",
       render: (_: any, record: IContract) => (
         <p>{record?.depositAmount.toLocaleString()}đ</p>
@@ -73,9 +70,7 @@ const ContractTable: React.FC<Props> = ({
       dataIndex: "status",
       key: "status",
       render: (status: ContractStatus) => (
-        <span
-          className={`font-bold px-2 py-1 ${contractStatusColor(status)}`}
-        >
+        <span className={`font-bold px-2 py-1 ${contractStatusColor(status)}`}>
           {status}
         </span>
       ),
@@ -98,18 +93,14 @@ const ContractTable: React.FC<Props> = ({
               "
               />
             }
-          >
-           
-          </Button>
+          ></Button>
           <Button
             icon={<i className="fa-solid fa-print text-orange-600 text-xl"></i>}
             onClick={() => {
               if (record) downloadContractPDF(record);
             }}
-          >
-           
-          </Button>
-          {record?.status === ContractStatus.ACTIVE && (
+          ></Button>
+          {/* {record?.status === ContractStatus.ACTIVE && (
             <Popconfirm
               title="Cancel Contract"
               description="Are you sure you want to cancel this contract?"
@@ -133,7 +124,7 @@ const ContractTable: React.FC<Props> = ({
                
               </Button>
             </Popconfirm>
-          )}
+          )} */}
           {record?.status !== ContractStatus.ACTIVE && (
             <DeleteModal
               onConfirm={(record) => onDelete(record)}

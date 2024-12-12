@@ -100,27 +100,27 @@ const homeAdminRouters: IRouter[] = [
     ],
   },
   {
-    path: "contract",
-    component: ContractLayout,
+    // path: "contract",
+    // component: ContractLayout,
+    // isShowNav: true,
+    // icon: "fa-solid fa-file-contract", // Icon hợp đồng cho Contract Layout
+    // label: "Contract",
+    // children: [
+    //  {
+    path: "contractList",
+    component: ContractPage,
     isShowNav: true,
-    icon: "fa-solid fa-file-contract", // Icon hợp đồng cho Contract Layout
-    label: "Contract",
-    children: [
-      {
-        path: "contractList",
-        component: ContractPage,
-        isShowNav: true,
-        icon: "fa-solid fa-folder", // Icon thư mục cho Contract List
-        label: "Contract List",
-      },
-      {
-        path: "requestContract",
-        component: RequestContractPage,
-        isShowNav: true,
-        icon: "fa-solid fa-file-signature", // Icon ký hiệu tài liệu cho Request Contract
-        label: "Request Contract",
-      },
-    ],
+    icon: "fa-solid fa-folder", // Icon thư mục cho Contract List
+    label: "Contract List",
+    //},
+    //   {
+    //     path: "requestContract",
+    //     component: RequestContractPage,
+    //     isShowNav: true,
+    //     icon: "fa-solid fa-file-signature", // Icon ký hiệu tài liệu cho Request Contract
+    //     label: "Request Contract",
+    //   },
+    // ],
   },
   {
     path: "account",

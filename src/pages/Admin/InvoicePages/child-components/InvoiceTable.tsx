@@ -93,7 +93,7 @@ const InvoiceTable: React.FC<Props> = ({
           ></Button>
           <DeleteModal onConfirm={onDeleteInvoice} record={record} />
 
-          {record.status === InvoiceStatus.UNPAID && (
+          {/* {record.status === InvoiceStatus.UNPAID && (
             <Popconfirm
               title="Payment Confirmation"
               description="Are you sure you want to confirm the payment?"
@@ -108,7 +108,7 @@ const InvoiceTable: React.FC<Props> = ({
                 <p className="text-green-500 font-bold">Confirm</p>
               </Button>
             </Popconfirm>
-          )}
+          )} */}
         </div>
       ),
       width: 150,
