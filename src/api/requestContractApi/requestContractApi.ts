@@ -24,7 +24,7 @@ const postRequestContractApi = (
     contract,
     type,
     amount,
-    description
+    description,
   });
 };
 const patchRequestContractApi = (

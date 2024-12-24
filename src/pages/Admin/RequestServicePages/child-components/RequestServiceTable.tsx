@@ -28,12 +28,12 @@ const RequestServiceTable: React.FC<Props> = ({
   onDelete,
 }) => {
   const columns = [
-    {
-      title: "Tenant",
-      dataIndex: "user",
-      key: "user",
-      render: (_: any, record: IRegisterService) => record?.user?.name,
-    },
+    // {
+    //   title: "Tenant",
+    //   dataIndex: "user",
+    //   key: "user",
+    //   render: (_: any, record: IRegisterService) => record?.user?.name,
+    // },
     {
       title: "Room",
       dataIndex: "room",
@@ -81,11 +81,7 @@ const RequestServiceTable: React.FC<Props> = ({
       dataIndex: "status",
       key: "status",
       render: (_: any, record: IRegisterService) => (
-        <p
-          className={`${requestServiceStatusColor(
-            record?.status
-          )} font-bold`}
-        >
+        <p className={`${requestServiceStatusColor(record?.status)} font-bold`}>
           {record?.status}
         </p>
       ),
